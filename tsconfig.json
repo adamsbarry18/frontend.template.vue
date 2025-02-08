@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true, // Allow import of CJS libs
+    "incremental": true, // Improve performance between type checking
+    "allowJs": true, // Allow .js file to be imported into .vue files
+    "noImplicitThis": true, // Mandatory to have typing on `this` for .vue files
+    "outDir": "./dist",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"] // @ alias used
+    },
+    "typeRoots": [
+      "./@types", // Allow to have custom type declarations
+      "./node_modules/@types",
+    ]
+  },
+  "vueCompilerOptions": {
+    "target": 2.7,
+  },
+  "include": [
+    "_resources/**/*",
+    ".storybook/**/*",
+    "src/**/*",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

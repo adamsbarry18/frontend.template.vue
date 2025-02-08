@@ -1,0 +1,116 @@
+* {
+  -webkit-font-smoothing : antialiased;
+}
+
+/* Fix default opacity in Firefox placeholder */
+::placeholder {
+  opacity: 1;
+}
+
+body p {
+  margin: 0;
+}
+
+svg {
+  flex-shrink: 0;
+}
+
+.-button-like {
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(110%);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    transition-duration: 0.1s;
+    opacity: 0.5;
+
+    input:focus { outline: none; }
+  }
+
+  svg:focus {
+    outline: none;
+  }
+}
+
+.-text-ellipsis {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.numbers-size {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 20px;
+  background-color: var(--color-background-white);
+  padding-right: 16px;
+  & > .count-icon {
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: var(--color-neutral-300);
+    padding: 5px;
+    width: 35px;
+    height: 35px;
+  }
+}
+
+.-disabled {
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.el-radio {
+  margin: 0;
+}
+
+.el-scrollbar__bar {
+  opacity: 1;
+}
+
+.el-scrollbar__thumb {
+  background-color: var(--color-neutral-300);
+  &:hover {
+    background-color: var(--color-neutral-500);
+  }
+}
+
+.-custom-scrollbar {
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+  }
+}
+
+.-description {
+  color: var(--color-neutral-500);
+  font-size: var(--paragraph-03);
+}
+
+.-subtitle {
+  color: var(--color-neutral-700);
+  font-size: var(--caption);
+}
+
+.-card-like {
+  border-radius: 4px;
+  border: 1px solid var(--color-neutral-300);
+  background-color: var(--color-background-white);
+}
+
+.-multiline-text {
+  white-space: pre-line;
+}

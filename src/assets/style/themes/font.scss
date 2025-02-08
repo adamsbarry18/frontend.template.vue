@@ -1,0 +1,118 @@
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-Medium.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-MediumItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src:  url('@/fonts/Roboto-Italic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+body {
+
+  // Skeepers DS paragraph size
+  --heading-01: 33px;
+  --heading-02: 28px;
+  --heading-03: 23px;
+  --heading-04: 19px;
+  --subheading: 20px;
+  --paragraph-01: 18px;
+  --paragraph-02: 16px; // default font size application
+  --paragraph-03: 14px; // data text
+  --caption: 12px; // ie: legend or doc link
+  --footer: 10px;
+
+  * {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    margin: 0;
+    line-height: initial;
+  }
+  // is H3 DS Skeepers at the moment
+  h1 {
+    color: var(--color-neutral-800);
+    font-size: var(--heading-01);
+    font-weight: 900;
+  }
+
+  // H4
+  h2 {
+    color: var(--color-neutral-800);
+    font-size: var(--heading-02);
+    font-weight: 900;
+  }
+
+  // H5
+  h3 {
+    color: var(--color-neutral-800);
+    font-size: var(--heading-03);
+    font-weight: 900;
+  }
+
+  // H6
+  h4 {
+    color: var(--color-neutral-800);
+    font-size: var(--heading-04);
+    font-weight: 700;
+  }
+
+  // Need to see if we prefer 14 or 16px as a base for text
+  p, li, ul, span, b, div, i, strong, a {
+    font-size: var(--paragraph-02); // 16px
+    line-height: 150%;
+    color: var(--color-neutral-800);
+  }
+
+  strong {
+    font-weight: 600 !important;
+  }
+}
+

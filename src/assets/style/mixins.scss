@@ -1,0 +1,54 @@
+body:before {
+  display: none;
+  position: fixed;
+  right: 5px;
+  bottom: 5px;
+  z-index: 9999;
+  background: hotpink;
+  padding: 0.5em;
+  color: black;
+  font-size: 1.1rem;
+  font-weight: bold;
+  content: 'screen-first';
+  pointer-events: none;
+}
+
+// Tablets and small desktops
+$screen-md-min: 1440px;
+// Large desktops
+$screen-xl-min: 1600px;
+
+// Medium devices
+@mixin md {
+  @media (min-width: #{$screen-md-min}) {
+      @content;
+  }
+}
+
+// Extra large devices
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+      @content;
+  }
+}
+
+// Custom devices width 
+@mixin rwd($screen) {
+  @media (min-width: ($screen + 'px')) {
+      @content;
+  }
+}
+
+@include md {
+  body:before {
+    background: green;
+    content: 'screen-md-min';
+  }
+}
+
+@include xl() {
+  body:before {
+    background: gold;
+    content: 'screen-xl-min';
+  }
+}
