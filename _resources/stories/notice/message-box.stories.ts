@@ -22,6 +22,7 @@ export const MessageBox = () => ({
             "Message box ouverte avec succès en utilisant l'alias msgbox",
           cancelButtonText: 'Cancel',
           confirmButtonText: 'OK',
+          showCancelButton: true,
         });
         console.log('MessageBox fermé avec OK (Alias msgbox)');
       } catch (error) {
