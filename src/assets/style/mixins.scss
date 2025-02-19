@@ -21,21 +21,21 @@ $screen-xl-min: 1600px;
 // Medium devices
 @mixin md {
   @media (min-width: #{$screen-md-min}) {
-      @content;
+    @content;
   }
 }
 
 // Extra large devices
 @mixin xl {
   @media (min-width: #{$screen-xl-min}) {
-      @content;
+    @content;
   }
 }
 
-// Custom devices width 
+// Custom devices width
 @mixin rwd($screen) {
   @media (min-width: ($screen + 'px')) {
-      @content;
+    @content;
   }
 }
 

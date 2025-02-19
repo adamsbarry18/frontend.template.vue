@@ -1,274 +1,269 @@
 body {
+  // BASE COLORS
+  --color-grey-50: #f9f9f9;
+  --color-grey-100: #f2f2f2;
+  --color-grey-200: #e6e6e6;
+  --color-grey-300: #d3d3d3;
+  --color-grey-400: #b3b3b3;
+  --color-grey-500: #999999;
+  --color-grey-600: #7f7f7f;
+  --color-grey-700: #666666;
+  --color-grey-800: #4c4c4c;
+  --color-grey-900: #333333;
 
-    // BASE COLORS
-    --color-grey-50: #F9F9F9;
-    --color-grey-100: #F2F2F2;
-    --color-grey-200: #E6E6E6;
-    --color-grey-300: #D3D3D3;
-    --color-grey-400: #B3B3B3;
-    --color-grey-500: #999999;
-    --color-grey-600: #7F7F7F;
-    --color-grey-700: #666666;
-    --color-grey-800: #4C4C4C;
-    --color-grey-900: #333333;
-    
+  --color-yellow-50: #fffbeb;
+  --color-yellow-100: #fff3c4;
+  --color-yellow-200: #fce588;
+  --color-yellow-300: #fadb5f;
+  --color-yellow-400: #f7c948;
+  --color-yellow-500: #f0b429;
+  --color-yellow-600: #de911d;
+  --color-yellow-700: #cb6e17;
+  --color-yellow-800: #b44d12;
+  --color-yellow-900: #8d2e0e;
 
-    --color-yellow-50: #FFFBEB;
-    --color-yellow-100: #FFF3C4;
-    --color-yellow-200: #FCE588;
-    --color-yellow-300: #FADB5F;
-    --color-yellow-400: #F7C948;
-    --color-yellow-500: #F0B429;
-    --color-yellow-600: #DE911D;
-    --color-yellow-700: #CB6E17;
-    --color-yellow-800: #B44D12;
-    --color-yellow-900: #8D2E0E;
-    
+  --color-blue-50: #f0f9ff;
+  --color-blue-100: #e0f2fe;
+  --color-blue-200: #bae6fd;
+  --color-blue-300: #7dd3fc;
+  --color-blue-400: #38bdf8;
+  --color-blue-500: #0ea5e9;
+  --color-blue-600: #0284c7;
+  --color-blue-700: #0369a1;
+  --color-blue-800: #075985;
+  --color-blue-900: #0c4a6e;
 
-    --color-blue-50: #F0F9FF;
-    --color-blue-100: #E0F2FE;
-    --color-blue-200: #BAE6FD;
-    --color-blue-300: #7DD3FC;
-    --color-blue-400: #38BDF8;
-    --color-blue-500: #0EA5E9;
-    --color-blue-600: #0284C7;
-    --color-blue-700: #0369A1;
-    --color-blue-800: #075985;
-    --color-blue-900: #0C4A6E;
-    
+  --color-green-50: #f3fdf4;
+  --color-green-100: #def7e6;
+  --color-green-200: #bcf0d1;
+  --color-green-300: #84e1bc;
+  --color-green-400: #51cf9a;
+  --color-green-500: #16bd67;
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
 
-    --color-green-50: #F3FDF4;
-    --color-green-100: #DEF7E6;
-    --color-green-200: #BCF0D1;
-    --color-green-300: #84E1BC;
-    --color-green-400: #51CF9A;
-    --color-green-500: #16BD67;
-    --color-green-600: #059669;
-    --color-green-700: #047857;
-    --color-green-800: #065F46;
-    --color-green-900: #064E3B;
-    
+  --color-orange-50: #fff8f1;
+  --color-orange-100: #feebc8;
+  --color-orange-200: #fbd38d;
+  --color-orange-300: #f6ad55;
+  --color-orange-400: #ed8936;
+  --color-orange-500: #dd6b20;
+  --color-orange-600: #c05621;
+  --color-orange-700: #9c4221;
+  --color-orange-800: #7b341e;
+  --color-orange-900: #652b19;
 
-    --color-orange-50: #FFF8F1;
-    --color-orange-100: #FEEBC8;
-    --color-orange-200: #FBD38D;
-    --color-orange-300: #F6AD55;
-    --color-orange-400: #ED8936;
-    --color-orange-500: #DD6B20;
-    --color-orange-600: #C05621;
-    --color-orange-700: #9C4221;
-    --color-orange-800: #7B341E;
-    --color-orange-900: #652B19;
-    
+  --color-red-50: #fff5f5;
+  --color-red-100: #ffe3e3;
+  --color-red-200: #ffc9c9;
+  --color-red-300: #ffa8a8;
+  --color-red-400: #ff8787;
+  --color-red-500: #ff6b6b;
+  --color-red-600: #fa5252;
+  --color-red-700: #f03e3e;
+  --color-red-800: #e03131;
+  --color-red-900: #c92a2a;
 
-    --color-red-50: #FFF5F5;
-    --color-red-100: #FFE3E3;
-    --color-red-200: #FFC9C9;
-    --color-red-300: #FFA8A8;
-    --color-red-400: #FF8787;
-    --color-red-500: #FF6B6B;
-    --color-red-600: #FA5252;
-    --color-red-700: #F03E3E;
-    --color-red-800: #E03131;
-    --color-red-900: #C92A2A;
-    
+  --color-purple-50: #faf5ff;
+  --color-purple-100: #f3e8ff;
+  --color-purple-200: #e9d5ff;
+  --color-purple-300: #d8b4fe;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+  --color-purple-600: #9333ea;
+  --color-purple-700: #7e22ce;
+  --color-purple-800: #6b21a8;
+  --color-purple-900: #581c87;
 
-    --color-purple-50: #FAF5FF;
-    --color-purple-100: #F3E8FF;
-    --color-purple-200: #E9D5FF;
-    --color-purple-300: #D8B4FE;
-    --color-purple-400: #C084FC;
-    --color-purple-500: #A855F7;
-    --color-purple-600: #9333EA;
-    --color-purple-700: #7E22CE;
-    --color-purple-800: #6B21A8;
-    --color-purple-900: #581C87;
-    
+  --color-brown-50: #fdf8f6;
+  --color-brown-100: #f2e8e5;
+  --color-brown-200: #eaddda;
+  --color-brown-300: #dfc2af;
+  --color-brown-400: #d2a18d;
+  --color-brown-500: #c2857a;
+  --color-brown-600: #a66c60;
+  --color-brown-700: #8b574a;
+  --color-brown-800: #704437;
+  --color-brown-900: #5a3629;
 
-    --color-brown-50: #FDF8F6;
-    --color-brown-100: #F2E8E5;
-    --color-brown-200: #EADDDA;
-    --color-brown-300: #DFC2AF;
-    --color-brown-400: #D2A18D;
-    --color-brown-500: #C2857A;
-    --color-brown-600: #A66C60;
-    --color-brown-700: #8B574A;
-    --color-brown-800: #704437;
-    --color-brown-900: #5A3629;
-    
+  --color-light-blue-50: #f0f9ff;
+  --color-light-blue-100: #e0f2fe;
+  --color-light-blue-200: #bae6fd;
+  --color-light-blue-300: #7dd3fc;
+  --color-light-blue-400: #38bdf8;
+  --color-light-blue-500: #0ea5e9;
+  --color-light-blue-600: #0284c7;
+  --color-light-blue-700: #0369a1;
+  --color-light-blue-800: #075985;
+  --color-light-blue-900: #0c4a6e;
 
-    --color-light-blue-50: #F0F9FF;
-    --color-light-blue-100: #E0F2FE;
-    --color-light-blue-200: #BAE6FD;
-    --color-light-blue-300: #7DD3FC;
-    --color-light-blue-400: #38BDF8;
-    --color-light-blue-500: #0EA5E9;
-    --color-light-blue-600: #0284C7;
-    --color-light-blue-700: #0369A1;
-    --color-light-blue-800: #075985;
-    --color-light-blue-900: #0C4A6E;
-    
+  --color-white: #ffffff;
+  --color-black: #000000;
 
-    --color-white : #FFFFFF;
-    --color-black : #000000;
+  // UTILITY COLORS
 
+  --color-neutral-50: var(--color-grey-50);
+  --color-neutral-100: var(--color-grey-100);
+  --color-neutral-200: var(--color-grey-200);
+  --color-neutral-300: var(--color-grey-300);
+  --color-neutral-400: var(--color-grey-400);
+  --color-neutral-500: var(--color-grey-500);
+  --color-neutral-600: var(--color-grey-600);
+  --color-neutral-700: var(--color-grey-700);
+  --color-neutral-800: var(--color-grey-800);
+  --color-neutral-900: var(--color-grey-900);
 
-    // UTILITY COLORS
+  --color-primary-50: var(--color-blue-50);
+  --color-primary-100: var(--color-blue-100);
+  --color-primary-200: var(--color-blue-200);
+  --color-primary-300: var(--color-blue-300);
+  --color-primary-400: var(--color-blue-400);
+  --color-primary-500: var(--color-blue-500);
+  --color-primary-600: var(--color-blue-600);
+  --color-primary-700: var(--color-blue-700);
+  --color-primary-800: var(--color-blue-800);
+  --color-primary-900: var(--color-blue-900);
 
-    --color-neutral-50 : var(--color-grey-50);
-    --color-neutral-100 : var(--color-grey-100);
-    --color-neutral-200 : var(--color-grey-200);
-    --color-neutral-300 : var(--color-grey-300);
-    --color-neutral-400 : var(--color-grey-400);
-    --color-neutral-500 : var(--color-grey-500);
-    --color-neutral-600 : var(--color-grey-600);
-    --color-neutral-700 : var(--color-grey-700);
-    --color-neutral-800 : var(--color-grey-800);
-    --color-neutral-900 : var(--color-grey-900);
+  --color-warning-50: var(--color-orange-50);
+  --color-warning-100: var(--color-orange-100);
+  --color-warning-200: var(--color-orange-200);
+  --color-warning-300: var(--color-orange-300);
+  --color-warning-400: var(--color-orange-400);
+  --color-warning-500: var(--color-orange-500);
+  --color-warning-600: var(--color-orange-600);
+  --color-warning-700: var(--color-orange-700);
+  --color-warning-800: var(--color-orange-800);
+  --color-warning-900: var(--color-orange-900);
 
-    --color-primary-50 : var(--color-blue-50);
-    --color-primary-100 : var(--color-blue-100);
-    --color-primary-200 : var(--color-blue-200);
-    --color-primary-300 : var(--color-blue-300);
-    --color-primary-400 : var(--color-blue-400);
-    --color-primary-500 : var(--color-blue-500);
-    --color-primary-600 : var(--color-blue-600);
-    --color-primary-700 : var(--color-blue-700);
-    --color-primary-800 : var(--color-blue-800);
-    --color-primary-900 : var(--color-blue-900);
+  --color-alternative-1-50: var(--color-orange-50);
+  --color-alternative-1-100: var(--color-orange-100);
+  --color-alternative-1-200: var(--color-orange-200);
+  --color-alternative-1-300: var(--color-orange-300);
+  --color-alternative-1-400: var(--color-orange-400);
+  --color-alternative-1-500: var(--color-orange-500);
+  --color-alternative-1-600: var(--color-orange-600);
+  --color-alternative-1-700: var(--color-orange-700);
+  --color-alternative-1-800: var(--color-orange-800);
+  --color-alternative-1-900: var(--color-orange-900);
 
-    --color-warning-50 : var(--color-orange-50);
-    --color-warning-100 : var(--color-orange-100);
-    --color-warning-200 : var(--color-orange-200);
-    --color-warning-300 : var(--color-orange-300);
-    --color-warning-400 : var(--color-orange-400);
-    --color-warning-500 : var(--color-orange-500);
-    --color-warning-600 : var(--color-orange-600);
-    --color-warning-700 : var(--color-orange-700);
-    --color-warning-800 : var(--color-orange-800);
-    --color-warning-900 : var(--color-orange-900);
+  --color-alternative-2-50: var(--color-brown-50);
+  --color-alternative-2-100: var(--color-brown-100);
+  --color-alternative-2-200: var(--color-brown-200);
+  --color-alternative-2-300: var(--color-brown-300);
+  --color-alternative-2-400: var(--color-brown-400);
+  --color-alternative-2-500: var(--color-brown-500);
+  --color-alternative-2-600: var(--color-brown-600);
+  --color-alternative-2-700: var(--color-brown-700);
+  --color-alternative-2-800: var(--color-brown-800);
+  --color-alternative-2-900: var(--color-brown-900);
 
-    --color-alternative-1-50 : var(--color-orange-50);
-    --color-alternative-1-100 : var(--color-orange-100);
-    --color-alternative-1-200 : var(--color-orange-200);
-    --color-alternative-1-300 : var(--color-orange-300);
-    --color-alternative-1-400 : var(--color-orange-400);
-    --color-alternative-1-500 : var(--color-orange-500);
-    --color-alternative-1-600 : var(--color-orange-600);
-    --color-alternative-1-700 : var(--color-orange-700);
-    --color-alternative-1-800 : var(--color-orange-800);
-    --color-alternative-1-900 : var(--color-orange-900);
+  --color-alternative-3-50: var(--color-light-blue-50);
+  --color-alternative-3-100: var(--color-light-blue-100);
+  --color-alternative-3-200: var(--color-light-blue-200);
+  --color-alternative-3-300: var(--color-light-blue-300);
+  --color-alternative-3-400: var(--color-light-blue-400);
+  --color-alternative-3-500: var(--color-light-blue-500);
+  --color-alternative-3-600: var(--color-light-blue-600);
+  --color-alternative-3-700: var(--color-light-blue-700);
+  --color-alternative-3-800: var(--color-light-blue-800);
+  --color-alternative-3-900: var(--color-light-blue-900);
 
-    --color-alternative-2-50 : var(--color-brown-50);
-    --color-alternative-2-100 : var(--color-brown-100);
-    --color-alternative-2-200 : var(--color-brown-200);
-    --color-alternative-2-300 : var(--color-brown-300);
-    --color-alternative-2-400 : var(--color-brown-400);
-    --color-alternative-2-500 : var(--color-brown-500);
-    --color-alternative-2-600 : var(--color-brown-600);
-    --color-alternative-2-700 : var(--color-brown-700);
-    --color-alternative-2-800 : var(--color-brown-800);
-    --color-alternative-2-900 : var(--color-brown-900);
+  --color-alternative-4-50: var(--color-purple-50);
+  --color-alternative-4-100: var(--color-purple-100);
+  --color-alternative-4-200: var(--color-purple-200);
+  --color-alternative-4-300: var(--color-purple-300);
+  --color-alternative-4-400: var(--color-purple-400);
+  --color-alternative-4-500: var(--color-purple-500);
+  --color-alternative-4-600: var(--color-purple-600);
+  --color-alternative-4-700: var(--color-purple-700);
+  --color-alternative-4-800: var(--color-purple-800);
+  --color-alternative-4-900: var(--color-purple-900);
 
-    --color-alternative-3-50 : var(--color-light-blue-50);
-    --color-alternative-3-100 : var(--color-light-blue-100);
-    --color-alternative-3-200 : var(--color-light-blue-200);
-    --color-alternative-3-300 : var(--color-light-blue-300);
-    --color-alternative-3-400 : var(--color-light-blue-400);
-    --color-alternative-3-500 : var(--color-light-blue-500);
-    --color-alternative-3-600 : var(--color-light-blue-600);
-    --color-alternative-3-700 : var(--color-light-blue-700);
-    --color-alternative-3-800 : var(--color-light-blue-800);
-    --color-alternative-3-900 : var(--color-light-blue-900);
+  // STATUS COLORS
+  --color-status-draft: var(--color-neutral-500);
+  --color-status-planned: var(--color-alternative-3-900);
 
-    --color-alternative-4-50 : var(--color-purple-50);
-    --color-alternative-4-100 : var(--color-purple-100);
-    --color-alternative-4-200 : var(--color-purple-200);
-    --color-alternative-4-300 : var(--color-purple-300);
-    --color-alternative-4-400 : var(--color-purple-400);
-    --color-alternative-4-500 : var(--color-purple-500);
-    --color-alternative-4-600 : var(--color-purple-600);
-    --color-alternative-4-700 : var(--color-purple-700);
-    --color-alternative-4-800 : var(--color-purple-800);
-    --color-alternative-4-900 : var(--color-purple-900);
+  --color-status-running: var(--color-blue-500);
+  --color-status-active: var(
+    --color-blue-500
+  ); // Have to change to running when legacy is updated ?
 
-    // STATUS COLORS
-    --color-status-draft: var(--color-neutral-500);
-    --color-status-planned: var(--color-alternative-3-900);
+  --color-status-completed: var(--color-green-600);
+  --color-status-success: var(--color-green-600);
+  --color-status-validated: var(
+    --color-blue-500
+  ); // ???? Verify where and why is this used and update after, should not exist or should be green and not blue
 
-    --color-status-running: var(--color-blue-500);
-    --color-status-active: var(--color-blue-500); // Have to change to running when legacy is updated ?
+  --color-status-paused: var(--color-orange-500);
+  --color-status-warning: var(--color-orange-700);
 
-    --color-status-completed: var(--color-green-600);
-    --color-status-success: var(--color-green-600);
-    --color-status-validated: var(--color-blue-500); // ???? Verify where and why is this used and update after, should not exist or should be green and not blue
+  --color-status-error: var(--color-red-600);
+  --color-status-deleted: var(--color-neutral-900);
 
-    --color-status-paused: var(--color-orange-500);
-    --color-status-warning: var(--color-orange-700);
+  --color-disabled-content: var(--color-neutral-600);
+  --color-disabled-bg: var(--color-neutral-300);
 
-    --color-status-error: var(--color-red-600);
-    --color-status-deleted: var(--color-neutral-900);
+  // Echarts graphs color palette
+  --color-dataviz-1: var(--color-blue-700);
+  --color-dataviz-2: var(--color-red-400);
+  --color-dataviz-3: var(--color-yellow-400);
+  --color-dataviz-4: var(--color-green-400);
+  --color-dataviz-5: var(--color-alternative-3-400);
+  --color-dataviz-6: var(--color-purple-300);
 
-    --color-disabled-content: var(--color-neutral-600);
-    --color-disabled-bg: var(--color-neutral-300);
+  // Echarts graphs color legacy palette
+  // Note: echarts officially only supports 'rgb', 'rgba' and 'hex' https://echarts.apache.org/en/option.html#color
+  --color-legacy-dataviz-1: var(--color-red-300);
+  --color-legacy-dataviz-2: var(--color-yellow-200);
+  --color-legacy-dataviz-3: var(--color-green-200);
+  --color-legacy-dataviz-4: var(--color-orange-200);
+  --color-legacy-dataviz-5: var(--color-red-400);
+  --color-legacy-dataviz-6: var(--color-blue-300);
+  --color-legacy-dataviz-7: var(--color-purple-300);
+  --color-legacy-dataviz-8: var(--color-green-200);
+  --color-legacy-dataviz-9: var(--color-alternative-3-200);
+  --color-legacy-dataviz-10: var(--color-blue-200);
+  --color-legacy-dataviz-11: var(--color-alternative-4-200);
 
-    // Echarts graphs color palette
-    --color-dataviz-1: var(--color-blue-700);
-    --color-dataviz-2: var(--color-red-400);
-    --color-dataviz-3: var(--color-yellow-400);
-    --color-dataviz-4: var(--color-green-400);
-    --color-dataviz-5: var(--color-alternative-3-400);
-    --color-dataviz-6: var(--color-purple-300);
+  // box-shadow
+  --box-shadow-s: 0px 1px 6px 1px rgba(0, 0, 0, 0.08);
+  --box-shadow-m:
+    0 4px 6px -1px rgba(43, 57, 111, 0.1),
+    0 2px 4px -1px rgba(40, 53, 119, 0.1),
+    0px -3px 5px 0px rgba(43, 77, 111, 0.05);
+  --box-shadow-l:
+    0 10px 14px -3px rgba(43, 77, 111, 0.12),
+    0 2px 4px -1px rgba(40, 53, 119, 0.1),
+    0 -4px 10px -2px rgba(43, 77, 111, 0.08);
+  --box-shadow-xl:
+    0 20px 25px -5px rgba(39, 38, 102, 0.13),
+    0 10px 10px -5px rgba(54, 45, 105, 0.04),
+    0px -3px 15px 0px rgba(43, 77, 111, 0.08);
 
-    // Echarts graphs color legacy palette
-    // Note: echarts officially only supports 'rgb', 'rgba' and 'hex' https://echarts.apache.org/en/option.html#color
-    --color-legacy-dataviz-1: var(--color-red-300);
-    --color-legacy-dataviz-2: var(--color-yellow-200);
-    --color-legacy-dataviz-3: var(--color-green-200);
-    --color-legacy-dataviz-4: var(--color-orange-200);
-    --color-legacy-dataviz-5: var(--color-red-400);
-    --color-legacy-dataviz-6: var(--color-blue-300);
-    --color-legacy-dataviz-7: var(--color-purple-300);
-    --color-legacy-dataviz-8: var(--color-green-200);
-    --color-legacy-dataviz-9: var(--color-alternative-3-200);
-    --color-legacy-dataviz-10: var(--color-blue-200);
-    --color-legacy-dataviz-11: var(--color-alternative-4-200);
+  // Univers colors
+  --color-univers-settings: var(--color-neutral-700);
 
-    // box-shadow
-    --box-shadow-s: 0px 1px 6px 1px rgba(0,0,0, 0.08);
-    --box-shadow-m: 0 4px 6px -1px rgba(43, 57, 111, 0.1), 0 2px 4px -1px rgba(40, 53, 119, 0.1),0px -3px 5px 0px rgba(43, 77, 111, 0.05);
-    --box-shadow-l: 0 10px 14px -3px rgba(43, 77, 111, 0.12),0 2px 4px -1px rgba(40, 53, 119, 0.1), 0 -4px 10px -2px rgba(43, 77, 111, 0.08);
-    --box-shadow-xl: 0 20px 25px -5px rgba(39, 38, 102, 0.13), 0 10px 10px -5px rgba(54, 45, 105, 0.04), 0px -3px 15px 0px rgba(43, 77, 111, 0.08);
+  // Components colors
+  --color-input-border: var(--color-neutral-400);
+  --color-input-border-hover: var(--color-neutral-500);
+  --color-input-outline-focus: var(--color-neutral-200);
 
-    // Univers colors
-    --color-univers-acquisition: var(--color-blue-500);
-    --color-univers-inspiration: var(--color-green-600);
-    --color-univers-automation: var(--color-orange-600);
-    --color-univers-studio: var(--color-alternative-blue-500);
-    --color-univers-datahub: var(--color-alternative-4-400);
-    --color-univers-ia: var(--color-red-500);
-    --color-univers-reporting: var(--color-yellow-700);
-    --color-univers-settings: var(--color-neutral-700);
+  --color-secondary-button-border: var(--color-neutral-400);
+  --color-secondary-button-border-hover: var(--color-neutral-500);
+  --color-secondary-button-border-focus: var(--color-neutral-100);
 
-    // Components colors
-    --color-input-border: var(--color-neutral-400);
-    --color-input-border-hover: var(--color-neutral-500);
-    --color-input-outline-focus: var(--color-neutral-200);
+  --color-background-white: var(--color-white);
+  --color-background-light: var(--color-neutral-100);
 
-    --color-secondary-button-border: var(--color-neutral-400);
-    --color-secondary-button-border-hover: var(--color-neutral-500);
-    --color-secondary-button-border-focus: var(--color-neutral-100);
+  --color-placeholder: var(--color-neutral-400);
 
-    --color-background-white: var(--color-white);
-    --color-background-light: var(--color-neutral-100);
+  // Components colors disabled
+  --color-input-disabled-background: var(--color-neutral-100);
+  --color-input-disabled-border: var(--color-neutral-200);
+  --color-input-disabled-content: var(--color-neutral-400);
 
-    --color-placeholder: var(--color-neutral-400);
-
-    // Components colors disabled
-    --color-input-disabled-background: var(--color-neutral-100);
-    --color-input-disabled-border : var(--color-neutral-200);
-    --color-input-disabled-content : var(--color-neutral-400);
-
-    --color-button-disabled-content : var(--color-neutral-500);
-    --color-button-disabled-background: var(--color-neutral-200);
+  --color-button-disabled-content: var(--color-neutral-500);
+  --color-button-disabled-background: var(--color-neutral-200);
 }

@@ -1,5 +1,5 @@
 {
-  "name": "my-design-system.vue",
+  "name": "design-system.vue",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,16 +8,27 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore",
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@cospired/i18n-iso-languages": "^4.2.0",
+    "@storybook/addon-actions": "^8.5.3",
     "@storybook/addon-links": "^8.5.3",
+    "@sxzz/popperjs-es": "^2.11.7",
+    "dayjs": "^1.11.13",
     "element-plus": "^2.9.4",
+    "i18n-iso-countries": "^7.13.0",
     "sass": "^1.84.0",
-    "vue": "^3.5.13"
+    "tinycolor2": "^1.6.0",
+    "vue": "^3.5.13",
+    "vue-i18n": "^10.0.5",
+    "vue3-popper": "^1.5.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
+    "@intlify/unplugin-vue-i18n": "^6.0.3",
     "@storybook/addon-essentials": "^8.5.3",
     "@storybook/addon-interactions": "^8.5.3",
     "@storybook/addon-onboarding": "^8.5.3",
@@ -27,11 +38,22 @@
     "@storybook/vue3": "^8.5.3",
     "@storybook/vue3-vite": "^8.5.3",
     "@types/node": "^22.13.1",
+    "@types/vue-i18n": "^6.1.3",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "^3.5.0",
     "storybook": "^8.5.3",
-    "typescript": "~5.7.2",
+    "typescript": "~5.5.0",
     "vite": "^6.1.0",
+    "vue-eslint-parser": "^9.4.3",
     "vue-tsc": "^2.2.0"
   }
 }

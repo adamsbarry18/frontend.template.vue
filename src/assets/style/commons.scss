@@ -1,5 +1,5 @@
 * {
-  -webkit-font-smoothing : antialiased;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Fix default opacity in Firefox placeholder */
@@ -27,7 +27,9 @@ svg {
     transition-duration: 0.1s;
     opacity: 0.5;
 
-    input:focus { outline: none; }
+    input:focus {
+      outline: none;
+    }
   }
 
   svg:focus {

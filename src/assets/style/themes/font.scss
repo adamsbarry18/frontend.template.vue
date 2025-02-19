@@ -1,61 +1,60 @@
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-Black.ttf') format('truetype');
+  src: url('@/fonts/Roboto-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-BlackItalic.ttf') format('truetype');
+  src: url('@/fonts/Roboto-BlackItalic.ttf') format('truetype');
   font-weight: 900;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-Bold.ttf') format('truetype');
+  src: url('@/fonts/Roboto-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-BoldItalic.ttf') format('truetype');
+  src: url('@/fonts/Roboto-BoldItalic.ttf') format('truetype');
   font-weight: 700;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-Medium.ttf') format('truetype');
+  src: url('@/fonts/Roboto-Medium.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-MediumItalic.ttf') format('truetype');
+  src: url('@/fonts/Roboto-MediumItalic.ttf') format('truetype');
   font-weight: 600;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-Regular.ttf') format('truetype');
+  src: url('@/fonts/Roboto-Regular.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src:  url('@/fonts/Roboto-Italic.ttf') format('truetype');
+  src: url('@/fonts/Roboto-Italic.ttf') format('truetype');
   font-weight: 500;
   font-style: italic;
 }
 
 body {
-
   // Skeepers DS paragraph size
   --heading-01: 33px;
   --heading-02: 28px;
@@ -72,7 +71,10 @@ body {
     font-family: 'Roboto', sans-serif;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     margin: 0;
     line-height: initial;
   }
@@ -105,7 +107,15 @@ body {
   }
 
   // Need to see if we prefer 14 or 16px as a base for text
-  p, li, ul, span, b, div, i, strong, a {
+  p,
+  li,
+  ul,
+  span,
+  b,
+  div,
+  i,
+  strong,
+  a {
     font-size: var(--paragraph-02); // 16px
     line-height: 150%;
     color: var(--color-neutral-800);
@@ -115,4 +125,3 @@ body {
     font-weight: 600 !important;
   }
 }
-
