@@ -42,6 +42,7 @@ import IconReset from '@/commons/icones/IconReset.vue';
 import IconSearch from '@/commons/icones/IconSearch.vue';
 import IconStatus from '@/commons/icones/IconStatus.vue';
 import IconStop from '@/commons/icones/IconStop.vue';
+import IconSettings from './IconSettings.vue';
 import IconTag from '@/commons/icones/IconTag.vue';
 import IconUsage from '@/commons/icones/IconUsage.vue';
 import IconUser from '@/commons/icones/IconUser.vue';
@@ -97,6 +98,7 @@ export {
   IconSearch,
   IconStatus,
   IconStop,
+  IconSettings,
   IconTag,
   IconUsage,
   IconUser,

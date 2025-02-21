@@ -24,7 +24,7 @@ export const Tabs = () => ({
       <h3 style="margin-top:20px">Card Tabs</h3>
       <u-tabs v-model="cardActive" type="card" >
         <u-tab-pane index="1" label="User">User Content</u-tab-pane>
-        <u-tab-pane index="2" label="Config"  :icon="'icon-settings'">Config Content</u-tab-pane>
+        <u-tab-pane index="2" label="Config"  icon="icon-settings">Config Content</u-tab-pane>
         <u-tab-pane index="3" label="Role">Role Content</u-tab-pane>
       </u-tabs>
 
@@ -32,7 +32,7 @@ export const Tabs = () => ({
       <h3 style="margin-top:20px">Border Card Tabs</h3>
       <u-tabs v-model="borderCardActive" type="border-card">
         <u-tab-pane index="1" label="User" icon="icon-user">User Content</u-tab-pane>
-        <u-tab-pane index="2" label="Config" :icon="'icon-settings'">Config Content</u-tab-pane>
+        <u-tab-pane index="2" label="Config" icon="icon-settings">Config Content</u-tab-pane>
         <u-tab-pane index="3" label="Role" disabled>Role Content</u-tab-pane>
         <u-tab-pane index="4" label="Error" error>Error Content</u-tab-pane>
       </u-tabs>
@@ -54,8 +54,8 @@ export const Tabs = () => ({
       </u-tabs>
 
       <h3 style="margin-top:20px">Editable Tabs (Add/Remove)</h3>
-      <u-tabs v-model="editableActive" type="card" editable @edit="logEvent" >
-        <u-tab-pane v-for="(tab, index) in editableTabs" :key="tab.name" :index="tab.name" :label="tab.title">
+      <u-tabs v-model="editableActive" type="card" @tab-remove="removeTab">
+        <u-tab-pane v-for="(tab, index) in editableTabs" :key="tab.name" :index="tab.name" :label="tab.title" closable>
           {{ tab.content }}
         </u-tab-pane>
       </u-tabs>

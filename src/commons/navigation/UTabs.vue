@@ -80,10 +80,9 @@
 </script>
 
 <style scoped>
-  /* Common styles from the examples.  Adapt as needed. */
   .demo-tabs > .el-tabs__content {
     padding: 32px;
-    color: #6b778c;
+    color: var(--color-grey-400);
     font-size: 32px;
     font-weight: 600;
   }

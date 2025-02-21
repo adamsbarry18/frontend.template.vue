@@ -70,7 +70,6 @@
 </script>
 
 <style scoped>
-  /* Style for label with icon */
   .custom-tabs-label .el-icon {
     vertical-align: middle;
   }
