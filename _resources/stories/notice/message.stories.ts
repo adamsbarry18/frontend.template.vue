@@ -12,7 +12,7 @@ export const Message = () => ({
     const message = uMessage;
     const showMessage = () => {
       message({
-        type: 'warning',
+        type: 'success',
         message: "Quelquechose s'est bien passé",
       });
     };

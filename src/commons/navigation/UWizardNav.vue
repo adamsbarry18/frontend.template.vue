@@ -51,9 +51,8 @@
 <script setup lang="ts">
   import UButton from '@/commons/basic/UButton.vue';
   import UTooltip from '@/commons/others/UTooltip.vue';
-  import { defineProps, defineEmits } from 'vue';
 
-  const props = defineProps({
+  defineProps({
     activeStep: {
       type: Number,
       required: true,
