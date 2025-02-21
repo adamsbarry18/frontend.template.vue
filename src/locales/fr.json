@@ -76,5 +76,10 @@
   "commons.date-picker.default-end-placeholder": "Date de fin",
   "commons.confirm.error-list.info": "Plus d'information sur les raisons dans l'aide contextuelle ci-dessus.",
   "commons.confirm.list.title": "Entités à supprimer : ",
-  "commons.confirm.error-list.title": "Entités non supprimables : "
+  "commons.confirm.error-list.title": "Entités non supprimables : ",
+  "commons.explorer.root": "Root",
+  "commons.explorer.empty": "Empty folder",
+  "commons.explorer.close": "Close finder",
+  "commons.explorer.gotofolder": "Go inside folder {item}",
+  "commons.explorer.backtofolder": "Back to folder {item}"
 }

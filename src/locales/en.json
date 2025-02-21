@@ -76,5 +76,10 @@
   "commons.date-picker.default-end-placeholder": "End date",
   "commons.confirm.error-list.info": "More information on reasons in the above contextual help.",
   "commons.confirm.list.title": "Entities to delete:",
-  "commons.confirm.error-list.title": "Undeletable entities:"
+  "commons.confirm.error-list.title": "Undeletable entities:",
+  "commons.explorer.root": "Root",
+  "commons.explorer.empty": "Empty folder",
+  "commons.explorer.close": "Close finder",
+  "commons.explorer.gotofolder": "Go inside folder {item}",
+  "commons.explorer.backtofolder": "Back to folder {item}"
 }
