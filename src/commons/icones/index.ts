@@ -12,6 +12,7 @@ import IconContextualMenu from '@/commons/icones/IconContextualMenu.vue';
 import IconCross from '@/commons/icones/IconCross.vue';
 import IconCrossRound from '@/commons/icones/IconCrossRound.vue';
 import IconCrown from '@/commons/icones/IconCrown.vue';
+import IconCompleted from '@/commons/icones/IconCompleted.vue';
 import IconSuccess from '@/commons/icones/IconCompleted.vue';
 import IconDashboard from '@/commons/icones/IconDashboard.vue';
 import IconDeleted from '@/commons/icones/IconDeleted.vue';
@@ -64,6 +65,7 @@ export {
   IconClose,
   IconConnect,
   IconContextualMenu,
+  IconCompleted,
   IconCross,
   IconCrossRound,
   IconCrown,
