@@ -2,10 +2,10 @@ import { ref } from 'vue';
 import UUploader from '@/commons/forms/UUploader.vue';
 
 export default {
-  title: 'Form/Uploader',
+  title: 'Forms/Uploader',
 };
 
-export const UploaderStories = () => ({
+export const Uploader = () => ({
   components: { UUploader },
   template: `
     <div style="padding: 16px;">

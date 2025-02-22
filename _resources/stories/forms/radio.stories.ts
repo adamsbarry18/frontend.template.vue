@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import URadio from '@/commons/forms/URadio.vue';
 
 export default {
-  title: 'Form/Radio',
+  title: 'Forms/Radio',
 };
 
 export const Radio = () => ({

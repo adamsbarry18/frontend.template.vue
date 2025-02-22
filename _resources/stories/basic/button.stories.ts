@@ -1,22 +1,20 @@
 import UButton from '@/commons/basic/UButton.vue';
 
 export default {
-  title: 'Basic',
+  title: 'Basic/Button',
 };
 
-export const Button = (args, { argTypes }) => ({
+export const Button = () => ({
   components: { UButton },
-  props: Object.keys(argTypes),
   template: `
     <div class="boxContent">
       <div class="story-row">
         <u-button type="default">Default</u-button>
-        <u-button type="primary">Primary</u-button>
+        <u-button type="primary" @click="alert('hello')">Primary</u-button>
         <u-button type="secondary">Secondary</u-button>
         <u-button type="tertiary">Tertiary</u-button>
         <u-button type="warning">Warning</u-button>
         <u-button type="primary" disabled>Disabled</u-button>
-        <u-button>{{ text }}</u-button>
       </div>
       <div class="story-row">
         <u-button type="default" size="small">Default</u-button>
@@ -43,13 +41,12 @@ export const Button = (args, { argTypes }) => ({
         <u-button round type="primary" icon="icon-edit" disabled></u-button>
       </div>
     </div>`,
-  methods: {
-    alert(data) {
-      alert(data);
-    },
+  setup() {
+    const alert = (data) => {
+      console.log(data);
+    };
+    return {
+      alert,
+    };
   },
 });
-
-Button.args = {
-  text: 'Hello Storybook',
-};

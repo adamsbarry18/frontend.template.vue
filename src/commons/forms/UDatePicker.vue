@@ -52,7 +52,7 @@
     shortcuts?: '' | 'future' | 'past' | 'around';
     customShortcuts?: DatePickerShortcut[];
     disabled?: boolean;
-    disabledDate?: (date: Date) => boolean;
+    disabledDate?: Function;
     clearable?: boolean;
   }
 

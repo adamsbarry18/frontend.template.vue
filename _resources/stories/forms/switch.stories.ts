@@ -2,7 +2,7 @@ import USwitch from '@/commons/forms/USwitch.vue';
 import { ref } from 'vue';
 
 export default {
-  title: 'Form/Switch',
+  title: 'Forms/Switch',
 };
 
 export const Switch = () => ({

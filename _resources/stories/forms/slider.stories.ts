@@ -2,10 +2,10 @@ import USlider from '@/commons/forms/USlider.vue';
 import { ref } from 'vue';
 
 export default {
-  title: 'Form/Slider',
+  title: 'Forms/Slider',
 };
 
-export const DefaultSlider = () => ({
+export const Slider = () => ({
   components: { USlider },
   template: `
   <div style="padding: 12px;">

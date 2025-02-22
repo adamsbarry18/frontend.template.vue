@@ -2,7 +2,7 @@ import UPasswordInput from '@/commons/forms/UPasswordInput.vue';
 import { ref, computed } from 'vue';
 
 export default {
-  title: 'Form/PasswordInput',
+  title: 'Forms/PasswordInput',
 };
 
 export const PasswordInput = () => ({

@@ -3,7 +3,7 @@ import USelectGroup from '@/commons/forms/USelectGroup.vue';
 import UButton from '@/commons/basic/UButton.vue';
 
 export default {
-  title: 'Form/SelectGroup',
+  title: 'Forms/SelectGroup',
   argTypes: {
     modelValue: { control: 'text' },
     placeholder: { control: 'text' },

@@ -72,7 +72,7 @@
       default: false,
     },
     autocomplete: {
-      type: String as () => 'current-password' | 'new-password',
+      type: String,
       default: 'new-password',
     },
     rules: {

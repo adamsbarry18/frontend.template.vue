@@ -126,7 +126,7 @@
       type: [String, Number, Object, Array],
     },
     options: {
-      type: Array as PropType<OptionItem[]>,
+      type: Array as PropType<any[]>,
       default: () => [],
     },
     placeholder: {
@@ -154,7 +154,7 @@
       default: false,
     },
     groupBy: {
-      type: String as PropType<keyof OptionItem | ''>,
+      type: String,
       default: '',
     },
     withGroupLabel: {
@@ -219,7 +219,6 @@
     }
   );
 
-  //Also watch the options, if options changes we need to re-evaluate the fallbackLabel
   watch(
     () => props.options,
     () => {
@@ -241,11 +240,10 @@
     }
     if (props.clearable) {
       nextTick(() => {
-        //Important to use nextTick
         const select = selectRef.value;
         if (select) {
-          select.inputHovering = true; // Directly access the property
-          const selectInputEl = select.$el.querySelector('input'); // Access the input element
+          select.inputHovering = true;
+          const selectInputEl = select.$el.querySelector('input');
           if (selectInputEl) {
             selectInputEl.addEventListener(
               'mouseenter',
@@ -264,7 +262,6 @@
   });
 
   onBeforeUnmount(() => {
-    // Use onBeforeUnmount for cleanup
     if (props.clearable) {
       const select = selectRef.value;
       if (select) {
@@ -285,7 +282,6 @@
     }
   });
 
-  // Methods
   const stopEventPropagation = (event: Event) => {
     event.stopPropagation();
   };
@@ -308,7 +304,7 @@
   };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .el-select-dropdown__item {
     &:focus:not(:active) {
       background-color: transparent !important;
@@ -356,6 +352,11 @@
   }
 
   .u-select-group {
+    .el-select__wrapper {
+      background-color: var(--color-white);
+      box-shadow: 0 0 0 1px var(--color-input-border);
+      border-radius: 4px;
+    }
     &.-no-border {
       .el-input__inner {
         border: none;
@@ -430,11 +431,11 @@
 
     .el-input .el-input__suffix .el-input__suffix-inner {
       display: flex;
-      flex-direction: row-reverse; // Hack to reverse the order of clear and arrow icons
+      flex-direction: row-reverse;
       height: inherit;
 
       .el-select__caret {
-        display: inline-block !important; // Hack to always display arrow icon
+        display: inline-block !important;
       }
     }
 

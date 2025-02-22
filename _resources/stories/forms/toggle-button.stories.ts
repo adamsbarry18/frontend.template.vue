@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import UToggleButton from '@/commons/forms/UToggleButton.vue';
 
 export default {
-  title: 'Form/AToggleButton',
+  title: 'Forms/AToggleButton',
 };
 
 export const ToggleButton = () => ({

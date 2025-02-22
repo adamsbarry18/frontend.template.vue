@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import UMultiActionButton from '@/commons/basic/UMultiActionButton.vue';
 
 export default {
-  title: 'Basic',
+  title: 'Basic/MultiActionButton',
 };
 
 export const MultiActionButton = () => ({

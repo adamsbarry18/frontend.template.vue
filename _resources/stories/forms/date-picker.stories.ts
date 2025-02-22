@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import UDatePicker from '@/commons/forms/UDatePicker.vue';
 
 export default {
-  title: 'Form/DatePicker',
+  title: 'Forms/DatePicker',
 };
 
 export const DatePicker = () => ({

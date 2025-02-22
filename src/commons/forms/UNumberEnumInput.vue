@@ -47,23 +47,30 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, nextTick } from 'vue';
+  import { ref, computed, watch, nextTick, PropType } from 'vue';
   import IconBase from '@/commons/icones/IconBase.vue';
 
-  interface Props {
-    modelValue: number;
-    options: any[];
-    min?: number;
-    max?: number;
-    disabled?: boolean;
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
-    modelValue: 0,
-    options: () => [],
-    min: 0,
-    max: 100,
-    disabled: false,
+  const props = defineProps({
+    modelValue: {
+      type: Number,
+      default: 0,
+    },
+    options: {
+      type: Array as PropType<any[]>,
+      default: () => [],
+    },
+    min: {
+      type: Number,
+      default: 0,
+    },
+    max: {
+      type: Number,
+      default: 100,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const emit = defineEmits<{
@@ -105,7 +112,7 @@
   const unfocusCustomInput = () => {
     customInputFocused.value = false;
     input.value = Math.min(
-      Math.max(parseInt(input.value as unknown as string, 10), props.min || 0),
+      Math.max(input.value, props.min || 0),
       props.max || 100
     );
     lastCustomModelValue.value = input.value;

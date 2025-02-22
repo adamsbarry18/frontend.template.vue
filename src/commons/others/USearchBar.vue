@@ -65,20 +65,36 @@
   import { debounce } from '@/libs/utils/Debounce';
   import IconBase from '@/commons/icones/IconBase.vue';
 
-  interface Props {
-    placeholder?: string;
-    modelValue?: string;
-    iconColor?: string;
-    iconPosition?: 'left' | 'right';
-    clear?: boolean;
-    clearLabel?: string;
-    debounceDelay?: number;
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
-    iconPosition: 'left',
-    clear: true,
-    debounceDelay: 250,
+  const props = defineProps({
+    placeholder: {
+      type: String,
+      default: '',
+    },
+    modelValue: {
+      type: String,
+      default: '',
+    },
+    iconColor: {
+      type: String,
+      default: 'var(--color-neutral-700)',
+    },
+    iconPosition: {
+      type: String,
+      default: 'left',
+      validator: (value: string) => ['left', 'right'].includes(value),
+    },
+    clear: {
+      type: Boolean,
+      default: true,
+    },
+    clearLabel: {
+      type: String,
+      default: '',
+    },
+    debounceDelay: {
+      type: Number,
+      default: 250,
+    },
   });
 
   const emit = defineEmits<{

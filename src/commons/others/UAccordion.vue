@@ -13,11 +13,12 @@
   import { ref, watch, onMounted } from 'vue';
   import { ElCollapse } from 'element-plus';
 
-  interface Props {
-    modelValue: string | null;
-  }
-
-  const props = defineProps<Props>();
+  const props = defineProps({
+    modelValue: {
+      type: String,
+      default: null,
+    },
+  });
   const emit = defineEmits<{
     (e: 'update:modelValue', value: string | null): void;
     (e: 'change', value: string | null): void;

@@ -2,10 +2,10 @@ import { ref } from 'vue';
 import UTimePicker from '@/commons/forms/UTimePicker.vue';
 
 export default {
-  title: 'Form/TimePicker',
+  title: 'Forms/TimePicker',
 };
 
-export const TimePickerStories = () => ({
+export const TimePicker = () => ({
   components: { UTimePicker },
   template: `
     <div style="padding: 16px;">

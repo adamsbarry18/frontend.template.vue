@@ -2,7 +2,7 @@ import UNumberEnumInput from '@/commons/forms/UNumberEnumInput.vue';
 import { ref } from 'vue';
 
 export default {
-  title: 'Form',
+  title: 'Forms/NumberEnumInput',
 };
 
 export const NumberEnumInput = () => ({

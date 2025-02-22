@@ -15,14 +15,13 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch, computed, PropType } from 'vue';
+  import { computed, PropType } from 'vue';
   import type { TabsPaneContext, TabPaneName } from 'element-plus';
   import { ElTabs } from 'element-plus';
 
   // Props
   const props = defineProps({
     modelValue: {
-      // Use modelValue for v-model
       type: [String, Number],
       required: true,
     },

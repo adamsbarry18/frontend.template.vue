@@ -1,7 +1,7 @@
 import UNumberInput from '@/commons/forms/UNumberInput.vue';
 
 export default {
-  title: 'Form/NumberInput',
+  title: 'Forms/NumberInput',
 };
 
 export const NumberInput = () => ({
