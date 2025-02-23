@@ -84,5 +84,6 @@
   "commons.explorer.backtofolder": "Back to folder {item}",
   "commons.taginput.filters": "Filters:",
   "commons.taginput.too-much-elements.tooltip": "You can't add more elements because you reached the limit of {limit}",
-  "commons.autocomplete.no-result": "<No results>"
+  "commons.autocomplete.no-result": "<No results>",
+  "commons.cascader.default-placeholder": "Search..."
 }
