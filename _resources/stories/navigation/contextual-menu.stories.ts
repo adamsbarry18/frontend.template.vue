@@ -15,7 +15,6 @@ export const ContextualMenu = () => ({
       <u-contextual-menu
         ref="basicMenu"
         :list="basicMenuList"
-        style="position: absolute;"
       >
         <template #title>
           <div style="padding: 4px; font-weight: bold;">Basic Menu Title</div>
@@ -28,7 +27,6 @@ export const ContextualMenu = () => ({
         ref="nestedMenu"
         :list="nestedMenuList"
         :itemWidth="180"
-        style="position: absolute;"
       />
       
       <h3 style="margin-top: 40px;">Contextual Menu with Shortcut</h3>
@@ -37,7 +35,6 @@ export const ContextualMenu = () => ({
         ref="shortcutMenu"
         :list="shortcutMenuList"
         shortcut="esc"
-        style="position: absolute;"
       />
     </div>
   `,

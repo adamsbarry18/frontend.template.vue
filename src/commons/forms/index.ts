@@ -13,6 +13,7 @@ import USelectGroup from '@/commons/forms/USelectGroup.vue';
 import UFormInput from '@/commons/forms/UFormInput.vue';
 import UTagInput from '@/commons/forms/UTagInput.vue';
 import UCascaderInput from '@/commons/forms/UCascaderInput.vue';
+import UCheckboxGroup from '@/commons/forms/UCheckboxGroup.vue';
 
 export {
   UNumberEnumInput,
@@ -30,4 +31,5 @@ export {
   UFormInput,
   UTagInput,
   UCascaderInput,
+  UCheckboxGroup,
 };

@@ -6,12 +6,16 @@ import UVerticalStepper from '@/commons/navigation/UVerticalStepper.vue';
 import UWiredVerticalStepper from '@/commons/navigation/UWiredVerticalStepper.vue';
 import UTabs from '@/commons/navigation/UTabs.vue';
 import UTabPane from '@/commons/navigation/UTabPane.vue';
+import UContextualMenu from '@/commons/navigation/UContextualMenu.vue';
 
 export {
   UTabTitle,
+  UTabPane,
+  UTabs,
   UWizardNav,
   UExplorer,
   UVerticalSubStepper,
   UVerticalStepper,
   UWiredVerticalStepper,
+  UContextualMenu,
 };
