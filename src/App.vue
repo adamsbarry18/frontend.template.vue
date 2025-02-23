@@ -105,13 +105,11 @@
   }
 
   h1 {
-    color: var(--color-neutral-800);
     margin-bottom: 2rem;
   }
 
   h3 {
     width: 100%;
-    color: var(--color-neutral-600);
     margin-bottom: 1rem;
   }
 </style>
