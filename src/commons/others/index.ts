@@ -10,6 +10,7 @@ import USearchBar from '@/commons/others/USearchBar.vue';
 import UInfo from '@/commons/others/UInfo.vue';
 import UProgressBar from '@/commons/others/UProgressBar.vue';
 import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
+import UPulser from '@/commons/others/UPulser.vue';
 
 export {
   UHelpButton,
@@ -24,4 +25,5 @@ export {
   UInfo,
   UProgressBar,
   UShortcutSubscriber,
+  UPulser,
 };
