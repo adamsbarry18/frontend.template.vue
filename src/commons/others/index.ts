@@ -11,6 +11,7 @@ import UInfo from '@/commons/others/UInfo.vue';
 import UProgressBar from '@/commons/others/UProgressBar.vue';
 import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
 import UPulser from '@/commons/others/UPulser.vue';
+import UActionButtonBar from '@/commons/others/UActionButtonBar.vue';
 
 export {
   UHelpButton,
@@ -26,4 +27,5 @@ export {
   UProgressBar,
   UShortcutSubscriber,
   UPulser,
+  UActionButtonBar,
 };

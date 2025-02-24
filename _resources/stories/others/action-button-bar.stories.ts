@@ -1,0 +1,38 @@
+import UActionButtonBar from '@/commons/others/UActionButtonBar.vue';
+import UButton from '@/commons/basic/UButton.vue';
+import { ref } from 'vue';
+
+export default {
+  title: 'others/ActionButtonBar',
+  component: UActionButtonBar,
+};
+
+export const ActionButtonBar = () => ({
+  components: { UActionButtonBar, UButton },
+  template: `
+    <div style="position: relative; height: 600px; padding: 20px; border: 1px solid #ddd;">
+      <h3>High Placement (default)</h3>
+      <u-action-button-bar placement="high">
+        <u-button>Button 1</u-button>
+        <u-button>Button 2</u-button>
+        <u-button>Button 3</u-button>
+      </u-action-button-bar>
+      
+      <h3 style="margin-top: 200px;">Mid Placement</h3>
+      <u-action-button-bar placement="mid">
+        <u-button>Button A</u-button>
+        <u-button>Button B</u-button>
+      </u-action-button-bar>
+      
+      <h3 style="margin-top: 200px;">Low Placement</h3>
+      <u-action-button-bar placement="low">
+        <u-button>Button X</u-button>
+        <u-button>Button Y</u-button>
+        <u-button>Button Z</u-button>
+      </u-action-button-bar>
+    </div>
+  `,
+  setup() {
+    return {};
+  },
+});
