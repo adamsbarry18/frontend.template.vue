@@ -85,5 +85,6 @@
   "commons.taginput.filters": "Filters:",
   "commons.taginput.too-much-elements.tooltip": "You can't add more elements because you reached the limit of {limit}",
   "commons.autocomplete.no-result": "<No results>",
-  "commons.cascader.default-placeholder": "Search..."
+  "commons.cascader.default-placeholder": "Search...",
+  "commons.last-process": "Last process:"
 }
