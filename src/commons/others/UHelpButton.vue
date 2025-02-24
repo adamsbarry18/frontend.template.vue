@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
   import { ElPopover, Placement, TooltipTriggerType } from 'element-plus';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   defineProps({
     placement: {

@@ -107,7 +107,7 @@
   import { isObject } from '@/libs/utils/Object';
   import UTooltip from '@/commons/others/UTooltip.vue';
   import { ElSelect, ElOption, ElOptionGroup } from 'element-plus';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   interface OptionItem {
     key?: string;

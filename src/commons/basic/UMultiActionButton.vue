@@ -21,7 +21,7 @@
   import { ref } from 'vue';
   import UButton from '@/commons/basic/UButton.vue';
   import UMultiActionPopper from '@/commons/basic/UMultiActionPopper.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   interface IMultiActionItem {
     label: string;

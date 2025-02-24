@@ -28,7 +28,7 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import UButton from '@/commons/basic/UButton.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   // Définir les props avec des types TypeScript
   const props = defineProps({

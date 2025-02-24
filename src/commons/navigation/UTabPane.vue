@@ -30,7 +30,7 @@
   import { computed } from 'vue';
   import type { PropType } from 'vue';
   import { ElTabPane } from 'element-plus';
-  import IconBase from '@/commons/icones/IconBase.vue'; // Import IconBase
+  import IconBase from '@/commons/icons/IconBase.vue'; // Import IconBase
 
   // Types
   type TabIndex = string | number;

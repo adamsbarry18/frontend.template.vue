@@ -155,7 +155,7 @@
   import { ellipsis } from '@/libs/utils/String';
   import UTooltip from '@/commons/others/UTooltip.vue';
   import USelectGroup from '@/commons/forms/USelectGroup.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
   import { ElTag, ElAutocomplete, ElInput } from 'element-plus';
   import i18n from '@/i18n';
 

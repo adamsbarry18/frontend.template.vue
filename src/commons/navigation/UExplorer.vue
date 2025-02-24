@@ -83,7 +83,7 @@
 <script setup lang="ts">
   import { ref, PropType } from 'vue';
   import UButton from '@/commons/basic/UButton.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
   import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
   import i18n from '@/i18n';
 

@@ -115,7 +115,7 @@
   import URadio from '@/commons/forms/URadio.vue';
   import UNumberInput from '@/commons/forms/UNumberInput.vue';
   import UPasswordInput from '@/commons/forms/UPasswordInput.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   // Définition des props
   const props = defineProps({

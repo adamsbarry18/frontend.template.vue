@@ -80,7 +80,7 @@
   } from 'vue';
   import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
   import UPulser from '@/commons/others/UPulser.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   interface MenuItem {
     label: string;

@@ -85,7 +85,7 @@
 <script setup lang="ts">
   import { ref, computed, watch, type PropType } from 'vue';
   import { ElDialog } from 'element-plus';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
   import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
   import UHelpButton from '@/commons/others/UHelpButton.vue';
 

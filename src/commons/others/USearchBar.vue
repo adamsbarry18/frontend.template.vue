@@ -63,7 +63,7 @@
 <script setup lang="ts">
   import { ref, computed, useAttrs } from 'vue';
   import { debounce } from '@/libs/utils/Debounce';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   const props = defineProps({
     placeholder: {

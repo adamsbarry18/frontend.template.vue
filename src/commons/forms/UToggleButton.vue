@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
   import { PropType, watch, onMounted } from 'vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   interface ToggleButtonOption {
     value: string | number;

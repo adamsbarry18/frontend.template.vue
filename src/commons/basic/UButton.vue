@@ -30,7 +30,7 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
   import { waitForMilliseconds } from '../../libs/utils/Time';
-  import IconBase from '../icones/IconBase.vue';
+  import IconBase from '../icons/IconBase.vue';
 
   const props = defineProps({
     type: {

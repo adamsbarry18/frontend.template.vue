@@ -51,7 +51,7 @@
 <script lang="ts" setup>
   import { ref, computed, watch } from 'vue';
   import { ElUpload } from 'element-plus';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
   import { useNumbers } from '@/composabes/useNumbers';
   import i18n from '@/i18n';
 

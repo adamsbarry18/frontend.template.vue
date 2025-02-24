@@ -1,6 +1,6 @@
 import UCard from '@/commons/layout/UCard.vue';
 import UButton from '@/commons/basic/UButton.vue';
-import IconBase from '@/commons/icones/IconBase.vue';
+import IconBase from '@/commons/icons/IconBase.vue';
 import { ref } from 'vue';
 
 export default {

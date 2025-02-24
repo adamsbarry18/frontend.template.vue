@@ -25,7 +25,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import UTooltip from '@/commons/others/UTooltip.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   interface IMultiActionItem {
     label: string;

@@ -98,7 +98,7 @@
   import { ref, computed, watch, onMounted } from 'vue';
   import { debounce } from '@/libs/utils/Debounce.js';
   import UTooltip from '@/commons/others/UTooltip.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
   import { MIN_INT, MAX_INT } from '@/libs/utils/constants';
 
   // Déclaration des props en utilisant l'objet

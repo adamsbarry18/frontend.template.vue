@@ -16,7 +16,17 @@ export default defineConfig({
       name: 'MyDesignSystem',
     },
     rollupOptions: {
-      external: [/^@storybook\//],
+      external: [
+        /^@storybook\//,
+        'element-plus',
+        'element-plus/lib/locale/lang/fr',
+        'element-plus/lib/locale/lang/en',
+        'element-plus/lib/locale',
+        'vue',
+      ],
     },
+  },
+  esbuild: {
+    keepNames: true,
   },
 });

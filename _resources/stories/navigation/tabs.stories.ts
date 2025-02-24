@@ -1,8 +1,8 @@
 import UButton from '@/commons/basic/UButton.vue';
-import IconBase from '@/commons/icones/IconBase.vue';
+import IconBase from '@/commons/icons/IconBase.vue';
 import UTabPane from '@/commons/navigation/UTabPane.vue';
 import UTabs from '@/commons/navigation/UTabs.vue';
-import URadio from '@/commons/forms/URadio.vue'; // Import URadio
+import URadio from '@/commons/forms/URadio.vue';
 import { ref } from 'vue';
 
 export default {

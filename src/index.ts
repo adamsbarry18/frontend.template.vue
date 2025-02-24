@@ -1,4 +1,5 @@
-export * from './commons/basic';
-export * from './commons/icones';
-export * from './commons/others';
-export * from './commons/navigation';
+import install from './plugins/install';
+export * from './commons';
+
+export { install };
+export default { install };

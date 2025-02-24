@@ -49,7 +49,7 @@
   import UHelpButton from '@/commons/others/UHelpButton.vue';
   import i18n from '@/i18n';
   import { computed, PropType, defineProps } from 'vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   const props = defineProps({
     list: {

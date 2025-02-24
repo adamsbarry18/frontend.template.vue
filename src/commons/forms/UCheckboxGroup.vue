@@ -46,7 +46,7 @@
   import { ref, computed, watch } from 'vue';
   import type { PropType } from 'vue';
   import UContextualMenu from '@/commons/navigation/UContextualMenu.vue';
-  import IconBase from '@/commons/icones/IconBase.vue';
+  import IconBase from '@/commons/icons/IconBase.vue';
 
   interface MenuItem {
     label: string;
