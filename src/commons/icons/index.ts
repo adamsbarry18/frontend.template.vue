@@ -303,7 +303,6 @@ export {
   IconUniversAcquisition,
   IconUniversAutomation,
   IconUniversInspiration,
-  IconUniversIa,
   IconUniversReporting,
   IconUniversDatahub,
   IconUniversStudio,
@@ -341,6 +340,5 @@ export {
   IconDelivery,
   IconEmailReceived,
   IconEmailClosed,
-  IconSmsReceived,
   IconSpam,
 };
