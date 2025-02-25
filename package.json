@@ -16,15 +16,13 @@
     "@cospired/i18n-iso-languages": "^4.2.0",
     "@storybook/addon-actions": "^8.5.3",
     "@storybook/addon-links": "^8.5.3",
-    "@sxzz/popperjs-es": "^2.11.7",
     "dayjs": "^1.11.13",
     "element-plus": "^2.9.4",
     "i18n-iso-countries": "^7.13.0",
     "sass": "^1.84.0",
     "tinycolor2": "^1.6.0",
     "vue": "^3.5.13",
-    "vue-i18n": "^10.0.5",
-    "vue3-popper": "^1.5.0"
+    "vue-i18n": "^10.0.5"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",

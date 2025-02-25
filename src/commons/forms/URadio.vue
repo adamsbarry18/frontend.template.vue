@@ -14,20 +14,19 @@
       :disabled="disabled || option.disabled"
       :class="{ '-disabled': disabled || option.disabled }"
     >
-      <template v-if="$slots[`option-${option.value}`]">
-        <slot :name="`option-${option.value}`" />
-      </template>
-      <template v-else>
-        {{ option.label }}
-      </template>
-      <span v-if="option.optionalLabel" class="optional-label">
-        {{ option.optionalLabel }}
-      </span>
-      <u-info v-if="option.info" placement="right">
-        <div v-html="option.info" />
-      </u-info>
-      <div v-if="option.description" class="description">
-        {{ option.description }}
+      <div class="radio-content">
+        <slot :name="`option-${option.value}`">
+          {{ option.label || ' ' }}
+        </slot>
+        <span v-if="option.optionalLabel" class="optional-label">
+          {{ option.optionalLabel }}
+        </span>
+        <u-info v-if="option.info" placement="right">
+          <div v-html="option.info" />
+        </u-info>
+        <div v-if="option.description" class="description">
+          {{ option.description }}
+        </div>
       </div>
     </el-radio>
   </el-radio-group>

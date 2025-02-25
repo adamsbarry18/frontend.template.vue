@@ -23,7 +23,6 @@
   const props = defineProps({
     modelValue: {
       type: [String, Number],
-      required: true,
     },
     type: {
       type: String as PropType<'card' | 'border-card' | ''>,
@@ -57,7 +56,7 @@
 
   // Use a computed property for v-model compatibility
   const activeTab = computed({
-    get: () => props.modelValue.toString(),
+    get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value),
   });
 

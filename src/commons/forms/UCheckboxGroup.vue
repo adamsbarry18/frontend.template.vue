@@ -58,7 +58,7 @@
 
   // Props du composant
   const props = defineProps({
-    modelValue: { type: Array as PropType<any[]>, required: true },
+    modelValue: { type: Array as PropType<any[]> },
     options: { type: Array as PropType<any[]>, required: true },
     direction: { type: String, default: 'row' },
   });

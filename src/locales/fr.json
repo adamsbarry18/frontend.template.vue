@@ -86,5 +86,13 @@
   "commons.taginput.too-much-elements.tooltip": "Vous ne pouvez pas ajouter plus d'éléments, car vous avez atteint la limite de {limit}",
   "commons.autocomplete.no-result": "<Pas de résultat>",
   "commons.cascader.default-placeholder": "Rechercher...",
-  "commons.last-process": "Dernier calcul :"
+  "commons.last-process": "Dernier calcul :",
+  "commons.filter.date-range.prompt": "Ajouter une date de début - fin :",
+  "commons.filter.number-range.prompt": "Ajouter une valeur min - max :",
+  "commons.filter.filter-list.clear": "Tout effacer",
+  "commons.searchbar.default-list": "Rechercher dans la liste...",
+  "commons.filter.filter-list.title": "Filtres",
+  "commons.filter.item-count": "{count} résultat | {count} résultats",
+  "commons.list.filters": "Filtres",
+  "commons.filter-no-value": "(non défini)"
 }

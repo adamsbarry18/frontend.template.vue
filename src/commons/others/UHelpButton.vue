@@ -1,12 +1,18 @@
 <template>
   <div class="u-help-button">
-    <el-popover :placement="placement" :width="width" :trigger="trigger">
+    <u-popper
+      :title="title"
+      :placement="placement"
+      :width="width"
+      :trigger="trigger"
+    >
       <template #reference>
         <div class="help-trigger">
           <span v-if="hasLabel" class="u-help-label">
-            {{ $t('commons.help') }}</span
-          >
+            {{ $t('commons.help') ?? 'Help' }}
+          </span>
           <icon-base
+            v-if="withIcon"
             class="-button-like"
             :color="
               active ? 'var(--color-primary-500)' : 'var(--color-neutral-700)'
@@ -16,25 +22,24 @@
           />
         </div>
       </template>
-      <div class="popper-content">
-        <slot />
-      </div>
-    </el-popover>
+      <slot />
+    </u-popper>
   </div>
 </template>
 
-<script lang="ts" setup>
-  import { ElPopover, Placement, TooltipTriggerType } from 'element-plus';
+<script setup lang="ts">
+  import UPopper from '@/commons/others/UPopper.vue';
   import IconBase from '@/commons/icons/IconBase.vue';
+  import { Placement, TooltipTriggerType } from 'element-plus';
 
-  defineProps({
-    placement: {
-      type: String as () => Placement,
-      default: 'right',
-    },
+  const props = defineProps({
     title: {
       type: String,
       default: '',
+    },
+    placement: {
+      type: String as () => Placement,
+      default: 'right',
     },
     width: {
       type: [String, Number],
@@ -56,6 +61,10 @@
       type: Boolean,
       default: false,
     },
+    withIcon: {
+      type: Boolean,
+      default: true,
+    },
   });
 </script>
 
@@ -67,26 +76,6 @@
 
     .u-help-label {
       margin-right: 8px;
-      font-size: var(--paragraph-03);
-    }
-  }
-  .popper-content {
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    word-wrap: break-word;
-    margin-top: 5px;
-    width: v-bind(width);
-    cursor: initial;
-
-    p,
-    b,
-    i,
-    a,
-    span,
-    strong,
-    ul,
-    li {
       font-size: var(--paragraph-03);
     }
   }

@@ -26,7 +26,7 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
   import IconBase from '@/commons/icons/IconBase.vue';
-  import * as Icons from '../../../src/commons/icons';
+  import * as Icons from '@/commons/icons';
 
   const props = defineProps<{
     prefix?: string;

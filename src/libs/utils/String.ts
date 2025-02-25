@@ -18,6 +18,19 @@ export const isUrlValid = (value: string): boolean => {
   }
 };
 
+export function formatBool(
+  value: boolean | null | undefined,
+  config: { trueLabel?: string; falseLabel?: string }
+): string {
+  if (value === true) {
+    return config.trueLabel ?? i18n.global.t('commons.yes');
+  }
+  if (value === false) {
+    return config.falseLabel ?? i18n.global.t('commons.no');
+  }
+  return '-';
+}
+
 // Function to generate a unique ID
 export const generateUID = (nbParam: number = 10): string => {
   let mask = '';
