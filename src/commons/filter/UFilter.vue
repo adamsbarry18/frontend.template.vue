@@ -5,7 +5,7 @@
         v-model="searchBuffer"
         icon-position="left"
         icon-color="var(--color-neutral-800)"
-        placeholder="Rechercher..."
+        :placeholder="t('commons.searchbar.default-list')"
         @change="onSearchChanged"
       />
       <span
@@ -18,13 +18,20 @@
           :size="20"
           color="var(--color-neutral-800)"
         />
-        <p>Effacer</p>
+        <p>{{ t('commons.filter.filter-list.clear') }}</p>
       </span>
     </div>
     <div class="filter-list">
       <div class="list-label">
-        <h4>Filtres</h4>
-        <span>({{ dataCount }})</span>
+        <h4>{{ t('commons.filter.filter-list.title') }}</h4>
+        <span
+          >({{
+            t('commons.filter.item-count', {
+              count: dataCount,
+              plural: dataCount,
+            })
+          }})</span
+        >
       </div>
       <div class="wrapper-filter">
         <u-filter-item
@@ -65,11 +72,15 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
   import USearchBar from '@/commons/others/USearchBar.vue';
   import UButton from '@/commons/basic/UButton.vue';
   import UFilterItem from '@/commons/filter/UFilterItem.vue';
   import UAddFilterPopper from './UAddFilterPopper.vue';
   import IconBase from '../icons/IconBase.vue';
+
+  // Import useI18n and destructure t and tc
+  const { t } = useI18n();
 
   const props = defineProps({
     modelValue: {

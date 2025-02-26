@@ -94,5 +94,7 @@
   "commons.filter.filter-list.title": "Filtres",
   "commons.filter.item-count": "{count} résultat | {count} résultats",
   "commons.list.filters": "Filtres",
-  "commons.filter-no-value": "(non défini)"
+  "commons.filter-no-value": "(non défini)",
+  "commons.filter.resume-actives": "Filtres actifs",
+  "commons.filter.resume-delete": "Effacer les filtres"
 }

@@ -1,6 +1,5 @@
 <template>
-  <UPopper v-model:visible="visible" placement="bottom-start">
-    <!-- Le slot "reference" est laissé vide (la référence sera gérée par le parent) -->
+  <u-popper v-model:visible="visible" placement="bottom-start">
     <div class="u-add-filter-popper u-popper">
       <div
         v-for="key in filterKeys"
@@ -11,11 +10,11 @@
         {{ config[key].label }}
       </div>
     </div>
-  </UPopper>
+  </u-popper>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, defineExpose } from 'vue';
+  import { ref, computed } from 'vue';
   import UPopper from '../others/UPopper.vue';
 
   const props = defineProps({
@@ -52,12 +51,7 @@
     display: flex;
     flex-direction: column;
     justify-items: center;
-    margin-top: 5px;
-    border: solid 1px var(--color-neutral-100);
-    box-shadow: 0 0px 10px 1px rgba(47, 50, 76, 0.15);
-    background-color: var(--color-background-white);
     cursor: pointer;
-    padding: 5px 0;
     width: 225px;
     .filter-button {
       background-color: transparent;

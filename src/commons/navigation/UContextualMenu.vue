@@ -68,16 +68,7 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    ref,
-    computed,
-    onMounted,
-    onBeforeUnmount,
-    defineProps,
-    defineEmits,
-    defineExpose,
-    PropType,
-  } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount, PropType } from 'vue';
   import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
   import UPulser from '@/commons/others/UPulser.vue';
   import IconBase from '@/commons/icons/IconBase.vue';

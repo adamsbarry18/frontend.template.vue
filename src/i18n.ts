@@ -82,7 +82,7 @@ const dateTimeFormats = {
       hour12: false,
     },
   },
-};
+} as const;
 
 const numberFormatsI18n = {
   'en-US': {
@@ -156,7 +156,7 @@ const i18n = createI18n({
     'en-US': enLocale,
     'fr-FR': frLocale,
   },
-  dateTimeFormats,
+  datetimeFormats: dateTimeFormats,
   numberFormatsI18n,
 });
 

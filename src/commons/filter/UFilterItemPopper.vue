@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, defineExpose } from 'vue';
+  import { ref } from 'vue';
   import UPopper from '../others/UPopper.vue';
 
   const visible = ref(false);
