@@ -96,5 +96,9 @@
   "commons.list.filters": "Filtres",
   "commons.filter-no-value": "(non défini)",
   "commons.filter.resume-actives": "Filtres actifs",
-  "commons.filter.resume-delete": "Effacer les filtres"
+  "commons.filter.resume-delete": "Effacer les filtres",
+  "commons.copied": "Copié !",
+  "commons.copy-to-clipboard": "Copier dans le presse-papier",
+  "commons.treeview.no-data": "Aucune donnée",
+  "commons.entity-tag.none": "-"
 }

@@ -6,6 +6,8 @@ import UFilterItemEnum from './types/UFilterItemEnum.vue';
 import UFilterItemNumberrange from './types/UFilterItemNumberrange.vue';
 import UAddFilterPopper from './UAddFilterPopper.vue';
 import UFilterItemPopper from './UFilterItemPopper.vue';
+import UFilterResume from './UFilterResume.vue';
+import UTagListFilter from './UTagListFilter.vue';
 
 export {
   UFilter,
@@ -16,4 +18,6 @@ export {
   UFilterItemNumberrange,
   UAddFilterPopper,
   UFilterItemPopper,
+  UTagListFilter,
+  UFilterResume,
 };

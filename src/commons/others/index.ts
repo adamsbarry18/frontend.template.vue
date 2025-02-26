@@ -12,6 +12,10 @@ import UProgressBar from '@/commons/others/UProgressBar.vue';
 import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
 import UPulser from '@/commons/others/UPulser.vue';
 import UActionButtonBar from '@/commons/others/UActionButtonBar.vue';
+import UPopper from './UPopper.vue';
+import UIconCount from './UIconCount.vue';
+import UCopyToClipboardButton from './UCopyToClipboardButton.vue';
+import UEntityTagSummary from './UEntityTagSummary.vue';
 
 export {
   UHelpButton,
@@ -28,4 +32,8 @@ export {
   UShortcutSubscriber,
   UPulser,
   UActionButtonBar,
+  UPopper,
+  UIconCount,
+  UCopyToClipboardButton,
+  UEntityTagSummary,
 };
