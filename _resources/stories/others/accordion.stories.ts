@@ -1,12 +1,13 @@
 import UAccordion from '@/commons/others/UAccordion.vue';
 import UAccordionItem from '@/commons/others/UAccordionItem.vue';
+import IconBase from '@/commons/icons/IconBase.vue';
 
 export default {
   title: 'Others/Accordion',
 };
 
 export const Accordion = () => ({
-  components: { UAccordion, UAccordionItem },
+  components: { UAccordion, UAccordionItem, IconBase },
   template: `
     <div style="background-color: white; width: 232px; height: 450px">
       <u-accordion v-model="activeItem" @change="onChange">

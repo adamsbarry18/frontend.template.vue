@@ -100,5 +100,12 @@
   "commons.copied": "Copié !",
   "commons.copy-to-clipboard": "Copier dans le presse-papier",
   "commons.treeview.no-data": "Aucune donnée",
-  "commons.entity-tag.none": "-"
+  "commons.entity-tag.none": "-",
+  "commons.code-editor.search.select-all": "Tout sélectionner",
+  "commons.code-editor.search.find": "Chercher",
+  "commons.code-editor.search.replace": "Remplacer",
+  "commons.code-editor.search.replace-all": "Tout remplacer",
+  "commons.code-editor.search.match-case": "Respecter la casse",
+  "commons.code-editor.search.regexp": "Regexp",
+  "commons.code-editor.search.by-word": "Mot entier"
 }

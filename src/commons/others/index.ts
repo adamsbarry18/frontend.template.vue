@@ -16,6 +16,8 @@ import UPopper from './UPopper.vue';
 import UIconCount from './UIconCount.vue';
 import UCopyToClipboardButton from './UCopyToClipboardButton.vue';
 import UEntityTagSummary from './UEntityTagSummary.vue';
+import UCascaderMenu from './UCascaderMenu.vue';
+import UCodeEditor from './UCodeEditor.vue';
 
 export {
   UHelpButton,
@@ -36,4 +38,6 @@ export {
   UIconCount,
   UCopyToClipboardButton,
   UEntityTagSummary,
+  UCascaderMenu,
+  UCodeEditor,
 };
