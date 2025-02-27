@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-  import { defineProps, useSlots } from 'vue';
+  import { useSlots } from 'vue';
   import UHelpButton from '@/commons/others/UHelpButton.vue';
 
   defineProps({

@@ -1,28 +1,3 @@
-<script setup lang="ts">
-  import { reactive, ref } from 'vue';
-  import UButton from './commons/basic/UButton.vue';
-  const value1 = ref(true);
-  const isActive = ref(false);
-  const seletedDate = ref(null);
-  const value = ref('je suis clicked');
-  const handleClick = () => {
-    alert(value.value);
-  };
-  import { ElMessage, ElMessageBox } from 'element-plus';
-
-  const open = () => {
-    ElMessageBox.confirm(
-      'proxy will permanently delete the file. Continue?',
-      'Warning',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'success',
-      }
-    );
-  };
-</script>
-
 <template>
   <div class="demo">
     <h1>u-button Examples</h1>
@@ -51,8 +26,34 @@
         >Modifier</u-button
       >
     </div>
+    <router-view />
   </div>
 </template>
+
+<script setup lang="ts">
+  import { reactive, ref } from 'vue';
+  import UButton from './commons/basic/UButton.vue';
+  const value1 = ref(true);
+  const isActive = ref(false);
+  const seletedDate = ref(null);
+  const value = ref('je suis clicked');
+  const handleClick = () => {
+    alert(value.value);
+  };
+  import { ElMessage, ElMessageBox } from 'element-plus';
+
+  const open = () => {
+    ElMessageBox.confirm(
+      'proxy will permanently delete the file. Continue?',
+      'Warning',
+      {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'success',
+      }
+    );
+  };
+</script>
 
 <style scoped>
   .demo {

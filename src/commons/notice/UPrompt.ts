@@ -5,7 +5,7 @@ export default function uPrompt(
   title: string = '',
   optionsParam: ElMessageBoxOptions = {}
 ) {
-  let options: ElMessageBoxOptions = { ...optionsParam };
+  const options: ElMessageBoxOptions = { ...optionsParam };
   options.customClass = 'u-msg-box';
 
   return ElMessageBox.prompt(text, title, options);

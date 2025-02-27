@@ -85,7 +85,7 @@
   "commons.taginput.filters": "Filtres :",
   "commons.taginput.too-much-elements.tooltip": "Vous ne pouvez pas ajouter plus d'éléments, car vous avez atteint la limite de {limit}",
   "commons.autocomplete.no-result": "<Pas de résultat>",
-  "commons.cascader.default-placeholder": "Rechercher...",
+  "commons.searchbar.default-placeholder": "Rechercher...",
   "commons.last-process": "Dernier calcul :",
   "commons.filter.date-range.prompt": "Ajouter une date de début - fin :",
   "commons.filter.number-range.prompt": "Ajouter une valeur min - max :",
@@ -97,6 +97,15 @@
   "commons.filter-no-value": "(non défini)",
   "commons.filter.resume-actives": "Filtres actifs",
   "commons.filter.resume-delete": "Effacer les filtres",
+  "commons.list.empty": "Aucun élément à afficher",
+  "commons.list.empty.filters.clear": "Vous avez {filterCount} filtres actifs. <b><u>Effacer les filtres</u></b>",
+  "commons.list.results": "Résultats : {minResult} - {maxResult} sur {total}",
+  "commons.list.results.empty": "Aucun résultat",
+  "commons.list-entities-count": "{count} élément | {count} éléments",
+  "commons.list-selected-entities-count": "Aucun élément sélectionné | {count} élément sélectionné | {count} éléments sélectionnés",
+  "commons.element-count": "{count} élément sélectionné | {count} éléments sélectionnés",
+  "commons.element-count-all-selected": "Tous les {count} éléments sont sélectionnés",
+  "commons.element-count-all": "Sélectionnez les {count} éléments",
   "commons.copied": "Copié !",
   "commons.copy-to-clipboard": "Copier dans le presse-papier",
   "commons.treeview.no-data": "Aucune donnée",
@@ -107,5 +116,6 @@
   "commons.code-editor.search.replace-all": "Tout remplacer",
   "commons.code-editor.search.match-case": "Respecter la casse",
   "commons.code-editor.search.regexp": "Regexp",
-  "commons.code-editor.search.by-word": "Mot entier"
+  "commons.code-editor.search.by-word": "Mot entier",
+  "commons.column-settings.column-locked": "Toujours affiché"
 }

@@ -9,27 +9,32 @@ A comprehensive Vue 3 design system with a rich set of components and utilities.
 ## 📚 Component Library
 
 ### Basic Components
+
 - `UButton` - Customizable button component
 - `UMultiActionButton` - Button with multiple actions
 - `UMultiActionPopper` - Popper for multi-action components
 
 ### Form Components
+
 - Input Controls: `UNumberInput`, `UPasswordInput`, `UColorPicker`
 - Selection: `URadio`, `USelectGroup`, `USwitch`
 - Date & Time: `UDatePicker`, `UTimePicker`
 - Others: `USlider`, `UUploader`
 
 ### Navigation
+
 - `UTabTitle` - Tab navigation component
 - `UWizardNav` - Wizard navigation interface
 
 ### Notice Components
+
 - `UMessage` - Toast messages
 - `UMessageBox` - Modal message boxes
 - `UConfirm` - Confirmation dialogs
 - `UPrompt` - User input prompts
 
 ### Other Components
+
 - Layout: `UAccordion`, `UDialog`
 - Feedback: `ULoader`, `UProgressBar`
 - Information: `UTooltip`, `UTag`, `UInfo`
@@ -62,6 +67,7 @@ src/
 ## 🎨 Theming
 
 Customizable themes using SCSS variables:
+
 ```scss
 @import '@/assets/style/themes/colors.scss';
 @import '@/assets/style/themes/font.scss';
@@ -83,6 +89,7 @@ npm run format
 ## 📖 Documentation
 
 Component documentation and examples available in Storybook:
+
 ```bash
 npm run storybook
 ```
@@ -90,6 +97,7 @@ npm run storybook
 ## 🌐 i18n Support
 
 Supported languages:
+
 - English (en)
 - French (fr)
 

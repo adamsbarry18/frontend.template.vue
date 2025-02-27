@@ -38,9 +38,6 @@
     (event: 'page-change', page: number): void;
   }>();
 
-  // Référence à l'instance de ElPagination
-  const elPagination = ref<InstanceType<typeof ElPagination> | null>(null);
-
   // État réactif pour la page courante
   const currentPage = ref(props.defaultPage);
 
@@ -56,30 +53,33 @@
     emit('page-change', page);
   };
 
-  // Synchronisation avec defaultPage et total
   watch(
-    () => props.defaultPage,
-    (newDefaultPage) => {
-      currentPage.value = newDefaultPage;
-    }
+    [() => props.defaultPage, () => props.total],
+    () => {
+      onDefaultPageChange();
+      onTotalChange();
+    },
+    { immediate: true }
   );
 
-  watch(
-    () => props.total,
-    () => {
-      if (
-        elPagination.value &&
-        (elPagination.value as any).internalCurrentPage !== currentPage.value
-      ) {
-        (elPagination.value as any).internalCurrentPage = currentPage.value;
-      }
+  function onDefaultPageChange() {
+    currentPage.value = props.defaultPage;
+  }
+
+  function onTotalChange() {
+    const maxPage = Math.ceil(props.total / props.size);
+    if (currentPage.value > maxPage) {
+      currentPage.value = maxPage;
+      emit('page-change', maxPage);
     }
-  );
+  }
 
   // Initialisation au montage
   onMounted(() => {
     currentPage.value = props.defaultPage;
   });
+
+  defineExpose({ currentPage });
 </script>
 
 <style lang="scss">

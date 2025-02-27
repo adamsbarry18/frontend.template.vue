@@ -2,7 +2,7 @@ import { ElMessage, MessageOptions } from 'element-plus';
 import { getCssVariable } from '@/libs/utils/Style';
 
 export default function uMessage(optionsParam: MessageOptions = {}) {
-  let options: MessageOptions = { ...optionsParam };
+  const options: MessageOptions = { ...optionsParam };
 
   options.customClass = options.customClass
     ? `${options.customClass} u-message`

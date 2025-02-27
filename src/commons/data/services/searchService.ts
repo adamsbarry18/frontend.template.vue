@@ -32,7 +32,7 @@ const SEARCH_DEFAULTS: SearchServiceSettings = {
   filterConfig: {},
   filterPanelActive: false,
   filters: {},
-  placeholder: i18n.global.t('searchbar.default-placeholder'),
+  placeholder: i18n.global.t('commons.searchbar.default-placeholder'),
 };
 
 export default class SearchService {

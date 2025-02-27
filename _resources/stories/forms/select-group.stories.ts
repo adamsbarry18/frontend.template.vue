@@ -185,7 +185,6 @@ export const SelectGroup = () => ({
     const customRenderValue = ref(null);
     const noOptionsValue = ref(null);
     const longTextValue = ref(null);
-    const dataNavValue = ref(null);
 
     const simpleOptions = [
       { label: 'Option 1', value: 'option1' },
@@ -268,7 +267,6 @@ export const SelectGroup = () => ({
       customRenderValue,
       noOptionsValue,
       longTextValue,
-      dataNavValue,
       simpleOptions,
       groupedOptions,
       optionsWithIcons,

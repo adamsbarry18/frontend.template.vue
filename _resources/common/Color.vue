@@ -8,7 +8,11 @@
         navigate through the interface.
       </p>
     </div>
-    <u-tabs class="blocks-wrapper" mode="new" :active-index.sync="activeIndex">
+    <u-tabs
+      class="blocks-wrapper"
+      mode="new"
+      v-model:active-index="activeIndex"
+    >
       <u-tab-pane
         label="Base colors"
         index="1"

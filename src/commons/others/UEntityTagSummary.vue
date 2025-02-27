@@ -30,12 +30,14 @@
         tooltip-class="tag-list-tooltip"
       >
         <div>+{{ hiddenTags.length }}</div>
-        <div slot="content">
-          <div v-for="tag in hiddenTags" :key="tag.id" class="tag-row">
-            <icon-base icon="icon-tag" :size="16" :color="tag.color" />
-            <span> {{ tag.name }}</span>
+        <template v-slot:content>
+          <div>
+            <div v-for="tag in hiddenTags" :key="tag.id" class="tag-row">
+              <icon-base icon="icon-tag" :size="16" :color="tag.color" />
+              <span> {{ tag.name }}</span>
+            </div>
           </div>
-        </div>
+        </template>
       </u-tooltip>
     </div>
   </div>

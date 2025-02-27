@@ -49,7 +49,7 @@
   const props = defineProps({
     placeholder: {
       type: String,
-      default: i18n.global.t('commons.cascader.default-placeholder'),
+      default: i18n.global.t('commons.searchbar.default-placeholder'),
     },
     options: {
       type: Array as PropType<any[]>,

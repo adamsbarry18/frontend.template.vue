@@ -106,7 +106,7 @@ export function useNumbers() {
     let suffix: string = '';
     let isReducedNumberZero: boolean = false;
     // Use .value to get the string locale from WritableComputedRef
-    let currentLocale: string = i18n.global.locale.value;
+    const currentLocale: string = i18n.global.locale.value;
     const i18nOptions: Intl.NumberFormatOptions = {};
 
     const {

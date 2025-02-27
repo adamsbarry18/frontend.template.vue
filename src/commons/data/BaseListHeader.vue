@@ -48,7 +48,7 @@
         v-show="filterPanelActive"
         v-model="searchService.getFilters"
         :datu-count="paginationService.itemsTotal"
-        :search.sync="searchService.getInput"
+        v-model:search="searchService.getInput"
         :config="searchService.getFilterConfig"
         @collapse="searchService.setFilterPanelActive = false"
         @change="onFilterChange"
@@ -63,6 +63,7 @@
   import UFilter from '@/commons/filter/UFilter.vue';
   import USelectGroup from '@/commons/forms/USelectGroup.vue';
   import ListService from './services/listService';
+  import IconBase from '../icons/IconBase.vue';
 
   // Typage des props
   interface Props {

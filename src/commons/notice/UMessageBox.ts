@@ -12,7 +12,7 @@ async function uMessageBox(
   optionsParam: ElMessageBoxOptions = {}
 ): Promise<MessageBoxData> {
   pauseShortcutManager();
-  let options: ElMessageBoxOptions = { ...optionsParam };
+  const options: ElMessageBoxOptions = { ...optionsParam };
 
   if (!options.customClass) {
     options.customClass = 'u-msg-box';

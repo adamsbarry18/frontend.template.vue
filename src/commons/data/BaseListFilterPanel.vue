@@ -4,7 +4,7 @@
       v-show="filterPanelActive"
       v-model="filter"
       :data-count="currentTotal"
-      :search.sync="searchBarInput"
+      v-model:search="searchBarInput"
       :config="filterConfig"
       @collapse="filterPanelActive = false"
       @change="onFilterChange"
@@ -13,8 +13,8 @@
 </template>
 
 <script seup lang="ts">
+  import UFilter from '@/commons/filter/UFilter.vue';
   import SearchService from './services/searchService';
-  import UFilter from '../filter/UFilter.vue';
 
   defineProps({
     searchService: {

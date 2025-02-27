@@ -85,7 +85,7 @@
   "commons.taginput.filters": "Filters:",
   "commons.taginput.too-much-elements.tooltip": "You can't add more elements because you reached the limit of {limit}",
   "commons.autocomplete.no-result": "<No results>",
-  "commons.cascader.default-placeholder": "Search...",
+  "commons.searchbar.default-placeholder": "Search...",
   "commons.last-process": "Last process:",
   "commons.filter.date-range.prompt": "Set a start date - end date:",
   "commons.filter.number-range.prompt": "Set a min - max value:",
@@ -94,6 +94,15 @@
   "commons.filter.filter-list.title": "Filters",
   "commons.filter.item-count": "{count} result | {count} results",
   "commons.list.filters": "Filters",
+  "commons.list.empty": "No element to display",
+  "commons.list.empty.filters.clear": "You have {filterCount} active filters. <b><u>Clear all filters</u></b>",
+  "commons.list.results": "Results: {minResult} - {maxResult} of {total}",
+  "commons.list.results.empty": "No results",
+  "commons.list-entities-count": "{count} entity | {count} entities",
+  "commons.list-selected-entities-count": "No entity selected | {count} entity selected | {count} entities selected",
+  "commons.element-count": "{count} selected element | {count} selected elements",
+  "commons.element-count-all-selected": "All {count} elements selected",
+  "commons.element-count-all": "Select all {count} elements",
   "commons.filter-no-value": "(no value)",
   "commons.filter.resume-actives": "Active filters",
   "commons.filter.resume-delete": "Clear filters",
@@ -107,5 +116,6 @@
   "commons.code-editor.search.replace-all": "Replace all",
   "commons.code-editor.search.match-case": "Match case",
   "commons.code-editor.search.regexp": "Regexp",
-  "commons.code-editor.search.by-word": "By word"
+  "commons.code-editor.search.by-word": "By word",
+  "commons.column-settings.column-locked": "Always displayed"
 }

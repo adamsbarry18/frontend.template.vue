@@ -35,8 +35,8 @@ export const WizardNav = () => ({
     </div>
   `,
   setup() {
-    let activeStep = ref(1);
-    let stepsCount = ref(5);
+    const activeStep = ref(1);
+    const stepsCount = ref(5);
     const onBack = () => {
       activeStep.value = Math.max(0, activeStep.value - 1);
     };

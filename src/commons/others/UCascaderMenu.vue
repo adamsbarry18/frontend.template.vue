@@ -34,7 +34,7 @@
   }
 
   const props = withDefaults(defineProps<Props>(), {
-    placeholder: () => i18n.global.t('commons.cascader.default-placeholder'),
+    placeholder: () => i18n.global.t('commons.searchbar.default-placeholder'),
     options: () => [],
     input: undefined,
     allowParentSelection: false,

@@ -9,7 +9,7 @@
       </template>
     </base-list-header>
 
-    <div v-loading="loading" class="u-list-container">
+    <div class="u-list-container">
       <slot name="items" :items="items">
         <div v-for="(item, key) in items" :key="key">
           <slot name="item" :item="item" />
@@ -60,7 +60,6 @@
 
   const items = ref<any[]>([]);
   const loading = ref(true);
-  const paginationRef = ref<InstanceType<typeof UListPagination> | null>(null);
 
   const pagination = computed(() => props.listService?.getPagination || null);
   const search = computed(() => props.listService?.getSearch || null);
@@ -74,8 +73,13 @@
   }
 
   async function onFilterChange() {
-    if (props.listService) {
-      items.value = (await props.listService.onFilterChange()) || [];
+    items.value = (await props.listService.onFilterChange()) || [];
+    const paginationRef = ref<InstanceType<typeof UListPagination> | null>(
+      null
+    );
+    if (paginationRef.value) {
+      paginationRef.value.currentPage =
+        props.listService.getPagination.getPageNumber;
     }
   }
 
