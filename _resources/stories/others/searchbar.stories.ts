@@ -12,11 +12,11 @@ export const Search = () =>
     template: `
       <div>
         <!-- Cas 1 : Barre de recherche simple -->
-        <u-search-bar @search="handleSearch"></u-search-bar>
+        <u-search-bar v-model="value" @change="handleSearch"></u-search-bar>
         <br />
 
         <!-- Cas 2 : Barre de recherche avec v-model -->
-        <u-search-bar v-model="value" @keyup.enter.native="handleSearch" @search="handleSearch"></u-search-bar>
+        <u-search-bar v-model="value" @keyup="handleSearch" @search="handleSearch"></u-search-bar>
         <br />
 
         <!-- Cas 3 : Placement de l'icône à gauche -->
@@ -81,7 +81,7 @@ export const Search = () =>
     },
     methods: {
       handleSearch() {
-        alert(`Recherche effectuée : ${this.value}`);
+        console.log(`Recherche effectuée : ${this.value}`);
       },
       handleFocus() {
         console.log('Input focused');

@@ -1,5 +1,5 @@
 import UButton from '@/commons/basic/UButton.vue';
-import UMultiActionPopper from '@/commons/basic/UMultiActionPopper.vue';
 import UMultiActionButton from '@/commons/basic/UMultiActionButton.vue';
+import USplitButton from './USplitButton.vue';
 
-export { UButton, UMultiActionPopper, UMultiActionButton };
+export { UButton, UMultiActionButton, USplitButton };

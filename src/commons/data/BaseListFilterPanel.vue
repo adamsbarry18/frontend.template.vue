@@ -3,8 +3,8 @@
     <u-filter
       v-show="filterPanelActive"
       v-model="filter"
-      :data-count="currentTotal"
-      v-model:search="searchBarInput"
+      :datu-count="currentTotal"
+      :search.sync="searchBarInput"
       :config="filterConfig"
       @collapse="filterPanelActive = false"
       @change="onFilterChange"
@@ -12,15 +12,40 @@
   </transition>
 </template>
 
-<script seup lang="ts">
+<script setup lang="ts">
+  import { computed } from 'vue';
   import UFilter from '@/commons/filter/UFilter.vue';
   import SearchService from './services/searchService';
 
-  defineProps({
-    searchService: {
-      type: SearchService,
-      required: false,
-      default: null,
-    },
+  const props = defineProps<{
+    searchService: SearchService | null;
+  }>();
+
+  const emit = defineEmits<{
+    (e: 'filter-change'): void;
+  }>();
+
+  const filterPanelActive = computed(() => {
+    return props.searchService?.filterPanelActive || false;
   });
+
+  const filter = computed(() => {
+    return props.searchService?.filters || {};
+  });
+
+  const currentTotal = computed(() => {
+    return 0;
+  });
+
+  const searchBarInput = computed(() => {
+    return props.searchService?.input || '';
+  });
+
+  const filterConfig = computed(() => {
+    return props.searchService?.filterConfig || {};
+  });
+
+  function onFilterChange() {
+    emit('filter-change');
+  }
 </script>

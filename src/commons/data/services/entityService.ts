@@ -1,29 +1,30 @@
-interface EntitySettings {
-  entityLabelKey: string;
-  entityIcon: string;
+interface EntityServiceSettings {
+  entityLabelKey?: string;
+  entityIcon?: string;
 }
 
-const ENTITY_DEFAULTS: EntitySettings = {
+const entityDefaults: EntityServiceSettings = {
   entityLabelKey: 'commons.list-entities-count',
   entityIcon: 'icon-object',
 };
 
 export default class EntityService {
-  private readonly entityLabelKey: string;
-  private readonly entityIcon: string;
+  private _entityLabelKey: string;
+  private _entityIcon: string;
 
-  constructor(settings: Partial<EntitySettings> = {}) {
-    const mergedSettings: EntitySettings = { ...ENTITY_DEFAULTS, ...settings };
+  constructor(settings: EntityServiceSettings = entityDefaults) {
+    // Fixed the object assignment to avoid mutating defaults
+    const mSettings = Object.assign({}, entityDefaults, settings);
 
-    this.entityLabelKey = mergedSettings.entityLabelKey;
-    this.entityIcon = mergedSettings.entityIcon;
+    this._entityLabelKey = mSettings.entityLabelKey!;
+    this._entityIcon = mSettings.entityIcon!;
   }
 
-  get getEntityLabelKey(): string {
-    return this.entityLabelKey;
+  get entityLabelKey(): string {
+    return this._entityLabelKey;
   }
 
-  get getEntityIcon(): string {
-    return this.entityIcon;
+  get entityIcon(): string {
+    return this._entityIcon;
   }
 }

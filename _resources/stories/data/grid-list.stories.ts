@@ -1,40 +1,101 @@
+import {
+  ListService,
+  PaginationService,
+  SearchService,
+  SortService,
+} from '@/commons';
 import UGridList from '@/commons/data/UGridList.vue';
-import ListService from '../../../src/commons/data/services/listService';
-import { reactive, ref } from 'vue';
-
-const emptyData: any[] = [];
+import { reactive } from 'vue';
 
 export default {
   title: 'data/GridList',
   component: UGridList,
 };
 
+const emptyData: any[] = [];
+
 export const GridList = () => ({
   components: { UGridList },
   setup() {
-    // Create instances of ListService with dummy data
-
     const data = reactive([
       { id: 1, name: 'Item 1', description: 'First item' },
-      { id: 2, name: 'Item 2', description: 'Second item' },
+      { id: 2, name: 'Item 2', description: 'Third item' },
       { id: 3, name: 'Item 3', description: 'Third item' },
     ]);
-    const dummyListService = new ListService({
+
+    const pagination = new PaginationService({ size: 12 });
+    const search = new SearchService({
+      filterPanelActive: false,
+      placeholder: 'search ...',
+    });
+    const sort = new SortService({
+      choices: [
+        {
+          label: 'most-recent',
+          prop: 'updated_time',
+          order: SortService.ORDER_DESC,
+        },
+        {
+          label: 'oldest',
+          prop: 'updated_time',
+          order: SortService.ORDER_ASC,
+        },
+        {
+          label: 'alpha asc',
+          prop: 'name',
+          order: SortService.ORDER_ASC,
+        },
+        {
+          label: 'alpha desc',
+          prop: 'name',
+          order: SortService.ORDER_DESC,
+        },
+      ],
+      defaultOrder: SortService.ORDER_DESC,
+      defaultProp: 'updated_time',
+      placeholder: 'placeholder sort',
+    });
+
+    const listService = new ListService({ pagination, search, sort, data });
+
+    const dummyListService = {
       data: data,
-      autoload: false,
-    });
-    const emptyListService = new ListService({
-      data: emptyData,
-      autoload: false,
-    });
-    return { dummyListService, emptyListService };
+      search: {
+        input: '',
+        filterConfig: {},
+        filterPanelActive: false,
+        filters: {},
+      },
+      pagination: {
+        defaultPage: 1,
+        itemsTotal: 3,
+        pageNumber: 1,
+        pageTotal: 1,
+        size: 12,
+      },
+      entity: {
+        entityLabelKey: 'commons.list-entities-count',
+        entityIcon: 'icon-object',
+      },
+      urlFilters: {},
+      sort: {
+        choices: [],
+        defaultProp: null,
+        defaultOrder: 'ascending',
+        placeholder: null,
+      },
+      retrieveDataPromise: null,
+      showCounts: true,
+      autoload: true,
+    };
+
+    return { dummyListService, listService };
   },
   template: `
     <div style="display: flex; flex-direction: column; gap: 40px; padding: 20px;">
-      <!-- Case 1: Grid List with Items -->
       <section>
         <h3>Grid List with Items</h3>
-        <u-grid-list :list-service="dummyListService" class="u-grid-list">
+        <u-grid-list :list-service="listService" class="u-grid-list">
           <template #header>
             <div style="padding: 10px; background: #f9f9f9;">
               Header: Items List
@@ -49,56 +110,6 @@ export const GridList = () => ({
           </template>
           <template #empty-label>
             <div style="padding: 20px; text-align: center;">No items found.</div>
-          </template>
-        </u-grid-list>
-      </section>
-
-      <!-- Case 2: Grid List with No Items -->
-      <section>
-        <h3>Grid List with No Items</h3>
-        <u-grid-list :list-service="emptyListService" class="u-grid-list">
-          <template #header>
-            <div style="padding: 10px; background: #f9f9f9;">
-              Header: Empty List
-            </div>
-          </template>
-          <template #item="{ item }">
-            <div style="padding: 10px; border: 1px solid #ccc; margin: 5px;">
-              {{ item }}
-            </div>
-          </template>
-          <template #empty-label>
-            <div style="padding: 20px; text-align: center;">No items to display.</div>
-          </template>
-        </u-grid-list>
-      </section>
-
-      <!-- Case 3: Static Grid List (Slots Only) -->
-      <section>
-        <h3>Static Grid List (Slots Only)</h3>
-        <u-grid-list class="u-grid-list">
-          <template #header>
-            <div style="padding: 10px; background: #f9f9f9;">
-              Static Header
-            </div>
-          </template>
-          <template #item>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-              <div style="padding: 10px; border: 1px solid #ccc; flex: 0 0 30%;">
-                Static Item 1
-              </div>
-              <div style="padding: 10px; border: 1px solid #ccc; flex: 0 0 30%;">
-                Static Item 2
-              </div>
-              <div style="padding: 10px; border: 1px solid #ccc; flex: 0 0 30%;">
-                Static Item 3
-              </div>
-            </div>
-          </template>
-          <template #empty-label>
-            <div style="padding: 20px; text-align: center;">
-              Nothing to show.
-            </div>
           </template>
         </u-grid-list>
       </section>

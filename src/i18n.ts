@@ -152,6 +152,8 @@ const i18n = createI18n({
   legacy: false,
   locale: localLanguage,
   fallbackLocale: 'en-US',
+  globalInjection: true,
+  warnHtmlMessage: false,
   messages: {
     'en-US': enLocale,
     'fr-FR': frLocale,

@@ -19,8 +19,6 @@
 <script setup lang="ts">
   import { ElPopover, Placement, TooltipTriggerType } from 'element-plus';
 
-  // type TooltipTriggerType = "hover" | "focus" | "click" | "contextmenu"
-
   defineProps({
     title: {
       type: String,
@@ -32,7 +30,7 @@
     },
     width: {
       type: [String, Number],
-      default: 360,
+      default: 'auto',
     },
     trigger: {
       type: String as () => TooltipTriggerType,
@@ -41,13 +39,29 @@
   });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+  .el-popover.el-popper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-items: center;
+    margin-top: 13px;
+    border: 1px solid var(--color-input-border);
+    border-radius: 4px;
+    box-shadow: var(--box-shadow-xl);
+    background-color: var(--color-background-white);
+  }
+
+  .el-popover.el-popper .el-popper__arrow::before {
+    border-color: var(--color-input-border);
+    background: var(--color-background-white);
+  }
+
   .popper-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     word-wrap: break-word;
-    margin-top: 5px;
     width: 100%;
     cursor: initial;
     p,

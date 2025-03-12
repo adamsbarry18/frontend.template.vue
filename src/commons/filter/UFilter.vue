@@ -24,14 +24,14 @@
     <div class="filter-list">
       <div class="list-label">
         <h4>{{ t('commons.filter.filter-list.title') }}</h4>
-        <span
-          >({{
+        <span>
+          ({{
             t('commons.filter.item-count', {
               count: dataCount,
               plural: dataCount,
             })
-          }})</span
-        >
+          }})
+        </span>
       </div>
       <div class="wrapper-filter">
         <u-filter-item
@@ -42,6 +42,7 @@
           @remove="removeFilter(key)"
           @change="handleChange"
         />
+        <!-- Bouton d'ajout de filtre -->
         <u-button
           v-if="canAddFilter"
           ref="buttonRef"
@@ -49,15 +50,25 @@
           icon="icon-add"
           icon-color="var(--color-neutral-800)"
           :icon-size="16"
-          @click="displayPopper"
+          @click="displayAddFilterPopper"
         />
-        <u-add-filter-popper
-          ref="addFilterPopperRef"
-          :config="availableFiltersConfig"
+        <!-- Popper d'ajout de filtre intégré -->
+        <u-popper
+          v-model:visible="addFilterVisible"
           placement="bottom-start"
-          @add-filter="addFilter"
-          @hide="onHidePopper"
-        />
+          :width="225"
+        >
+          <div class="u-add-filter-popper u-popper">
+            <div
+              v-for="key in availableFilterKeys"
+              :key="key"
+              class="filter-button"
+              @click="addFilter(key)"
+            >
+              {{ config[key].label }}
+            </div>
+          </div>
+        </u-popper>
       </div>
     </div>
     <div class="collapse-button -button-like" @click="collapse">
@@ -71,15 +82,14 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
   import USearchBar from '@/commons/others/USearchBar.vue';
   import UButton from '@/commons/basic/UButton.vue';
-  import UFilterItem from '@/commons/filter/UFilterItem.vue';
-  import UAddFilterPopper from './UAddFilterPopper.vue';
+  import UFilterItem from './UFilterItem.vue';
   import IconBase from '../icons/IconBase.vue';
+  import UPopper from '../others/UPopper.vue';
 
-  // Import useI18n and destructure t and tc
   const { t } = useI18n();
 
   const props = defineProps({
@@ -108,7 +118,7 @@
     (e: 'update:search', value: string): void;
   }>();
 
-  // On copie la valeur reçue en prop dans un objet réactif
+  // Copie réactive de la valeur initiale
   const input = ref({ ...props.modelValue });
   const active = ref(false);
   const searchBuffer = ref(props.search);
@@ -139,6 +149,10 @@
     return res;
   });
 
+  const availableFilterKeys = computed(() =>
+    Object.keys(availableFiltersConfig.value)
+  );
+
   const hasActiveFilter = computed(() => {
     return (
       (input.value && Object.keys(input.value).length > 0) ||
@@ -155,20 +169,18 @@
     emit('change', input.value);
   }
 
-  const addFilterPopperRef = ref<InstanceType<typeof UAddFilterPopper>>();
-  // Référence au bouton servant de déclencheur pour afficher le popper d'ajout
+  const addFilterVisible = ref(false);
   const buttonRef = ref<InstanceType<typeof UButton>>();
 
-  function displayPopper() {
-    if (!active.value) {
-      active.value = true;
-      // On appelle la méthode exposée par UAddFilterPopper pour afficher le popper
-      addFilterPopperRef.value?.showFilterPopper((buttonRef.value as any).$el);
-    }
+  function displayAddFilterPopper() {
+    addFilterVisible.value = true;
+    active.value = true;
   }
 
-  function onHidePopper() {
-    active.value = false;
+  function addFilter(key: string) {
+    input.value[key] = null;
+    handleChange();
+    addFilterVisible.value = false;
   }
 
   function clearAll() {
@@ -182,14 +194,7 @@
 
   function removeFilter(key: string, triggerEvent = true) {
     delete input.value[key];
-    if (triggerEvent) {
-      handleChange();
-    }
-  }
-
-  function addFilter(key: string) {
-    input.value[key] = null;
-    handleChange();
+    if (triggerEvent) handleChange();
   }
 
   function collapse() {
@@ -287,6 +292,24 @@
         &:focus {
           outline: 3px solid var(--color-input-outline-focus);
         }
+      }
+    }
+  }
+
+  .u-add-filter-popper {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    cursor: pointer;
+    .filter-button {
+      background-color: transparent;
+      border-bottom: 1px solid var(--color-neutral-200);
+      padding: 12px 40px;
+      color: var(--color-neutral-800);
+      font-size: var(--paragraph-03);
+      user-select: none;
+      &:hover {
+        background-color: var(--color-neutral-100);
       }
     }
   }

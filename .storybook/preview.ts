@@ -1,14 +1,21 @@
 // preview.ts
 import { setup } from '@storybook/vue3';
+import { createApp } from 'vue';
 import type { Preview } from '@storybook/vue3';
-import 'element-plus/dist/index.css';
+import { vueRouter } from 'storybook-vue3-router';
 import i18n from '@/i18n';
-import '../src/assets/style/main.scss';
 import './style.scss';
+import '../src/assets/style/main.scss';
+import installPlugins from '@/plugins/install';
+
+const app = createApp({});
+app.config.globalProperties.$t = (key: string, ...args: any[]) =>
+  i18n.global.t(key, args);
 
 // Installation globale de i18n
 setup((app) => {
   app.use(i18n);
+  app.use(installPlugins);
 });
 
 export const globalTypes = {
@@ -40,7 +47,7 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [withI18n],
+  decorators: [withI18n, vueRouter()],
   globalTypes,
   tags: ['autodocs'],
 };

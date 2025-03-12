@@ -1,14 +1,12 @@
-export interface UrlFiltersSettings {
+interface UrlFiltersSettings {
   [key: string]: any;
 }
 
-const URL_FILTERS_DEFAULTS: UrlFiltersSettings = {};
+const urlFiltersDefault: UrlFiltersSettings = {};
 
 export default class UrlFiltersService {
-  constructor(settings: Partial<UrlFiltersSettings> = {}) {
-    const mergedSettings: UrlFiltersSettings = {
-      ...URL_FILTERS_DEFAULTS,
-      ...settings,
-    };
+  constructor(settings: UrlFiltersSettings = urlFiltersDefault) {
+    // Fixed the object assignment to avoid mutating defaults
+    Object.assign({}, urlFiltersDefault, settings);
   }
 }

@@ -5,7 +5,7 @@ export const LIST_COLUMN_VISIBILITY = {
   ALWAYS: 'always',
   VISIBLE: 'visible',
   INVISIBLE: 'invisible',
-} as const;
+};
 
 type VisibilityValue =
   (typeof LIST_COLUMN_VISIBILITY)[keyof typeof LIST_COLUMN_VISIBILITY];

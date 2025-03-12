@@ -19,14 +19,16 @@
       <div v-if="showHeaderRight" class="header-right">
         <div v-if="entity" class="numbers-size">
           <icon-base
-            :icon="entity.getEntityIcon"
+            :icon="entity.entityIcon"
             :size="26"
             color="white"
             class="count-icon"
           />
           <p>
             {{
-              $t(entity.getEntityLabelKey, { count: listService.getItemsTotal })
+              $t(entity.entityLabelKey, {
+                count: listService.itemsTotal,
+              })
             }}
           </p>
         </div>
@@ -34,7 +36,7 @@
           v-if="sort"
           v-model="sort.selectValue"
           :options="sort.selectOptions"
-          :placeholder="sort.getPlaceholder"
+          :placeholder="sort.placeholder"
           @change="onFilterChange"
         />
       </div>
@@ -46,11 +48,11 @@
     >
       <u-filter
         v-show="filterPanelActive"
-        v-model="searchService.getFilters"
+        v-model="searchService.filters"
         :datu-count="paginationService.itemsTotal"
-        v-model:search="searchService.getInput"
-        :config="searchService.getFilterConfig"
-        @collapse="searchService.setFilterPanelActive = false"
+        :search.sync="searchService.input"
+        :config="searchService.filterConfig"
+        @collapse="searchService.filterPanelActive = false"
         @change="onFilterChange"
       />
     </transition>
@@ -58,48 +60,69 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, defineProps, defineEmits } from 'vue';
+  import { computed, onMounted } from 'vue';
   import BaseListSearchBar from './BaseListSearchBar.vue';
   import UFilter from '@/commons/filter/UFilter.vue';
   import USelectGroup from '@/commons/forms/USelectGroup.vue';
-  import ListService from './services/listService';
   import IconBase from '../icons/IconBase.vue';
+  import ListService from './services/listService';
 
-  // Typage des props
-  interface Props {
-    listService: ListService<any> | null;
-  }
+  const props = withDefaults(
+    defineProps<{
+      listService?: ListService | null;
+    }>(),
+    {
+      listService: null,
+    }
+  );
 
-  // Définir les props et les événements émis
-  const props = defineProps<Props>();
   const emit = defineEmits<{
-    (event: 'filter-change'): void;
+    (e: 'filter-change'): void;
   }>();
 
-  // Propriétés calculées basées sur listService
-  const paginationService = computed(
-    () => props.listService?.getPagination ?? null
-  );
-  const searchService = computed(() => props.listService?.getSearch ?? null);
-  const entity = computed(() => props.listService?.getEntity ?? null);
-  const sort = computed(() => props.listService?.getSort ?? null);
-  const showCounts = computed(() => props.listService?.getShowCounts ?? false);
-  const filterPanelActive = computed(
-    () => searchService.value?.getFilterPanelActive ?? false
-  );
-  const showHeaderRight = computed(() => !!entity.value || !!sort.value);
+  const paginationService = computed(() => {
+    return props.listService?.pagination || null;
+  });
+
+  const searchService = computed(() => {
+    return props.listService?.search || null;
+  });
+
   const showHeader = computed(() => {
     return (
       showHeaderRight.value ||
-      (searchService.value && paginationService.value) ||
-      (searchService.value && !paginationService.value)
+      (!!searchService.value && !!paginationService.value) ||
+      (!!searchService.value && !paginationService.value)
     );
   });
 
-  // Méthode pour gérer le changement de filtre
-  const onFilterChange = () => {
+  const showHeaderRight = computed(() => {
+    return !!entity.value || !!sort.value;
+  });
+
+  const filterPanelActive = computed(() => {
+    return searchService.value?.filterPanelActive || false;
+  });
+
+  const showCounts = computed(() => {
+    return props.listService?.showCounts || false;
+  });
+
+  const entity = computed(() => {
+    return props.listService?.entity || null;
+  });
+
+  const sort = computed(() => {
+    return props.listService?.sort || null;
+  });
+
+  function onFilterChange() {
     emit('filter-change');
-  };
+  }
+  onMounted(() => {
+    console.log('list service data: ', props.listService.data);
+  });
+  defineExpose({ showCounts });
 </script>
 
 <style lang="scss" scoped>

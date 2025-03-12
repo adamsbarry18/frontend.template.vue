@@ -1,7 +1,7 @@
 <template>
   <div
     ref="editorContainerRef"
-    class="a-code-editor"
+    class="u-code-editor"
     :class="{ '-dark': darkMode }"
   />
 </template>
@@ -265,7 +265,7 @@
 </script>
 
 <style lang="scss">
-  .a-code-editor {
+  .u-code-editor {
     height: 100%;
 
     .cm-panel.cm-search {

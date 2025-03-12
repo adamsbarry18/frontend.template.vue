@@ -1,58 +1,55 @@
-export interface PaginationServiceSettings {
-  defaultPage: number;
-  size: number;
+interface PaginationServiceSettings {
+  defaultPage?: number;
+  size?: number;
 }
 
-export interface PaginationContext {
+interface PaginationContext {
   page: number;
   size: number;
 }
 
-const PAGINATION_DEFAULTS: PaginationServiceSettings = {
+const paginationDefaults: PaginationServiceSettings = {
   defaultPage: 1,
   size: 12,
 };
 
 export default class PaginationService {
-  private readonly defaultPage: number;
-  private pageNumber: number;
+  private _defaultPage: number;
+  private _pageNumber: number;
   private _itemsTotal: number;
-  private readonly size: number;
+  private _size: number;
 
-  constructor(settings: Partial<PaginationServiceSettings> = {}) {
-    const mergedSettings: PaginationServiceSettings = {
-      ...PAGINATION_DEFAULTS,
-      ...settings,
-    };
+  constructor(settings: PaginationServiceSettings = paginationDefaults) {
+    const mSettings = Object.assign({}, paginationDefaults, settings);
 
-    this.defaultPage = mergedSettings.defaultPage;
-    this.pageNumber = mergedSettings.defaultPage;
+    this._defaultPage = mSettings.defaultPage!;
+    this.changePage(mSettings.defaultPage!);
     this._itemsTotal = 0;
-    this.size = mergedSettings.size;
+    this._size = mSettings.size!;
   }
 
-  get getDefaultPage(): number {
-    return this.defaultPage;
+  get defaultPage(): number {
+    return this._defaultPage;
   }
 
   get itemsTotal(): number {
     return this._itemsTotal;
   }
 
-  set itemsTotal(value: number) {
-    this._itemsTotal = value;
+  set itemsTotal(itemsTotal: number) {
+    this._itemsTotal = itemsTotal;
   }
 
-  get getPageNumber(): number {
-    return this.pageNumber;
+  get pageNumber(): number {
+    return this._pageNumber;
   }
 
-  get getPageTotal(): number {
+  get pageTotal(): number {
     return Math.ceil(this.itemsTotal / this.size);
   }
 
-  get getSize(): number {
-    return this.size;
+  get size(): number {
+    return this._size;
   }
 
   get context(): PaginationContext {
@@ -63,17 +60,17 @@ export default class PaginationService {
   }
 
   static mergeContext(
-    target: Partial<PaginationContext>,
-    source: Partial<PaginationContext>
+    target: PaginationContext,
+    source: PaginationContext
   ): PaginationContext {
     return {
-      page: source.page || target.page || 1,
-      size: source.size || target.size || 12,
+      page: source.page || target.page,
+      size: source.size || target.size,
     };
   }
 
   changePage(pageNumber: number): void {
-    this.pageNumber = pageNumber;
+    this._pageNumber = pageNumber;
   }
 
   paginateData<T>(data: T[]): T[] {

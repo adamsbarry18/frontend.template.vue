@@ -14,10 +14,11 @@
     :type="type"
   >
     <template #header>
-      <slot name="header" />
-      <div class="u-list-column-header" :title="label" :class="headerClass">
-        {{ label }}
-      </div>
+      <slot name="header">
+        <div class="u-list-column-header" :title="label" :class="headerClass">
+          {{ label }}
+        </div>
+      </slot>
     </template>
     <template #default="scope">
       <slot :row="scope.row" />
@@ -26,79 +27,131 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref, inject } from 'vue';
+  import { computed, ref, inject, PropType } from 'vue';
   import { ElTableColumn } from 'element-plus';
   import { LIST_COLUMN_VISIBILITY } from '@/libs/utils/List';
   import i18n from '@/i18n';
 
-  interface Props {
-    columnKey?: string;
-    columnDefaultVisibility?: string;
-    label?: string;
-    className?: string;
-    sortable: boolean | string;
-    sortProp?: string;
-    sortMethod?: (a: any, b: any) => number;
-    sortBy?: string;
-    width?: string;
-    type?: string;
-    minWidth?: string;
-    align: string;
-    headerClass?: string;
-    filterable?: boolean;
-    filterLabel?: string;
-    filterFunction?: Function;
-    filterType?: string;
-    filterProperty?: string;
-    filterConfig?: Record<string, unknown>;
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
-    columnDefaultVisibility: LIST_COLUMN_VISIBILITY.ALWAYS,
-    sortable: false,
-    align: 'center',
-    headerClass: '',
-    filterable: false,
+  // Props definition
+  const props = defineProps({
+    columnKey: {
+      type: String,
+    },
+    columnDefaultVisibility: {
+      type: String,
+      default: LIST_COLUMN_VISIBILITY.ALWAYS,
+      validator: (item: string) =>
+        [
+          LIST_COLUMN_VISIBILITY.ALWAYS,
+          LIST_COLUMN_VISIBILITY.VISIBLE,
+          LIST_COLUMN_VISIBILITY.INVISIBLE,
+        ].includes(item),
+    },
+    label: {
+      type: String,
+    },
+    className: {
+      type: String,
+    },
+    sortable: {
+      type: [Boolean, String],
+      default: false,
+    },
+    sortProp: {
+      type: String,
+    },
+    sortMethod: {
+      type: Function as PropType<(a: any, b: any) => number>,
+    },
+    sortBy: {
+      type: String,
+    },
+    width: {
+      type: String,
+    },
+    type: {
+      type: String,
+    },
+    minWidth: {
+      type: String,
+    },
+    align: {
+      type: String,
+      default: 'center',
+    },
+    headerClass: {
+      type: String,
+      default: '',
+    },
+    filterable: {
+      type: Boolean,
+      default: false,
+    },
+    filterLabel: {
+      type: String,
+    },
+    filterFunction: {
+      type: Function,
+    },
+    filterType: {
+      type: String,
+    },
+    filterProperty: {
+      type: String,
+    },
+    filterConfig: {
+      type: Object,
+    },
   });
 
-  // Injection des dépendances globales
-  const listKey = inject<string>('listKey', '');
-  const columnVisibility = inject<Record<string, boolean>>(
-    'columnVisibility',
-    {}
-  );
+  // Injected values
+  const listKey = inject<string>('listKey');
+  const columnVisibility = inject<any>('columnVisibility');
 
-  // Variable réactive pour le tri personnalisé
-  const hasCustomSort = ref<boolean>(false);
+  // State
+  const hasCustomSort = ref(false);
 
-  const isVisible = computed<boolean>(() => {
-    if (props.columnKey && listKey !== '' && columnVisibility) {
-      const key = `${listKey}@${props.columnKey}`;
-      if (Object.prototype.hasOwnProperty.call(columnVisibility, key)) {
-        return columnVisibility[key];
-      }
+  // Computed properties
+  const isVisible = computed(() => {
+    if (
+      props.columnKey &&
+      columnVisibility &&
+      columnVisibility.hasOwnProperty(`${listKey}@${props.columnKey}`)
+    ) {
+      return columnVisibility[`${listKey}@${props.columnKey}`];
     }
     return true;
   });
 
-  const sortableProp = computed<boolean | string>(() =>
-    hasCustomSort.value ? 'custom' : props.sortable
-  );
+  const sortableProp = computed(() => {
+    return hasCustomSort.value ? 'custom' : props.sortable;
+  });
 
-  const sortByProp = computed<string | null>(() =>
-    hasCustomSort.value ? null : props.sortBy || null
-  );
+  const sortByProp = computed(() => {
+    return hasCustomSort.value ? null : props.sortBy;
+  });
 
-  function defaultSortMethod(a: any, b: any): number {
+  const sortMethodFunction = computed(() => {
+    if (hasCustomSort.value) {
+      return null;
+    }
+    return props.sortMethod ? props.sortMethod : defaultSortMethod;
+  });
+
+  // Methods
+  const defaultSortMethod = (a: any, b: any): number => {
     if (!props.sortProp) return 0;
+
     if (
       !a.hasOwnProperty(props.sortProp) &&
       !b.hasOwnProperty(props.sortProp)
     ) {
       return 0;
-    } else if (!a.hasOwnProperty(props.sortProp)) {
+    }
+    if (!a.hasOwnProperty(props.sortProp)) {
       return -1;
-    } else if (!b.hasOwnProperty(props.sortProp)) {
+    }
+    if (!b.hasOwnProperty(props.sortProp)) {
       return 1;
     }
     if (
@@ -108,36 +161,27 @@
       return a[props.sortProp].localeCompare(
         b[props.sortProp],
         i18n.global.locale,
-        {
-          numeric: true,
-        }
+        { numeric: true }
       );
     }
     if (a[props.sortProp] === b[props.sortProp]) {
       return 0;
     }
     return a[props.sortProp] > b[props.sortProp] ? 1 : -1;
-  }
+  };
 
-  const sortMethodFunction = computed<((a: any, b: any) => number) | null>(
-    () =>
-      hasCustomSort.value
-        ? null
-        : props.sortMethod
-          ? props.sortMethod
-          : defaultSortMethod
-  );
-
-  function setCustomSort(value: boolean): void {
+  const setCustomSort = (value: boolean) => {
     hasCustomSort.value = value;
-  }
+  };
 
-  defineExpose({ setCustomSort });
+  // Expose methods to be accessible outside the component
+  defineExpose({
+    setCustomSort,
+  });
 </script>
 
 <style lang="scss">
   .u-list-wrapper .el-table th div.cell {
-    background-color: red;
     .u-list-column-header {
       padding: 0;
       max-height: 52px;

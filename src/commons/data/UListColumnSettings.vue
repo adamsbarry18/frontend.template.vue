@@ -1,51 +1,57 @@
 <template>
-  <div v-if="show" ref="popper" class="u-list-column-settings u-popper">
-    <u-shortcut-subscriber @shortcut-trigger="onShortcutEscape" />
-    <div x-arrow />
-    <div class="column-list -custom-scrollbar">
-      <u-tooltip
-        v-for="column in columns"
-        :key="column.key"
-        placement="left"
-        tooltip-class="column-settings-info"
-      >
-        <div
-          class="column-item"
-          @click="onChecked(!values[column.key], column.key)"
+  <u-popper
+    v-model:visible="show"
+    placement="bottom-start"
+    :width="230"
+    trigger="click"
+  >
+    <div class="u-list-column-settings">
+      <u-shortcut-subscriber v-if="show" @shortcut-trigger="onShortcutEscape" />
+      <div class="column-list -custom-scrollbar">
+        <u-tooltip
+          v-for="column in columns"
+          :key="column.key"
+          placement="left"
+          tooltip-class="column-settings-info"
         >
-          <el-checkbox
-            :model-value="values[column.key]"
-            :disabled="isLocked(column.key)"
-            class="column-checkbox"
-            @update:model-value="onChecked(($event = true), column.key)"
-          >
-            {{ column.label }}
-          </el-checkbox>
-        </div>
-        <template #content v-if="isLocked(column.key)">
-          {{ $t('commons.column-settings.column-locked') }}
-        </template>
-      </u-tooltip>
+          <div class="column-item">
+            <el-checkbox
+              v-model="values[column.key]"
+              :disabled="isLocked(column.key)"
+              class="column-checkbox"
+              @change="onChecked(!!$event, column.key)"
+            >
+              {{ column.label }}
+            </el-checkbox>
+          </div>
+          <template #content>
+            <span v-if="isLocked(column.key)">{{
+              $t('commons.column-settings.column-locked')
+            }}</span>
+          </template>
+        </u-tooltip>
+      </div>
+      <u-button
+        type="primary"
+        :disabled="!hasUnsavedChanges()"
+        class="-button-like"
+        @click="submit"
+      >
+        {{ $t('commons.form.save') }}
+      </u-button>
+      <u-button class="reset -button-like" @click="reset">
+        {{ $t('commons.form.reset-defaults') }}
+      </u-button>
     </div>
-    <u-button
-      type="primary"
-      :disabled="!hasUnsavedChanges"
-      class="-button-like"
-      @click="submit"
-    >
-      {{ $t('commons.form.save') }}
-    </u-button>
-    <u-button class="reset -button-like" @click="reset">
-      {{ $t('commons.form.reset-defaults') }}
-    </u-button>
-  </div>
+  </u-popper>
 </template>
 
 <script setup lang="ts">
-  import { ref, inject, onMounted, computed } from 'vue';
+  import { ref, reactive, inject, PropType } from 'vue';
   import UButton from '@/commons/basic/UButton.vue';
   import UTooltip from '@/commons/others/UTooltip.vue';
   import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
+  import UPopper from '../others/UPopper.vue';
   import { ElCheckbox } from 'element-plus';
   import {
     isColumnVisible,
@@ -53,144 +59,126 @@
     LIST_COLUMN_VISIBILITY,
   } from '../../libs/utils/List';
 
-  // Définir les types
-  interface Column {
-    key: string;
-    label: string;
-  }
+  // Injection des données fournies par le parent
+  const listKey = inject('listKey');
+  const columnVisibility = inject('columnVisibility');
 
-  // Injection de dépendances
-  const listKey = inject<string>('listKey', '');
-  const columnVisibility = inject<Record<string, boolean>>(
-    'columnVisibility',
-    {}
-  );
+  // Définir les props
+  const props = defineProps({
+    columns: {
+      type: Array as PropType<any[]>,
+      required: true,
+    },
+    defaults: {
+      type: Object,
+      required: true,
+    },
+  });
 
-  // Props
-  const props = defineProps<{
-    columns: Column[];
-    defaults: Record<string, string>;
-  }>();
+  // Définir les événements
+  const emit = defineEmits(['column-visibility-change', 'hide']);
 
-  // Événements émis
-  const emit = defineEmits<{
-    (e: 'column-visibility-change', columnId: string, value: boolean): void;
-    (e: 'hide'): void;
-  }>();
-
-  // Références et état réactif
-  const popper = ref<HTMLElement | null>(null);
+  // État réactif
   const show = ref(false);
-  const values = ref<Record<string, boolean>>({});
-  const initValues = ref<boolean[]>([]);
+  const values = reactive({});
+  const initValues = ref<any[]>([]);
 
   // Méthodes
-  function showSettings(reference: HTMLElement) {
-    values.value = {};
+  const showSettings = () => {
+    // Si le popper est déjà affiché, on le referme
+    if (show.value) {
+      show.value = false;
+      emit('hide');
+      return;
+    }
+    // Sinon, on initialise les valeurs puis on l'affiche
     for (const column of props.columns) {
+      const columnId = getColumnId(column.key);
       if (getDefaultVisibility(column.key) === LIST_COLUMN_VISIBILITY.ALWAYS) {
-        values.value[column.key] = true;
+        values[column.key] = true;
       } else {
-        values.value[column.key] = hasSavedVisibility(getColumnId(column.key))
-          ? isColumnVisible(getColumnId(column.key))
+        values[column.key] = hasSavedVisibility(columnId)
+          ? isColumnVisible(columnId)
           : getDefaultVisibility(column.key) !==
             LIST_COLUMN_VISIBILITY.INVISIBLE;
       }
     }
-    initValues.value = Object.values(values.value);
+    initValues.value = Object.values(values);
     show.value = true;
-  }
+  };
 
-  const hasUnsavedChanges = computed(() => {
-    const activeValues = Object.values(values.value);
-    return activeValues.some((val, i) => val !== initValues.value[i]);
-  });
+  const hasUnsavedChanges = () => {
+    const activeValues = Object.values(values);
+    for (let i = 0; i < activeValues.length; i++) {
+      if (activeValues[i] !== initValues.value[i]) return true;
+    }
+    return false;
+  };
 
-  function getColumnId(columnKey: string) {
+  const getColumnId = (columnKey: string) => {
     return `${listKey}@${columnKey}`;
-  }
+  };
 
-  function submit() {
-    for (const columnKey of Object.keys(values.value)) {
-      emit(
-        'column-visibility-change',
-        getColumnId(columnKey),
-        values.value[columnKey]
-      );
+  const submit = () => {
+    for (const column of Object.keys(values)) {
+      const columnId = getColumnId(column);
+      emit('column-visibility-change', columnId, values[column]);
     }
     show.value = false;
-    emit('hide');
-  }
+  };
 
   function onShortcutEscape() {
     show.value = false;
     emit('hide');
   }
 
-  function reset() {
+  const reset = () => {
     for (const column of props.columns) {
-      values.value[column.key] =
+      values[column.key] =
         getDefaultVisibility(column.key) !== LIST_COLUMN_VISIBILITY.INVISIBLE;
     }
-  }
+  };
 
-  function onChecked(value: boolean, columnKey: string) {
+  const onChecked = (value: boolean, columnKey: string) => {
     if (!isLocked(columnKey)) {
-      values.value[columnKey] = value;
+      values[columnKey] = !!value;
     }
-  }
+  };
 
-  function isLocked(columnKey: string) {
+  const isLocked = (columnKey: string) => {
     return props.defaults[columnKey] === LIST_COLUMN_VISIBILITY.ALWAYS;
-  }
+  };
 
-  function getDefaultVisibility(columnKey: string) {
-    return props.defaults[columnKey] || LIST_COLUMN_VISIBILITY.VISIBLE;
-  }
+  const getDefaultVisibility = (columnKey: string) => {
+    return props.defaults[columnKey]
+      ? props.defaults[columnKey]
+      : LIST_COLUMN_VISIBILITY.VISIBLE;
+  };
 
-  // Lifecycle hook
-  onMounted(() => {
-    // Si nécessaire, initialisation supplémentaire ici
-  });
-
-  // Exposé pour usage externe (optionnel)
   defineExpose({
     showSettings,
   });
 </script>
 
 <style lang="scss">
+  /* (styles inchangés) */
   .u-list-column-settings {
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    margin-top: 13px;
-    border: 1px solid var(--color-input-border);
-    border-radius: 4px;
-    box-shadow: var(--box-shadow-xl);
-    background-color: var(--color-background-white);
-    width: 230px;
     max-height: 75%;
     user-select: none;
-
     .column-list {
       flex-grow: 1;
-      box-shadow: inset 0px -11px 20px -10px rgba(47, 50, 76, 0.14);
       padding: 14px 20px;
       height: 270px;
       overflow-y: auto;
-
       .column-item {
         margin-bottom: 8px;
         cursor: pointer;
         overflow-x: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-
         &:last-child {
           margin-bottom: 15px;
         }
-
         .el-checkbox {
           margin-right: 10px;
           margin-bottom: 0;
@@ -215,6 +203,7 @@
     }
     & > .u-button {
       margin: 24px 20px 0px 20px;
+      width: 75%;
       &.reset {
         margin-top: 4px;
         margin-bottom: 12px;

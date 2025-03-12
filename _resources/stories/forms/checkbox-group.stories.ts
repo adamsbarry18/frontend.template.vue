@@ -14,7 +14,6 @@ export const DefaultCheckboxGroup = () => ({
       <u-checkbox-group
         v-model="selectedValues"
         :options="options"
-        data-nav="example"
         @change="handleChange"
       />
       <p>Selected: {{ selectedValues }}</p>
@@ -24,7 +23,6 @@ export const DefaultCheckboxGroup = () => ({
         v-model="selectedValuesColumn"
         :options="options"
         direction="column"
-        data-nav="exampleColumn"
         @change="handleChangeColumn"
       />
       <p>Selected: {{ selectedValuesColumn }}</p>

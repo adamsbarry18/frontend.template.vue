@@ -59,28 +59,33 @@
             v-show="showSearchbar"
             v-model="searchBarInput"
             class="search-bar"
+            :datu-nav="dataNavInput"
             :placeholder="$t('commons.searchbar.default-list')"
             icon-color="var(--color-neutral-700)"
             icon-position="left"
             clear
             @change="onSearchChange"
           >
-            <template #suffix v-if="hasAvailableFilters">
-              <button class="filter-icon" @click="filterPanelActive = true">
-                <icon-base
-                  icon="icon-filter"
-                  :size="22"
-                  color="var(--color-white)"
-                />
-                <p>{{ $t('commons.list.filters') }}</p>
-                <u-filter-resume
-                  v-if="filterCount > 0"
-                  :filter-config="filterConfig"
-                  :active-filter="filter"
-                  @clear-filters="onClearFilters"
-                />
-              </button>
-            </template>
+            <button
+              v-if="hasAvailableFilters"
+              slot="suffix"
+              class="filter-icon"
+              @click="filterPanelActive = true"
+            >
+              <icon-base
+                icon="icon-filter"
+                :size="22"
+                color="var(--color-white)"
+              />
+              <p>{{ $t('commons.list.filters') }}</p>
+              <u-filter-resume
+                v-if="filterCount > 0"
+                slot="suffix"
+                :filter-config="filterConfig"
+                :active-filter="filter"
+                @clear-filters="onClearFilters"
+              />
+            </button>
           </u-search-bar>
         </div>
         <div class="header-right">
@@ -102,10 +107,10 @@
               {{
                 $te(entityLabelKey)
                   ? $t(entityLabelKey, {
-                      count: formsattedListCount,
+                      count: formattedListCount,
                     })
                   : $t('commons.list-entities-count', {
-                      count: formsattedListCount,
+                      count: formattedListCount,
                     })
               }}
             </p>
@@ -116,8 +121,8 @@
         <u-filter
           v-show="filterPanelActive"
           v-model="filter"
-          :data-count="currentTotal"
-          v-model:search="searchBarInput"
+          :datu-count="currentTotal"
+          :search.sync="searchBarInput"
           :config="filterConfig"
           @collapse="filterPanelActive = false"
           @change="onFilterChange"
@@ -150,6 +155,7 @@
         class="column-settings-button-wrapper"
       >
         <icon-base
+          v-if="editableColumns.length > 0"
           ref="settingsButton"
           icon="icon-settings"
           class="column-settings-button -button-like"
@@ -159,7 +165,7 @@
               : 'var(--color-neutral-700)'
           "
           :size="24"
-          @click="onSettingsClick"
+          @click.native="onSettingsClick"
         />
       </div>
       <u-list-column-settings
@@ -172,7 +178,6 @@
       />
       <el-table
         ref="table"
-        v-loading="loading || !isMounted"
         :data="displayedData"
         :default-sort="savedDefaultSort"
         :show-header="showTableHeader"
@@ -190,12 +195,15 @@
         @row-dblclick="onRowDoubleClick"
         @sort-change="onSortChange"
         @expand-change="onExpandChange"
-        @wheel="onScroll"
+        @wheel.native="onScroll"
         @cell-mouse-enter="onCellHover"
       >
-        <template #empty>
+        <div slot="empty">
           <div v-if="loading || !isMounted" />
-          <slot v-else-if="filterCount === 0 && searchBarInput" name="empty">
+          <slot
+            v-else-if="filterCount === 0 && searchBarInput === ''"
+            name="empty"
+          >
             <img
               class="empty_image"
               src="@/assets/images/svg/list_empty.svg"
@@ -216,7 +224,7 @@
               "
             />
           </div>
-        </template>
+        </div>
         <el-table-column
           v-if="selectable"
           width="50"
@@ -234,11 +242,9 @@
           "
           width="55"
         >
-          <template #header>
-            <div class="column-settings" />
-          </template>
+          <div slot="header" class="column-settings" />
         </el-table-column>
-        <slot name="append" />
+        <slot slot="append" name="append" />
       </el-table>
     </div>
     <u-list-pagination
@@ -253,7 +259,7 @@
       v-show="rowButtonsVisible"
       :pos="hoverElementPosition"
       :x-pos="xPosActionBtn()"
-      @mouseleave="onLeaveRowButtons"
+      @mouseleave.native="onLeaveRowButtons"
     >
       <div v-if="currentRowHover !== null" class="u-list-row-buttons">
         <slot name="action" :row="currentRowHover" />
@@ -269,10 +275,8 @@
     onMounted,
     onBeforeUnmount,
     provide,
-    inject,
     useSlots,
     PropType,
-    nextTick,
   } from 'vue';
   import { v4 as uuidv4 } from 'uuid';
   import UContextualMenu from '@/commons/navigation/UContextualMenu.vue';
@@ -378,7 +382,7 @@
   });
 
   // Définir les événements émis
-  const emit = defineEmits([
+  const emits = defineEmits([
     'selection-change',
     'row-click',
     'row-rightclick',
@@ -392,114 +396,123 @@
     'expand-change',
   ]);
 
-  // Références et état réactif
-  const table = ref<InstanceType<typeof ElTable> | null>(null);
-  const contextualMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
-  const columnSettingsPopper = ref<InstanceType<
-    typeof UListColumnSettings
-  > | null>(null);
-  const settingsButton = ref<InstanceType<typeof IconBase> | null>(null);
-  const contextualMenuTarget = ref<any>(null);
-  const editableColumns = ref<any[]>([]);
-  const selection = ref<any[]>([]);
-  const defaultVisibility = ref<Record<string, string>>({});
-  const columnVisibility = ref<Record<string, boolean>>({});
-  const filter = ref<Record<string, any>>({});
-  const filterConfig = ref<Record<string, any>>({});
-  const currentSort = ref<{ prop: string; order: string } | null>(null);
-  const columnSortedComponent = ref<any>(null);
+  // Références
+  const contextualMenu = ref(null);
+  const table = ref(null);
+  const settingsButton = ref(null);
+  const columnSettingsPopper = ref(null);
+
+  // État réactif
+  const contextualMenuTarget = ref(null);
+  const editableColumns = ref([]);
+  const selection = ref([]);
+  const defaultVisibility = ref({});
+  const columnVisibility = ref({});
+  const filter = ref({});
+  const filterConfig = ref({});
+  const currentSort = ref(null);
+  const columnSortedComponent = ref(null);
   const isSettingsPopperActive = ref(false);
   const filterPanelActive = ref(false);
-  const rightClickEvent = ref<MouseEvent | null>(null);
+  const rightClickEvent = ref(null);
   const searchBarInput = ref('');
   const filterChangeDebouncer = ref(null);
   const searchChangeDebouncer = ref(null);
   const onChangeDebouncer = ref(null);
-  const hoverElementPosition = ref<any>({});
-  const currentRowHover = ref<any>(null);
-  const oldRowNodeHover = ref<HTMLElement | null>(null);
+  interface Position {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  }
+  const hoverElementPosition = ref<Partial<Position>>({});
+  const currentRowHover = ref(null);
+  const oldRowNodeHover = ref(null);
   const rowButtonsVisible = ref(false);
   const isScrolling = ref(false);
-  const scrollingTimeout = ref<NodeJS.Timeout | null>(null);
+  const scrollingTimeout = ref(null);
   const isMounted = ref(false);
   const currentPage = ref(1);
   const defaultPage = ref(1);
   const paginationKey = ref('defaultPaginationKey');
 
-  // Router
+  // Fournir des données aux composants enfants
+  provide('listKey', props.listKey);
+  provide('columnVisibility', columnVisibility);
+
+  // Accès au routeur
   const route = useRoute();
   const router = useRouter();
 
-  // Provide listKey et columnVisibility
-  provide('listKey', props.listKey);
-  provide('columnVisibility', columnVisibility.value);
-
-  // Computed properties
+  // Propriétés calculées
   const savedDefaultSort = computed(() => {
-    let sort;
     if (props.listKey && hasSavedSort(props.listKey)) {
-      sort = getListSort(props.listKey);
-    } else {
-      sort = props.defaultSort;
+      const sort = getListSort(props.listKey);
+      // Ensure the order is explicitly 'ascending' or 'descending'
+      if (
+        sort &&
+        sort.order &&
+        sort.order !== 'ascending' &&
+        sort.order !== 'descending'
+      ) {
+        sort.order = sort.order === 'asc' ? 'ascending' : 'descending';
+      }
+      return sort as { prop: string; order: 'ascending' | 'descending' };
     }
-    if (
-      sort &&
-      sort.prop &&
-      (sort.order === 'ascending' || sort.order === 'descending')
-    ) {
-      return sort;
-    }
-    return undefined;
+    return props.defaultSort as {
+      prop: string;
+      order: 'ascending' | 'descending';
+    };
   });
 
   const filteredData = computed(() => {
-    if (!isMounted.value || !props.data) return [];
+    if (!isMounted.value) return [];
     const res = props.searchFunction
-      ? props.data.filter((a) => props.searchFunction!(a, searchBarInput.value))
+      ? props.data.filter((a) => props.searchFunction(a, searchBarInput.value))
       : props.data;
     return applyFiltersToList(res, filter.value, filterConfig.value);
   });
 
-  const isRemoteData = computed(() => !!props.total && props.total > 0);
+  const isRemoteData = computed(() => props.total > 0);
 
   const paginatedData = computed(() => {
     if (isRemoteData.value && props.data?.length) return props.data;
-    if (!filteredData.value.length) return [];
-    const sort = currentSort.value;
-    if (sort && columnSortedComponent.value) {
-      return orderBy(
-        filteredData.value,
-        sort.prop,
-        sort.order,
-        columnSortedComponent.value.sortMethod,
-        columnSortedComponent.value.sortBy
-      ).slice(
+    if (filteredData.value?.length) {
+      const sort = currentSort.value;
+      if (sort && columnSortedComponent.value) {
+        return orderBy(
+          filteredData.value,
+          sort.prop,
+          sort.order,
+          columnSortedComponent.value.sortMethod,
+          columnSortedComponent.value.sortBy
+        ).slice(
+          (currentPage.value - 1) * props.pageSize,
+          currentPage.value * props.pageSize
+        );
+      }
+      return filteredData.value.slice(
         (currentPage.value - 1) * props.pageSize,
         currentPage.value * props.pageSize
       );
     }
-    return filteredData.value.slice(
-      (currentPage.value - 1) * props.pageSize,
-      currentPage.value * props.pageSize
-    );
+    return [];
   });
 
   const displayedData = computed(() =>
     props.showPagination ? paginatedData.value : filteredData.value
   );
-
   const currentTotal = computed(() => props.total || filteredData.value.length);
-
   const pageCount = computed(() =>
     Math.ceil(currentTotal.value / props.pageSize)
   );
-
   const filterCount = computed(() => Object.keys(filter.value).length);
 
-  const formsattedListCount = computed(() => {
+  const formattedListCount = computed(() => {
     if (props.total) return currentTotal.value;
-    if (filterCount.value !== 0 || searchBarInput.value !== '')
-      return `${filteredData.value.length} / ${props.data?.length || 0}`;
+    if (filterCount.value !== 0 || searchBarInput.value !== '') {
+      return `${filteredData.value.length} / ${props.data.length}`;
+    }
     return filteredData.value.length;
   });
 
@@ -513,17 +526,14 @@
         (i: any) =>
           !i.hasOwnProperty('filterFunc') ||
           (contextualMenuTarget.value &&
-            (i as any).filterFunc(contextualMenuTarget.value))
+            i.filterFunc?.(contextualMenuTarget.value))
       )
-      .map((i: any) => getScopedContextualMenuItem(i))
+      .map((i) => getScopedContextualMenuItem(i))
   );
 
   const showHeaderRight = computed(
     () => props.showCounts && !props.showPagination
   );
-
-  // Capturer les slots pendant le setup
-  const slots = useSlots();
 
   const computedCurrentSort = computed(() => {
     if (!currentSort.value) return null;
@@ -540,36 +550,7 @@
     })
   );
 
-  // Lifecycle hooks
-  onMounted(() => {
-    parseTableColumns();
-    const tableWrapper = table.value?.$refs.bodyWrapper as
-      | HTMLDivElement
-      | undefined;
-    tableWrapper?.addEventListener('mouseleave', onMouseLeaveList);
-    editableColumns.value = generateEditableColumnList();
-    filterConfig.value = generateFilterConfig();
-    filter.value = parseFiltersFromUrl();
-    searchBarInput.value = parseSearchInputFromUrl();
-    emit('filter-change', filter.value);
-    const sort = currentSort.value || savedDefaultSort.value;
-    if (sort && sort.prop && sort.order)
-      updateTableSort({ prop: sort.prop, order: sort.order });
-    setTimeout(() => {
-      isMounted.value = true;
-      setDefaultPage(parsePageFromUrl() || 1);
-      onChange();
-    }, 50);
-  });
-
-  onBeforeUnmount(() => {
-    const tableWrapper = table.value?.$refs.bodyWrapper as
-      | HTMLDivElement
-      | undefined;
-    tableWrapper?.removeEventListener('mouseleave', onMouseLeaveList);
-  });
-
-  // Methods
+  // Méthodes
   function onShortcutEscapeFilters() {
     filterPanelActive.value = false;
   }
@@ -578,49 +559,50 @@
     clearSelection();
   }
 
-  function onScroll(evt: WheelEvent) {
-    emit('scroll');
+  function onScroll(evt) {
+    emits('scroll');
     if (evt.deltaY > 0) checkScrolledToBottom();
     rowButtonsVisible.value = false;
+    contextualMenu.value.show = false;
     isScrolling.value = true;
-    if (scrollingTimeout.value) clearTimeout(scrollingTimeout.value);
+    clearTimeout(scrollingTimeout.value);
     scrollingTimeout.value = setTimeout(() => (isScrolling.value = false), 150);
   }
 
   function checkScrolledToBottom() {
-    const tableWrapperEl = table.value?.$el.querySelector(
+    const tableWrapperEl = table.value.$el.querySelector(
       'div.el-table__body-wrapper'
-    ) as HTMLDivElement | undefined;
+    );
     const BOTTOM_OFFSET = 150;
     if (
       tableWrapperEl &&
       tableWrapperEl.scrollTop + BOTTOM_OFFSET >
         tableWrapperEl.scrollHeight - tableWrapperEl.offsetHeight
     ) {
-      emit('scrolled-to-bottom');
+      emits('scrolled-to-bottom');
     }
   }
 
-  function setDefaultPage(page: number) {
+  function setDefaultPage(page) {
     defaultPage.value = page;
     currentPage.value = page;
     paginationKey.value = uuidv4();
   }
 
-  function onLeaveRowButtons(event: MouseEvent) {
-    const relatedTarget = event.relatedTarget as HTMLElement;
+  function onLeaveRowButtons(event) {
     if (
-      !relatedTarget?.classList.contains('u-list-row-buttons') &&
-      relatedTarget?.tagName.toLowerCase() !== 'td'
+      !event.relatedTarget?.classList.contains('u-list-row-buttons') &&
+      event.relatedTarget?.tagName !== 'TD'
     ) {
       rowButtonsVisible.value = false;
-      oldRowNodeHover.value?.classList.remove('color-hover');
+      if (oldRowNodeHover.value)
+        oldRowNodeHover.value.classList.remove('color-hover');
     }
   }
 
   function rowClassNameWrapper({ row, rowIndex }) {
     let res = 'u-list-row';
-    if (props.rowClassName) res += ` ${props.rowClassName({ row, rowIndex })}`;
+    if (props.rowClassName) res += ` ${props.rowClassName(row, rowIndex)}`;
     return res;
   }
 
@@ -632,28 +614,11 @@
     if (!isScrolling.value) showRowButtons(row, cell.parentNode);
   }
 
-  function onMouseLeaveList(event) {
-    const relatedTarget = event.relatedTarget;
-    if (
-      !relatedTarget?.classList.contains('u-list-row-buttons') &&
-      !['button', 'svg', 'path', 'td'].includes(
-        relatedTarget?.nodeName.toLowerCase()
-      )
-    ) {
-      rowButtonsVisible.value = false;
-      if (oldRowNodeHover.value) {
-        oldRowNodeHover.value?.classList.remove('color-hover');
-      }
-    }
-  }
-
   function showRowButtons(row, rowElement) {
     currentRowHover.value = row;
     oldRowNodeHover.value = rowElement;
     oldRowNodeHover.value.classList.add('color-hover');
-    const posTab = (
-      table.value?.$refs.bodyWrapper as HTMLDivElement
-    ).getBoundingClientRect();
+    const posTab = table.value.$refs.bodyWrapper.getBoundingClientRect();
     hoverElementPosition.value = oldRowNodeHover.value.getBoundingClientRect();
     rowButtonsVisible.value =
       Math.trunc(hoverElementPosition.value.top) >= Math.trunc(posTab.top) &&
@@ -666,93 +631,78 @@
     if (item.icon) res.icon = item.icon;
     if (item.label) res.label = item.label;
     if (item.onClick) {
-      res.onClick = () =>
-        item.multiTarget
-          ? item.onClick([contextualMenuTarget.value], rightClickEvent.value)
-          : item.onClick(contextualMenuTarget.value, rightClickEvent.value);
+      res.onClick = item.multiTarget
+        ? () =>
+            item.onClick([contextualMenuTarget.value], rightClickEvent.value)
+        : () => item.onClick(contextualMenuTarget.value, rightClickEvent.value);
     }
     if (item.children)
-      res.children = item.children.map((child: any) =>
+      res.children = item.children.map((child) =>
         getScopedContextualMenuItem(child)
       );
     return res;
   }
 
-  function onSelectionChange(newSelection: any[]) {
-    selection.value = [...newSelection];
-    emit('selection-change', selection.value);
+  function onSelectionChange(selectionArray) {
+    selection.value = [...selectionArray];
+    emits('selection-change', selection.value);
   }
 
   function onRowClick(row, column, event) {
     let rowNode = event.target;
-    while (rowNode && !rowNode.classList.contains('u-list-row'))
+    while (rowNode && !rowNode.classList?.contains('u-list-row'))
       rowNode = rowNode.parentNode;
     if (rowNode) showRowButtons(row, rowNode);
-    if (canToggleRowSelection(row)) toggleRowSelection(row);
-    emit('row-click', row);
+    if (canToggleRowSelection(row)) toggleRowSelection(row, true);
+    emits('row-click', row);
   }
 
-  function onRowRightClick(row: any, col: any, event: MouseEvent) {
-    if (
-      (event.target as HTMLElement).matches(
-        '.u-list-row-buttons, .u-list-row-buttons *'
-      )
-    )
+  function onRowRightClick(row, col, $event) {
+    if ($event.target.matches('.u-list-row-buttons, .u-list-row-buttons *'))
       return;
     if (scopedContextualMenuItems.value.length > 0) {
       if (canToggleRowSelection(row)) {
         clearSelection();
         toggleRowSelection(row, true);
       }
-      rightClickEvent.value = event;
-      openContextualMenu(row, event);
+      rightClickEvent.value = $event;
+      openContextualMenu(row, $event);
     }
-    emit('row-rightclick', row, event);
+    emits('row-rightclick', row, $event);
   }
 
-  function onPaginationPageChange(page: number) {
+  function onPaginationPageChange(page) {
     currentPage.value = page;
     onChange();
   }
 
-  function openContextualMenu(row: any, event: MouseEvent) {
+  function openContextualMenu(row, event) {
     contextualMenuTarget.value = row;
-    contextualMenu.value?.showMenu({ x: event.clientX, y: event.clientY });
+    contextualMenu.value.showMenu({ x: event.clientX, y: event.clientY });
     event.preventDefault();
   }
 
-  function onRowDoubleClick(row: any) {
-    emit('row-dblclick', row);
+  function onRowDoubleClick(row) {
+    emits('row-dblclick', row);
   }
 
-  function canToggleRowSelection(row: any) {
+  function canToggleRowSelection(row) {
+    const rowIndex = displayedData.value.indexOf(row);
     return (
       props.selectable &&
-      (!props.selectableFilter || props.selectableFilter(row, 0))
+      (!props.selectableFilter || props.selectableFilter(row, rowIndex))
     );
   }
 
-  function toggleRowSelection(row: any, selected?: boolean) {
-    table.value?.toggleRowSelection(row, selected);
-  }
-
-  function toggleRowExpansion(row: any, expanded: boolean) {
-    table.value?.toggleRowExpansion(row, expanded);
-  }
-
-  function doLayout() {
-    table.value?.doLayout();
+  function toggleRowSelection(row, selected) {
+    table.value.toggleRowSelection(row, selected);
   }
 
   function onSettingsClick() {
     if (!isSettingsPopperActive.value) {
       isSettingsPopperActive.value = true;
-      nextTick(() => columnSettingsPopper.value?.showSettings());
+      columnSettingsPopper.value.showSettings(settingsButton.value.$el);
     }
-  }
-
-  function clearFilters() {
-    onClearFilters();
   }
 
   function onClearFilters() {
@@ -765,57 +715,55 @@
     setTimeout(() => (isSettingsPopperActive.value = false), 100);
   }
 
-  function updateTableSort(sort: { prop: string; order: string }) {
+  function updateTableSort(sort) {
     const { prop, order } = sort;
-    table.value?.sort(prop, order);
+    if (typeof table.value?.sort === 'function') table.value.sort(prop, order);
   }
 
   function onSortChange(event) {
     const { prop, order } = event;
     if (props.listKey) setSort({ list: props.listKey, value: { prop, order } });
     currentSort.value = { prop, order };
-    emit('sort-change', event);
+    emits('sort-change', event);
     setDefaultPage(1);
-    columnSortedComponent.value = slots
-      .default?.()
+    columnSortedComponent.value = useSlots()
+      .default()
       .find((c) => c.props?.columnKey === prop);
     onChange();
   }
 
-  function onColumnVisibilityChange(column: string, value: boolean) {
+  function onColumnVisibilityChange(column, value) {
     columnVisibility.value[column] = value;
-    setVisibility({
-      column,
-      value: value
-        ? LIST_COLUMN_VISIBILITY.VISIBLE
-        : LIST_COLUMN_VISIBILITY.INVISIBLE,
-    });
+    setVisibility({ column, value });
   }
 
   function clearSelection() {
-    table.value?.clearSelection();
+    table.value.clearSelection();
   }
 
   function selectAll() {
-    table.value?.toggleAllSelection();
+    table.value.toggleAllSelection();
   }
 
   function onSelectAllAcrossPages() {
-    onSelectionChange(props.data || []);
+    onSelectionChange(props.data);
   }
 
   function xPosActionBtn() {
-    const posTab = table.value?.$el.getBoundingClientRect();
-    return posTab ? window.innerWidth - posTab.right + 30 : 0;
+    if (table.value) {
+      const posTab = table.value.$el.getBoundingClientRect();
+      return window.innerWidth - posTab.right + 30;
+    }
+    return 0;
   }
 
   function onChange(timeout = 50) {
     if (!onChangeDebouncer.value) {
       onChangeDebouncer.value = debounce(async () => {
         if (route && props.storeFiltersUrl) {
-          const query = { ...route.query };
+          const query = { ...(route.query || {}) };
           let shouldChangeRoute = false;
-          if (query.page) {
+          if (query.hasOwnProperty('page')) {
             if (currentPage.value === 1) {
               delete query.page;
               shouldChangeRoute = true;
@@ -827,23 +775,23 @@
             query.page = currentPage.value.toString();
             shouldChangeRoute = true;
           }
-          if (shouldChangeRoute && router)
-            await router.replace({ query }).catch(() => {});
+          if (shouldChangeRoute) router.replace({ query });
         }
-        const filters: Record<string, any> = {};
+        const filters = {};
         for (const key of Object.keys(filter.value)) {
           filters[filterConfig.value[key].property] = {
             type: filterConfig.value[key].type,
             value: filter.value[key],
           };
         }
-        emit('change', {
+        const ctx = {
           page: currentPage.value,
           size: props.pageSize,
           sort: currentSort.value,
           q: searchBarInput.value || null,
-          filters,
-        });
+          filters: { ...filters },
+        };
+        emits('change', ctx);
       }, timeout);
     }
     onChangeDebouncer.value();
@@ -853,7 +801,7 @@
     if (!filterChangeDebouncer.value) {
       filterChangeDebouncer.value = debounce(
         async () => {
-          emit('filter-change', JSON.parse(JSON.stringify(filter.value)));
+          emits('filter-change', JSON.parse(JSON.stringify(filter.value)));
           await onFilterOrSearchChange();
         },
         isRemoteData.value ? 800 : 250
@@ -862,10 +810,10 @@
     filterChangeDebouncer.value();
   }
 
-  function onSearchChange(search: string) {
+  function onSearchChange(search) {
     if (!searchChangeDebouncer.value) {
       searchChangeDebouncer.value = debounce(async () => {
-        emit('search-change', search);
+        emits('search-change', search);
         await onFilterOrSearchChange();
       }, 250);
     }
@@ -881,25 +829,30 @@
     }
   }
 
-  function onExpandChange(row: any, expanded: boolean) {
-    emit('expand-change', row, expanded);
+  function onExpandChange(row, expanded) {
+    emits('expand-change', row, expanded);
   }
 
-  function getFilterUrlKey(filterKey: string) {
+  function getFilterUrlKey(filterKey) {
     return `f_${filterKey}`;
   }
 
   function parseFiltersFromUrl() {
-    const res: Record<string, any> = {};
+    const res = {};
     for (const key of Object.keys(filterConfig.value)) {
-      const urlKey = getFilterUrlKey(key);
-      if (route.query[urlKey]) {
+      if (route.query.hasOwnProperty(getFilterUrlKey(key))) {
         try {
           if (filterConfig.value[key].type === 'daterange') {
-            const content = JSON.parse(route.query[urlKey] as string);
+            const queryParam = route.query[getFilterUrlKey(key)];
+            const content = JSON.parse(
+              Array.isArray(queryParam) ? queryParam[0] : queryParam
+            );
             res[key] = parseDateFilterValue(content);
           } else {
-            res[key] = JSON.parse(route.query[urlKey] as string);
+            const queryParam = route.query[getFilterUrlKey(key)];
+            res[key] = JSON.parse(
+              Array.isArray(queryParam) ? queryParam[0] : queryParam
+            );
           }
         } catch (err) {
           console.error(`Could not parse filter key ${key}`);
@@ -910,51 +863,64 @@
   }
 
   function parseSearchInputFromUrl() {
-    return route.query['list-search'] ? String(route.query['list-search']) : '';
+    return route?.query?.hasOwnProperty('list-search')
+      ? String(route.query['list-search'])
+      : '';
   }
 
   function parsePageFromUrl() {
-    return route.query.page ? parseInt(route.query.page as string, 10) : 1;
+    return route?.query?.hasOwnProperty('page')
+      ? parseInt(
+          Array.isArray(route.query.page)
+            ? route.query.page[0]
+            : route.query.page,
+          10
+        )
+      : 1;
   }
 
-  function parseDateFilterValue(content: any[]) {
+  function parseDateFilterValue(content) {
+    let res = null;
     if (
       !content ||
       content.length !== 2 ||
       (content[0] === null && content[1] === null)
-    )
-      return [null, null];
-    const res = [
-      content[0] === null ? null : new Date(content[0]),
-      content[1] === null ? null : new Date(content[1]),
-    ];
+    ) {
+      res = [null, null];
+    } else if (content[0] === null) {
+      res = [null, new Date(content[1])];
+    } else if (content[1] === null) {
+      res = [new Date(content[0]), null];
+    } else {
+      res = [new Date(content[0]), new Date(content[1])];
+    }
     if (
-      (res[0] && isNaN(res[0].getTime())) ||
-      (res[1] && isNaN(res[1].getTime()))
-    )
+      (res[0] !== null && isNaN(res[0].getTime())) ||
+      (res[1] !== null && isNaN(res[1].getTime()))
+    ) {
       throw new Error('Invalid date');
+    }
     return res;
   }
 
   async function clearURLFilters() {
-    const query = { ...route.query };
+    const query = { ...route?.query };
     let hasChanged = false;
     for (const key of Object.keys(filterConfig.value)) {
-      const urlKey = getFilterUrlKey(key);
-      if (query[urlKey]) {
-        delete query[urlKey];
+      if (query.hasOwnProperty(getFilterUrlKey(key))) {
+        delete query[getFilterUrlKey(key)];
         hasChanged = true;
       }
     }
     if (query['list-search']) {
-      delete query['list-search'];
       hasChanged = true;
+      delete query['list-search'];
     }
     if (hasChanged && router) await router.replace({ query }).catch(() => {});
   }
 
   async function setFiltersInUrl() {
-    const query = { ...route.query };
+    const query = { ...route?.query };
     let hasChanged = false;
     for (const key of Object.keys(filter.value)) {
       if (filter.value[key] !== null) {
@@ -971,12 +937,12 @@
       }
     }
     if (!searchBarInput.value && query['list-search']) {
-      delete query['list-search'];
       hasChanged = true;
+      delete query['list-search'];
     }
     if (searchBarInput.value && searchBarInput.value !== query['list-search']) {
-      query['list-search'] = searchBarInput.value;
       hasChanged = true;
+      query['list-search'] = searchBarInput.value;
     }
     if (hasChanged && router) await router.replace({ query }).catch(() => {});
   }
@@ -984,85 +950,116 @@
   function generateFilterConfig() {
     const res = { ...props.extraFilterConfig };
     const slots = useSlots();
-    if (slots.default) {
+    if (slots && slots.default) {
       const filterableColumns = slots.default().filter((c) => {
-        const propsData = c.props;
-        return (
-          propsData?.filterable !== false &&
-          propsData?.columnKey &&
-          propsData?.filterType
-        );
+        if (!c.props || !c.props.columnKey || !c.props.filterType) return false;
+        return c.props.filterable !== false;
       });
       for (const column of filterableColumns) {
-        const propsData = column.props!;
-        res[propsData.columnKey] = {
-          type: propsData.filterType,
-          property: propsData.filterProperty,
-          label: propsData.filterLabel || i18n.global.t(propsData.columnKey),
+        res[column.props.columnKey] = {
+          type: column.props.filterType,
+          property: column.props.filterProperty,
+          label: column.props.filterLabel
+            ? column.props.filterLabel
+            : i18n.global.t(column.props.columnKey),
         };
-        if (propsData.filterFunction)
-          res[propsData.columnKey].function = propsData.filterFunction;
-        if (propsData.filterConfig)
-          Object.assign(res[propsData.columnKey], propsData.filterConfig);
+        if (column.props.filterFunction)
+          res[column.props.columnKey].function = column.props.filterFunction;
+        if (column.props.filterConfig)
+          Object.assign(res[column.props.columnKey], column.props.filterConfig);
       }
     }
     return res;
   }
 
   function generateEditableColumnList() {
+    const slots = useSlots();
     if (
-      !props.hasConfigurableColumns ||
-      !props.showTableHeader ||
-      !useSlots().default
-    )
-      return [];
-    return (
-      useSlots()
-        .default?.()
-        .filter((c) => c.props?.columnKey)
-        .map((c) => initializeEditableColumn(c)) || []
-    );
+      slots &&
+      slots.default &&
+      props.hasConfigurableColumns &&
+      props.showTableHeader
+    ) {
+      return slots
+        .default()
+        .filter((c) => c.props && c.props.columnKey)
+        .map((c) => initializeEditableColumn(c));
+    }
+    return [];
   }
 
-  function initializeEditableColumn(columnComponent: any) {
-    const key = columnComponent.props!.columnKey;
+  function initializeEditableColumn(columnComponent) {
+    let visibility = null;
+    const key = columnComponent.props.columnKey;
     defaultVisibility.value[key] =
-      columnComponent.props!.columnDefaultVisibility ||
-      LIST_COLUMN_VISIBILITY.VISIBLE;
-    let visibility: boolean | null = null;
+      columnComponent.props.columnDefaultVisibility || 'visible';
     if (props.listKey) {
-      const fullKey = `${props.listKey}@${key}`;
-      if (hasSavedVisibility(fullKey)) {
-        visibility = isColumnVisible(fullKey);
+      if (hasSavedVisibility(`${props.listKey}@${key}`)) {
+        visibility = isColumnVisible(`${props.listKey}@${key}`);
       } else {
         visibility =
           defaultVisibility.value[key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
-        setVisibility({
-          column: fullKey,
-          value: visibility
-            ? LIST_COLUMN_VISIBILITY.VISIBLE
-            : LIST_COLUMN_VISIBILITY.INVISIBLE,
-        });
+        setVisibility({ column: `${props.listKey}@${key}`, value: visibility });
       }
-      columnVisibility.value[fullKey] = visibility;
+      columnVisibility.value[`${props.listKey}@${key}`] = visibility;
     }
-    return { key, label: columnComponent.props!.label || key };
+    return { key, label: columnComponent.props.label ?? key };
   }
 
   function parseTableColumns() {
-    if (!props.backendSortable || !useSlots().default) return;
-    useSlots()
-      .default?.()
-      .forEach((c: any) => {
-        if (c.type.name === 'u-list-column' && c.props?.sortable !== false) {
-          (c.ref as any)?.setCustomSort?.(true);
+    const slots = useSlots();
+    if (slots && slots.default && props.backendSortable) {
+      for (const column of slots.default()) {
+        if (
+          column.type &&
+          typeof column.type === 'object' &&
+          'name' in column.type &&
+          column.type.name === 'UListColumn' &&
+          column.props.sortable !== false
+        ) {
+          column.props.customSort = true;
         }
-      });
+      }
+    }
   }
+
+  // Hooks de cycle de vie
+  onMounted(() => {
+    parseTableColumns();
+    const tableWrapper = table.value.$refs.bodyWrapper;
+    tableWrapper?.addEventListener('mouseleave', (event) => {
+      if (
+        !event.relatedTarget?.classList.contains('u-list-row-buttons') &&
+        !['button', 'svg', 'path', 'td'].includes(
+          event.relatedTarget?.nodeName.toLowerCase()
+        )
+      ) {
+        rowButtonsVisible.value = false;
+        if (oldRowNodeHover.value)
+          oldRowNodeHover.value.classList.remove('color-hover');
+      }
+    });
+    editableColumns.value = generateEditableColumnList();
+    filterConfig.value = generateFilterConfig();
+    filter.value = parseFiltersFromUrl();
+    searchBarInput.value = parseSearchInputFromUrl();
+    emits('filter-change', filter.value);
+    const sort = currentSort.value || savedDefaultSort.value;
+    if (sort) updateTableSort(sort);
+    setTimeout(() => {
+      isMounted.value = true;
+      setDefaultPage(parsePageFromUrl() || 1);
+      onChange();
+    }, 50);
+  });
+
+  onBeforeUnmount(() => {
+    const tableWrapper = table.value.$refs.bodyWrapper;
+    tableWrapper?.removeEventListener('mouseleave');
+  });
 </script>
 
 <style lang="scss">
-  /* Style SCSS inchangé, copié tel quel */
   .el-table__empty-text {
     line-height: normal;
     p {
@@ -1150,7 +1147,6 @@
         justify-content: space-between;
         z-index: 2;
         padding: 20px;
-        width: 100%;
         gap: 12px;
         .header-right {
           display: flex;

@@ -5,7 +5,7 @@
     :class="{ '-unset': !isSet, '-active': active }"
   >
     <div class="filter-label" @click="displayPopper">
-      <b>{{ config.label }} :&nbsp;</b>
+      <b>{{ config.label }}:&nbsp;</b>
       <span>{{ formattedValue }}</span>
     </div>
     <div class="expand-button" @click="displayPopper">
@@ -18,31 +18,39 @@
     <div class="close-button -button-like" @click.stop="onRemove">
       <icon-base icon="icon-close" :size="9" color="var(--color-neutral-700)" />
     </div>
-    <u-filter-item-popper
-      ref="popperRef"
-      class="u-filter-item-popover"
-      :class="config.type ? '-' + config.type : '-unknown'"
-      placement="bottom-start"
-      @hide="onHidePopper"
-    >
-      <component
-        :is="componentsMap[config.type]"
-        v-model="input"
-        :config="config"
-        @change="handleChange"
-      />
-    </u-filter-item-popper>
+    <!-- Popper intégré via UPopper -->
+    <u-popper v-model:visible="visible" placement="bottom-start">
+      <div
+        class="u-filter-item-popper"
+        :class="config.type ? '-' + config.type : '-unknown'"
+      >
+        <component
+          :is="componentsMap[config.type]"
+          v-model="input"
+          :config="config"
+          @change="handleChange"
+        />
+      </div>
+    </u-popper>
   </div>
 </template>
+
 <script setup lang="ts">
-  import UFilterItemPopper from './UFilterItemPopper.vue';
+  import { ref, computed, watch } from 'vue';
+  import UPopper from '../others/UPopper.vue';
+  import IconBase from '../icons/IconBase.vue';
+  // Import des composants de saisie par type
   import UFilterItemBool from './types/UfilterItemBool.vue';
   import UFilterItemEnum from './types/UFilterItemEnum.vue';
   import UFilterItemNumberrange from './types/UFilterItemNumberrange.vue';
   import UFilterItemDaterange from '@/commons/filter/types/UFilterItemDatePicker.vue';
-  import IconBase from '../icons/IconBase.vue';
-  import { ref, computed, watch, onMounted } from 'vue';
   import i18n from '@/i18n';
+
+  interface ConfigType {
+    label: string;
+    type: string;
+    [key: string]: any;
+  }
 
   const props = defineProps({
     modelValue: {
@@ -50,7 +58,8 @@
       default: () => [],
     },
     config: {
-      type: Object,
+      type: Object as () => ConfigType,
+      required: true,
     },
   });
 
@@ -60,8 +69,9 @@
     (e: 'remove'): void;
   }>();
 
-  // Stockage de la valeur (input) et état d'ouverture du popper
+  // Valeur du filtre et contrôle du popper
   const input = ref(props.modelValue);
+  const visible = ref(false);
   const active = ref(false);
 
   watch(
@@ -76,7 +86,7 @@
     return input.value || input.value === false;
   });
 
-  // On mappe le type à son composant correspondant
+  // Mappe le type à son composant et sa fonction de formatage
   const componentsMap: Record<string, any> = {
     bool: UFilterItemBool,
     enum: UFilterItemEnum,
@@ -105,24 +115,22 @@
     emit('change', input.value);
   }
 
-  const popperRef = ref<InstanceType<typeof UFilterItemPopper>>();
-  // Référence au bouton servant de déclencheur
   const buttonRef = ref<HTMLElement>();
 
   function displayPopper() {
     if (!active.value) {
       active.value = true;
-      popperRef.value?.showFilterPopper(buttonRef.value);
+      visible.value = true;
     }
-  }
-
-  function onHidePopper() {
-    active.value = false;
   }
 
   function onRemove() {
     emit('remove');
   }
+
+  watch(visible, (val) => {
+    if (!val) active.value = false;
+  });
 </script>
 
 <style lang="scss" scoped>
@@ -180,6 +188,20 @@
       border-radius: 0 4px 4px 0;
       padding: 0 12px;
       height: 100%;
+    }
+  }
+
+  .u-filter-item-popper {
+    &.-numberrange {
+      width: 450px;
+    }
+    &.-daterange {
+      width: 500px;
+    }
+    &.-enum {
+      padding: 0;
+      max-height: 400px;
+      overflow-y: auto;
     }
   }
 </style>

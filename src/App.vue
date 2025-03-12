@@ -1,81 +1,122 @@
 <template>
-  <div class="demo">
-    <h1>u-button Examples</h1>
-
-    <div class="u-button-group">
-      <h3>Different Types</h3>
-      <u-button type="default" @click="handleClick">{{
-        $t('commons.yes')
-      }}</u-button>
-      <u-button type="primary" @click="handleClick">Primary</u-button>
-      <u-button type="secondary" @click="handleClick">Secondary</u-button>
-      <u-button type="tertiary" @click="handleClick">Tertiary</u-button>
-      <u-button type="warning" @click="handleClick">Warning</u-button>
-      <u-button type="delete" @click="handleClick">delete</u-button>
-    </div>
-
-    <div class="u-button-group">
-      <h3>Icones et États</h3>
-      <u-button icon="icon-add" type="primary" @click="handleClick"
-        >Ajouter</u-button
-      >
-      <u-button icon="icon-delete" type="delete" @click="handleClick"
-        >Supprimer</u-button
-      >
-      <u-button icon="icon-edit" type="secondary" @click="handleClick"
-        >Modifier</u-button
-      >
-    </div>
+  <div class="app">
     <router-view />
   </div>
 </template>
 
-<script setup lang="ts">
-  import { reactive, ref } from 'vue';
-  import UButton from './commons/basic/UButton.vue';
-  const value1 = ref(true);
-  const isActive = ref(false);
-  const seletedDate = ref(null);
-  const value = ref('je suis clicked');
-  const handleClick = () => {
-    alert(value.value);
-  };
-  import { ElMessage, ElMessageBox } from 'element-plus';
+<script setup lang="ts"></script>
 
-  const open = () => {
-    ElMessageBox.confirm(
-      'proxy will permanently delete the file. Continue?',
-      'Warning',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'success',
+<style lang="scss">
+  body {
+    margin: 0;
+    padding: 0;
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+    }
+
+    & .el-loading-mask {
+      z-index: 900;
+      background-color: var(--color-neutral-100);
+    }
+
+    .el-loading-spinner .path {
+      stroke: var(--color-primary-500);
+    }
+
+    hr {
+      border-top: 1px solid var(--color-neutral-300);
+      border-bottom: none;
+    }
+
+    &.konami-code {
+      background-color: black;
+
+      @keyframes konami {
+        0% {
+          transform: scale(1) rotate(0deg);
+        }
+        100% {
+          transform: scale(0) rotate(720deg);
+        }
       }
-    );
-  };
-</script>
 
-<style scoped>
-  .demo {
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-  }
+      #app {
+        transform-origin: center center;
+        animation: konami 3s ease-in-out;
+        animation-fill-mode: forwards;
+      }
+    }
 
-  .u-button-group {
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+    #app {
+      --header-height: 60px;
+      // Both top and bottom stonly banners can be displayed simultaneously
+      --stonly-banner-height: calc(
+        var(
+            --stonly-banner-top-sticky-margin,
+            var(--stonly-banner-top-margin, 0px)
+          ) +
+          var(--stonly-banner-bottom-margin, 0px)
+      );
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-neutral-100);
+      width: 100%;
+      min-height: 100%;
 
-  h1 {
-    margin-bottom: 2rem;
-  }
+      // AngularJs: bootstrap override el-theme
+      .collapse {
+        display: inherit;
+      }
 
-  h3 {
-    width: 100%;
-    margin-bottom: 1rem;
+      .app-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: calc(
+          100vh - var(--header-height) - var(--stonly-banner-height)
+        );
+
+        &.login {
+          min-height: calc(100vh - var(--stonly-banner-height));
+        }
+
+        .main-content {
+          display: flex;
+          flex-direction: column;
+          background-color: transparent;
+          width: 100%;
+          max-height: calc(
+            100vh - var(--header-height) - var(--stonly-banner-height)
+          );
+          overflow-y: auto;
+
+          &.login {
+            max-height: calc(100vh - var(--stonly-banner-height));
+          }
+        }
+      }
+    }
+
+    .orange-warning {
+      background-color: var(--color-status-warning);
+
+      .el-message__content {
+        margin: auto;
+        width: 85%;
+        color: var(--color-white);
+        font-weight: 500;
+      }
+
+      .el-message__closeBtn {
+        color: var(--color-white);
+      }
+
+      .el-icon-warning {
+        color: var(--color-white);
+      }
+    }
   }
 </style>

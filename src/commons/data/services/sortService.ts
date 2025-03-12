@@ -1,83 +1,68 @@
-export enum SortOrder {
-  ASCENDING = 'ascending',
-  DESCENDING = 'descending',
-}
+type OrderType = 'ascending' | 'descending';
 
-export interface SortChoice {
+interface SortChoice {
   label: string;
   prop: string;
-  order: SortOrder;
+  order: OrderType;
 }
 
-export interface SortServiceSettings {
-  choices: SortChoice[];
-  defaultProp: string | null;
-  defaultOrder: SortOrder;
-  placeholder: string | null;
+interface SortServiceSettings {
+  choices?: SortChoice[];
+  defaultProp?: string | null;
+  defaultOrder?: OrderType;
+  placeholder?: string | null;
 }
 
-export interface SortContext {
-  sort?: {
-    prop?: string;
-    order?: SortOrder;
+interface SortContext {
+  sort: {
+    prop: string | null;
+    order: OrderType | null;
   };
 }
 
-export interface SelectOption {
+interface SelectOption {
   label: string;
   value: number;
 }
 
-const SORT_DEFAULTS: SortServiceSettings = {
-  choices: [],
-  defaultProp: null,
-  defaultOrder: SortOrder.ASCENDING,
-  placeholder: null,
-};
-
 export default class SortService {
-  private readonly choices: SortChoice[];
-  private prop: string | null;
-  private order: SortOrder;
-  private readonly placeholder: string | null;
+  private _choices: SortChoice[];
+  private _prop: string | null;
+  private _order: OrderType | null;
+  private _placeholder: string | null;
 
-  static readonly ORDER_ASC: SortOrder = SortOrder.ASCENDING;
-  static readonly ORDER_DESC: SortOrder = SortOrder.DESCENDING;
+  static ORDER_ASC: OrderType = 'ascending';
+  static ORDER_DESC: OrderType = 'descending';
 
-  constructor(settings: Partial<SortServiceSettings> = {}) {
-    const mergedSettings: SortServiceSettings = {
-      ...SORT_DEFAULTS,
-      ...settings,
-    };
+  constructor(settings: SortServiceSettings = sortDefault) {
+    const mSettings = Object.assign({}, sortDefault, settings);
 
-    this.choices = mergedSettings.choices;
-    this.prop = mergedSettings.defaultProp;
-    this.order = mergedSettings.defaultOrder;
-    this.placeholder = mergedSettings.placeholder;
+    this._choices = mSettings.choices!;
+    this._prop = mSettings.defaultProp;
+    this._order = mSettings.defaultOrder!;
+    this._placeholder = mSettings.placeholder;
   }
 
-  get getPlaceholder(): string | null {
-    return this.placeholder;
+  get placeholder(): string | null {
+    return this._placeholder;
   }
 
   get selectValue(): number {
-    return this.choices.findIndex((choice) => choice.prop === this.prop);
+    return this._choices.findIndex((choice) => choice.prop === this._prop);
   }
 
   set selectValue(value: number) {
-    const choice = this.choices[value];
-    if (choice) {
-      this.prop = choice.prop;
-      this.order = choice.order;
-    }
+    const choice = this._choices[value];
+    this._prop = choice.prop;
+    this._order = choice.order;
   }
 
   get selectOptions(): SelectOption[] {
     const options: SelectOption[] = [];
 
-    for (let i = 0; i < this.choices.length; i++) {
+    for (let i = 0; i < this._choices.length; i++) {
       options.push({
-        label: this.choices[i].label,
+        label: this._choices[i].label,
         value: i,
       });
     }
@@ -86,27 +71,34 @@ export default class SortService {
   }
 
   get context(): SortContext | null {
-    if (!this.prop || !this.order) return null;
+    if (!this._prop || !this._order) return null;
 
     return {
-      sort: { prop: this.prop, order: this.order },
+      sort: { prop: this._prop, order: this._order },
     };
   }
 
   static mergeContext(
-    target: Partial<SortContext>,
-    source: Partial<SortContext>
+    target: SortContext | null,
+    source: SortContext | null
   ): SortContext {
     return {
       sort: {
-        prop: source.sort?.prop || target.sort?.prop,
-        order: source.sort?.order || target.sort?.order,
+        prop: source?.sort?.prop || target?.sort?.prop || null,
+        order: source?.sort?.order || target?.sort?.order || null,
       },
     };
   }
 
-  orderBy(prop: string, order: SortOrder = SortOrder.ASCENDING): void {
-    this.prop = prop;
-    this.order = order;
+  orderBy(prop: string, order: OrderType = SortService.ORDER_ASC): void {
+    this._prop = prop;
+    this._order = order;
   }
 }
+
+const sortDefault: SortServiceSettings = {
+  choices: [],
+  defaultProp: null,
+  defaultOrder: SortService.ORDER_ASC,
+  placeholder: null,
+};

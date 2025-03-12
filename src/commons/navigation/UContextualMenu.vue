@@ -32,7 +32,7 @@
           <div
             v-if="item.children && item.children.length > 0"
             class="arrow-icon-item-wrapper"
-            aria-hidden="true"
+            ariu-hidden="true"
           >
             <icon-base
               icon="icon-arrow"
@@ -265,7 +265,7 @@
       top: 6px;
       right: 12px;
     }
-    > .a-switch {
+    > .u-switch {
       margin-left: 24px;
     }
     .item-icon {

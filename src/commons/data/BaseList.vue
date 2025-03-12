@@ -9,7 +9,7 @@
       </template>
     </base-list-header>
 
-    <div class="u-list-container">
+    <div v-if="loading" class="u-list-container">
       <slot name="items" :items="items">
         <div v-for="(item, key) in items" :key="key">
           <slot name="item" :item="item" />
@@ -35,8 +35,8 @@
       v-if="pagination"
       ref="paginationRef"
       :total="pagination.itemsTotal"
-      :size="pagination.getSize"
-      :default-page="pagination.getDefaultPage"
+      :size="pagination.size"
+      :default-page="pagination.defaultPage"
       @page-change="onPageChange"
     />
 
@@ -50,36 +50,48 @@
   import UListPagination from './UListPagination.vue';
   import BaseListHeader from './BaseListHeader.vue';
 
-  const props = defineProps({
-    listService: {
-      type: Object as () => ListService<any>,
-      required: false,
-      default: null,
-    },
-  });
+  const props = defineProps<{
+    listService: ListService | null;
+  }>();
 
   const items = ref<any[]>([]);
   const loading = ref(true);
+  const paginationRef = ref<InstanceType<typeof UListPagination> | null>(null);
 
-  const pagination = computed(() => props.listService?.getPagination || null);
-  const search = computed(() => props.listService?.getSearch || null);
-  const isFiltered = computed(() => !!search.value?.isFiltered);
+  const pagination = computed(() => {
+    return props.listService?.pagination || null;
+  });
+
+  const search = computed(() => {
+    return props.listService?.search || null;
+  });
+
+  const isFiltered = computed(() => {
+    return !!search.value?.isFiltered;
+  });
+
+  onMounted(async () => {
+    if (items.value.length) {
+      props.listService?.onRetrieveData((data: any[]) => {
+        items.value = data;
+      });
+
+      if (props.listService?.autoload) await retrieveData();
+    }
+  });
 
   async function onPageChange(pageNumber: number) {
-    if (props.listService?.getPagination) {
-      props.listService.getPagination.changePage(pageNumber);
-      await retrieveData();
-    }
+    props.listService?.pagination?.changePage(pageNumber);
+    await retrieveData();
   }
 
   async function onFilterChange() {
-    items.value = (await props.listService.onFilterChange()) || [];
-    const paginationRef = ref<InstanceType<typeof UListPagination> | null>(
-      null
-    );
-    if (paginationRef.value) {
-      paginationRef.value.currentPage =
-        props.listService.getPagination.getPageNumber;
+    if (props.listService) {
+      items.value = await props.listService.onFilterChange();
+      if (paginationRef.value) {
+        paginationRef.value.currentPage =
+          props.listService.pagination?.pageNumber || 1;
+      }
     }
   }
 
@@ -93,16 +105,6 @@
       loading.value = false;
     }
   }
-
-  onMounted(async () => {
-    props.listService?.onRetrieveData((data) => {
-      items.value = data;
-    });
-
-    if (props.listService?.getAutoload) {
-      await retrieveData();
-    }
-  });
 </script>
 
 <style lang="scss" scoped>

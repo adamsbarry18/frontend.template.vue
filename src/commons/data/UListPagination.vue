@@ -141,6 +141,10 @@
           position: relative;
           bottom: 2px;
         }
+
+        &.is-active {
+          background-color: var(--color-blue-200);
+        }
       }
 
       .more::before {

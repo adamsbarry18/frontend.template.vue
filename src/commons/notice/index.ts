@@ -1,15 +1,7 @@
 import UConfirm from './UConfirm';
-import UConfirmDeleteList from './UConfirmDeleteList.vue';
-import UConfirmDismissEntity from './UConfirmDismissEntity.vue';
 import UMessage from './UMessage';
 import UMessageBox from './UMessageBox';
 import UPrompt from './UPrompt';
+import UConfirmDelete from './UConfirmDelete.vue';
 
-export {
-  UConfirm,
-  UConfirmDeleteList,
-  UConfirmDismissEntity,
-  UMessage,
-  UMessageBox,
-  UPrompt,
-};
+export { UConfirm, UMessage, UMessageBox, UPrompt, UConfirmDelete };

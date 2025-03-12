@@ -117,5 +117,6 @@
   "commons.code-editor.search.match-case": "Respecter la casse",
   "commons.code-editor.search.regexp": "Regexp",
   "commons.code-editor.search.by-word": "Mot entier",
-  "commons.column-settings.column-locked": "Toujours affiché"
+  "commons.column-settings.column-locked": "Toujours affiché",
+  "entity.label": "Entité"
 }
