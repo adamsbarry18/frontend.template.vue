@@ -43,7 +43,7 @@
     nextTick,
     PropType,
   } from 'vue';
-  import { ElCascader } from 'element-plus';
+  import { ElCascader, type CascaderValue } from 'element-plus';
   import i18n from '@/i18n';
 
   const props = defineProps({
@@ -56,7 +56,7 @@
       default: () => [],
     },
     input: {
-      type: Array,
+      type: Array as PropType<any[]>,
       default: () => [],
     },
     labelFormatter: {
@@ -86,7 +86,7 @@
 
   const emit = defineEmits(['change']);
 
-  const value = ref(props.input || []);
+  const value = ref<CascaderValue>(props.input || []);
   const hasChanged = ref(false);
   const isFocused = ref(false);
   const elCascaderRef = ref<InstanceType<typeof ElCascader>>();
@@ -97,8 +97,8 @@
   }));
 
   const placeholderLabel = computed(() => {
-    return value.value?.length > 0
-      ? props.labelFormatter([...value.value])
+    return (value.value as any[])?.length > 0
+      ? props.labelFormatter([...(value.value as any[])])
       : props.placeholder;
   });
 
@@ -135,7 +135,10 @@
   });
 
   const handleChange = () => {
-    emit('change', value.value?.length ? [...value.value] : null);
+    emit(
+      'change',
+      (value.value as any[])?.length ? [...(value.value as any[])] : null
+    );
     hasChanged.value = true;
   };
 
@@ -158,10 +161,12 @@
   };
 
   const formatLabel = () => {
-    if (props.labelFormatter && value.value?.length) {
+    if (props.labelFormatter && (value.value as any[])?.length) {
       nextTick(() => {
         if (elCascaderRef.value?.$el && inputCascader.value) {
-          inputCascader.value.value = props.labelFormatter([...value.value]);
+          inputCascader.value.value = props.labelFormatter([
+            ...(value.value as any[]),
+          ]);
         }
       });
     }

@@ -44,7 +44,7 @@
 
   const props = defineProps({
     modelValue: {
-      type: Array as PropType<Date[] | null>,
+      type: Array as PropType<any[] | null>,
       default: null,
     },
     config: {
@@ -55,7 +55,7 @@
 
   const emit = defineEmits(['update:value', 'change']);
 
-  const internalValue = ref<Date[] | null>(props.modelValue);
+  const internalValue = ref(props.modelValue);
 
   const defaultStartValue = computed(() => {
     return props.config.hasOwnProperty('defaultStart')
@@ -69,7 +69,7 @@
       : null;
   });
 
-  const getFormattedValue = (value: [Date | null, Date | null]): string => {
+  const getFormattedValue = (value) => {
     return formatDateRange(value);
   };
 

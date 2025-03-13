@@ -18,38 +18,43 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import type { CascaderOption, CascaderProps } from 'element-plus';
+  import { ref, onMounted, PropType } from 'vue';
   import { ElCascader } from 'element-plus';
   import i18n from '@/i18n';
 
   // Props definition
-  interface Props {
-    placeholder?: string;
-    options?: CascaderOption[];
-    input?: Array<string | number>;
-    allowParentSelection?: boolean;
-    expandTrigger?: CascaderProps['expandTrigger'];
-    disabled?: boolean;
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
-    placeholder: () => i18n.global.t('commons.searchbar.default-placeholder'),
-    options: () => [],
-    input: undefined,
-    allowParentSelection: false,
-    expandTrigger: 'click',
-    disabled: false,
+  const props = defineProps({
+    placeholder: {
+      type: String,
+      default: i18n.global.t('commons.searchbar.default-placeholder'),
+    },
+    options: {
+      type: Array as PropType<any[]>,
+      default: () => [],
+    },
+    input: {
+      type: Array,
+    },
+    allowParentSelection: {
+      type: Boolean,
+      default: false,
+    },
+    expandTrigger: {
+      type: String as PropType<'click' | 'hover'>,
+      default: 'click',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   // Emits definition
-  const emit = defineEmits<{
-    (e: 'select', value: Array<string | number> | null): void;
-  }>();
+  const emit = defineEmits(['select']);
 
   // Reactive state
-  const value = ref<Array<string | number> | null>(null);
-  const lastValue = ref<Array<string | number> | null>(null);
+  const value = ref(null);
+  const lastValue = ref(null);
   const hasSelectedItem = ref(false);
 
   // Lifecycle hooks

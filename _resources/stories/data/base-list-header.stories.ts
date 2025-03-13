@@ -25,7 +25,7 @@ export const ListHeader = () => ({
       },
       entity: {
         entityIcon: 'icon-entity',
-        entityLabelKey: 'entity.label',
+        entityLabelKey: 'commons.entity.label',
       },
       sort: {
         selectValue: '',

@@ -3,10 +3,10 @@ import './assets/style/main.scss';
 import App from './App.vue';
 import i18n from '@/i18n';
 import router from '@/router';
-import installPlugins from '@/plugins/install';
+import plugins from './plugins';
 
 const app = createApp(App);
 app.use(router);
 app.use(i18n);
-app.use(installPlugins);
+app.use(plugins);
 app.mount('#app');

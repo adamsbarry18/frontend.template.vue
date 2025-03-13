@@ -10,6 +10,7 @@ import UListPagination from './UListPagination.vue';
 import UListRowButtons from './UListRowButtons.vue';
 import UListSelectionActions from './UListSelectionActions.vue';
 import USortableList from './USortableList.vue';
+import UConfidenceIndicator from './UConfidenceIndicator.vue';
 
 export * from '@/commons/data/services';
 
@@ -26,4 +27,5 @@ export {
   UListRowButtons,
   UListSelectionActions,
   USortableList,
+  UConfidenceIndicator,
 };

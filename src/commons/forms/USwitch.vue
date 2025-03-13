@@ -34,7 +34,10 @@
   import UInfo from '@/commons/others/UInfo.vue';
 
   const props = defineProps({
-    modelValue: Boolean,
+    modelValue: {
+      type: [Boolean, String, Number],
+      default: false,
+    },
     trueLabel: { type: String, default: '' },
     falseLabel: { type: String, default: '' },
     displayBothLabels: { type: Boolean, default: false },

@@ -19,7 +19,6 @@
 
   const props = defineProps({
     modelValue: {
-      type: Number,
       required: true,
     },
     min: {
@@ -42,8 +41,12 @@
     get() {
       return props.modelValue;
     },
-    set(val: number) {
-      emit('update:modelValue', val);
+    set(val) {
+      if (Array.isArray(val)) {
+        emit('update:modelValue', val[0]); // Use the first value if it's an array
+      } else {
+        emit('update:modelValue', val);
+      }
     },
   });
   const formatTooltip = (value: number): string => {

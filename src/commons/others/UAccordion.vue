@@ -15,7 +15,6 @@
 
   const props = defineProps({
     modelValue: {
-      type: String,
       default: null,
     },
   });
@@ -24,7 +23,7 @@
     (e: 'change', value: string | null): void;
   }>();
 
-  const activePanel = ref<string | null>(null);
+  const activePanel = ref(null);
 
   watch(
     () => props.modelValue,

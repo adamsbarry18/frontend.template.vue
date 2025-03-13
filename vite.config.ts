@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'MyDesignSystem',
+      name: 'DesignSystem',
     },
     rollupOptions: {
       external: [
@@ -24,6 +24,12 @@ export default defineConfig({
         'element-plus/lib/locale',
         'vue',
       ],
+      output: {
+        globals: {
+          vue: 'Vue',
+          'element-plus': 'ElementPlus',
+        },
+      },
     },
   },
   esbuild: {

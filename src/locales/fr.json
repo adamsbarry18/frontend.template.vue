@@ -118,5 +118,15 @@
   "commons.code-editor.search.regexp": "Regexp",
   "commons.code-editor.search.by-word": "Mot entier",
   "commons.column-settings.column-locked": "Toujours affiché",
-  "entity.label": "Entité"
+  "commons.entity.label": "Entité",
+  "commons.confidence-indicator.threshold-0": "Neutre",
+  "commons.confidence-indicator.threshold-1": "Neutre",
+  "commons.confidence-indicator.threshold-2": "Tendance",
+  "commons.confidence-indicator.threshold-3": "Directionnel",
+  "commons.confidence-indicator.threshold-4": "Exploitable",
+  "commons.confidence-indicator.exploration.threshold-0": "Basse",
+  "commons.confidence-indicator.exploration.threshold-1": "Basse",
+  "commons.confidence-indicator.exploration.threshold-2": "Moyenne",
+  "commons.confidence-indicator.exploration.threshold-3": "Haute",
+  "commons.confidence-indicator.exploration.threshold-4": "Très haute"
 }

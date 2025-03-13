@@ -74,7 +74,9 @@ export function wait(variable: string, expire?: number): Promise<any> {
     const checkVariable = () => {
       try {
         // eslint-disable-next-line no-eval
-        const value = eval(variable);
+        const value = variable
+          .split('.')
+          .reduce((acc, part) => acc?.[part], window);
         if (typeof value !== 'undefined') {
           resolve(value);
         } else if (expire && Date.now() - startTime > expire) {
