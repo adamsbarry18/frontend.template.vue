@@ -6,7 +6,7 @@ import { vueRouter } from 'storybook-vue3-router';
 import i18n from '@/i18n';
 import './style.scss';
 import '../src/assets/style/main.scss';
-import installPlugins from '@/plugins/install';
+import plugins from '@/plugins';
 
 const app = createApp({});
 app.config.globalProperties.$t = (key: string, ...args: any[]) =>
@@ -15,7 +15,7 @@ app.config.globalProperties.$t = (key: string, ...args: any[]) =>
 // Installation globale de i18n
 setup((app) => {
   app.use(i18n);
-  app.use(installPlugins);
+  app.use(plugins);
 });
 
 export const globalTypes = {

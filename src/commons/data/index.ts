@@ -11,6 +11,12 @@ import UListRowButtons from './UListRowButtons.vue';
 import UListSelectionActions from './UListSelectionActions.vue';
 import USortableList from './USortableList.vue';
 import UConfidenceIndicator from './UConfidenceIndicator.vue';
+import UCategoryFunnel from './UCategoryFunnel.vue';
+import UDateDisplay from './UDateDisplay.vue';
+import ChartNoData from './ChartNoData.vue';
+import UFunnel from './UFunnel.vue';
+import UBar from './UBar.vue';
+import UDonutChart from './UDonutChart.vue';
 
 export * from '@/commons/data/services';
 
@@ -28,4 +34,10 @@ export {
   UListSelectionActions,
   USortableList,
   UConfidenceIndicator,
+  UCategoryFunnel,
+  UDateDisplay,
+  ChartNoData,
+  UFunnel,
+  UBar,
+  UDonutChart,
 };

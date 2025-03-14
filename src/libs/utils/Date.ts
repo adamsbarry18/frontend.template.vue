@@ -232,7 +232,7 @@ export const initializeDateLocale = (lang: string): void => {
  * @param date Date to validate.
  * @returns True if the date is a valid Date object and not NaN, false otherwise.
  */
-export const isDateValid = (date: Date): boolean =>
+export const isDateValid = (date): boolean =>
   date instanceof Date && !isNaN(date.getTime());
 
 /**

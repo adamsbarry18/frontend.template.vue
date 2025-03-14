@@ -128,5 +128,8 @@
   "commons.confidence-indicator.exploration.threshold-1": "Basse",
   "commons.confidence-indicator.exploration.threshold-2": "Moyenne",
   "commons.confidence-indicator.exploration.threshold-3": "Haute",
-  "commons.confidence-indicator.exploration.threshold-4": "Très haute"
+  "commons.confidence-indicator.exploration.threshold-4": "Très haute",
+  "commons.funnel.category-summary": "{percentage} des {total}",
+  "commons.funnel.category-summary.intentions": "{percentage} de taux de passage des visites en intentions",
+  "commons.funnel.category-summary.transactions": "{percentage} de taux de transformation des intentions"
 }
