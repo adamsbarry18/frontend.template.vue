@@ -19,6 +19,7 @@ import UBar from './UBar.vue';
 import UDonutChart from './UDonutChart.vue';
 import UDataKpiCard from './UDataKpiCard.vue';
 import UDonutGauge from './UDonutGauge.vue';
+import UKpiCard from './UKpiCard.vue';
 
 export * from '@/commons/data/services';
 
@@ -44,4 +45,5 @@ export {
   UDonutChart,
   UDataKpiCard,
   UDonutGauge,
+  UKpiCard,
 };
