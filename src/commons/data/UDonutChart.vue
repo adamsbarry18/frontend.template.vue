@@ -18,9 +18,7 @@
   import { getCssVariable } from '@/libs/utils/Style';
   import { getGraphColorPalette } from '@/libs/utils/Color';
   import ChartNoData from './ChartNoData.vue';
-  import { useNumbers } from '@/composabes/useNumbers';
-
-  const { numberFormat } = useNumbers();
+  import { numberFormat } from '../../libs/utils/Number';
 
   const props = defineProps({
     centerText: {
@@ -226,7 +224,7 @@
 <style lang="scss">
   .u-donut-chart {
     width: 100%;
-    height: 200px;
+    height: 250px;
     .donut,
     .donut > div,
     .donut canvas {

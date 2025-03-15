@@ -99,7 +99,7 @@
   import { debounce } from '@/libs/utils/Debounce.js';
   import UTooltip from '@/commons/others/UTooltip.vue';
   import IconBase from '@/commons/icons/IconBase.vue';
-  import { MIN_INT, MAX_INT } from '@/libs/utils/constants';
+  import { MIN_INT, MAX_INT } from '../../libs/utils/Number';
 
   // Déclaration des props en utilisant l'objet
   const props = defineProps({

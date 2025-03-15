@@ -1,4 +1,3 @@
-<!-- UCategoryFunnel.vue -->
 <template>
   <div class="u-category-funnel">
     <div
@@ -29,7 +28,7 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { getGraphColorPalette } from '@/libs/utils/Color';
-  import { useNumbers } from '@/composabes/useNumbers';
+  import { numberFormat } from '../../libs/utils/Number';
 
   interface Category {
     title: string;
@@ -42,8 +41,6 @@
     categories: Category[];
     colors?: string[];
   }>();
-
-  const { numberFormat } = useNumbers();
 
   // Utilisation de la palette de couleurs par défaut si aucune n'est fournie
   const colors = computed(() => props.colors ?? getGraphColorPalette());

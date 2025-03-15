@@ -131,5 +131,6 @@
   "commons.confidence-indicator.exploration.threshold-4": "Very high",
   "commons.funnel.category-summary": "{percentage} of {total}",
   "commons.funnel.category-summary.intentions": "{percentage} visit into intention transform rate",
-  "commons.funnel.category-summary.transactions": "{percentage} intention transform rate"
+  "commons.funnel.category-summary.transactions": "{percentage} intention transform rate",
+  "commons.comparison-vs-last-12-months": "vs. previous 12 months"
 }

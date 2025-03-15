@@ -90,9 +90,7 @@
   import { ref, computed, onMounted } from 'vue';
   import { graphic } from 'echarts';
   import ChartNoData from './ChartNoData.vue';
-  import { useNumbers } from '@/composabes/useNumbers';
-
-  const { numberFormat } = useNumbers();
+  import { numberFormat } from '../../libs/utils/Number';
 
   // Définition des types
   interface Category {

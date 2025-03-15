@@ -1,5 +1,5 @@
+import { defineComponent } from 'vue';
 import UDonutChart from '@/commons/data/UDonutChart.vue';
-import { ref } from 'vue';
 
 export default {
   title: 'data/DonutChart',
@@ -8,60 +8,111 @@ export default {
 
 export const DonutChart = () => ({
   components: { UDonutChart },
-  template: `
-  <div style="display: flex; flex-direction: column; gap: 40px; padding: 20px;">
-    <!-- Cas 1: Graphique donut avec des données -->
-    <div>
-      <h3>Donut Chart with Data</h3>
-      <u-donut-chart
-        :data="data"
-        center-text="Total"
-        center-subtext="Units"
-        title="My Donut Chart"
-        :show-label
-        :with-legend
-      />
-    </div>
-
-    <!-- Cas 2: Graphique donut sans données -->
-    <div>
-      <h3>Donut Chart with No Data</h3>
-      <u-donut-chart
-        :data="emptyData"
-        center-text="No Data"
-        center-subtext=""
-        title="Empty Donut Chart"
-        :show-label="false"
-        :with-legend="false"
-      />
-    </div>
-
-    <!-- Cas 3: Graphique donut en mode sombre -->
-    <div>
-      <h3>Donut Chart in Dark Mode</h3>
-      <u-donut-chart
-        :data="data"
-        center-text="Total"
-        center-subtext="Units"
-        title="Dark Mode Chart"
-        :show-label="true"
-        :with-legend="true"
-        class="-dark"
-      />
-    </div>
-  </div>
-`,
   setup() {
-    // Exemple de données pour le graphique donut
-    const data = ref([
-      { name: 'Category A', value: 40 },
-      { name: 'Category B', value: 25 },
-      { name: 'Category C', value: 35 },
-    ]);
+    const defaultData = [
+      { value: 1048, name: 'Search Engine' },
+      { value: 735, name: 'Direct' },
+      { value: 580, name: 'Email' },
+      { value: 484, name: 'Union Ads' },
+      { value: 300, name: 'Video Ads' },
+    ];
+    const colors = [
+      '#5470c6',
+      '#91cc75',
+      '#fac858',
+      '#ee6666',
+      '#73c0de',
+      '#3ba272',
+      '#fc8452',
+      '#9a60b4',
+      '#ea7ccc',
+    ];
 
-    // Exemple de données vide
-    const emptyData = ref([]);
-
-    return { data, emptyData };
+    return { defaultData, colors };
   },
+  template: `
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+        <!-- Default -->
+        <div style="height: 400px; width: 400px; border: 1px solid #ccc; padding: 10px;">
+          <h3>Default</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+          />
+        </div>
+        
+        <!-- With Center Text -->
+        <div style="height: 400px; width: 400px; border: 1px solid #ccc; padding: 10px;">
+          <h3>With Center Text</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+            centerText="403.5 k"
+            centerSubtext="Individus ciblés\nestimés"
+          />
+        </div>
+        
+        <!-- With Sum -->
+        <div style="height: 400px; width: 400px; border: 1px solid #ccc; padding: 10px;">
+          <h3>With Sum</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+            withSum
+            centerSubtext="clicks"
+          />
+        </div>
+        
+        <!-- With Legend -->
+        <div style="height: 400px; width: 400px; border: 1px solid #ccc; padding: 10px;">
+          <h3>With Legend</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+            withLegend
+          />
+        </div>
+        
+        <!-- With Sum And Legend -->
+        <div style="height: 400px; width: 400px; border: 1px solid #ccc; padding: 10px;">
+          <h3>With Sum And Legend</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+            withSum
+            withLegend
+          />
+        </div>
+        
+        <!-- With Label -->
+        <div style="height: 400px; width: 400px; border: 1px solid #ccc; padding: 10px;">
+          <h3>With Label</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+            showLabel
+          />
+        </div>
+        <!-- With All Features -->
+        <div style="height: 400px; width: auto; border: 1px solid #ccc; padding: 10px;">
+          <h3>With All Features</h3>
+          <u-donut-chart
+            :data="defaultData"
+            title="Access From"
+            :colors="colors"
+            centerText="403.5 k"
+            center-subtext="With All Features"
+            withSum
+            withLegend
+            showLabel
+          />
+        </div>
+      </div>
+    `,
 });
