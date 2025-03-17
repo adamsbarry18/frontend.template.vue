@@ -1,103 +1,157 @@
 import UDialog from '@/commons/others/UDialog.vue';
-import UButton from '@/commons/basic/UButton.vue';
 import { ref } from 'vue';
+import UButton from '@/commons/basic/UButton.vue';
 
 export default {
   title: 'others/Dialog',
+  component: UDialog,
 };
 
-export const BasicDialog = () => ({
+// 1. Configuration par défaut
+export const Default = () => ({
   components: { UDialog, UButton },
   template: `
     <div>
-      <u-button @click="infoDialog=true">Open info dialog</u-button>
-      <u-button @click="leftPanelDialog=true">Open left-panel dialog</u-button>
-
-      <u-button @click="buttonDialog=true">Open button dialog</u-button>
-
-      <u-button @click="confirmDialog=true">Open confirm dialog</u-button>
-      <u-button @click="closeIconOutsideDialog=true">Open close icon outside dialog</u-button>
-
-      <u-dialog :visible="infoDialog" @update:visible="infoDialog = $event" closable has-back-button @back="onBack()" height="200px">
+      <u-button @click="showDialog">Open Dialog</u-button>
+      <u-dialog :visible="visible" @close="closeDialog">
         <template #title>
-            <h1>This is title</h1>
+          <h2>Dialog Title</h2>
         </template>
-        <p>Une information très utile</p>
+        <p>Dialog content goes here.</p>
         <template #footer>
-            ©Jambon corp
-        </template>
-        <template>
-            <slot name="help">Une aide probablement essentielle</slot>
+          <u-button @click="closeDialog">Close</u-button>
         </template>
       </u-dialog>
-
-      <u-dialog :visible="leftPanelDialog" @update:visible="leftPanelDialog = $event" closable height="100px">
-      <template #title>
-            <h1>This is title</h1>
-        </template>
-        <template #left-panel>
-         <p> - Item 1</p>
-         <p> - Item 2</p>
-         <p> - Item 3</p>
-         <p> - Item 4</p>
-        </template>
-        <p>Une information très utile</p>
-        <template #help>
-            <p>Une aide probablement essentielle</p>
-        </template>
-        <template #footer>
-            ©Jambon corp
-        </template>
-      </u-dialog>
-
-      <u-dialog :visible="buttonDialog" @update:visible="buttonDialog = $event" height="100px">
-        <p>Quelle heure est-il?</p>
-        <template #footer>
-            <u-button @click="buttonDialog=false">Ok</u-button>
-            <u-button type="primary"  @click="buttonDialog=false">D'accord</u-button>
-        </template>
-        <template #left-panel>
-         <p> - Item 1</p>
-         <p> - Item 2</p>
-         <p> - Item 3</p>
-         <p> - Item 4</p>
-        </template>
-      </u-dialog>
-
-      <u-dialog @before-close="handleClose" :visible="confirmDialog" @update:visible="confirmDialog = $event" closable height="100px">
-        <p>Close me</p>
-      </u-dialog>
-
-      <u-dialog :visible="closeIconOutsideDialog" @update:visible="closeIconOutsideDialog = $event" closable close-icon-outside height="100px">
-        <p>Close icon is outside of dialog</p>
-      </u-dialog>
-    </div>
-        `,
+    </div>`,
   setup() {
-    const infoDialog = ref(false);
-    const leftPanelDialog = ref(false);
-    const buttonDialog = ref(false);
-    const confirmDialog = ref(false);
-    const closeIconOutsideDialog = ref(false);
+    const visible = ref(false);
+    const showDialog = () => {
+      visible.value = true;
+    };
+    const closeDialog = () => {
+      visible.value = false;
+    };
+    return { visible, showDialog, closeDialog };
+  },
+});
 
+// 2. Avec panneau gauche
+export const WithLeftPanel = () => ({
+  components: { UDialog, UButton },
+  template: `
+    <div>
+      <u-button @click="showDialog">Open Dialog with Left Panel</u-button>
+      <u-dialog :visible="visible" @close="closeDialog">
+        <template #left-panel>
+          <div>Left Panel Content</div>
+        </template>
+        <template #title>
+          <h2>Dialog Title</h2>
+        </template>
+        <p>Dialog content goes here.</p>
+        <template #footer>
+          <u-button @click="closeDialog">Close</u-button>
+        </template>
+      </u-dialog>
+    </div>`,
+  setup() {
+    const visible = ref(false);
+    const showDialog = () => {
+      visible.value = true;
+    };
+    const closeDialog = () => {
+      visible.value = false;
+    };
+    return { visible, showDialog, closeDialog };
+  },
+});
+
+// 3. Avec icône de fermeture extérieure
+export const WithOutsideCloseIcon = () => ({
+  components: { UDialog, UButton },
+  template: `
+    <div>
+      <u-button @click="showDialog">Open Dialog with Outside Close Icon</u-button>
+      <u-dialog :visible="visible" closable close-icon-outside @close="closeDialog">
+        <template #title>
+          <h2>Dialog Title</h2>
+        </template>
+        <p>Dialog content goes here.</p>
+        <template #footer>
+          <u-button @click="closeDialog">Close</u-button>
+        </template>
+      </u-dialog>
+    </div>`,
+  setup() {
+    const visible = ref(false);
+    const showDialog = () => {
+      visible.value = true;
+    };
+    const closeDialog = () => {
+      visible.value = false;
+    };
+    return { visible, showDialog, closeDialog };
+  },
+});
+
+// 4. Avec bouton de retour
+export const WithBackButton = () => ({
+  components: { UDialog, UButton },
+  template: `
+    <div>
+      <u-button @click="showDialog">Open Dialog with Back u-button</u-button>
+      <u-dialog :visible="visible" has-back-button @back="onBack" @close="closeDialog">
+        <template #title>
+          <h2>Dialog Title</h2>
+        </template>
+        <p>Dialog content goes here.</p>
+        <template #footer>
+          <u-button @click="closeDialog">Close</u-button>
+        </template>
+      </u-dialog>
+    </div>`,
+  setup() {
+    const visible = ref(false);
+    const showDialog = () => {
+      visible.value = true;
+    };
+    const closeDialog = () => {
+      visible.value = false;
+    };
     const onBack = () => {
-      alert('Back button clicked!');
+      console.log('Back u-button clicked');
     };
+    return { visible, showDialog, closeDialog, onBack };
+  },
+});
 
-    const handleClose = (done) => {
-      if (confirm('Are you sure you want to close?')) {
-        done(); // Pour fermer le dialogue
-      }
+// 5. Avec aide
+export const WithHelp = () => ({
+  components: { UDialog, UButton },
+  template: `
+    <div>
+      <u-button @click="showDialog">Open Dialog with Help</u-button>
+      <u-dialog :visible="visible" @close="closeDialog">
+        <template #title>
+          <h2>Dialog Title</h2>
+        </template>
+        <template #help>
+          <p>Help content goes here.</p>
+        </template>
+        <p>Dialog content goes here.</p>
+        <template #footer>
+          <u-button @click="closeDialog">Close</u-button>
+        </template>
+      </u-dialog>
+    </div>`,
+  setup() {
+    const visible = ref(false);
+    const showDialog = () => {
+      visible.value = true;
     };
-
-    return {
-      infoDialog,
-      leftPanelDialog,
-      buttonDialog,
-      confirmDialog,
-      closeIconOutsideDialog,
-      onBack,
-      handleClose,
+    const closeDialog = () => {
+      visible.value = false;
     };
+    return { visible, showDialog, closeDialog };
   },
 });

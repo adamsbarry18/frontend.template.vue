@@ -14,6 +14,9 @@ import UFormInput from '@/commons/forms/UFormInput.vue';
 import UTagInput from '@/commons/forms/UTagInput.vue';
 import UCascaderInput from '@/commons/forms/UCascaderInput.vue';
 import UCheckboxGroup from '@/commons/forms/UCheckboxGroup.vue';
+import UMultiDayScheduleInput from './UMultiDayScheduleInput.vue';
+import UTimeScheduleInput from './UTimeScheduleInput.vue';
+import UEveryXDaysScheduleInput from './UEveryXDaysScheduleInput.vue';
 
 export {
   UNumberEnumInput,
@@ -32,4 +35,7 @@ export {
   UTagInput,
   UCascaderInput,
   UCheckboxGroup,
+  UMultiDayScheduleInput,
+  UTimeScheduleInput,
+  UEveryXDaysScheduleInput,
 };

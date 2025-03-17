@@ -295,7 +295,7 @@
       background-color: var(--color-background-white);
       padding: 5px 16px;
       width: 100%;
-      height: 40px;
+      min-height: 35px;
       color: var(--color-neutral-800);
       font-size: var(--paragraph-02);
 

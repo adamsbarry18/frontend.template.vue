@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, defineProps, defineEmits } from 'vue';
+  import { ref, watch } from 'vue';
   import { ElSwitch, Placement } from 'element-plus';
   import UInfo from '@/commons/others/UInfo.vue';
 

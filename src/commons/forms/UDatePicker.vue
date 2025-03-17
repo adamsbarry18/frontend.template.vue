@@ -322,7 +322,7 @@
       box-shadow: 0 0 0 1px var(--color-input-border);
       border-radius: 4px;
       padding: 0 12px;
-      height: 40px;
+      height: 35px;
 
       &:hover {
         box-shadow: 0 0 0 1px var(--color-input-border-hover);
@@ -350,7 +350,6 @@
     box-shadow: 0 0 0 1px var(--color-input-border);
     border-radius: 4px;
     padding: 0 12px;
-    height: 40px;
     .el-range-input {
       font-size: var(--paragraph-03);
       color: var(--color-neutral-900);
