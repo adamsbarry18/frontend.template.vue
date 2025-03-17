@@ -6,6 +6,26 @@
       <p class="-description">Description</p>
       <u-category-funnel :categories="categories" :colors="colors" />
     </div>
+    <div>
+      <u-button @click="showDialog"
+        >Open Dialog with Outside Close Icon</u-button
+      >
+      <u-dialog
+        :visible="visible"
+        closable
+        close-icon-outside
+        @close="closeDialog"
+      >
+        <template #title>
+          <h2>Dialog Title</h2>
+        </template>
+        <p>Dialog content goes here.</p>
+        <template #footer>
+          <u-button @click="closeDialog">Close</u-button>
+        </template>
+      </u-dialog>
+    </div>
+    `,
   </div>
 </template>
 
@@ -13,6 +33,15 @@
   import { onMounted, reactive, ref } from 'vue';
   import UButton from '@/commons/basic/UButton.vue';
   import UCategoryFunnel from '@/commons/data/UCategoryFunnel.vue';
+  import UDialog from '@/commons/others/UDialog.vue';
+
+  const visible = ref(false);
+  const showDialog = () => {
+    visible.value = true;
+  };
+  const closeDialog = () => {
+    visible.value = false;
+  };
 
   const transactions = 125_000_000;
   const digitalized = 62_250_000;

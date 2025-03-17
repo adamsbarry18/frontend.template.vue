@@ -16,7 +16,6 @@
     :height="height"
     :max-width="maxWidth"
     :max-height="maxHeight"
-    :append-to-body="true"
     :modal-append-to-body="true"
     @opened="onOpened"
     @closed="onClose"
@@ -86,7 +85,6 @@
   import { ref, computed, watch, type PropType } from 'vue';
   import { ElDialog } from 'element-plus';
   import IconBase from '@/commons/icons/IconBase.vue';
-  import UShortcutSubscriber from '@/commons/others/UShortcutSubscriber.vue';
   import UHelpButton from '@/commons/others/UHelpButton.vue';
 
   // Define props with type annotations
@@ -186,11 +184,9 @@
     align-items: center;
     display: flex;
     justify-content: center;
-    margin: auto !important;
     border-radius: 7px;
     box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3);
     background-color: var(--color-white);
-    width: auto;
     text-align: center;
     color: var(--color-white);
     position: relative;
