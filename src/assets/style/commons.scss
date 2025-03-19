@@ -2,13 +2,68 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Fix default opacity in Firefox placeholder */
-::placeholder {
-  opacity: 1;
+.-caption-text {
+  font-size: var(--caption);
+  color: var(--color-neutral-500);
 }
 
-body p {
-  margin: 0;
+.-onboarding-guide-text {
+  font-size: var(--paragraph-03);
+  color: var(--color-neutral-800);
+}
+
+.-align-flex {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.-flex-center {
+  display: flex;
+  align-items: center;
+}
+
+/* Necessary for angular font */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-neutral-800);
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.-dashboard-layout {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 20px;
+  padding: 32px;
+  padding-bottom: 90px;
+  & > .placeholder-card {
+    border-radius: 4px;
+    box-shadow: 0 0 5px 0 rgba(205, 210, 223, 0.5);
+    background-color: var(--color-white);
+    height: 330px;
+  }
+
+  & > .-one-third-width {
+    grid-column: span 2;
+  }
+  & > .-two-thirds-width {
+    grid-column: span 4;
+  }
+  & > .-half-width {
+    grid-column: span 3;
+  }
+  & > .-full-width {
+    grid-column: span 6;
+  }
+}
+
+::placeholder {
+  opacity: 1;
 }
 
 svg {

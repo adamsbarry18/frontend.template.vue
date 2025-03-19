@@ -1,5 +1,4 @@
 import IconBase from '@/commons/icons/IconBase.vue';
-import Iconabperso from '@/commons/icons/channel/Iconabperso.vue';
 import IconAccount from '@/commons/icons/IconAccount.vue';
 import IconAcquire from '@/commons/icons/IconAcquire.vue';
 import IconAction from '@/commons/icons/IconAction.vue';
@@ -37,9 +36,8 @@ import IconDashboard from '@/commons/icons/IconDashboard.vue';
 import IconDelay from '@/commons/icons/IconDelay.vue';
 import IconDelete from '@/commons/icons/IconDelete.vue';
 import IconDeleted from '@/commons/icons/IconDeleted.vue';
-import IconDelivery from '@/commons/icons/deliverability/IconDelivery.vue';
 import IconDiscount from '@/commons/icons/IconDiscount.vue';
-import Icondisplay from '@/commons/icons/channel/Icondisplay.vue';
+import IconDisplay from '@/commons/icons/channel/IconDisplay.vue';
 import IconDidWhat from '@/commons/icons/IconDidWhat.vue';
 import IconDns from '@/commons/icons/IconDns.vue';
 import IconDraft from '@/commons/icons/IconDraft.vue';
@@ -47,15 +45,13 @@ import IconDraggable from '@/commons/icons/IconDraggable.vue';
 import IconDuplicate from '@/commons/icons/IconDuplicate.vue';
 import IconDynamicList from '@/commons/icons/IconDynamicList.vue';
 import IconEdit from '@/commons/icons/IconEdit.vue';
-import Iconemail from '@/commons/icons/channel/Iconemail.vue';
-import IconEmailClosed from '@/commons/icons/deliverability/IconEmailClosed.vue';
-import IconEmailReceived from '@/commons/icons/deliverability/IconEmailReceived.vue';
+import IconEmail from '@/commons/icons/channel/IconEmail.vue';
 import IconEmpty from '@/commons/icons/IconEmpty.vue';
 import IconError from '@/commons/icons/IconError.vue';
 import IconEvent from '@/commons/icons/IconEvent.vue';
 import IconExclusion from '@/commons/icons/IconExclusion.vue';
 import IconExplore from '@/commons/icons/IconExplore.vue';
-import Iconexport from '@/commons/icons/channel/Iconexport.vue';
+import IconExport from '@/commons/icons/channel/IconExport.vue';
 import IconExportDownload from '@/commons/icons/IconExportDownload.vue';
 import IconFeed from '@/commons/icons/IconFeed.vue';
 import IconFidelize from '@/commons/icons/IconFidelize.vue';
@@ -74,7 +70,6 @@ import IconHide from '@/commons/icons/IconHide.vue';
 import IconHistory from '@/commons/icons/IconHistory.vue';
 import IconHotel from '@/commons/icons/feed/IconHotel.vue';
 import IconHourglass from '@/commons/icons/IconHourglass.vue';
-import IconIa from '@/commons/icons/univers/IconUniversIa.vue';
 import IconIdentityCard from '@/commons/icons/IconIdentityCard.vue';
 import IconImport from '@/commons/icons/IconImport.vue';
 import IconInfo from '@/commons/icons/IconInfo.vue';
@@ -103,16 +98,15 @@ import IconOnboarding from '@/commons/icons/IconOnboarding.vue';
 import IconOpenOut from '@/commons/icons/IconOpenOut.vue';
 import IconPaused from '@/commons/icons/IconPaused.vue';
 import IconPersonalShopper from '@/commons/icons/IconPersonalShopper.vue';
-import Iconphone from '@/commons/icons/channel/Iconphone.vue';
+import IconPhone from '@/commons/icons/channel/IconPhone.vue';
 import IconPin from '@/commons/icons/IconPin.vue';
 import IconPixel from '@/commons/icons/IconPixel.vue';
 import IconPlanned from '@/commons/icons/IconPlanned.vue';
 import IconPlay from '@/commons/icons/IconPlay.vue';
-import Iconpost from '@/commons/icons/channel/Iconpost.vue';
-import Iconpostal from '@/commons/icons/channel/Iconpostal.vue';
+import IconPost from '@/commons/icons/channel/IconPost.vue';
+import IconPostal from '@/commons/icons/channel/IconPostal.vue';
 import IconProduct from '@/commons/icons/feed/IconProduct.vue';
-import Iconprog from '@/commons/icons/channel/Iconprog.vue';
-import Iconpush from '@/commons/icons/channel/Iconpush.vue';
+import IconPush from '@/commons/icons/channel/IconPush.vue';
 import IconQualifications from '@/commons/icons/IconQualifications.vue';
 import IconRandom from '@/commons/icons/IconRandom.vue';
 import IconRecoFeed from '@/commons/icons/IconRecoFeed.vue';
@@ -122,16 +116,15 @@ import IconReset from '@/commons/icons/IconReset.vue';
 import IconRunning from '@/commons/icons/IconActive.vue';
 import IconSatisfaction from '@/commons/icons/IconSatisfaction.vue';
 import IconScenario from '@/commons/icons/IconScenario.vue';
-import Iconsearch from '@/commons/icons/channel/Iconsearch.vue';
 import IconSearch from '@/commons/icons/IconSearch.vue';
+import { default as IconChannelSearch } from '@/commons/icons/channel/IconSearch.vue';
 import IconSeeds from '@/commons/icons/IconSeeds.vue';
 import IconSegmentations from '@/commons/icons/IconSegmentations.vue';
 import IconSettings from '@/commons/icons/IconSettings.vue';
 import IconShopping from '@/commons/icons/IconShopping.vue';
-import Iconsms from '@/commons/icons/channel/Iconsms.vue';
+import IconSms from '@/commons/icons/channel/IconSms.vue';
 import IconSmartlist from '@/commons/icons/IconSmartlist.vue';
-import Iconsocial from '@/commons/icons/channel/Iconsocial.vue';
-import IconSpam from '@/commons/icons/deliverability/IconSpam.vue';
+import IconSocial from '@/commons/icons/channel/IconSocial.vue';
 import IconStarted from '@/commons/icons/IconHourglass.vue';
 import IconStatus from '@/commons/icons/IconStatus.vue';
 import IconStop from '@/commons/icons/IconStop.vue';
@@ -140,7 +133,7 @@ import IconSuccess from '@/commons/icons/IconCompleted.vue';
 import IconSuspects from '@/commons/icons/IconSuspects.vue';
 import IconTag from '@/commons/icons/IconTag.vue';
 import IconTargetCustomer from '@/commons/icons/IconTargetCustomer.vue';
-import Icontel from '@/commons/icons/channel/Icontel.vue';
+import IconTel from '@/commons/icons/channel/IconTel.vue';
 import IconTelescope from '@/commons/icons/IconTelescope.vue';
 import IconThemeDark from '@/commons/icons/IconThemeDark.vue';
 import IconThemeLight from '@/commons/icons/IconThemeLight.vue';
@@ -148,16 +141,6 @@ import IconTransactions from '@/commons/icons/IconTransactions.vue';
 import IconTravel from '@/commons/icons/feed/IconTravel.vue';
 import IconUnderstand from '@/commons/icons/IconUnderstand.vue';
 import IconUnivers from '@/commons/icons/IconUnivers.vue';
-import IconUniversAcquisition from '@/commons/icons/univers/IconUniversAcquisition.vue';
-import IconUniversActivate from '@/commons/icons/univers/IconUniversActivate.vue';
-import IconUniversAutomation from '@/commons/icons/univers/IconUniversAutomation.vue';
-import IconUniversDatahub from '@/commons/icons/univers/IconUniversDatahub.vue';
-import IconUniversDecide from '@/commons/icons/univers/IconUniversDecide.vue';
-import IconUniversInspiration from '@/commons/icons/univers/IconUniversInspiration.vue';
-import IconUniversLeads from '@/commons/icons/univers/IconUniversLeads.vue';
-import IconUniversReporting from '@/commons/icons/univers/IconUniversReporting.vue';
-import IconUniversStudio from '@/commons/icons/univers/IconUniversStudio.vue';
-import IconUnsubscribe from '@/commons/icons/deliverability/IconUnsubscribe.vue';
 import IconUsage from '@/commons/icons/IconUsage.vue';
 import IconUser from '@/commons/icons/IconUser.vue';
 import IconUsers from '@/commons/icons/IconUsers.vue';
@@ -169,9 +152,22 @@ import IconView from '@/commons/icons/IconView.vue';
 import IconVisit from '@/commons/icons/IconVisit.vue';
 import IconWarning from '@/commons/icons/IconWarning.vue';
 import IconWeather from '@/commons/icons/IconWeather.vue';
+import IconInventor from './IconInventor.vue';
+import IconWareHouse from './IconWareHouse.vue';
+import IconDelivery from './IconDelivery.vue';
+import IconStatistic from './IconStatistic.vue';
+
+// social
+import IconFacebook from '@/commons/icons/channel/IconFacebook.vue';
+import IconPinterest from '@/commons/icons/channel/IconPinterest.vue';
+import IconTiktok from '@/commons/icons/channel/IconTiktok.vue';
+import IconInstagram from '@/commons/icons/channel/IconInstagram.vue';
+import IconTwitter from '@/commons/icons/channel/IconTwitter.vue';
+import IconYoutube from '@/commons/icons/channel/IconYoutube.vue';
+import IconTelegram from '@/commons/icons/channel/IconTelegram.vue';
+import IconWhatsapp from '@/commons/icons/channel/IconWhatsapp.vue';
 
 export {
-  IconUniversActivate,
   IconActive,
   IconCompleted,
   IconValidated,
@@ -221,7 +217,7 @@ export {
   IconView,
   IconHide,
   IconAdd,
-  IconSearch,
+  IconChannelSearch,
   IconStop,
   IconNotifDefault,
   IconNotifActive,
@@ -252,19 +248,17 @@ export {
   IconConvert,
   IconFidelize,
   IconNewFolder,
-  Iconabperso,
-  Icondisplay,
-  Iconpush,
-  Iconsocial,
-  Iconsearch,
-  Iconprog,
-  Iconemail,
-  Iconexport,
-  Icontel,
-  Iconphone,
-  Iconpost,
-  Iconpostal,
-  Iconsms,
+  IconDisplay,
+  IconPush,
+  IconSocial,
+  IconSearch,
+  IconEmail,
+  IconExport,
+  IconTel,
+  IconPhone,
+  IconPost,
+  IconPostal,
+  IconSms,
   IconAction,
   IconScenario,
   IconCaution,
@@ -298,14 +292,6 @@ export {
   IconGlobalDashboard,
   IconExportDownload,
   IconHourglass,
-  IconUniversLeads,
-  IconUniversDecide,
-  IconUniversAcquisition,
-  IconUniversAutomation,
-  IconUniversInspiration,
-  IconUniversReporting,
-  IconUniversDatahub,
-  IconUniversStudio,
   IconExplore,
   IconActivate,
   IconMarketingImpact,
@@ -336,9 +322,16 @@ export {
   IconMixMedia,
   IconDelay,
   IconBudget,
-  IconUnsubscribe,
+  IconFacebook,
+  IconPinterest,
+  IconTiktok,
+  IconInstagram,
+  IconTwitter,
+  IconYoutube,
+  IconTelegram,
+  IconWhatsapp,
+  IconInventor,
+  IconWareHouse,
   IconDelivery,
-  IconEmailReceived,
-  IconEmailClosed,
-  IconSpam,
+  IconStatistic,
 };
