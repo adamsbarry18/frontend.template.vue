@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import URadio from '@/commons/forms/URadio.vue';
+import URadio from '@/modules/common/forms/URadio.vue';
 
 export default {
   title: 'Forms/Radio',

@@ -1,4 +1,4 @@
-import UVerticalSubStepper from '@/commons/navigation/UVerticalSubStepper.vue';
+import UVerticalSubStepper from '@/modules/common/navigation/UVerticalSubStepper.vue';
 import { ref } from 'vue';
 
 export default {

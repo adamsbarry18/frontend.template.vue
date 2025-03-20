@@ -1,5 +1,5 @@
-import UButton from '@/commons/basic/UButton.vue';
-import uMessage from '@/commons/notice/UMessage';
+import UButton from '@/modules/common/basic/UButton.vue';
+import uMessage from '@/modules/common/notice/UMessage';
 
 export default {
   title: 'Notice/Message',

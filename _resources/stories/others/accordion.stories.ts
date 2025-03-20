@@ -1,6 +1,6 @@
-import UAccordion from '@/commons/others/UAccordion.vue';
-import UAccordionItem from '@/commons/others/UAccordionItem.vue';
-import IconBase from '@/commons/icons/IconBase.vue';
+import UAccordion from '@/modules/common/others/UAccordion.vue';
+import UAccordionItem from '@/modules/common/others/UAccordionItem.vue';
+import IconBase from '@/modules/common/icons/IconBase.vue';
 
 export default {
   title: 'Others/Accordion',

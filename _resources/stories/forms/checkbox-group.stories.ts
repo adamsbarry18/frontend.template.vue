@@ -1,4 +1,4 @@
-import UCheckboxGroup from '@/commons/forms/UCheckboxGroup.vue';
+import UCheckboxGroup from '@/modules/common/forms/UCheckboxGroup.vue';
 import { ref } from 'vue';
 
 export default {

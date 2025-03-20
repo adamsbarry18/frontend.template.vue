@@ -1,6 +1,6 @@
-import { ref, provide } from 'vue';
+import { ref } from 'vue';
 import { ElTable } from 'element-plus';
-import UListColumn from '@/commons/data/UListColumn.vue';
+import UListColumn from '@/modules/common/data/UListColumn.vue';
 import { listData } from '../_data/list';
 
 export default {
@@ -20,6 +20,8 @@ export const ListColumn = () => ({
         width="200" 
         align="left"
         sortable
+        :list-key="listKey"
+        :column-visibility="columnVisibility"
         @sort-change="onSortChange"
       >
         <template #header>
@@ -37,6 +39,8 @@ export const ListColumn = () => ({
         width="100" 
         align="right"
         sortable
+        :list-key="listKey"
+        :column-visibility="columnVisibility"
         @sort-change="onSortChange"
       >
         <template #header>
@@ -51,19 +55,12 @@ export const ListColumn = () => ({
 `,
   setup() {
     const data = ref(listData);
-    const onSortChange = () => console.log('sort-change');
-
-    provide('listKey', 'testList');
-
-    // Définir la visibilité des colonnes :
-    // - La colonne "Name" (clé 'colName') sera visible.
-    // - La colonne "Actions" (clé 'colActions') sera masquée.
+    const listKey = 'testList';
     const columnVisibility = {
       'testList@colName': true,
       'testList@colActions': true,
     };
-    provide('columnVisibility', columnVisibility);
-
-    return { data, onSortChange };
+    const onSortChange = () => console.log('sort-change');
+    return { data, listKey, columnVisibility, onSortChange };
   },
 });

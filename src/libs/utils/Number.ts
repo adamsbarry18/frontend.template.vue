@@ -107,15 +107,8 @@ export const numberFormat = (
   const currentLocale: string = i18n.global.locale.value;
   const i18nOptions: Intl.NumberFormatOptions = {};
 
-  const {
-    currency,
-    precision,
-    maxPrecision,
-    condensed,
-    unit,
-    locale,
-    signNumber,
-  } = options;
+  const { currency, precision, maxPrecision, condensed, unit, signNumber } =
+    options;
 
   if (
     currency &&

@@ -1,4 +1,4 @@
-import UTagInput from '@/commons/forms/UTagInput.vue';
+import UTagInput from '@/modules/common/forms/UTagInput.vue';
 import { ref } from 'vue';
 
 export default {

@@ -1,4 +1,4 @@
-import UListSelectionActions from '@/commons/data/UListSelectionActions.vue';
+import UListSelectionActions from '@/modules/common/data/UListSelectionActions.vue';
 import { ref } from 'vue';
 import { action } from '@storybook/addon-actions';
 

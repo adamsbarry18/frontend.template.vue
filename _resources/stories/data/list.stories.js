@@ -1,6 +1,6 @@
-import UList from '@/commons/data/UList.vue';
-import UListColumn from '@/commons/data/UListColumn.vue';
-import UButton from '@/commons/basic/UButton.vue';
+import UList from '@/modules/common/data/UList.vue';
+import UListColumn from '@/modules/common/data/UListColumn.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 import { listActions, listData } from '../_data/list';
 import { action } from '@storybook/addon-actions';
 

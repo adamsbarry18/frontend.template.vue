@@ -1,7 +1,7 @@
-import Icon from '@/../_resources/common/Icon.vue';
+import Icon from '../../common/UiIcon.vue';
 
 export default {
-  title: 'common/Icon',
+  title: 'common/Icons',
 };
 
 export const _Icon = () => ({

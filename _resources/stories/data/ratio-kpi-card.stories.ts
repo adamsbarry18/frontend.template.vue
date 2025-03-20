@@ -1,4 +1,4 @@
-import URatioKpiCard from '@/commons/data/URatioKpiCard.vue';
+import URatioKpiCard from '@/modules/common/data/URatioKpiCard.vue';
 
 export default {
   title: 'data/RatioKpiCard',

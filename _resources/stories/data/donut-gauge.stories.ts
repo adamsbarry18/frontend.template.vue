@@ -1,4 +1,4 @@
-import UDonutGauge from '@/commons/data/UDonutGauge.vue';
+import UDonutGauge from '@/modules/common/data/UDonutGauge.vue';
 
 export default {
   title: 'data/DonutGauge',

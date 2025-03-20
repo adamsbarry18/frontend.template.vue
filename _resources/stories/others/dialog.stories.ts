@@ -1,6 +1,6 @@
-import UDialog from '@/commons/others/UDialog.vue';
+import UDialog from '@/modules/common/others/UDialog.vue';
 import { ref } from 'vue';
-import UButton from '@/commons/basic/UButton.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 
 export default {
   title: 'others/Dialog',

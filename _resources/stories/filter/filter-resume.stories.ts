@@ -1,5 +1,5 @@
-import UFilterResume from '@/commons/filter/UFilterResume.vue';
-import { reactive, ref } from 'vue';
+import UFilterResume from '@/modules/common/filter/UFilterResume.vue';
+import { reactive } from 'vue';
 
 export default {
   title: 'filter/FilterResume',

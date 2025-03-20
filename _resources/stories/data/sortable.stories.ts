@@ -1,7 +1,7 @@
-import USortableList from '@/commons/data/USortableList.vue';
+import USortableList from '@/modules/common/data/USortableList.vue';
 import { ref } from 'vue';
 import { action } from '@storybook/addon-actions';
-import IconBase from '@/commons/icons/IconBase.vue';
+import IconBase from '@/modules/common/icons/IconBase.vue';
 
 export default {
   title: 'data/SortableList',

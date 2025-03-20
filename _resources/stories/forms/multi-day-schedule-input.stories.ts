@@ -1,4 +1,4 @@
-import UMultiDayScheduleInput from '@/commons/forms/UMultiDayScheduleInput.vue';
+import UMultiDayScheduleInput from '@/modules/common/forms/UMultiDayScheduleInput.vue';
 
 export default {
   title: 'forms/MultiDayScheduleInput',

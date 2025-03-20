@@ -1,5 +1,5 @@
-import UButton from '@/commons/basic/UButton.vue';
-import UCatalogueCard from '@/commons/layout/UCatalogueCard.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
+import UCatalogueCard from '@/modules/common/layout/UCatalogueCard.vue';
 
 export default {
   title: 'Layout/CatalogueCard',

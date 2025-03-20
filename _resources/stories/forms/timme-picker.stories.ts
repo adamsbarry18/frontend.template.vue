@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import UTimePicker from '@/commons/forms/UTimePicker.vue';
+import UTimePicker from '@/modules/common/forms/UTimePicker.vue';
 
 export default {
   title: 'Forms/TimePicker',

@@ -1,4 +1,4 @@
-import UListPagination from '@/commons/data/UListPagination.vue';
+import UListPagination from '@/modules/common/data/UListPagination.vue';
 import { ref } from 'vue';
 
 export default {

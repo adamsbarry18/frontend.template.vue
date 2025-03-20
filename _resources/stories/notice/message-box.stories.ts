@@ -1,6 +1,5 @@
-import UButton from '@/commons/basic/UButton.vue';
-import uMessageBox from '@/commons/notice/UMessageBox';
-import { ref } from 'vue';
+import UButton from '@/modules/common/basic/UButton.vue';
+import UMessageBox from '@/modules/common/notice/UMessageBox';
 
 export default {
   title: 'Notice/MessageBox',
@@ -11,7 +10,7 @@ export const MessageBox = () => ({
   components: { UButton },
   template: '<u-button @click="showMessageBox">Show message box</u-button>',
   setup() {
-    const msgbox = uMessageBox;
+    const msgbox = UMessageBox;
 
     const showMessageBox = async () => {
       try {

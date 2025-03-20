@@ -1,5 +1,4 @@
-import UPill from '@/commons/layout/UPill.vue';
-import { action } from '@storybook/addon-actions';
+import UPill from '@/modules/common/layout/UPill.vue';
 
 export default {
   title: 'Layout/Pill',

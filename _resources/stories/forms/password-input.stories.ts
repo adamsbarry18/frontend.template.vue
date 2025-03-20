@@ -1,4 +1,4 @@
-import UPasswordInput from '@/commons/forms/UPasswordInput.vue';
+import UPasswordInput from '@/modules/common/forms/UPasswordInput.vue';
 import { ref, computed } from 'vue';
 
 export default {
@@ -39,7 +39,7 @@ export const PasswordInput = () => ({
     const numberCheck = (value) => (/[0-9]/.test(value) ? 15 : null);
     const uppercaseCheck = (value) => (/[A-Z]/.test(value) ? 15 : null);
     const specialCharacterCheck = (value) =>
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value) ? 15 : null;
+      /[!@#$%^&*()_+\-=[]{};':"\\|,.<>\/?]+/.test(value) ? 15 : null;
 
     return {
       input,

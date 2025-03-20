@@ -1,4 +1,4 @@
-import UFunnel from '@/commons/data/UFunnel.vue';
+import UFunnel from '@/modules/common/data/UFunnel.vue';
 
 export default {
   title: 'data/Funnels',

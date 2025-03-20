@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { BaseInterceptor } from './BaseInterceptor';
 
 const cacheable = true;

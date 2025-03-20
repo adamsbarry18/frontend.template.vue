@@ -1,6 +1,5 @@
-import UActionButtonBar from '@/commons/others/UActionButtonBar.vue';
-import UButton from '@/commons/basic/UButton.vue';
-import { ref } from 'vue';
+import UActionButtonBar from '@/modules/common/others/UActionButtonBar.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 
 export default {
   title: 'others/ActionButtonBar',

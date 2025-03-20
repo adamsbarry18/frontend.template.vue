@@ -3,16 +3,14 @@ import {
   PaginationService,
   SearchService,
   SortService,
-} from '@/commons';
-import UGridList from '@/commons/data/UGridList.vue';
+} from '@/modules/common';
+import UGridList from '@/modules/common/data/UGridList.vue';
 import { reactive } from 'vue';
 
 export default {
   title: 'data/GridList',
   component: UGridList,
 };
-
-const emptyData: any[] = [];
 
 export const GridList = () => ({
   components: { UGridList },

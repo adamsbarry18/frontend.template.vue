@@ -1,4 +1,4 @@
-import UKpiCard from '@/commons/data/UKpiCard.vue';
+import UKpiCard from '@/modules/common/data/UKpiCard.vue';
 
 export default {
   title: 'data/KpiCard', // Catégorie dans Storybook

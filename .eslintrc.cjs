@@ -17,7 +17,7 @@ module.exports = {
     'plugin:vue/vue3-essential',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended', // Doit être placé en dernier pour écraser les règles
+    'plugin:prettier/recommended',
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -25,6 +25,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'vue/no-unused-vars': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   overrides: [
     {

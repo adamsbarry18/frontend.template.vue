@@ -1,4 +1,4 @@
-import UGrid from '@/commons/layout/UGrid.vue';
+import UGrid from '@/modules/common/layout/UGrid.vue';
 import { ref } from 'vue';
 
 export default {

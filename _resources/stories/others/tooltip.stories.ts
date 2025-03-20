@@ -1,4 +1,4 @@
-import UTooltip from '@/commons/others/UTooltip.vue';
+import UTooltip from '@/modules/common/others/UTooltip.vue';
 
 export default {
   title: 'Others/Tooltip',

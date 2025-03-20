@@ -1,4 +1,4 @@
-import Typography from '@/../_resources/common/Typography.vue';
+import Typography from '../../common/UiTypography.vue';
 
 export default {
   title: 'common/Typography',

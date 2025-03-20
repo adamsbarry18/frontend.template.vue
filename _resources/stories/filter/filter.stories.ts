@@ -1,4 +1,4 @@
-import UFilter from '@/commons/filter/UFilter.vue';
+import UFilter from '@/modules/common/filter/UFilter.vue';
 import { ref } from 'vue';
 
 export default {

@@ -1,4 +1,4 @@
-import UButton from '@/commons/basic/UButton.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 
 export default {
   title: 'Basic/Button',
@@ -7,7 +7,7 @@ export default {
 export const Button = () => ({
   components: { UButton },
   template: `
-    <div class="boxContent">
+    <div class="box-content">
       <div class="story-row">
         <u-button type="default">Default</u-button>
         <u-button type="primary" @click="alert('hello')">Primary</u-button>

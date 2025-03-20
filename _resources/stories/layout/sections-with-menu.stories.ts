@@ -1,6 +1,6 @@
-import USectionsWithMenu from '@/commons/layout/USectionsWithMenu.vue';
-import UButton from '@/commons/basic/UButton.vue';
-import UIndexedSection from '@/commons/layout/UIndexedSection.vue';
+import USectionsWithMenu from '@/modules/common/layout/USectionsWithMenu.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
+import UIndexedSection from '@/modules/common/layout/UIndexedSection.vue';
 
 export default {
   title: 'Layout/SectionsWithMenu',

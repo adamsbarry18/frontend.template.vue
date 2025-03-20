@@ -1,5 +1,5 @@
-import UWizardNav from '@/commons/navigation/UWizardNav.vue';
-import UButton from '@/commons/basic/UButton.vue';
+import UWizardNav from '@/modules/common/navigation/UWizardNav.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 import { ref } from 'vue';
 
 export default {

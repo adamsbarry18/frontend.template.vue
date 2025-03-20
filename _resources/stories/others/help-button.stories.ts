@@ -1,5 +1,5 @@
-import UHelpButton from '@/commons/others/UHelpButton.vue';
-import UButton from '@/commons/basic/UButton.vue';
+import UHelpButton from '@/modules/common/others/UHelpButton.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 
 export default {
   title: 'Others/HelpButton',

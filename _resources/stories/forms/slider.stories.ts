@@ -1,4 +1,4 @@
-import USlider from '@/commons/forms/USlider.vue';
+import USlider from '@/modules/common/forms/USlider.vue';
 import { ref } from 'vue';
 
 export default {

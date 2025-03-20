@@ -1,4 +1,4 @@
-import UTimeScheduleInput from '@/commons/forms/UTimeScheduleInput.vue';
+import UTimeScheduleInput from '@/modules/common/forms/UTimeScheduleInput.vue';
 
 export default {
   title: 'forms/TimeScheduleInput',

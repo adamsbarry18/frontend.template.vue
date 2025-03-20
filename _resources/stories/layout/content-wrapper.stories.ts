@@ -1,5 +1,5 @@
-import UContentWrapper from '@/commons/layout/UContentWrapper.vue';
-import UButton from '@/commons/basic/UButton.vue';
+import UContentWrapper from '@/modules/common/layout/UContentWrapper.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 
 export default {
   title: 'layout/ContentWrapper',

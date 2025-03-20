@@ -1,4 +1,4 @@
-import UProgressBar from '@/commons/others/UProgressBar.vue';
+import UProgressBar from '@/modules/common/others/UProgressBar.vue';
 import { ref } from 'vue';
 
 export default {

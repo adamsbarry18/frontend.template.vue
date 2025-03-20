@@ -1,6 +1,6 @@
 import { ref } from 'vue';
-import UExplorer from '@/commons/navigation/UExplorer.vue';
-import UButton from '@/commons/basic/UButton.vue';
+import UExplorer from '@/modules/common/navigation/UExplorer.vue';
+import UButton from '@/modules/common/basic/UButton.vue';
 
 export default {
   title: 'Navigation/Explorer',

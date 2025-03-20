@@ -1,4 +1,4 @@
-import UDismissable from '@/commons/others/UDismissable.vue';
+import UDismissable from '@/modules/common/others/UDismissable.vue';
 
 export default {
   title: 'Others/Dismissable',

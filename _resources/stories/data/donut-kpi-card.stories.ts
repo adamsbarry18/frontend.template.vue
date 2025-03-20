@@ -1,4 +1,4 @@
-import UDonutKpiCard from '@/commons/data/UDonutKpiCard.vue';
+import UDonutKpiCard from '@/modules/common/data/UDonutKpiCard.vue';
 
 export default {
   title: 'data/DonutKpiCard',

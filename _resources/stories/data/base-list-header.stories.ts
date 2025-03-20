@@ -1,5 +1,4 @@
-import { ListService } from '@/commons';
-import BaseListHeader from '@/commons/data/BaseListHeader.vue';
+import BaseListHeader from '@/modules/common/data/BaseListHeader.vue';
 import { reactive, ref } from 'vue';
 
 export default {

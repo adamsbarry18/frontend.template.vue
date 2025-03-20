@@ -1,4 +1,4 @@
-import UCategoryFunnel from '@/commons/data/UCategoryFunnel.vue';
+import UCategoryFunnel from '@/modules/common/data/UCategoryFunnel.vue';
 import { ref } from 'vue';
 
 export default {

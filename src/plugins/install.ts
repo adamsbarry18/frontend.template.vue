@@ -1,4 +1,4 @@
-import * as icons from '@/commons/icons';
+import * as icons from '@/modules/common/icons';
 
 import { ElLoading, ElInfiniteScroll } from 'element-plus';
 
