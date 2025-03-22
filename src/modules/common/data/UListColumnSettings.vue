@@ -73,7 +73,6 @@
   const show = ref(false);
   const values = reactive({});
 
-  // Initialisation des valeurs de visibilité
   function showSettings() {
     for (const column of props.columns) {
       const columnId = getColumnId(column.key);
@@ -87,7 +86,6 @@
         values[column.key] = isVisible;
       }
     }
-    console.log('values', values);
     show.value = true;
   }
 

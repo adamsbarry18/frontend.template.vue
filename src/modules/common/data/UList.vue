@@ -152,15 +152,16 @@ s'affiche pas, voici le code complet du composant UList.vue:
           :size="24"
           @click="onSettingsClick"
         />
+        <u-list-column-settings
+          v-if="hasConfigurableColumns && showTableHeader"
+          ref="columnSettingsPopper"
+          :columns="editableColumns"
+          :defaults="defaultVisibility"
+          @hide="onSettingsExit"
+          @column-visibility-change="onColumnVisibilityChange"
+        />
       </div>
-      <u-list-column-settings
-        v-if="hasConfigurableColumns && showTableHeader"
-        ref="columnSettingsPopper"
-        :columns="editableColumns"
-        :defaults="defaultVisibility"
-        @hide="onSettingsExit"
-        @column-visibility-change="onColumnVisibilityChange"
-      />
+
       <el-table
         ref="table"
         :data="displayedData"
