@@ -45,7 +45,6 @@
     width: 100%;
     flex-direction: column;
     justify-items: center;
-    margin-top: 13px;
     border: 1px solid var(--color-input-border);
     border-radius: 4px;
     box-shadow: var(--box-shadow-xl);

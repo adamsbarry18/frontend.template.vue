@@ -1,7 +1,7 @@
 <template>
   <el-table-column
     v-if="isVisible"
-    :class-name="className"
+    :class="['u-list-column', className]"
     :prop="sortProp"
     :sortable="sortableProp"
     :width="width"
@@ -9,10 +9,10 @@
     :sort-method="sortMethodFunction"
     :sort-by="sortByProp"
     :sort-orders="['ascending', 'descending']"
-    class="u-list-column"
     :align="align"
     :type="type"
   >
+    <!-- En-tête : utilise le slot "header" si défini, sinon affiche le label -->
     <template #header>
       <slot name="header">
         <div class="u-list-column-header" :title="label" :class="headerClass">
@@ -20,6 +20,8 @@
         </div>
       </slot>
     </template>
+
+    <!-- Cellules : transmet la donnée de la ligne -->
     <template #default="scope">
       <slot :row="scope.row" />
     </template>
@@ -27,15 +29,17 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref, PropType } from 'vue';
+  import { computed, ref, inject } from 'vue';
   import { ElTableColumn } from 'element-plus';
-  import { LIST_COLUMN_VISIBILITY } from '@/libs/utils/List';
+  import {
+    hasSavedVisibility,
+    isColumnVisible,
+    LIST_COLUMN_VISIBILITY,
+  } from '@/libs/utils/List';
   import i18n from '@/i18n';
 
   const props = defineProps({
-    columnKey: {
-      type: String,
-    },
+    columnKey: { type: String },
     columnDefaultVisibility: {
       type: String,
       default: LIST_COLUMN_VISIBILITY.ALWAYS,
@@ -46,119 +50,69 @@
           LIST_COLUMN_VISIBILITY.INVISIBLE,
         ].includes(item),
     },
-    label: {
-      type: String,
-    },
-    className: {
-      type: String,
-    },
-    sortable: {
-      type: [Boolean, String],
-      default: false,
-    },
-    sortProp: {
-      type: String,
-    },
-    sortMethod: {
-      type: Function as PropType<(a: any, b: any) => number>,
-    },
-    sortBy: {
-      type: String,
-    },
-    width: {
-      type: String,
-    },
-    type: {
-      type: String,
-    },
-    minWidth: {
-      type: String,
-    },
-    align: {
-      type: String,
-      default: 'center',
-    },
-    headerClass: {
-      type: String,
-      default: '',
-    },
-    filterable: {
-      type: Boolean,
-      default: false,
-    },
-    filterLabel: {
-      type: String,
-    },
-    filterFunction: {
-      type: Function,
-    },
-    filterType: {
-      type: String,
-    },
-    filterProperty: {
-      type: String,
-    },
-    filterConfig: {
-      type: Object,
-    },
-    // Nouvelles props pour remplacer inject()
-    listKey: {
-      type: String,
-      required: true,
-    },
-    columnVisibility: {
-      type: Object as PropType<Record<string, boolean>>,
-      required: true,
-    },
+    label: { type: String },
+    className: { type: String },
+    sortable: { type: [Boolean, String], default: false },
+    sortProp: { type: String },
+    sortMethod: { type: Function },
+    sortBy: { type: String },
+    width: { type: String },
+    type: { type: String },
+    minWidth: { type: String },
+    align: { type: String, default: 'center' },
+    headerClass: { type: String, default: '' },
   });
 
-  // State
+  // Injection de dépendances
+  const listKey = inject('listKey', '');
+  const columnVisibility = inject('columnVisibility', {});
+
+  // Variable réactive pour gérer le tri personnalisé
   const hasCustomSort = ref(false);
 
-  // Computed properties
   const isVisible = computed(() => {
-    if (
-      props.columnKey &&
-      props.columnVisibility &&
-      Object.prototype.hasOwnProperty.call(
-        props.columnVisibility,
-        `${props.listKey}@${props.columnKey}`
-      )
-    ) {
-      return props.columnVisibility[`${props.listKey}@${props.columnKey}`];
+    const fullKey = `${listKey}@${props.columnKey}`;
+    if (props.columnKey && columnVisibility.hasOwnProperty(fullKey)) {
+      return columnVisibility[fullKey];
     }
     return true;
   });
 
+  // Propriété calculée pour la valeur de "sortable" selon la présence d'un tri personnalisé
   const sortableProp = computed(() => {
     return hasCustomSort.value ? 'custom' : props.sortable;
   });
 
+  // Propriété calculée pour "sort-by"
   const sortByProp = computed(() => {
     return hasCustomSort.value ? null : props.sortBy;
   });
 
-  const sortMethodFunction = computed(() => {
-    if (hasCustomSort.value) {
-      return null;
+  // Propriété calculée pour la fonction de tri
+  const sortMethodFunction = computed<((a: any, b: any) => number) | undefined>(
+    () => {
+      if (hasCustomSort.value) {
+        return undefined;
+      }
+      return props.sortMethod
+        ? (props.sortMethod as (a: any, b: any) => number)
+        : defaultSortMethod;
     }
-    return props.sortMethod ? props.sortMethod : defaultSortMethod;
-  });
+  );
 
-  // Methods
   const defaultSortMethod = (a: any, b: any): number => {
     if (!props.sortProp) return 0;
 
     if (
-      !Object.prototype.hasOwnProperty.call(a, props.sortProp) &&
-      !Object.prototype.hasOwnProperty.call(b, props.sortProp)
+      !a.hasOwnProperty(props.sortProp) &&
+      !b.hasOwnProperty(props.sortProp)
     ) {
       return 0;
     }
-    if (!Object.prototype.hasOwnProperty.call(a, props.sortProp)) {
+    if (!a.hasOwnProperty(props.sortProp)) {
       return -1;
     }
-    if (!Object.prototype.hasOwnProperty.call(b, props.sortProp)) {
+    if (!b.hasOwnProperty(props.sortProp)) {
       return 1;
     }
     if (
@@ -177,13 +131,10 @@
     return a[props.sortProp] > b[props.sortProp] ? 1 : -1;
   };
 
-  const setCustomSort = (value: boolean) => {
+  // Méthode pour activer/désactiver le tri personnalisé
+  function setCustomSort(value: boolean) {
     hasCustomSort.value = value;
-  };
-
-  defineExpose({
-    setCustomSort,
-  });
+  }
 </script>
 
 <style lang="scss">

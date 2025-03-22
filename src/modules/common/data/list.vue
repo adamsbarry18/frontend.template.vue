@@ -1,5 +1,3 @@
-le masquage des colonnes fonctionnent bien mais le UListColumnSettings ne
-s'affiche pas, voici le code complet du composant UList.vue:
 <template>
   <div
     class="u-list-wrapper"
@@ -156,6 +154,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
       <u-list-column-settings
         v-if="hasConfigurableColumns && showTableHeader"
         ref="columnSettingsPopper"
+        :list-key="props.listKey"
         :columns="editableColumns"
         :defaults="defaultVisibility"
         @hide="onSettingsExit"
@@ -163,6 +162,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
       />
       <el-table
         ref="table"
+        v-loading="loading || !isMounted"
         :data="displayedData"
         :default-sort="savedDefaultSort"
         :show-header="showTableHeader"
@@ -216,6 +216,18 @@ s'affiche pas, voici le code complet du composant UList.vue:
         />
         <el-table-column v-if="isTree" width="45" />
         <slot />
+        <el-table-column
+          v-if="
+            hasConfigurableColumns &&
+            showTableHeader &&
+            editableColumns.length > 0
+          "
+          width="55"
+        >
+          <template #header>
+            <div class="column-settings" />
+          </template>
+        </el-table-column>
         <slot name="append" />
       </el-table>
     </div>
@@ -249,7 +261,6 @@ s'affiche pas, voici le code complet du composant UList.vue:
     useSlots,
     PropType,
     nextTick,
-    provide,
   } from 'vue';
   import { v4 as uuidv4 } from 'uuid';
   import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
@@ -398,8 +409,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
   const currentPage = ref(1);
   const defaultPage = ref(1);
   const paginationKey = ref('defaultPaginationKey');
-  provide('listKey', props.listKey);
-  provide('columnVisibility', columnVisibility.value);
+
   const route = useRoute();
   const router = useRouter();
 
@@ -696,7 +706,10 @@ s'affiche pas, voici le code complet du composant UList.vue:
   }
 
   function onSettingsClick() {
-    nextTick(() => columnSettingsPopper.value?.showSettings());
+    if (!isSettingsPopperActive.value) {
+      isSettingsPopperActive.value = true;
+      nextTick(() => columnSettingsPopper.value?.showSettings());
+    }
   }
 
   function onClearFilters() {
@@ -726,11 +739,15 @@ s'affiche pas, voici le code complet du composant UList.vue:
     onChange();
   }
 
-  // Gestion des changements de visibilité
-  const onColumnVisibilityChange = (column, value) => {
+  function onColumnVisibilityChange(column: string, value: boolean) {
     columnVisibility.value[column] = value;
-    setVisibility({ column, value });
-  };
+    setVisibility({
+      column,
+      value: value
+        ? LIST_COLUMN_VISIBILITY.VISIBLE
+        : LIST_COLUMN_VISIBILITY.INVISIBLE,
+    });
+  }
 
   function clearSelection() {
     table.value?.clearSelection();
@@ -950,25 +967,24 @@ s'affiche pas, voici le code complet du composant UList.vue:
   }
 
   function generateEditableColumnList() {
-    const defaultSlot = slots.default ? slots.default() : [];
     if (
-      props.hasConfigurableColumns &&
-      props.showTableHeader &&
-      defaultSlot.length > 0
-    ) {
-      const columns = defaultSlot
-        .filter((c) => c.props && (c.props['column-key'] || c.props.columnKey))
-        .map((c) => initializeEditableColumn(c));
-      return columns;
-    }
-    return [];
+      !props.hasConfigurableColumns ||
+      !props.showTableHeader ||
+      !useSlots().default
+    )
+      return [];
+    return (
+      useSlots()
+        .default?.()
+        .filter((c) => c.props?.columnKey)
+        .map((c) => initializeEditableColumn(c)) || []
+    );
   }
 
   function initializeEditableColumn(columnComponent: any) {
-    const key =
-      columnComponent.props['column-key'] || columnComponent.props.columnKey;
+    const key = columnComponent.props!.columnKey;
     defaultVisibility.value[key] =
-      columnComponent.props['column-default-visibility'] ||
+      columnComponent.props!.columnDefaultVisibility ||
       LIST_COLUMN_VISIBILITY.VISIBLE;
     let visibility: boolean | null = null;
     if (props.listKey) {
@@ -978,19 +994,27 @@ s'affiche pas, voici le code complet du composant UList.vue:
       } else {
         visibility =
           defaultVisibility.value[key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+        setVisibility({
+          column: fullKey,
+          value: visibility
+            ? LIST_COLUMN_VISIBILITY.VISIBLE
+            : LIST_COLUMN_VISIBILITY.INVISIBLE,
+        });
       }
       columnVisibility.value[fullKey] = visibility;
     }
-    return { key, label: columnComponent.props.label || key };
+    return { key, label: columnComponent.props!.label || key };
   }
 
   function parseTableColumns() {
-    if (!props.backendSortable || !slots.default) return;
-    slots.default?.().forEach((c: any) => {
-      if (c.type.name === 'u-list-column' && c.props?.sortable !== false) {
-        (c.ref as any)?.setCustomSort?.(true);
-      }
-    });
+    if (!props.backendSortable || !useSlots().default) return;
+    useSlots()
+      .default?.()
+      .forEach((c: any) => {
+        if (c.type.name === 'u-list-column' && c.props?.sortable !== false) {
+          (c.ref as any)?.setCustomSort?.(true);
+        }
+      });
   }
 </script>
 

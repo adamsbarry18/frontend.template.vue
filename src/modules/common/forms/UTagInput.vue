@@ -220,7 +220,7 @@
       if (option && option.label) {
         tagLabel = option.label;
       }
-    } else if (Object.prototype.hasOwnProperty.call(tag.value, 'text')) {
+    } else if (tag.value.hasOwnProperty('text')) {
       tagLabel = tag.value.text;
     } else if (tag.label) {
       tagLabel = tag.label;
@@ -241,7 +241,7 @@
     return JSON.stringify(ordered);
   };
   const getTagFilters = (tag: any) => {
-    if (!Object.prototype.hasOwnProperty.call(tag.value, 'filters')) {
+    if (!tag.value.hasOwnProperty('filters')) {
       return [];
     }
 

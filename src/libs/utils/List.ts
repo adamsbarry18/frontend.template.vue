@@ -15,21 +15,15 @@ interface SetVisibilityParams {
   value: VisibilityValue;
 }
 
-export function setVisibility(
-  { column, value }: SetVisibilityParams,
-  prefix: string = 'pulse'
-): void {
+export function setVisibility({ column, value }: SetVisibilityParams): void {
   let columnVisibility: Record<string, VisibilityValue> | null = JSON.parse(
-    userStorage.getItem(`${prefix}.column-visibility`) || 'null'
+    userStorage.getItem('column-visibility') || 'null'
   );
   if (!columnVisibility) {
     columnVisibility = {};
   }
   columnVisibility[column] = value;
-  userStorage.setItem(
-    `${prefix}.column-visibility`,
-    JSON.stringify(columnVisibility)
-  );
+  userStorage.setItem('column-visibility', JSON.stringify(columnVisibility));
 }
 
 interface SortValue {
@@ -42,66 +36,44 @@ interface SetSortParams {
   value: SortValue;
 }
 
-export function setSort(
-  { list, value }: SetSortParams,
-  prefix: string = 'pulse'
-): void {
+export function setSort({ list, value }: SetSortParams): void {
   let listSort: Record<string, SortValue> | null = JSON.parse(
-    userStorage.getItem(`${prefix}.list-sort`) || 'null'
+    userStorage.getItem('list-sort') || 'null'
   );
   if (!listSort) {
     listSort = {};
   }
   listSort[list] = value;
-  userStorage.setItem(`${prefix}.list-sort`, JSON.stringify(listSort));
+  userStorage.setItem('list-sort', JSON.stringify(listSort));
 }
 
-export function getListSort(
-  listKey: string,
-  prefix: string = 'pulse'
-): SortValue {
+export function getListSort(listKey: string): SortValue {
   const columnSort: Record<string, SortValue> | null = JSON.parse(
-    userStorage.getItem(`${prefix}.list-sort`) || 'null'
+    userStorage.getItem('list-sort') || 'null'
   );
-  if (
-    !columnSort ||
-    !Object.prototype.hasOwnProperty.call(columnSort, listKey)
-  ) {
+  if (!columnSort || !columnSort.hasOwnProperty(listKey)) {
     return { prop: null, order: null };
   }
   return columnSort[listKey];
 }
 
-export function isColumnVisible(
-  columnKey: string,
-  prefix: string = 'pulse'
-): boolean {
+export function isColumnVisible(columnKey: string): boolean {
   const columnVisibility: Record<string, VisibilityValue> | null = JSON.parse(
-    userStorage.getItem(`${prefix}.column-visibility`) || 'null'
+    userStorage.getItem('column-visibility') || 'null'
   );
   return !!columnVisibility?.[columnKey];
 }
 
-export function hasSavedVisibility(
-  columnKey: string,
-  prefix: string = 'pulse'
-): boolean {
+export function hasSavedVisibility(columnKey: string): boolean {
   const columnVisibility: Record<string, VisibilityValue> | null = JSON.parse(
-    userStorage.getItem(`${prefix}.column-visibility`) || 'null'
+    userStorage.getItem('column-visibility') || 'null'
   );
-  return columnVisibility
-    ? Object.prototype.hasOwnProperty.call(columnVisibility, columnKey)
-    : false;
+  return columnVisibility ? columnVisibility.hasOwnProperty(columnKey) : false;
 }
 
-export function hasSavedSort(
-  listKey: string,
-  prefix: string = 'pulse'
-): boolean {
+export function hasSavedSort(listKey: string): boolean {
   const savedSort: Record<string, SortValue> | null = JSON.parse(
-    userStorage.getItem(`${prefix}.list-sort`) || 'null'
+    userStorage.getItem('list-sort') || 'null'
   );
-  return savedSort
-    ? Object.prototype.hasOwnProperty.call(savedSort, listKey)
-    : false;
+  return savedSort ? savedSort.hasOwnProperty(listKey) : false;
 }

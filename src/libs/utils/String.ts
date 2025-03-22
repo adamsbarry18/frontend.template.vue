@@ -129,7 +129,7 @@ export const formatToString = (
   value: unknown,
   config: { type: string; [key: string]: unknown }
 ): string => {
-  return Object.prototype.hasOwnProperty.call(typeFormater, config.type)
+  return typeFormater.hasOwnProperty(config.type)
     ? typeFormater[config.type](value, config)
     : `${value}`;
 };

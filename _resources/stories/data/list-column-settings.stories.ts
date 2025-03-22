@@ -46,7 +46,7 @@ export const ListColumnSettings = () => ({
     };
   },
   template: `
-    <div style="padding: 20px;">
+    <div>
       <h3>List Column Settings Example</h3>
       <icon-base
         icon="icon-settings"

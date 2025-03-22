@@ -40,7 +40,7 @@ function applyFilter(
   if (typeof config.function === 'function') {
     return config.function(row, filterValue, config);
   }
-  if (Object.prototype.hasOwnProperty.call(filterFunctions, config.type)) {
+  if (filterFunctions.hasOwnProperty(config.type)) {
     return filterFunctions[config.type](row, filterValue, config);
   }
   return false;
@@ -104,7 +104,7 @@ export function getPropValue(row: any, property: string): any {
   const propertyPath = property.split('.');
   let value: any = row;
   for (const key of propertyPath) {
-    if (value == null || !Object.prototype.hasOwnProperty.call(value, key)) {
+    if (value == null || !value.hasOwnProperty(key)) {
       return null;
     }
     value = value[key];

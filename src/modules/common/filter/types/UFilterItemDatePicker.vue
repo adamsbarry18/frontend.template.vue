@@ -13,9 +13,7 @@
           v-model="internalValue[0]"
           type="date"
           :shortcuts="
-            Object.prototype.hasOwnProperty.call(config, 'shortcuts')
-              ? config.shortcuts
-              : ''
+            config.hasOwnProperty('shortcuts') ? config.shortcuts : ''
           "
           @change="handleChange(0)"
         />
@@ -27,9 +25,7 @@
           v-model="internalValue[1]"
           type="date"
           :shortcuts="
-            Object.prototype.hasOwnProperty.call(config, 'shortcuts')
-              ? config.shortcuts
-              : ''
+            config.hasOwnProperty('shortcuts') ? config.shortcuts : ''
           "
           @change="handleChange(1)"
         />
@@ -61,13 +57,13 @@
   const internalValue = ref(props.modelValue);
 
   const defaultStartValue = computed(() => {
-    return Object.prototype.hasOwnProperty.call(props.config, 'defaultStart')
+    return props.config.hasOwnProperty('defaultStart')
       ? props.config.defaultStart
       : null;
   });
 
   const defaultEndValue = computed(() => {
-    return Object.prototype.hasOwnProperty.call(props.config, 'defaultEnd')
+    return props.config.hasOwnProperty('defaultEnd')
       ? props.config.defaultEnd
       : null;
   });

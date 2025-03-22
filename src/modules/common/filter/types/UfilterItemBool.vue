@@ -46,7 +46,7 @@
   onMounted(() => {
     internalValue.value = props.modelValue;
     if (
-      Object.prototype.hasOwnProperty.call(props.config, 'default') &&
+      props.config.hasOwnProperty('default') &&
       internalValue.value === null
     ) {
       internalValue.value = props.config.default;

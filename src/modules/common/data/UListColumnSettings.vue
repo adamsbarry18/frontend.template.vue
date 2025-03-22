@@ -6,7 +6,6 @@
     trigger="click"
   >
     <div class="u-list-column-settings">
-      <u-shortcut-subscriber v-if="show" @shortcut-trigger="onShortcutEscape" />
       <div class="column-list -custom-scrollbar">
         <u-tooltip
           v-for="column in columns"
@@ -50,7 +49,6 @@
   import { ref, reactive, PropType } from 'vue';
   import UButton from '@/modules/common/basic/UButton.vue';
   import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
   import UPopper from '../others/UPopper.vue';
   import { ElCheckbox } from 'element-plus';
   import {
@@ -58,84 +56,76 @@
     hasSavedVisibility,
     LIST_COLUMN_VISIBILITY,
   } from '@/libs/utils/List';
+  import { inject } from 'vue';
 
   const props = defineProps({
-    listKey: {
-      type: String,
-      required: true,
-    },
-    columns: {
-      type: Array as PropType<any[]>,
-      required: true,
-    },
+    columns: { type: Array as PropType<any[]> },
     defaults: {
-      type: Object,
-      required: true,
+      type: Object as PropType<Record<string, string>>,
     },
   });
 
-  const emit = defineEmits(['column-visibility-change', 'hide']);
+  const listKey = inject('listKey', '');
+  const columnVisibility = inject('columnVisibility', {});
+
+  const emit = defineEmits(['column-visibility-change']);
 
   const show = ref(false);
   const values = reactive({});
-  const initValues = ref<any[]>([]);
 
-  const showSettings = () => {
-    if (show.value) {
-      show.value = false;
-      emit('hide');
-      return;
-    }
+  // Initialisation des valeurs de visibilité
+  function showSettings() {
     for (const column of props.columns) {
       const columnId = getColumnId(column.key);
-      if (getDefaultVisibility(column.key) === LIST_COLUMN_VISIBILITY.ALWAYS) {
+      if (props.defaults[column.key] === LIST_COLUMN_VISIBILITY.ALWAYS) {
         values[column.key] = true;
+      } else if (hasSavedVisibility(columnId)) {
+        values[column.key] = isColumnVisible(columnId);
       } else {
-        values[column.key] = hasSavedVisibility(columnId)
-          ? isColumnVisible(columnId)
-          : getDefaultVisibility(column.key) !==
-            LIST_COLUMN_VISIBILITY.INVISIBLE;
+        const isVisible =
+          props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+        values[column.key] = isVisible;
       }
     }
-    initValues.value = Object.values(values);
+    console.log('values', values);
     show.value = true;
-  };
+  }
 
   const hasUnsavedChanges = () => {
-    const activeValues = Object.values(values);
-    for (let i = 0; i < activeValues.length; i++) {
-      if (activeValues[i] !== initValues.value[i]) return true;
+    for (const column of props.columns) {
+      const columnId = getColumnId(column.key);
+
+      const savedVisibility = hasSavedVisibility(columnId)
+        ? isColumnVisible(columnId)
+        : props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+      if (values[column.key] !== savedVisibility) return true;
     }
     return false;
   };
 
   const getColumnId = (columnKey: string) => {
-    return `${props.listKey}@${columnKey}`;
+    return `${listKey}@${columnKey}`;
   };
 
   const submit = () => {
     for (const column of Object.keys(values)) {
-      const columnId = getColumnId(column);
-      emit('column-visibility-change', columnId, values[column]);
+      emit('column-visibility-change', getColumnId(column), values[column]);
     }
     show.value = false;
   };
 
-  function onShortcutEscape() {
-    show.value = false;
-    emit('hide');
-  }
-
   const reset = () => {
     for (const column of props.columns) {
-      values[column.key] =
-        getDefaultVisibility(column.key) !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+      if (!isLocked(column.key)) {
+        values[column.key] =
+          props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+      }
     }
   };
 
   const onChecked = (value: boolean, columnKey: string) => {
     if (!isLocked(columnKey)) {
-      values[columnKey] = !!value;
+      values[columnKey] = value;
     }
   };
 
@@ -143,15 +133,7 @@
     return props.defaults[columnKey] === LIST_COLUMN_VISIBILITY.ALWAYS;
   };
 
-  const getDefaultVisibility = (columnKey: string) => {
-    return props.defaults[columnKey]
-      ? props.defaults[columnKey]
-      : LIST_COLUMN_VISIBILITY.VISIBLE;
-  };
-
-  defineExpose({
-    showSettings,
-  });
+  defineExpose({ showSettings });
 </script>
 
 <style lang="scss">
