@@ -66,7 +66,6 @@
   });
 
   const listKey = inject('listKey', '');
-  const columnVisibility = inject('columnVisibility', {});
 
   const emit = defineEmits(['column-visibility-change']);
 

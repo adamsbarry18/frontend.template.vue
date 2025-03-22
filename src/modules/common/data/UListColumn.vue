@@ -31,11 +31,7 @@
 <script setup lang="ts">
   import { computed, ref, inject } from 'vue';
   import { ElTableColumn } from 'element-plus';
-  import {
-    hasSavedVisibility,
-    isColumnVisible,
-    LIST_COLUMN_VISIBILITY,
-  } from '@/libs/utils/List';
+  import { LIST_COLUMN_VISIBILITY } from '@/libs/utils/List';
   import i18n from '@/i18n';
 
   const props = defineProps({
