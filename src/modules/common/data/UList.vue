@@ -1,5 +1,3 @@
-le masquage des colonnes fonctionnent bien mais le UListColumnSettings ne
-s'affiche pas, voici le code complet du composant UList.vue:
 <template>
   <div
     class="u-list-wrapper"
@@ -217,6 +215,18 @@ s'affiche pas, voici le code complet du composant UList.vue:
         />
         <el-table-column v-if="isTree" width="45" />
         <slot />
+        <el-table-column
+          v-if="
+            hasConfigurableColumns &&
+            showTableHeader &&
+            editableColumns.length > 0
+          "
+          width="55"
+        >
+          <template #header>
+            <div class="column-settings" />
+          </template>
+        </el-table-column>
         <slot name="append" />
       </el-table>
     </div>
@@ -307,7 +317,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
     isTree: { type: Boolean, default: false },
     showCounts: { type: Boolean, default: true },
     rowClassName: { type: Function },
-    listKey: { type: String, default: '' },
+    listKey: { type: String, default: 'list' },
     rowKey: { type: String, default: 'id' },
     height: { type: String },
     listActions: { type: Array, default: () => [] },
@@ -315,7 +325,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
       type: Function,
       default: (row, searchInput = '') => {
         if (!row.name) return true;
-        return row.name.toLowerCase().includes(searchInput.toLowerCase());
+        return row.name?.toLowerCase().includes(searchInput?.toLowerCase());
       },
     },
     defaultSort: { type: Object, default: () => ({}) },
@@ -568,7 +578,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
     const relatedTarget = event.relatedTarget as HTMLElement;
     if (
       !relatedTarget?.classList.contains('u-list-row-buttons') &&
-      relatedTarget?.tagName.toLowerCase() !== 'td'
+      relatedTarget?.tagName?.toLowerCase() !== 'td'
     ) {
       rowButtonsVisible.value = false;
       oldRowNodeHover.value?.classList.remove('color-hover');
@@ -594,7 +604,7 @@ s'affiche pas, voici le code complet du composant UList.vue:
     if (
       !relatedTarget?.classList.contains('u-list-row-buttons') &&
       !['button', 'svg', 'path', 'td'].includes(
-        relatedTarget?.nodeName.toLowerCase()
+        relatedTarget?.nodeName?.toLowerCase()
       )
     ) {
       rowButtonsVisible.value = false;

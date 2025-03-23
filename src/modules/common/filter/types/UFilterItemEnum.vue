@@ -21,6 +21,7 @@
   import { ref, watch } from 'vue';
   import UCheckboxGroup from '@/modules/common/forms/UCheckboxGroup.vue';
   import URadio from '@/modules/common/forms/URadio.vue';
+  import i18n from '@/i18n';
 
   const props = defineProps({
     modelValue: {
@@ -61,6 +62,24 @@
       props.config.singleValue ? internalValue.value : internalValue.value
     );
   };
+
+  const getFormattedValue = (value, config) => {
+    if (!value || value.length === 0) {
+      return i18n.global.t('commons.filter-no-value');
+    }
+    const opt = config.options.find((opt) => opt.value === value[0]);
+    const optLabel = opt
+      ? opt.label
+      : i18n.global.t('commons.filter-invalid-value');
+    if (value.length === 1) {
+      return optLabel;
+    }
+    return `${optLabel} (+${value.length - 1})`;
+  };
+
+  defineExpose({
+    getFormattedValue,
+  });
 </script>
 
 <style lang="scss">

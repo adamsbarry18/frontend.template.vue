@@ -18,7 +18,6 @@
     <div class="close-button -button-like" @click.stop="onRemove">
       <icon-base icon="icon-close" :size="9" color="var(--color-neutral-700)" />
     </div>
-    <!-- Popper intégré via UPopper -->
     <u-popper v-model:visible="visible" placement="bottom-start">
       <div
         class="u-filter-item-popper"
@@ -34,23 +33,65 @@
     </u-popper>
   </div>
 </template>
-
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
   import UPopper from '../others/UPopper.vue';
   import IconBase from '../icons/IconBase.vue';
-  // Import des composants de saisie par type
-  import UFilterItemBool from './types/UfilterItemBool.vue';
+  import i18n from '@/i18n';
+  import UfilterItemBool from './types/UfilterItemBool.vue';
   import UFilterItemEnum from './types/UFilterItemEnum.vue';
   import UFilterItemNumberrange from './types/UFilterItemNumberrange.vue';
-  import UFilterItemDaterange from '@/modules/common/filter/types/UFilterItemDatePicker.vue';
-  import i18n from '@/i18n';
+  import UFilterItemDatePicker from '@/modules/common/filter/types/UFilterItemDatePicker.vue';
 
   interface ConfigType {
     label: string;
     type: string;
     [key: string]: any;
   }
+
+  // Define formatting functions
+  function formatBool(value: any, config: ConfigType): string {
+    if (value === true) return config.trueLabel || 'Yes';
+    if (value === false) return config.falseLabel || 'No';
+    return 'Unknown';
+  }
+
+  function formatEnum(value: any, config: ConfigType): string {
+    const option = config.options?.find(
+      (opt: { value: any; label: string }) => opt.value === value
+    );
+    return option ? option.label : String(value);
+  }
+
+  function formatNumberRange(value: any, config: ConfigType): string {
+    if (Array.isArray(value) && value.length === 2) {
+      return `${value[0]} - ${value[1]} ${config.unit || ''}`.trim();
+    }
+    return String(value);
+  }
+
+  function formatDateRange(value: any): string {
+    if (Array.isArray(value) && value.length === 2) {
+      const start =
+        value[0] instanceof Date
+          ? value[0].toLocaleDateString()
+          : String(value[0]);
+      const end =
+        value[1] instanceof Date
+          ? value[1].toLocaleDateString()
+          : String(value[1]);
+      return `${start} - ${end}`;
+    }
+    return String(value);
+  }
+
+  // Map filter types to formatting functions
+  const formatValue = {
+    bool: formatBool,
+    enum: formatEnum,
+    numberrange: formatNumberRange,
+    daterange: formatDateRange,
+  };
 
   const props = defineProps({
     modelValue: {
@@ -69,7 +110,6 @@
     (e: 'remove'): void;
   }>();
 
-  // Valeur du filtre et contrôle du popper
   const input = ref(props.modelValue);
   const visible = ref(false);
   const active = ref(false);
@@ -86,29 +126,26 @@
     return input.value || input.value === false;
   });
 
-  // Mappe le type à son composant et sa fonction de formatage
+  // Component mapping remains unchanged
   const componentsMap: Record<string, any> = {
-    bool: UFilterItemBool,
+    bool: UfilterItemBool,
     enum: UFilterItemEnum,
     numberrange: UFilterItemNumberrange,
-    daterange: UFilterItemDaterange,
+    daterange: UFilterItemDatePicker,
   };
 
-  type FormatValueFunction = (value: any, config: ConfigType) => string;
-  const formatValue: Record<string, FormatValueFunction> = {
-    bool: UFilterItemBool.getFormattedValue,
-    enum: UFilterItemEnum.getFormattedValue,
-    numberrange: UFilterItemNumberrange.getFormattedValue,
-    daterange: UFilterItemDaterange.getFormattedValue,
-  };
-
+  // Updated formattedValue computation
   const formattedValue = computed(() => {
     if (input.value == null) {
       return i18n.global.t('commons.filter-no-value');
     }
-    return formatValue[props.config.type]
-      ? formatValue[props.config.type](input.value, props.config)
-      : input.value;
+    const formatter = formatValue[props.config.type];
+    if (typeof formatter === 'function') {
+      return formatter(input.value, props.config);
+    } else {
+      console.warn(`No formatter found for type: ${props.config.type}`);
+      return String(input.value);
+    }
   });
 
   function handleChange() {

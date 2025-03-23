@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+  import { formatBool } from '@/libs/utils/String';
   import URadio from '@/modules/common/forms/URadio.vue';
   import { computed, ref, watch, onMounted } from 'vue';
 
@@ -58,6 +59,14 @@
     emit('update:modelValue', internalValue.value);
     emit('change', internalValue.value);
   };
+
+  const getFormattedValue = (value, config) => {
+    return formatBool(value, config);
+  };
+
+  defineExpose({
+    getFormattedValue,
+  });
 </script>
 
 <style lang="scss">

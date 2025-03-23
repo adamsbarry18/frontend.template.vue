@@ -35,7 +35,7 @@
   import i18n from '@/i18n';
 
   const props = defineProps({
-    columnKey: { type: String },
+    columnKey: { type: String, required: true },
     columnDefaultVisibility: {
       type: String,
       default: LIST_COLUMN_VISIBILITY.ALWAYS,
@@ -131,6 +131,10 @@
   function setCustomSort(value: boolean) {
     hasCustomSort.value = value;
   }
+
+  defineExpose({
+    setCustomSort,
+  });
 </script>
 
 <style lang="scss">

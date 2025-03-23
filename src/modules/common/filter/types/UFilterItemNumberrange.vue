@@ -30,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+  import { formatNumberRange } from '@/libs/utils/String';
   import UNumberInput from '@/modules/common/forms/UNumberInput.vue';
   import { ref, computed, watch, PropType } from 'vue';
 
@@ -79,6 +80,14 @@
     internalInput.value = [defaultMin.value, defaultMax.value];
     handleChange();
   }
+
+  function getFormattedValue(value, config) {
+    return formatNumberRange(value, config);
+  }
+
+  defineExpose({
+    getFormattedValue,
+  });
 </script>
 
 <style lang="scss">

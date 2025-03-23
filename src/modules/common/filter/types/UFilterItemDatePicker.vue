@@ -40,6 +40,7 @@
 
   import UDatePicker from '@/modules/common/forms/UDatePicker.vue';
   import type { PropType } from 'vue';
+  import { formatDateRange } from '@/libs/utils/String';
 
   const props = defineProps({
     modelValue: {
@@ -111,6 +112,14 @@
     internalValue.value = [defaultStartValue.value, defaultEndValue.value];
     handleChange();
   };
+
+  const getFormattedValue = (value) => {
+    return formatDateRange(value);
+  };
+
+  defineExpose({
+    getFormattedValue,
+  });
 </script>
 
 <style lang="scss">
