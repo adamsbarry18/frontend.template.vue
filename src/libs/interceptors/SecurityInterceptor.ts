@@ -5,6 +5,8 @@ import axios, {
 } from 'axios';
 import { BaseInterceptor } from './BaseInterceptor';
 import { useRouter } from 'vue-router';
+import RootNotification from '../utils/Notification';
+import { useUsersStore } from '@/modules/users/store/user';
 
 export class SecurityInterceptor extends BaseInterceptor {
   protected readonly $router = useRouter();

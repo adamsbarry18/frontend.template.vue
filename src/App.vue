@@ -1,10 +1,28 @@
 <template>
   <div class="app">
     <router-view />
+    <transition name="notification">
+      <notification-panel v-show="notificationVisible" />
+    </transition>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { computed, onMounted } from 'vue';
+  import NotificationPanel from './modules/shared/skeleton/notification/NotificationPanel.vue';
+  import { useNotificationStore } from './modules/shared/skeleton/notification/_store/notification';
+  import { STATE, reactBus } from './plugins/reactBus';
+
+  const notificationStore = useNotificationStore();
+
+  const notificationVisible = computed(() => {
+    return notificationStore.getPersistentNotificationsVisible;
+  });
+
+  onMounted(async () => {
+    await reactBus.emit(STATE.TEST_NOTIFICATION);
+  });
+</script>
 
 <style lang="scss">
   body {

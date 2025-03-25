@@ -25,7 +25,6 @@
         </template>
       </u-dialog>
     </div>
-    `,
   </div>
 </template>
 
