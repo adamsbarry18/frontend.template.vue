@@ -5,13 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 export type DisplayIcon = 'icon-notif-active';
 
 export interface NotificationItem {
-  id: string;
-  template: string;
-  context: any;
-  partitionId: string;
-  icon: string;
-  isError: boolean;
-  created_time: Date;
+  id?: string;
+  template?: string;
+  context?: any;
+  icon?: string;
+  isError?: boolean;
+  created_time?: Date;
 }
 
 export const useNotificationStore = defineStore('notification', () => {
@@ -19,13 +18,7 @@ export const useNotificationStore = defineStore('notification', () => {
   const persistentNotifications = ref<NotificationItem[]>([]);
   const persistentNotificationsVisible = ref(false);
 
-  const currentPartitionId = 'dummy-partition'; // Remplacez par la valeur réelle
-
-  const getAll = computed(() =>
-    persistentNotifications.value.filter(
-      (notif) => notif.partitionId === currentPartitionId
-    )
-  );
+  const getAll = computed(() => persistentNotifications.value);
 
   const getAllErrorNotifications = computed(() =>
     getAll.value.filter((notif) => notif.isError)
@@ -39,29 +32,21 @@ export const useNotificationStore = defineStore('notification', () => {
   function addPersistentNotification({
     template,
     context,
-    partitionId,
     icon = 'icon-notif-active',
     isError = false,
-  }: {
-    template: string;
-    context: any;
-    partitionId: string;
-    icon?: string;
-    isError?: boolean;
   }): void {
     const id = uuidv4().substring(0, 8);
     persistentNotifications.value.push({
       id,
       template,
       context,
-      partitionId,
       icon,
       isError,
       created_time: new Date(),
     });
   }
 
-  function removeItem({ id }: { id: string }): void {
+  function removeItem({ id }): void {
     persistentNotifications.value = persistentNotifications.value.filter(
       (item) => item.id !== id
     );

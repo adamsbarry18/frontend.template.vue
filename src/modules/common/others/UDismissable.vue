@@ -30,6 +30,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import IconBase from '../icons/IconBase.vue';
+  import i18n from '@/i18n';
   defineProps({
     closeable: {
       type: Boolean,
@@ -45,7 +46,7 @@
     },
     label: {
       type: String,
-      default: 'Clear',
+      default: i18n.global.t('commons.form.clear'),
     },
   });
 
@@ -103,7 +104,7 @@
     .u-dismissable-close {
       position: absolute;
       top: 8px;
-      right: 8px;
+      right: 60px;
       transform-origin: center center;
       transition: all 0.2s ease-in-out;
 

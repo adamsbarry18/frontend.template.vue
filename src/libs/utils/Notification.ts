@@ -17,7 +17,6 @@ interface ShortLivedParams {
 }
 
 interface PersistentOptions {
-  partitionId?: string;
   context?: any;
   isError?: boolean;
   icon?: string;
@@ -57,12 +56,9 @@ export default class RootNotification {
     options: PersistentOptions = {}
   ): void {
     const notificationStore = useNotificationStore();
-    // Récupère partitionId à partir des options ou utilise une valeur par défaut
-    const partitionId = options.partitionId || 'default-partition';
     notificationStore.addPersistentNotification({
       template,
       context: options.context,
-      partitionId,
       icon: options.icon || 'icon-notif-active',
       isError: options.isError || false,
     });

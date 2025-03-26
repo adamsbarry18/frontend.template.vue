@@ -11,7 +11,7 @@
   import { computed, onMounted } from 'vue';
   import NotificationPanel from './modules/shared/skeleton/notification/NotificationPanel.vue';
   import { useNotificationStore } from './modules/shared/skeleton/notification/_store/notification';
-  import { STATE, reactBus } from './plugins/reactBus';
+  // import { STATE, reactBus } from './plugins/reactBus';
 
   const notificationStore = useNotificationStore();
 
@@ -19,8 +19,8 @@
     return notificationStore.getPersistentNotificationsVisible;
   });
 
-  onMounted(async () => {
-    await reactBus.emit(STATE.TEST_NOTIFICATION);
+  onMounted(() => {
+    // await reactBus.emit(STATE.TEST_NOTIFICATION);
   });
 </script>
 

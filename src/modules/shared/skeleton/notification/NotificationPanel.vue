@@ -12,22 +12,8 @@
       </div>
     </div>
     <div class="content">
-      <u-shortcut-subscriber
-        v-if="isNotificationPanelVisible"
-        @shortcut-trigger="onShortcutEscape"
-      />
-      <u-shortcut-subscriber
-        v-if="isNotificationPanelVisible"
-        shortcut="n"
-        @shortcut-trigger="onShortcutN"
-      />
-
       <template v-if="notificationsGroups && notificationsGroups.length > 0">
-        <div
-          class="clear-all-button -button-like"
-          :class="{ disabled: hasErrorConnectorAccountNotifications }"
-          @click="onClearAll"
-        >
+        <div class="clear-all-button -button-like" @click="onClearAll">
           <u-tooltip placement="top">
             <span class="notification-success">
               <icon-base
@@ -62,10 +48,9 @@
                 notification.icon ? notification.icon : 'icon-notif-active'
               "
               :type="notification.isError ? 'error' : 'default'"
-              :closeable="!hasErrorConnectorAccountNotifications"
               @close="onClose(notification.id)"
             >
-              <component :is="renderNotification(notification)" />
+              <component :is="renderCompile(notification)" />
             </u-dismissable>
           </transition-group>
         </div>
@@ -79,21 +64,22 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted, onUnmounted } from 'vue';
+  import { ref, computed, onMounted, onUnmounted, markRaw } from 'vue';
   import { useNotificationStore } from './_store/notification';
   import { reactBus, STATE } from '@/plugins/reactBus';
-  import RootNotification from '@/libs/utils/Notification';
+  import { compile } from 'vue/dist/vue.esm-bundler.js';
   import dayjs from 'dayjs';
   import IconBase from '@/modules/common/icons/IconBase.vue';
   import UDismissable from '@/modules/common/others/UDismissable.vue';
-  import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
   import UTooltip from '@/modules/common/others/UTooltip.vue';
   import i18n from '@/i18n';
+  import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
+  import { notification } from '@/plugins/notification';
 
   // Stores Pinia
   const notificationStore = useNotificationStore();
 
-  // État réactif
+  // Reactive state
   const notifications = ref(notificationStore.getAll);
   const isNotificationPanelVisible = ref(
     notificationStore.getPersistentNotificationsVisible
@@ -106,11 +92,11 @@
       const date = notification.created_time
         ? new Date(notification.created_time)
         : new Date(0);
-      let dateLabel = i18n.global.$d(date, 'dayMonthYear');
+      let dateLabel = i18n.global.d(date, 'dayMonthYear');
       if (dayjs(date).isSame(dayjs(), 'day')) {
-        dateLabel = i18n.global.$t('target.date.today');
+        dateLabel = i18n.global.t('target.date.today');
       } else if (dayjs(date).isSame(dayjs().subtract(1, 'day'), 'day')) {
-        dateLabel = i18n.global.$t('target.date.yesterday');
+        dateLabel = i18n.global.t('target.date.yesterday');
       }
       let group = res.find((g) => g.dateLabel === dateLabel);
       if (!group) {
@@ -123,13 +109,7 @@
     return res;
   });
 
-  const hasErrorConnectorAccountNotifications = computed(() => {
-    return notifications.value.some(
-      (n) => n.isError && n.context?.data?.account
-    );
-  });
-
-  // Gestion des événements DOM
+  // DOM event handlers
   const handleBodyClick = (event) => {
     if (isNotificationPanelVisible.value && !isElementInDialog(event.target)) {
       notificationStore.togglePersistentNotificationsVisible();
@@ -145,36 +125,24 @@
     return false;
   }
 
-  // Méthodes
+  // Methods
   const onClose = (id) => {
-    if (!hasErrorConnectorAccountNotifications.value) {
-      notificationStore.removeItem({ id });
-    }
+    notificationStore.removeItem({ id });
   };
 
   const onClearAll = () => {
-    if (!hasErrorConnectorAccountNotifications.value) {
-      notifications.value.forEach((n) =>
-        notificationStore.removeItem({ id: n.id })
-      );
+    for (const notification of notifications.value) {
+      notificationStore.removeItem({ id: notification.id });
+      console.log('*****notificationsGroups***********', notification.id);
     }
+    notifications.value = [];
   };
 
   const handleArrowClick = () => {
     notificationStore.togglePersistentNotificationsVisible();
   };
 
-  const onShortcutEscape = () => {
-    if (isNotificationPanelVisible.value) {
-      notificationStore.togglePersistentNotificationsVisible();
-    }
-  };
-
-  const onShortcutN = () => {
-    notificationStore.togglePersistentNotificationsVisible();
-  };
-
-  // Gestion des événements ReactBus
+  // ReactBus event handlers
   onMounted(() => {
     document.body.addEventListener('click', handleBodyClick);
     reactBus.on(STATE.TEST_NOTIFICATION, onTestConnection);
@@ -188,16 +156,34 @@
   const onTestConnection = async () => {
     const test = true;
     if (test) {
-      RootNotification.info({
+      notification.error({
         title: 'Titre Notification test',
         message: 'Description',
-        template: '<notification-connection />',
+        template:
+          '<notification-connection :notification-id="notificationId"/>',
         display: 'persistent_short',
         options: {
           icon: 'icon-connect',
+          context: {
+            components: {
+              'notification-connection': markRaw(NotificationConnection),
+            },
+          },
         },
       });
     }
+  };
+
+  const renderCompile = ({ template, context = {}, id }) => {
+    const render = compile(template);
+    return {
+      render,
+      data() {
+        return { ...context.data, notificationId: id };
+      },
+      methods: context.methods,
+      components: context.components || {},
+    };
   };
 </script>
 

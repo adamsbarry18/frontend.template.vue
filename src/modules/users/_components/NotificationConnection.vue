@@ -8,6 +8,12 @@
 
 <script setup lang="ts">
   import UButton from '@/modules/common/basic/UButton.vue';
+
+  defineProps({
+    notificationId: {
+      type: String,
+    },
+  });
   const clickHandler = () => {
     console.log('click');
   };

@@ -23,7 +23,6 @@ export class SecurityInterceptor extends BaseInterceptor {
         config: InternalAxiosRequestConfig
       ): InternalAxiosRequestConfig => {
         config = this.setRequestHeaders(config);
-        config = this.setPartitionId(config);
         config = this.setVersion(config);
         return config;
       },
@@ -51,7 +50,6 @@ export class SecurityInterceptor extends BaseInterceptor {
               if (!result) return null as never;
               this.attachResponseInterceptor();
               this.setRequestHeaders(originalRequest);
-              this.setPartitionId(originalRequest);
               this.setVersion(originalRequest);
               return await axios(originalRequest);
             } catch (err) {
@@ -96,22 +94,6 @@ export class SecurityInterceptor extends BaseInterceptor {
         throw error;
       },
     };
-  }
-
-  /** Ajoute l'ID de partition aux paramètres de la requête */
-  setPartitionId(
-    config: InternalAxiosRequestConfig
-  ): InternalAxiosRequestConfig {
-    if (config && !(config as any).skipPartition) {
-      if (!config.params) {
-        config.params = {};
-      }
-      if (!config.params.partitionId) {
-        config.params.partitionId =
-          this.$store.getters['entities/partitions/id'];
-      }
-    }
-    return config;
   }
 
   /** Définit la version dans les paramètres de la requête */

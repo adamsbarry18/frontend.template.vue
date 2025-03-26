@@ -7,6 +7,7 @@
   "commons.form.cancel": "Cancel",
   "commons.form.ok": "OK",
   "commons.form.delete": "Delete",
+  "commons.form.clear": "Clear",
   "commons.form.save": "Save",
   "commons.form.back": "Back",
   "commons.form.confirm": "Confirm",
@@ -159,5 +160,13 @@
   "commons.schedule.cron.every-month.prefix": "The",
   "commons.schedule.cron.every-month.suffix": "of the month",
   "commons.schedule.cron.every-month.day-of-week.placeholder": "Day of week",
-  "commons.schedule.cron.every-month.last-day": "The last day of the month"
+  "commons.schedule.cron.every-month.last-day": "The last day of the month",
+  "dashboard.welcome.title": "Hello there {name}",
+  "dashboard.welcome.title-2": "welcome to your space!",
+  "dashboard.error-count": "<b>{n}</b> error notification | <b>{n}</b> error notifications",
+  "target.date.days": "days",
+  "target.date.day": "day",
+  "target.date.empty": "-",
+  "target.date.yesterday": "Yesterday",
+  "target.date.today": "Today"
 }

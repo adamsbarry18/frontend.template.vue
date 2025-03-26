@@ -1,4 +1,5 @@
 import { createI18n } from 'vue-i18n';
+
 import isoLanguages from '@cospired/i18n-iso-languages';
 import isoCountries from 'i18n-iso-countries';
 

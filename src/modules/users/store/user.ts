@@ -20,7 +20,6 @@ export interface User {
   updated_time: Date | null;
   color: string | null;
   preferences: any;
-  partitions: any[]; // Vous pouvez typer plus précisément selon vos modèles
 }
 
 /**
@@ -43,7 +42,6 @@ const dummyUsers: User[] = [
     updated_time: null,
     color: null,
     preferences: {},
-    partitions: [],
   },
 ];
 
@@ -75,9 +73,6 @@ export const useUsersStore = defineStore('users', () => {
   );
   const language = computed(() =>
     currentUser.value ? currentUser.value.language.toLowerCase() : 'en'
-  );
-  const partitions = computed(() =>
-    currentUser.value ? currentUser.value.partitions : false
   );
 
   const token = computed(() =>
@@ -137,7 +132,6 @@ export const useUsersStore = defineStore('users', () => {
     securityToken,
     internal,
     language,
-    partitions,
     isLoggingOut,
     token,
   };
