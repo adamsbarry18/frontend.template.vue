@@ -32,7 +32,7 @@
 <script setup>
   import { computed, onMounted } from 'vue';
   import { STATE, reactBus } from '@/plugins/reactBus';
-  import { useNotificationStore } from '@/modules/shared/skeleton/notification/_store/notification';
+  import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import IconBase from '@/modules/common/icons/IconBase.vue';
   // Initialisation du store Pinia pour les notifications
   const notificationStore = useNotificationStore();

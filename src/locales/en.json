@@ -1,4 +1,11 @@
 {
+  "application.name": "My app",
+  "globals.dashboard.title": "Dashboard",
+  "globals.account.title": "My account",
+  "globals.user-account.title": "User account",
+  "globals.logout.title": "Logout",
+  "settings.administration.title": "Parameters",
+  "univers.menu-store.title": "Store",
   "commons.yes": "Yes",
   "commons.no": "No",
   "commons.before": "Before",
@@ -168,5 +175,6 @@
   "target.date.day": "day",
   "target.date.empty": "-",
   "target.date.yesterday": "Yesterday",
-  "target.date.today": "Today"
+  "target.date.today": "Today",
+  "adblocker.detected": "An adblocker has been detected. Please disable it to avoid display issues on the application."
 }

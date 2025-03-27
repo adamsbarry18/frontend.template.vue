@@ -79,7 +79,36 @@ export const useUsersStore = defineStore('users', () => {
     currentUser.value ? currentUser.value.token : null
   );
 
+  const getInitial = computed(() =>
+    currentUser.value && currentUser.value.name
+      ? currentUser.value.name.substring(0, 1).toUpperCase()
+      : '-'
+  );
+  const isInternal = computed(() => currentUser.value.internal);
+
   // Actions
+  function userColorFromId(userId: number): string {
+    const user = getUser(userId);
+    if (!user || user.color === null) {
+      const DEFAULT_COLORS = [
+        '#fc842c',
+        '#b43893',
+        '#c98963',
+        '#4e8cd4',
+        '#18bc91',
+        '#cf454a',
+      ];
+      return DEFAULT_COLORS[userId % DEFAULT_COLORS.length];
+    }
+    return user.color;
+  }
+  async function fetchUser() {
+    return null;
+  }
+  function getUser(userId: number): User | null {
+    return users.value.find((u) => u.id === userId) || null;
+  }
+
   function setCurrentUser(id: number): void {
     idCurrentUser.value = id;
   }
@@ -134,5 +163,9 @@ export const useUsersStore = defineStore('users', () => {
     language,
     isLoggingOut,
     token,
+    userColorFromId,
+    getInitial,
+    isInternal,
+    fetchUser,
   };
 });

@@ -1,4 +1,13 @@
 {
+  "application.name": "Mon app",
+  "globals.dashboard.title": "Dashboard",
+  "globals.account.title": "Mon compte",
+  "globals.user-account.title": "Compte utilisateur",
+  "globals.logout.title": "Se déconnecter",
+  "settings.administration.title": "Administration",
+  "univers.menu1.title": "Menu 1",
+  "univers.menu1.profile-search.title": "sous-menu 1",
+  "univers.menu-store.title": "Store",
   "commons.yes": "Oui",
   "commons.no": "Non",
   "commons.before": "Avant",
@@ -168,5 +177,6 @@
   "target.date.day": "jour",
   "target.date.empty": "-",
   "target.date.yesterday": "Hier",
-  "target.date.today": "Aujourd'hui"
+  "target.date.today": "Aujourd'hui",
+  "adblocker.detected": "Un bloqueur de publicité a été détecté. Merci de le désactiver pour éviter des problèmes d'affichage sur la plateforme."
 }

@@ -1,10 +1,5 @@
 <template>
   <div v-if="show" ref="menu" class="u-contextual-menu" :style="axisComputed">
-    <u-shortcut-subscriber
-      v-if="show"
-      :shortcut="props.shortcut"
-      @shortcut-trigger="onShortcutEscape"
-    />
     <!-- First level -->
     <ul class="cm-ul cm-ul-1">
       <li v-if="$slots.title" class="cmenu-title">
@@ -69,7 +64,6 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted, onBeforeUnmount, PropType } from 'vue';
-  import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
   import UPulser from '@/modules/common/others/UPulser.vue';
   import IconBase from '@/modules/common/icons/IconBase.vue';
 
@@ -91,7 +85,6 @@
       default: () => ({ x: 6, y: 2 }),
     },
     borderWidth: { type: Number, default: 6 },
-    shortcut: { type: String, default: 'esc' },
   });
 
   const emit = defineEmits(['close']);
@@ -138,10 +131,6 @@
     const bodyWidth = document.body.offsetWidth;
     return axis.value.x + props.itemWidth * 3 >= bodyWidth;
   });
-
-  function onShortcutEscape() {
-    close();
-  }
 
   function showMenu(newAxis: { x: number; y: number }) {
     show.value = true;
@@ -190,7 +179,7 @@
   });
 
   // Expose public methods for utilisation externe
-  defineExpose({ showMenu, close, onShortcutEscape });
+  defineExpose({ showMenu, close });
 </script>
 
 <style lang="scss">

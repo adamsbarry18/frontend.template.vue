@@ -1,6 +1,6 @@
 import { ElNotification } from 'element-plus';
 import { getCssVariable } from './Style';
-import { useNotificationStore } from '@/modules/shared/skeleton/notification/_store/notification';
+import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
 
 export const DISPLAY_TYPE = {
   PERSISTENT: 'persistent',

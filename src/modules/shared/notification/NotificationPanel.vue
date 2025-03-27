@@ -74,6 +74,7 @@
   import UTooltip from '@/modules/common/others/UTooltip.vue';
   import i18n from '@/i18n';
   import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
+  import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
   import { notification } from '@/plugins/notification';
 
   // Stores Pinia
@@ -109,12 +110,14 @@
     return res;
   });
 
+  // Methods
+
   // DOM event handlers
-  const handleBodyClick = (event) => {
+  function handleBodyClick(event) {
     if (isNotificationPanelVisible.value && !isElementInDialog(event.target)) {
       notificationStore.togglePersistentNotificationsVisible();
     }
-  };
+  }
 
   function isElementInDialog(el) {
     let node = el.parentNode;
@@ -125,22 +128,20 @@
     return false;
   }
 
-  // Methods
-  const onClose = (id) => {
+  function onClose(id) {
     notificationStore.removeItem({ id });
-  };
+  }
 
-  const onClearAll = () => {
+  function onClearAll() {
     for (const notification of notifications.value) {
       notificationStore.removeItem({ id: notification.id });
-      console.log('*****notificationsGroups***********', notification.id);
     }
     notifications.value = [];
-  };
+  }
 
-  const handleArrowClick = () => {
+  function handleArrowClick() {
     notificationStore.togglePersistentNotificationsVisible();
-  };
+  }
 
   // ReactBus event handlers
   onMounted(() => {
@@ -153,7 +154,7 @@
     reactBus.off(STATE.TEST_NOTIFICATION, onTestConnection);
   });
 
-  const onTestConnection = async () => {
+  async function onTestConnection() {
     const test = true;
     if (test) {
       notification.error({
@@ -172,9 +173,9 @@
         },
       });
     }
-  };
+  }
 
-  const renderCompile = ({ template, context = {}, id }) => {
+  function renderCompile({ template, context = {}, id }) {
     const render = compile(template);
     return {
       render,
@@ -184,7 +185,7 @@
       methods: context.methods,
       components: context.components || {},
     };
-  };
+  }
 </script>
 
 <style lang="scss">

@@ -19,7 +19,7 @@ isoCountries.registerLocale(enCountries);
 isoCountries.registerLocale(frCountries);
 
 const dateTimeFormats = {
-  'en-US': {
+  en: {
     minuteHour: { hour: 'numeric', minute: 'numeric', hour12: false },
     minuteHourSecond: {
       hour: 'numeric',
@@ -51,7 +51,7 @@ const dateTimeFormats = {
       hour12: false,
     },
   },
-  'fr-FR': {
+  fr: {
     minuteHour: { hour: 'numeric', minute: 'numeric', hour12: false },
     minuteHourSecond: {
       hour: 'numeric',
@@ -86,7 +86,7 @@ const dateTimeFormats = {
 } as const;
 
 const numberFormatsI18n = {
-  'en-US': {
+  en: {
     currency: {
       style: 'currency',
     },
@@ -114,7 +114,7 @@ const numberFormatsI18n = {
       maximumFractionDigits: 2,
     },
   },
-  'fr-FR': {
+  fr: {
     currency: {
       style: 'currency',
       currency: 'EUR',
@@ -147,20 +147,33 @@ const numberFormatsI18n = {
   },
 };
 
-const localLanguage = window.localStorage.getItem('language') || 'fr-FR';
+const localLanguage = window.localStorage.getItem('language');
 
 const i18n = createI18n({
   legacy: false,
-  locale: localLanguage,
-  fallbackLocale: 'en-US',
+  locale: localLanguage !== null ? localLanguage.toLowerCase() : 'fr',
+  fallbackLocale: localLanguage !== null ? localLanguage.toLowerCase() : 'en',
   globalInjection: true,
   warnHtmlMessage: false,
   messages: {
-    'en-US': enLocale,
-    'fr-FR': frLocale,
+    en: enLocale,
+    fr: frLocale,
   },
   datetimeFormats: dateTimeFormats,
   numberFormatsI18n,
 });
 
 export default i18n;
+
+if (import.meta.hot) {
+  import.meta.hot.accept('./locales/en.json', (updatedEnLocale) => {
+    if (updatedEnLocale?.default) {
+      i18n.global.mergeLocaleMessage('en', updatedEnLocale.default);
+    }
+  });
+  import.meta.hot.accept('./locales/fr.json', (updatedFrLocale) => {
+    if (updatedFrLocale?.default) {
+      i18n.global.mergeLocaleMessage('fr', updatedFrLocale.default);
+    }
+  });
+}

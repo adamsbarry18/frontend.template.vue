@@ -1,30 +1,112 @@
 <template>
-  <div class="app">
-    <router-view />
-    <transition name="notification">
-      <notification-panel v-show="notificationVisible" />
-    </transition>
+  <div id="app" :data-lang="$i18n.locale">
+    <main-header v-if="isAppReady" />
+    <div class="app-wrapper">
+      <main-menu />
+      <div class="main-content">
+        <template v-if="isAppReady">
+          <router-view />
+          <transition name="notification">
+            <notification-panel v-show="notificationVisible" />
+          </transition>
+          <global-help-button />
+        </template>
+        <div
+          ref="adBlockerDiv"
+          class="ad-banner ad-button"
+          style="display: block; padding: 0 !important"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted } from 'vue';
-  import NotificationPanel from './modules/shared/skeleton/notification/NotificationPanel.vue';
-  import { useNotificationStore } from './modules/shared/skeleton/notification/_store/notification';
-  // import { STATE, reactBus } from './plugins/reactBus';
+  import { ref, computed, onMounted } from 'vue';
+  import { initializeDateLocale } from '@/libs/utils/Date';
+  import { useUsersStore } from '@/stores/users/user';
+  import GlobalHelpButton from '@/modules/app/_components/GlobalHelpButton.vue';
+  import MainMenu from '@/modules/shared/menu/main-menu/MainMenu.vue';
+  import MainHeader from '@/modules/shared/menu/main-header/MainHeader.vue';
+  import NotificationPanel from '@/modules/shared/notification/NotificationPanel.vue';
+  import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
+  import { useRouter, useRoute } from 'vue-router';
+  import i18n from '@/i18n';
+  import { message } from './plugins/install';
 
+  const usersStore = useUsersStore();
   const notificationStore = useNotificationStore();
+  const router = useRouter();
+  const route = useRoute();
 
-  const notificationVisible = computed(() => {
-    return notificationStore.getPersistentNotificationsVisible;
-  });
+  const isAppReady = ref(false);
+  const adBlockerDiv = ref<HTMLDivElement | null>(null);
 
-  onMounted(() => {
-    // await reactBus.emit(STATE.TEST_NOTIFICATION);
+  const isConnected = computed(() => usersStore.isConnected);
+  const currentUser = computed(() => usersStore.currentUser); // Assuming currentUser is in the users store
+  const notificationVisible = computed(
+    () => notificationStore.persistentNotificationsVisible
+  );
+  const currentRoutePath = computed(() => route.path);
+
+  const showMainMenu = computed(
+    () => currentUser.value !== null && currentRoutePath.value !== '/login'
+  );
+
+  const checkAdBlocker = () => {
+    setTimeout(() => {
+      if (
+        !(window as any).adblockerWhitelisted ||
+        !adBlockerDiv.value ||
+        adBlockerDiv.value.offsetParent === null
+      ) {
+        message({
+          customClass: 'orange-warning',
+          type: 'warning',
+          duration: 600000,
+          message: i18n.global.t('adblocker.detected'),
+        });
+      }
+    }, 10000);
+  };
+
+  const goToLogout = async () => {
+    await usersStore.logout();
+    router.push({ name: 'login' });
+  };
+
+  const fetchUser = async () => {
+    await usersStore.fetchUser();
+  };
+
+  const relogin = async () => {
+    await usersStore.relogin();
+  };
+
+  onMounted(async () => {
+    isAppReady.value = false;
+    // checkAdBlocker();
+
+    const lang = localStorage.getItem('language');
+    if (lang === 'en' || lang === 'fr') {
+      initializeDateLocale(lang);
+      i18n.global.locale.value = lang;
+    }
+
+    isAppReady.value = true;
   });
 </script>
 
 <style lang="scss">
+  .notification-enter-active,
+  .notification-leave-active {
+    transition: transform 0.5s;
+  }
+
+  .notification-enter, .notification-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    transform: translateX(300px);
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -42,6 +124,13 @@
 
     .el-loading-spinner .path {
       stroke: var(--color-primary-500);
+    }
+
+    /* Necessary for angular */
+    .angular * {
+      font-family: 'Roboto', sans-serif;
+      font-size: var(--paragraph-03);
+      line-height: inherit;
     }
 
     hr {

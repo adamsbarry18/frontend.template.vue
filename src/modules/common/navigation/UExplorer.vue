@@ -76,7 +76,6 @@
         </u-button>
       </div>
     </div>
-    <u-shortcutSubscriber @shortcut-trigger="hide" />
   </div>
 </template>
 
@@ -84,7 +83,6 @@
   import { ref, PropType } from 'vue';
   import UButton from '@/modules/common/basic/UButton.vue';
   import IconBase from '@/modules/common/icons/IconBase.vue';
-  import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
   import i18n from '@/i18n';
 
   // Définition de l'interface pour les éléments de l'explorateur
