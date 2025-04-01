@@ -1,5 +1,5 @@
 <template>
-  <div class="base-menu" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+  <div class="base-nav" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
     <div
       class="extend-arrow"
       :class="{ '-extended': isNavExtended }"
@@ -10,7 +10,7 @@
         :class="{ '-extended': isNavExtended }"
         icon="icon-arrow"
         color="var(--color-neutral-800)"
-        :size="14"
+        size="14"
       />
     </div>
     <div
@@ -20,69 +20,65 @@
         '-animating': areSectionsAnimating,
       }"
     >
-      <menu-section
+      <nav-section
         v-for="item in globals"
         :key="item.name"
-        ref="section"
         class="globals-section"
-        type="globals"
+        navType="globals"
         :item="item"
-        :current-section="currentUniverse"
+        :current-section="currentGroup"
         :current-item="currentItem"
         :generate-link="generateLink"
         :extended-nav="isNavExtended"
         @section-click="onSectionClick"
-        @menu-click="onMenuClick"
+        @nav-click="onMenuClick"
       />
       <div class="separator" />
-      <menu-section
-        v-for="item in mainUniverses"
+      <nav-section
+        v-for="item in mainGroupsNav"
         :key="item.name"
-        ref="section"
-        class="main-universe-section"
-        type="univers"
+        class="main-group-section"
+        navType="groups-nav"
         :item="item"
-        :current-section="currentUniverse"
+        :current-section="currentGroup"
         :current-item="currentItem"
         :generate-link="generateLink"
         :extended-nav="isNavExtended"
         :animating="areSectionsAnimating"
         @update:animating="areSectionsAnimating = $event"
         @section-click="onSectionClick"
-        @menu-click="onMenuClick"
+        @nav-click="onMenuClick"
       />
       <div class="separator" />
-      <menu-section
-        v-for="item in secondaryUniverses"
+      <nav-section
+        v-for="item in secondaryGroups"
         :key="item.name"
-        ref="section"
-        class="secondary-universe-section"
-        type="univers"
+        class="secondary-group-section"
+        navType="groups-nav"
         :item="item"
-        :current-section="currentUniverse"
+        :current-section="currentGroup"
         :current-item="currentItem"
         :generate-link="generateLink"
         :extended-nav="isNavExtended"
         :animating="areSectionsAnimating"
         @update:animating="areSectionsAnimating = $event"
         @section-click="onSectionClick"
-        @menu-click="onMenuClick"
+        @nav-click="onMenuClick"
       />
       <div class="settings-section">
-        <menu-section
+        <nav-section
           v-for="item in settings"
           :key="item.name"
-          ref="section"
-          type="settings"
+          navType="settings"
           :item="item"
-          :current-section="currentUniverse"
+          :current-section="currentGroup"
           :current-item="currentItem"
           :generate-link="generateLink"
           :extended-nav="isNavExtended"
           :animating="areSectionsAnimating"
           @update:animating="areSectionsAnimating = $event"
           @section-click="onSectionClick"
-          @menu-click="onMenuClick"
+          @nav-click="onMenuClick"
         />
       </div>
     </div>
@@ -91,14 +87,22 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import MenuSection from './MenuSection.vue';
+  import NavSection from './NavSection.vue';
+  import { NavItem } from '@/stores/menu/nav';
+  import IconBase from '@/modules/common/icons/IconBase.vue';
+
+  interface Config {
+    univers?: any[];
+    settings?: any;
+    globals?: any[];
+  }
 
   const props = defineProps({
     config: {
-      type: Object,
+      type: Object as () => Config,
       required: true,
     },
-    currentUniverse: {
+    currentGroup: {
       type: String,
       default: null,
     },
@@ -107,30 +111,29 @@
       default: null,
     },
     generateLink: {
-      type: Function as PropType<(item: any) => string>,
+      type: Function as PropType<(item: NavItem) => string>,
       required: true,
     },
   });
 
-  const emit = defineEmits(['menu-click']);
+  const emit = defineEmits(['nav-click']);
 
   const isNavExtended = ref(false);
   const areSectionsAnimating = ref(false);
-  const section = ref<InstanceType<typeof MenuSection>[]>([]);
+  const sections = ref<InstanceType<typeof NavSection>[]>([]);
 
-  const universes = computed(() => (props.config as any)?.univers || []);
-  const mainUniverses = computed(() =>
-    universes.value.filter((universe) => universe.isMainFeature)
+  const universes = computed(() => props.config.univers || []);
+  const mainGroupsNav = computed(() =>
+    universes.value.filter((group) => group.isPrimary)
   );
-  const secondaryUniverses = computed(() =>
-    universes.value.filter((universe) => !universe.isMainFeature)
+  const secondaryGroups = computed(() =>
+    universes.value.filter((group) => !group.isPrimary)
   );
-  const settings = computed(() => (props.config as any)?.settings || []);
-  const globals = computed(() => (props.config as any)?.globals || []);
+  const settings = computed(() => props.config.settings || []);
+  const globals = computed(() => props.config.globals || []);
 
-  function openSection(item) {
-    // Open one section and close others
-    section.value?.forEach((sect) => {
+  function openSection(item: any) {
+    sections.value.forEach((sect) => {
       if (sect.item?.name === item.name) {
         sect.openSection();
       } else {
@@ -141,7 +144,6 @@
 
   function onExtendNavClick() {
     isNavExtended.value = !isNavExtended.value;
-    console.log('Extend nav clicked');
   }
 
   function onMouseEnter() {
@@ -152,55 +154,50 @@
     isNavExtended.value = false;
   }
 
-  function onSectionClick(item) {
-    // Close other sections when one section is opened
-    section.value?.forEach((sect) => {
+  function onSectionClick(item: any) {
+    sections.value.forEach((sect) => {
       if (sect.item?.name !== item.name) {
         sect.closeSection();
       }
     });
+    openSection(item);
   }
 
-  function onMenuClick(item) {
+  function onMenuClick(item: any) {
     if (!item?.disabled) {
-      emit('menu-click', item);
-      console.log('Menu item clicked:', item.name);
+      emit('nav-click', item);
       isNavExtended.value = false;
-    }
-  }
-
-  function onConfigChanged() {
-    onCurrentUniverseChange(props.currentUniverse);
-  }
-
-  function onCurrentUniverseChange(value: string | null | undefined) {
-    if (value === 'global') {
-      section.value?.forEach((sect) => sect.closeSection());
-    } else if (value) {
-      openSection({ name: value });
     }
   }
 
   watch(
     () => props.config,
-    () => onConfigChanged(),
+    () => onCurrentGroupChange(props.currentGroup),
     { deep: true }
   );
 
   watch(
-    () => props.currentUniverse,
-    (newValue) => onCurrentUniverseChange(newValue)
+    () => props.currentGroup,
+    (newValue) => onCurrentGroupChange(newValue)
   );
 
+  function onCurrentGroupChange(value: string | null | undefined) {
+    if (value === 'global') {
+      sections.value.forEach((sect) => sect.closeSection());
+    } else if (value) {
+      openSection({ name: value });
+    }
+  }
+
   onMounted(() => {
-    if (props.currentUniverse) {
-      onCurrentUniverseChange(props.currentUniverse);
+    if (props.currentGroup) {
+      onCurrentGroupChange(props.currentGroup);
     }
   });
 </script>
 
 <style scoped lang="scss">
-  .base-menu {
+  .base-nav {
     --extended-nav-width: 290px;
     --transition-duration: 0.2s;
     position: relative;

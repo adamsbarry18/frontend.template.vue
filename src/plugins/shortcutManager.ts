@@ -1,65 +1,15 @@
-/**
- * Type de fonction de raccourci.
- */
+import type { App } from 'vue';
+
 type ShortcutFunction = () => void;
-
-/**
- * File d'attente des raccourcis.
- */
 const queues: Record<string, ShortcutFunction[]> = {};
-
-/**
- * Indicateur d'activation du gestionnaire de raccourcis.
- */
 let enable = true;
-
-/**
- * Stockage des dernières touches pressées.
- */
 const lastKeys: string[] = [];
 
-/**
- * Démarre le gestionnaire de raccourcis.
- */
-export function startShortcutManager(): void {
-  document.addEventListener('keyup', onKeyUp, true);
-}
+// Routes désactivant les raccourcis
+const shortcutDisabledRoutes = ['login', 'forgot-password', 'reset-password'];
 
 /**
- * Détruit le gestionnaire de raccourcis.
- */
-export function destroyShortcutManager(): void {
-  document.removeEventListener('keyup', onKeyUp, true);
-}
-
-/**
- * Met en pause le gestionnaire de raccourcis.
- */
-export function pauseShortcutManager(): void {
-  enable = false;
-}
-
-/**
- * Redémarre le gestionnaire de raccourcis après un délai.
- */
-export function restartShortcutManager(): void {
-  setTimeout(() => {
-    enable = true;
-  }, 200);
-}
-
-/**
- * Liste des routes désactivant les raccourcis.
- */
-const shortcutDisabledRoutes: string[] = [
-  'login',
-  'forgot-password',
-  'reset-password',
-];
-
-/**
- * Gère l'événement `keyup`.
- * @param event Événement clavier.
+ * Gère l'événement `keyup` et vérifie les raccourcis.
  */
 function onKeyUp(event: KeyboardEvent): void {
   if (
@@ -86,27 +36,20 @@ function onKeyUp(event: KeyboardEvent): void {
 
 /**
  * Vérifie et exécute les raccourcis clavier.
- * @param event Événement clavier.
  */
 function shortcutCheck(event: KeyboardEvent): void {
-  if (event.key === 'n') {
-    callShortcutFunc('n');
-  }
-  if (event.key === 'Escape') {
-    callShortcutFunc('esc');
-  }
+  if (event.key === 'n') callShortcutFunc('n');
+  if (event.key === 'Escape') callShortcutFunc('esc');
 }
 
 /**
  * Vérifie si la séquence du Konami Code est entrée.
- * @param key Touche pressée.
  */
 function konamiCheck(key: string): void {
   lastKeys.push(key);
-  if (lastKeys.length > 8) {
-    lastKeys.shift();
-  }
-  const keys = [
+  if (lastKeys.length > 8) lastKeys.shift();
+
+  const konamiSequence = [
     'ArrowUp',
     'ArrowUp',
     'ArrowDown',
@@ -116,9 +59,10 @@ function konamiCheck(key: string): void {
     'ArrowLeft',
     'ArrowRight',
   ];
+
   if (
-    lastKeys.length === keys.length &&
-    lastKeys.join(',') === keys.join(',')
+    lastKeys.length === konamiSequence.length &&
+    lastKeys.join(',') === konamiSequence.join(',')
   ) {
     document.body.classList.toggle('konami-code');
   }
@@ -126,22 +70,17 @@ function konamiCheck(key: string): void {
 
 /**
  * Enregistre une fonction de rappel pour un raccourci donné.
- * @param callFunc Fonction à exécuter lors du déclenchement du raccourci.
- * @param shortcut Nom du raccourci (par défaut: 'esc').
  */
 export function registerToShortcutQueue(
   callFunc: ShortcutFunction,
   shortcut: string = 'esc'
 ): void {
-  if (!queues[shortcut]) {
-    queues[shortcut] = [];
-  }
+  if (!queues[shortcut]) queues[shortcut] = [];
   queues[shortcut].unshift(callFunc);
 }
 
 /**
- * Exécute la fonction associée à un raccourci et la retire de la file.
- * @param shortcut Nom du raccourci (par défaut: 'esc').
+ * Exécute la fonction associée à un raccourci.
  */
 export function callShortcutFunc(shortcut: string = 'esc'): void {
   if (enable && queues[shortcut] && queues[shortcut].length > 0) {
@@ -152,8 +91,6 @@ export function callShortcutFunc(shortcut: string = 'esc'): void {
 
 /**
  * Supprime une fonction spécifique de la file d'attente d'un raccourci.
- * @param callFunc Fonction à supprimer.
- * @param shortcut Nom du raccourci (par défaut: 'esc').
  */
 export function removeFromShortcutQueue(
   callFunc: ShortcutFunction,
@@ -166,3 +103,17 @@ export function removeFromShortcutQueue(
     }
   }
 }
+
+export const pauseShortcuts = () => (enable = false);
+export const restartShortcuts = () => setTimeout(() => (enable = true), 200);
+
+export default {
+  install(app: App) {
+    document.addEventListener('keyup', onKeyUp, true);
+
+    app.config.globalProperties.$registerShortcut = registerToShortcutQueue;
+    app.config.globalProperties.$removeShortcut = removeFromShortcutQueue;
+    app.config.globalProperties.$pauseShortcuts = pauseShortcuts;
+    app.config.globalProperties.$restartShortcuts = restartShortcuts;
+  },
+};

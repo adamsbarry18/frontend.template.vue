@@ -1,16 +1,16 @@
-import install from './install';
+import global from './global';
 import vcharts from './vcharts';
 import reactBus from './reactBus';
-import notification from './notification';
+import shortcutManager from './shortcutManager';
 
 import type { App, Plugin } from 'vue';
 
 const plugins: Plugin = {
   install: (app: App) => {
-    app.use(install);
+    app.use(global);
     app.use(vcharts);
     app.use(reactBus);
-    app.use(notification);
+    app.use(shortcutManager);
   },
 };
 

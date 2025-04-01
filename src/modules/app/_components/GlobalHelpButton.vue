@@ -13,7 +13,6 @@
   import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
   import { useUsersStore } from '@/stores/users/user';
   import { useRouter } from 'vue-router';
-  import { defineEmits } from 'vue';
 
   const emits = defineEmits(['open-contextual']);
   const router = useRouter();

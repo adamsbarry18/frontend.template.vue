@@ -1,5 +1,7 @@
 import UButton from '@/modules/common/basic/UButton.vue';
-import { message } from '@/plugins/install';
+import { useNotification } from '@/composables/notfication';
+
+const { $message } = useNotification();
 
 export default {
   title: 'Notice/Message',
@@ -10,8 +12,8 @@ export const Message = () => ({
   template: '<u-button @click="showMessage()">Show message</u-button>',
   setup() {
     const showMessage = () => {
-      message({
-        type: 'success',
+      $message({
+        type: 'error',
         message: "Quelquechose s'est bien passé",
       });
     };

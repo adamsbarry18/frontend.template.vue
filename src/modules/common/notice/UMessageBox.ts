@@ -3,15 +3,10 @@ import {
   ElMessageBoxOptions,
   MessageBoxData,
 } from 'element-plus';
-import {
-  pauseShortcutManager,
-  restartShortcutManager,
-} from '@/plugins/shortcutManager';
 
 async function uMessageBox(
   optionsParam: ElMessageBoxOptions = {}
 ): Promise<MessageBoxData> {
-  pauseShortcutManager();
   const options: ElMessageBoxOptions = { ...optionsParam };
 
   if (!options.customClass) {
@@ -20,9 +15,7 @@ async function uMessageBox(
     options.customClass += 'u-msg-box';
   }
 
-  return ElMessageBox(options).finally(() => {
-    restartShortcutManager();
-  });
+  return ElMessageBox(options);
 }
 
 export default uMessageBox;

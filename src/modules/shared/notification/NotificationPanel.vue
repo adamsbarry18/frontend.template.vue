@@ -13,25 +13,16 @@
     </div>
     <div class="content">
       <template v-if="notificationsGroups && notificationsGroups.length > 0">
+        <u-shortcut-subscriber @shortcut-trigger="handleArrowClick" />
         <div class="clear-all-button -button-like" @click="onClearAll">
-          <u-tooltip placement="top">
-            <span class="notification-success">
-              <icon-base
-                icon="icon-delete"
-                :size="20"
-                color="var(--color-neutral-800)"
-              />
-              Supprimer toutes les notifications
-            </span>
-            <template #content>
-              <div>
-                <p>
-                  Il n'est pas possible de supprimer des notifications d'erreurs
-                  importantes
-                </p>
-              </div>
-            </template>
-          </u-tooltip>
+          <span class="notification-success">
+            <icon-base
+              icon="icon-delete"
+              :size="20"
+              color="var(--color-neutral-800)"
+            />
+            Supprimer toutes les notifications
+          </span>
         </div>
         <div
           v-for="group in notificationsGroups"
@@ -71,11 +62,13 @@
   import dayjs from 'dayjs';
   import IconBase from '@/modules/common/icons/IconBase.vue';
   import UDismissable from '@/modules/common/others/UDismissable.vue';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
   import i18n from '@/i18n';
   import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
+  import { useNotification } from '@/composables/notfication';
   import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
-  import { notification } from '@/plugins/notification';
+
+  // composables
+  const { $notification } = useNotification();
 
   // Stores Pinia
   const notificationStore = useNotificationStore();
@@ -110,14 +103,12 @@
     return res;
   });
 
-  // Methods
-
   // DOM event handlers
-  function handleBodyClick(event) {
+  const handleBodyClick = (event) => {
     if (isNotificationPanelVisible.value && !isElementInDialog(event.target)) {
       notificationStore.togglePersistentNotificationsVisible();
     }
-  }
+  };
 
   function isElementInDialog(el) {
     let node = el.parentNode;
@@ -128,20 +119,21 @@
     return false;
   }
 
-  function onClose(id) {
+  // Methods
+  const onClose = (id) => {
     notificationStore.removeItem({ id });
-  }
+  };
 
-  function onClearAll() {
+  const onClearAll = () => {
     for (const notification of notifications.value) {
       notificationStore.removeItem({ id: notification.id });
     }
     notifications.value = [];
-  }
+  };
 
-  function handleArrowClick() {
+  const handleArrowClick = () => {
     notificationStore.togglePersistentNotificationsVisible();
-  }
+  };
 
   // ReactBus event handlers
   onMounted(() => {
@@ -154,10 +146,10 @@
     reactBus.off(STATE.TEST_NOTIFICATION, onTestConnection);
   });
 
-  async function onTestConnection() {
+  const onTestConnection = async () => {
     const test = true;
     if (test) {
-      notification.error({
+      $notification.error({
         title: 'Titre Notification test',
         message: 'Description',
         template:
@@ -173,9 +165,9 @@
         },
       });
     }
-  }
+  };
 
-  function renderCompile({ template, context = {}, id }) {
+  const renderCompile = ({ template, context = {}, id }) => {
     const render = compile(template);
     return {
       render,
@@ -185,7 +177,7 @@
       methods: context.methods,
       components: context.components || {},
     };
-  }
+  };
 </script>
 
 <style lang="scss">

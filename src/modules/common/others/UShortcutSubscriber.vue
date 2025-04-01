@@ -1,69 +1,46 @@
 <template>
-  <!-- Ce composant n'affiche rien -->
+  <div />
 </template>
 
 <script setup lang="ts">
-  import { onMounted, onUnmounted } from 'vue';
+  import { ref, onMounted, onBeforeUnmount } from 'vue';
+  import {
+    registerToShortcutQueue,
+    removeFromShortcutQueue,
+  } from '@/plugins/shortcutManager';
 
-  interface ShortcutEvent {
-    /** Type d'événement à écouter : 'keyup', 'keydown', 'click', etc. */
-    event: string;
-    /** Pour les événements clavier, la touche à surveiller (par exemple, 'Escape', 'Enter') */
-    key?: string;
-  }
+  // Définition des props
+  const props = defineProps<{
+    shortcut?: string;
+  }>();
 
-  // Prop "events" : un tableau d'objets ShortcutEvent.
-  // Si aucun événement n'est passé, on écoute par défaut "keyup" sur la touche "Escape".
-  const props = defineProps<{ events?: ShortcutEvent[] }>();
-  const eventsToListen =
-    props.events && props.events.length > 0
-      ? props.events
-      : [{ event: 'keyup', key: 'Escape' }];
+  // Valeur par défaut pour la prop `shortcut`
+  const shortcut = props.shortcut || 'esc';
 
-  const emit = defineEmits<{ (e: 'shortcut-trigger', event: Event): void }>();
+  // Définition des événements
+  const emit = defineEmits<{
+    (event: 'shortcut-trigger'): void;
+  }>();
 
-  function handleEvent(ev: Event) {
-    // Pour chaque configuration d'événement, vérifier si l'événement déclenché correspond
-    for (const shortcut of eventsToListen) {
-      if (ev.type === shortcut.event) {
-        // Pour les événements clavier, vérifier la touche
-        if ('key' in ev && shortcut.key) {
-          const keyboardEvent = ev as KeyboardEvent;
-          if (keyboardEvent.key === shortcut.key) {
-            emit('shortcut-trigger', ev);
-          }
-        } else {
-          // Pour les autres types d'événements, on déclenche directement
-          emit('shortcut-trigger', ev);
-        }
-      }
-    }
-  }
+  // État de l'abonnement au raccourci
+  const isSub = ref(false);
 
+  // Fonction déclenchée lors de l'activation du raccourci
+  const onShortcutTrigger = () => {
+    isSub.value = false;
+    emit('shortcut-trigger');
+  };
+
+  // Enregistrement du raccourci au montage du composant
   onMounted(() => {
-    // Ajoute un écouteur pour chaque type d'événement défini
-    for (const shortcut of eventsToListen) {
-      document.addEventListener(shortcut.event, handleEvent);
-    }
+    isSub.value = true;
+    registerToShortcutQueue(onShortcutTrigger, shortcut);
   });
 
-  onUnmounted(() => {
-    for (const shortcut of eventsToListen) {
-      document.removeEventListener(shortcut.event, handleEvent);
+  // Suppression du raccourci lors de la destruction du composant
+  onBeforeUnmount(() => {
+    if (isSub.value) {
+      removeFromShortcutQueue(onShortcutTrigger, shortcut);
     }
   });
-
-  /**
-   * Exemple d'utilisation
-   *   <div>
-    <UShortcutSubscriber
-      :events="[
-        { event: 'keyup', key: 'Escape' },
-        { event: 'click' }
-      ]"
-      @shortcut-trigger="handleShortcut"
-    />
-    <div v-if="isOpen">Contenu affiché. Appuyez sur Échap ou cliquez à l'extérieur pour fermer.</div>
-  </div>
-   */
 </script>

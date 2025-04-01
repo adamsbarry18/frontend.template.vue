@@ -1,13 +1,13 @@
 <template>
   <div class="u-breadcrumb">
-    <div v-if="currentUniverseInfo" class="u-breadcrumb-item-wrapper">
+    <div v-if="currentGroupInfo" class="u-breadcrumb-item-wrapper">
       <div class="u-breadcrumb-item univers-item">
         <icon-base
-          :icon="`icon-${currentUniverseInfo.icon}`"
-          :color="currentUniverseInfo.color"
+          :icon="`icon-${currentGroupInfo.icon}`"
+          :color="currentGroupInfo.color"
           size="24"
         />
-        <span>{{ $t(`univers.${currentUniverseInfo.name}.title`) }}</span>
+        <span>{{ $t(`groups-nav.${currentGroupInfo.name}.title`) }}</span>
       </div>
     </div>
     <div v-else-if="settingsInfo" class="u-breadcrumb-item-wrapper">
@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { useMenuStore } from '@/stores/menu/menu';
+  import { useNavStore } from '@/stores/menu/nav';
   import IconBase from '@/modules/common/icons/IconBase.vue';
   import { ElInput } from 'element-plus';
 
@@ -95,17 +95,17 @@
   const emit = defineEmits(['input']);
 
   // Accès au store Pinia
-  const menuStore = useMenuStore();
+  const navStore = useNavStore();
 
   // Propriétés calculées basées sur le store
-  const currentUniverseInfo = computed(() => menuStore.currentUniverseInfo);
-  const currentItem = computed(() => menuStore.currentItem);
-  const settings = computed(() => menuStore.availableSettings);
+  const currentGroupInfo = computed(() => navStore.currentGroupInfo);
+  const currentItem = computed(() => navStore.currentItem);
+  const settings = computed(() => navStore.availableSettings);
 
   // Propriété calculée pour settingsInfo
   const settingsInfo = computed(() => {
     const univers = settings.value
-      .map((u) => u.subitem.map((s) => ({ ...s, universe: u })))
+      .map((u) => u.children.map((s) => ({ ...s, universe: u })))
       .flat(2)
       .filter((i) => !!i);
     return univers.find((u) => u.activesStates.includes(currentItem.value))

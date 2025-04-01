@@ -1,5 +1,6 @@
 import UButton from '@/modules/common/basic/UButton.vue';
-import { notification } from '@/plugins/notification';
+import { useNotification } from '@/composables/notfication';
+const { $notification } = useNotification();
 
 export default {
   title: 'notice/Notification',
@@ -17,31 +18,31 @@ export const Notification = () => ({
   </div>`,
   methods: {
     showNotification() {
-      notification.notify({
+      $notification.notify({
         message: 'message',
         title: 'title',
       });
     },
     showSuccessNotification() {
-      notification.success({
+      $notification.success({
         message: 'message',
         title: 'title',
       });
     },
     showErrorNotification() {
-      notification.error({
+      $notification.error({
         message: 'message',
         title: 'title',
       });
     },
     showInfoNotification() {
-      notification.info({
+      $notification.info({
         message: 'message',
         title: 'title',
       });
     },
     showWarningNotification() {
-      notification.warning({
+      $notification.warning({
         message: 'message',
         title: 'title',
       });

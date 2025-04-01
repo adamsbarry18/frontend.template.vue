@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
   import { ref, watch } from 'vue';
-  import { useIntersectionObserver } from '@/composabes/layout/useIntersectionObserver';
+  import { useIntersectionObserver } from '@/composables/layout/useIntersectionObserver';
 
   defineProps<{
     menuTitle: string;

@@ -5,7 +5,6 @@ import IconAction from '@/modules/common/icons/IconAction.vue';
 import IconActivate from '@/modules/common/icons/IconActivate.vue';
 import IconActive from '@/modules/common/icons/IconActive.vue';
 import IconAdd from '@/modules/common/icons/IconAdd.vue';
-import IconAdvalo from '@/modules/common/icons/IconAdvalo.vue';
 import IconApi from '@/modules/common/icons/IconApi.vue';
 import IconArrow from '@/modules/common/icons/IconArrow.vue';
 import IconArrowBack from '@/modules/common/icons/IconArrowBack.vue';
@@ -299,7 +298,6 @@ export {
   IconHistory,
   IconFlux,
   IconLeadSource,
-  IconAdvalo,
   IconApi,
   IconOffDate,
   IconUsage,

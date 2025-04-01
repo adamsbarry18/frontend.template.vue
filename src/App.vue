@@ -2,7 +2,7 @@
   <div id="app" :data-lang="$i18n.locale">
     <main-header v-if="isAppReady" />
     <div class="app-wrapper">
-      <main-menu />
+      <main-nav />
       <div class="main-content">
         <template v-if="isAppReady">
           <router-view />
@@ -26,13 +26,15 @@
   import { initializeDateLocale } from '@/libs/utils/Date';
   import { useUsersStore } from '@/stores/users/user';
   import GlobalHelpButton from '@/modules/app/_components/GlobalHelpButton.vue';
-  import MainMenu from '@/modules/shared/menu/main-menu/MainMenu.vue';
+  import MainNav from '@/modules/shared/menu/main-menu/MainNav.vue';
   import MainHeader from '@/modules/shared/menu/main-header/MainHeader.vue';
   import NotificationPanel from '@/modules/shared/notification/NotificationPanel.vue';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import { useRouter, useRoute } from 'vue-router';
   import i18n from '@/i18n';
-  import { message } from './plugins/install';
+  import { useNotification } from './composables/notfication';
+
+  const { $message } = useNotification();
 
   const usersStore = useUsersStore();
   const notificationStore = useNotificationStore();
@@ -60,7 +62,7 @@
         !adBlockerDiv.value ||
         adBlockerDiv.value.offsetParent === null
       ) {
-        message({
+        $message({
           customClass: 'orange-warning',
           type: 'warning',
           duration: 600000,

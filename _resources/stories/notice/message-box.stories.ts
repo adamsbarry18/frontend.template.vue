@@ -1,5 +1,7 @@
 import UButton from '@/modules/common/basic/UButton.vue';
-import { msgbox } from '@/plugins/install';
+import { useNotification } from '@/composables/notfication';
+
+const { $msgbox } = useNotification();
 
 export default {
   title: 'Notice/MessageBox',
@@ -12,7 +14,7 @@ export const MessageBox = () => ({
   setup() {
     const showMessageBox = async () => {
       try {
-        await msgbox({
+        await $msgbox({
           type: 'warning',
           title: 'Title msbox',
           message:

@@ -1,29 +1,20 @@
 <template>
   <div
-    class="menu-section"
-    :class="{
-      '-opened': isSectionOpened,
-      '-extended': extendedNav,
-    }"
+    class="nav-section"
+    :class="{ '-opened': isSectionOpened, '-extended': extendedNav }"
   >
     <component
       :is="item?.isRoot ? 'a' : 'div'"
       class="item-entry"
-      :class="{
-        '-opened': isSectionOpened,
-        '-active': isItemActive,
-      }"
+      :class="{ '-opened': isSectionOpened, '-active': isItemActive }"
       :href="item?.isRoot ? generateLink(item) : undefined"
-      @click.prevent="
-        onItemClick();
-        if (item?.isRoot) onMenuClick(item);
-      "
+      @click.prevent="handleClick"
     >
-      <icon-base :icon="'icon-' + item?.icon" :color="itemColor" :size="24" />
+      <icon-base :icon="`icon-${item?.icon}`" :color="itemColor" size="24" />
       <transition name="slide-fade-horizontal">
-        <span v-if="extendedNav" class="item-text">{{
-          $t(`${type}.${item?.name}.title`)
-        }}</span>
+        <span v-if="extendedNav" class="item-text">
+          {{ t(`${navType}.${item?.name}.title`) }}
+        </span>
       </transition>
       <transition name="slide-fade-horizontal">
         <icon-base
@@ -32,7 +23,7 @@
           :class="{ '-opened': isSectionOpened }"
           icon="icon-arrow"
           color="var(--color-neutral-700)"
-          :size="16"
+          size="16"
         />
       </transition>
     </component>
@@ -45,27 +36,27 @@
     >
       <div v-if="isSectionOpened && !item?.isRoot" class="sub-items-wrapper">
         <a
-          v-for="sub in item?.subitem"
-          :key="sub.name"
+          v-for="child in item?.children"
+          :key="child.name"
           class="sub-item-entry"
           :class="{
-            '-active': isSubItemActive(sub),
-            '-disabled': sub.disabled,
+            '-active': isSubItemActive(child),
+            '-disabled': child.disabled,
           }"
-          :href="generateLink(sub)"
-          @click.prevent="onMenuClick(sub)"
+          :href="generateLink(child)"
+          @click.prevent="onChildClick(child)"
         >
           <icon-base
-            :icon="'icon-' + sub.icon"
-            :color="getSubItemColor(sub)"
-            :size="20"
+            :icon="`icon-${child.icon}`"
+            :color="getSubItemColor(child)"
+            size="20"
           />
           <transition name="slide-fade-horizontal">
             <span v-if="extendedNav" class="sub-item-text">
               {{
-                sub.disabled
-                  ? $t('commons.coming-soon')
-                  : $t(`${type}.${item?.name}.${sub.name}.title`)
+                child.disabled
+                  ? t('commons.coming-soon')
+                  : t(`${navType}.${item?.name}.${child.name}.title`)
               }}
             </span>
           </transition>
@@ -77,22 +68,23 @@
 
 <script setup lang="ts">
   import { ref, computed, PropType } from 'vue';
+  import { useI18n } from 'vue-i18n';
   import IconBase from '@/modules/common/icons/IconBase.vue';
-  import { MenuItem } from '@/stores/menu/menu';
+  import type { NavItem } from '@/stores/menu/nav';
 
   const props = defineProps({
-    type: {
+    navType: {
       type: String,
       required: true,
       validator: (value: string) =>
-        ['globals', 'univers', 'settings'].includes(value),
+        ['globals', 'groups-nav', 'settings'].includes(value),
     },
     extendedNav: {
       type: Boolean,
       required: true,
     },
     item: {
-      type: Object as () => MenuItem,
+      type: Object as () => NavItem,
       required: true,
     },
     currentSection: {
@@ -104,7 +96,7 @@
       default: null,
     },
     generateLink: {
-      type: Function as PropType<(item: MenuItem) => string>,
+      type: Function as PropType<(item: NavItem) => string>,
       required: true,
     },
     animating: {
@@ -113,7 +105,8 @@
     },
   });
 
-  const emit = defineEmits(['section-click', 'menu-click', 'update:animating']);
+  const emit = defineEmits(['section-click', 'nav-click', 'update:animating']);
+  const { t } = useI18n();
 
   const isSectionOpened = ref(false);
 
@@ -121,36 +114,39 @@
     if (props.item?.isRoot) {
       return props.currentItem === props.item.name;
     }
-    return props.item?.subitem?.some((subItem) => isSubItemActive(subItem));
+    return props.item?.children?.some((child) => isSubItemActive(child));
   });
 
-  const itemColor = computed(() => {
-    return isItemActive.value
-      ? 'var(--color-primary-600)'
-      : 'var(--color-neutral-800)';
-  });
+  const itemColor = computed(() =>
+    isItemActive.value ? 'var(--color-primary-600)' : 'var(--color-neutral-800)'
+  );
 
-  function getSubItemColor(subItem: MenuItem) {
-    if (subItem?.disabled) {
-      return 'var(--color-neutral-300)';
-    }
-    return isSubItemActive(subItem)
-      ? 'var(--color-primary-600)'
-      : 'var(--color-neutral-800)';
-  }
-
-  function isSubItemActive(subItem: MenuItem) {
+  function isSubItemActive(child: NavItem): boolean {
     return (
       props.item?.name === props.currentSection &&
-      subItem?.name === props.currentItem
+      child?.name === props.currentItem
     );
   }
 
-  function onItemClick() {
-    if (!props.item?.isRoot) {
+  function getSubItemColor(child: NavItem): string {
+    if (child?.disabled) return 'var(--color-neutral-300)';
+    return isSubItemActive(child)
+      ? 'var(--color-primary-600)'
+      : 'var(--color-neutral-800)';
+  }
+
+  function handleClick() {
+    if (props.item?.isRoot) {
+      emit('nav-click', props.item);
+    } else {
       isSectionOpened.value = !isSectionOpened.value;
+      emit('section-click', props.item);
     }
-    emit('section-click', props.item);
+  }
+
+  function onChildClick(child: NavItem) {
+    if (child.disabled) return;
+    emit('nav-click', child);
   }
 
   function openSection() {
@@ -164,19 +160,11 @@
       isSectionOpened.value = false;
     }
   }
-
-  function onMenuClick(item: MenuItem) {
-    if (item?.disabled) {
-      return;
-    }
-    emit('menu-click', item);
-  }
-
   defineExpose({ openSection, closeSection });
 </script>
 
 <style lang="scss" scoped>
-  .menu-section {
+  .nav-section {
     width: 40px;
     margin-left: 12px;
 
