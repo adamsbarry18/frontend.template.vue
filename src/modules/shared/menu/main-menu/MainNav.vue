@@ -2,7 +2,7 @@
   <div class="main-nav">
     <base-nav
       :config="config"
-      :current-group="currentGroup"
+      :current-group="currentGroupNav"
       :current-item="currentNavItem"
       :generate-link="generateLink"
       @nav-click="onMenuClick"
@@ -30,14 +30,12 @@
     globals: navStore.availableGlobals.filter((g) => g.isRoot),
   }));
 
-  const currentGroup = computed(() => {
+  const currentGroupNav = computed(() => {
     const name = navStore.currentItem;
-    console.log('currentItem from store:', name);
-    const allGroups = navStore.availableGroupsNav.flatMap((group) =>
+    const allGroupsNav = navStore.availableGroupsNav.flatMap((group) =>
       (group.children || []).map((child) => ({ ...child, group: group.name }))
     );
-    console.log('All groups:', allGroups);
-    const current = allGroups.find((child) =>
+    const current = allGroupsNav.find((child) =>
       child.activesStates?.includes(name)
     );
     if (current) {

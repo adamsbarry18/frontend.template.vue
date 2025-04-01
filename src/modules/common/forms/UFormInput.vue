@@ -11,7 +11,7 @@
       <div element-loading-spinner="el-icon-loading" />
       <span v-if="label" class="simple-label">{{ label }}</span>
       <slot name="label" />
-      <icon-base
+      <IconBase
         v-if="closable"
         icon="icon-cross"
         class="close-button -button-like"
@@ -88,10 +88,7 @@
       v-else
       v-model="input"
       class="default-type-input"
-      :class="{
-        '-error': withError,
-        '-disabled': disabled,
-      }"
+      :class="{ '-error': withError, '-disabled': disabled }"
       :name="inputName"
       :autocomplete="autocomplete"
       :placeholder="placeholder"
@@ -101,25 +98,25 @@
       @blur="onBlur"
     />
     <transition name="error-text">
-      <span v-if="withError" class="error-msg">
-        {{ errorMessage }}
-      </span>
+      <span v-if="withError" class="error-msg">{{ errorMessage }}</span>
     </transition>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
+  import IconBase from '@/modules/common/icons/IconBase.vue';
   import UDatePicker from '@/modules/common/forms/UDatePicker.vue';
   import USelectGroup from '@/modules/common/forms/USelectGroup.vue';
   import URadio from '@/modules/common/forms/URadio.vue';
   import UNumberInput from '@/modules/common/forms/UNumberInput.vue';
   import UPasswordInput from '@/modules/common/forms/UPasswordInput.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
 
-  // Définition des props
   const props = defineProps({
-    modelValue: { type: [String, Number, Date, Array, Boolean], default: '' },
+    modelValue: {
+      type: [String, Number, Date, Array, Boolean] as PropType<any>,
+      default: '',
+    },
     placeholder: { type: String, default: '' },
     direction: {
       type: String,
@@ -137,8 +134,14 @@
     disabled: { type: Boolean, default: false },
     disabledDate: { type: Function as PropType<() => void> },
     loading: { type: Boolean, default: false },
-    validator: { type: Function, default: null },
-    error: { type: [Boolean, String], default: false },
+    validator: {
+      type: Function as PropType<(value: any) => string | null>,
+      default: null,
+    },
+    error: {
+      type: [Boolean, String] as PropType<boolean | string>,
+      default: false,
+    },
     instantCheckError: { type: Boolean, default: false },
     type: {
       type: String,
@@ -154,8 +157,8 @@
           'password',
         ].includes(v),
     },
-    radioOptions: { type: Array, default: () => [] },
-    enumOptions: { type: Array, default: () => [] },
+    radioOptions: { type: Array as PropType<any[]>, default: () => [] },
+    enumOptions: { type: Array as PropType<any[]>, default: () => [] },
     groupBy: { type: String, default: '' },
     tagType: { type: String, default: '' },
     maxTotalValues: { type: Number },
@@ -163,19 +166,15 @@
     min: { type: Number },
     max: { type: Number },
     rules: {
-      // Define the type explicitly as functions accepting a string and returning a number.
       type: Array as PropType<Array<(value: string) => number>>,
       default: () => [],
     },
-    onInputChange: {
-      type: Function as unknown as () => void, // Adapter la signature en fonction des besoins
-      required: false,
-    },
+    onInputChange: { type: Function as PropType<() => void>, required: false },
   });
 
-  const emit = defineEmits(['input', 'change', 'blur', 'close']);
+  const emit = defineEmits(['update:modelValue', 'change', 'blur', 'close']);
 
-  const input = ref(null);
+  const input = ref<any>(null);
   const hasBlurred = ref(false);
 
   const errorMessage = computed(() => {
@@ -197,7 +196,8 @@
       } else {
         input.value = val;
       }
-    }
+    },
+    { immediate: true }
   );
 
   onMounted(() => {
@@ -213,7 +213,7 @@
   });
 
   const onChange = () => {
-    emit('input', input.value);
+    emit('update:modelValue', input.value);
     emit('change', input.value);
   };
 

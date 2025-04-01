@@ -18,7 +18,7 @@ export const FormInput = () => ({
 
       <!-- Input avec label simple -->
       <u-form-input
-        v-model="value"
+        v-model="enumValue"
         label="Label"
         placeholder="type in a value"
         :error="!value ? 'Champ obligatoire' : null"

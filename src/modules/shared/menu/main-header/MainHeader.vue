@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <router-link class="logo-app -button-like" :to="dashboardRedirection">
-      <img src="@/assets/images/svg/404.svg" alt="app logo" />
+      <img src="@/assets/images/logo_mabarry.jpg" alt="app logo" />
     </router-link>
     <breadcrumb
       class="header-breadcrumb"

@@ -121,7 +121,6 @@ export const useNavStore = defineStore('nav', () => {
   });
 
   function setCurrentItem(value: string) {
-    console.log('Setting currentItem to:', value);
     currentItem.value = value;
   }
 
