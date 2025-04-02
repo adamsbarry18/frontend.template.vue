@@ -239,6 +239,7 @@
     padding: 0 5px 0 10px;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--color-neutral-900);
     white-space: nowrap;
     cursor: pointer;
     &:hover {

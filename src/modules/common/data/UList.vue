@@ -1062,7 +1062,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      right: 0;
+      right: 20px;
       text-align: right;
       white-space: nowrap;
       & > :first-child {
@@ -1133,7 +1133,6 @@
 
           .search-bar {
             flex: 1;
-            height: 100%;
             .main-input {
               padding-left: 0;
             }

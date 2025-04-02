@@ -102,8 +102,15 @@ export const useUsersStore = defineStore('users', () => {
     }
     return user.color;
   }
-  async function fetchUser() {
-    return null;
+
+  async function searchUserFromEmail({ email }) {}
+
+  async function confirmResetPassword({ email, password, token }) {}
+
+  async function resetPassword({ email }) {}
+
+  async function getAll(): Promise<User[]> {
+    return [];
   }
   function getUser(userId: number): User | null {
     return users.value.find((u) => u.id === userId) || null;
@@ -145,6 +152,8 @@ export const useUsersStore = defineStore('users', () => {
 
   async function logout(): Promise<void> {}
 
+  async function updateUserPassword({ user, password }) {}
+
   return {
     users,
     login,
@@ -158,6 +167,7 @@ export const useUsersStore = defineStore('users', () => {
     addUser,
     updateUser,
     getUserByEmail,
+    getUser,
     securityToken,
     internal,
     language,
@@ -166,6 +176,10 @@ export const useUsersStore = defineStore('users', () => {
     userColorFromId,
     getInitial,
     isInternal,
-    fetchUser,
+    getAll,
+    resetPassword,
+    confirmResetPassword,
+    searchUserFromEmail,
+    updateUserPassword,
   };
 });

@@ -10,6 +10,7 @@ import loginRoutes from './login.routes';
 import { useUsersStore } from '@/stores/users/user';
 import { useNavStore } from '@/stores/menu/nav';
 import testRoutes from './test.routes';
+import administationRoutes from './administration.routes';
 // import { useBreadcrumbStore } from '@/stores/breadcrumb';
 
 const routes: RouteRecordRaw[] = [
@@ -26,6 +27,7 @@ const routes: RouteRecordRaw[] = [
   },
   ...loginRoutes,
   ...testRoutes,
+  ...administationRoutes,
   {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
@@ -69,9 +71,9 @@ router.replace = ((location) => {
 
 // Exemple de fonction pour réinitialiser le breadcrumb
 // (Adaptez-la selon votre store de breadcrumb)
-function resetBreadcrumb(to: any) {
+function resetBreadcrumb(to) {
   const links = to.meta.breadcrumb
-    ? to.meta.breadcrumb.map((l: any) => ({
+    ? to.meta.breadcrumb.map((l) => ({
         path: l.path,
         label: i18n.global.t(`breadcrumb.${l.label}`),
       }))

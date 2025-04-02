@@ -228,7 +228,7 @@
     margin: 0 auto 15px auto;
     border: none;
     border-radius: 30px;
-    width: 90%;
+    width: 100%;
     background: var(--color-neutral-800);
 
     .main-input {

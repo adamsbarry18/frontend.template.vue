@@ -152,7 +152,7 @@
       if (error === 'BAD_CREDENTIALS') {
         $errorMsg('login.bad.credentials');
       } else if (error === 'ERR_PWD_IDENTICAL') {
-        $errorMsg('reset.error.same.password');
+        $errorMsg('login.reset.error.same.password');
       } else {
         $errorMsg('loginExpired.notification.error');
         console.error('Unknown login expired error!', error);
@@ -164,7 +164,6 @@
 <style lang="scss" scoped>
   .login-expired {
     .form {
-      margin-left: 100px;
       width: 425px;
 
       :deep(.u-form-input) {

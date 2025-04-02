@@ -42,6 +42,7 @@
 
 <style lang="scss" scoped>
   .u-color-picker {
+    position: inherit;
     .el-color-picker {
       .el-color-picker__mask {
         border: none;

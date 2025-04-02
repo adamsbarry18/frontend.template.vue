@@ -113,7 +113,7 @@
     cursor: pointer;
     padding: 0px 20px;
     min-width: 75px;
-    min-height: 42px;
+    min-height: 35px;
     font-size: var(--paragraph-02);
     font-weight: 600;
 

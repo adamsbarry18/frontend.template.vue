@@ -77,10 +77,6 @@
     router.push({ name: 'login' });
   };
 
-  const fetchUser = async () => {
-    await usersStore.fetchUser();
-  };
-
   const relogin = async () => {
     await usersStore.relogin();
   };

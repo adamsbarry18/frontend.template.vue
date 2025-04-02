@@ -238,7 +238,7 @@
           &::after {
             position: absolute;
             top: 6px;
-            right: -12px;
+            right: 12px;
             border-right: 1px solid var(--color-neutral-500);
             height: 25px;
             content: '';

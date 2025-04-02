@@ -598,8 +598,6 @@ export const WithFilters = () => ({
     selectable
     :selectable-filter="selectableFilter"
     reserve-selection
-    show-pagination
-    :page-size="5"
     has-border
     :extra-filter-config="extraFilterConfig"
     @selection-change="handleSelectionChange"
