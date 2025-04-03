@@ -1,4 +1,4 @@
-import UButton from '@/modules/common/basic/UButton.vue';
+import { UButton } from '@/modules/common';
 
 export default {
   title: 'Basic/Button',

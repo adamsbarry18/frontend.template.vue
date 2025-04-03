@@ -49,7 +49,7 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
-  import { useUsersStore } from '@/stores/users/user';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
   import { isValidEmail } from '@/libs/utils/String';
   import {
@@ -58,8 +58,7 @@
     isPasswordSecure,
   } from '@/libs/utils/Security';
   import Home from '@/modules/login/_components/Home.vue';
-  import UFormInput from '@/modules/common/forms/UFormInput.vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
+  import { UFormInput, UButton } from '@/modules/common';
   import PasswordSecurityIndicators from '@/modules/users/_components/PasswordSecurityIndicators.vue';
   import i18n from '@/i18n';
 

@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
   import { computed } from 'vue';
-  import UFilter from '@/modules/common/filter/UFilter.vue';
+  import { UFilter } from '@/modules/common';
   import SearchService from './services/searchService';
 
   const props = defineProps<{

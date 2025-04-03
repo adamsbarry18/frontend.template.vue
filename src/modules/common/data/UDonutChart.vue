@@ -17,7 +17,7 @@
   import { debounce } from '@/libs/utils/Debounce';
   import { getCssVariable } from '@/libs/utils/Style';
   import { getGraphColorPalette } from '@/libs/utils/Color';
-  import ChartNoData from './ChartNoData.vue';
+  import { ChartNoData } from '@/modules/common';
   import { numberFormat } from '@/libs/utils/Number';
 
   const props = defineProps({

@@ -53,19 +53,20 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted, nextTick } from 'vue';
+  import { ref, computed, watch, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-
-  import USectionsWithMenu from '@/modules/common/layout/USectionsWithMenu.vue';
-  import UIndexedSection from '@/modules/common/layout/UIndexedSection.vue';
-  import UActionButtonBar from '@/modules/common/others/UActionButtonBar.vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
+  import {
+    UButton,
+    UActionButtonBar,
+    UIndexedSection,
+    USectionsWithMenu,
+  } from '@/modules/common';
   import PersonalInfoForm from '../settings/PersonalInfoForm.vue';
   import AccountAdministrationCard from '../settings/AccountAdministrationCard.vue';
   import PasswordForm from '../settings/PasswordForm.vue';
 
   // import { useAuthorisationsStore } from '@/stores/modules/authorisations/authorisations';
-  import { useUsersStore } from '@/stores/users/user';
+  import { useUsersStore } from '@/stores/modules/users/user';
   // import { useAppStore } from '@/stores/app';
   import { updateActiveLanguage } from '@/libs/utils/Language';
   import { useNotification } from '@/composables/notfication';

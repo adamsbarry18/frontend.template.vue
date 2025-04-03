@@ -1,4 +1,4 @@
-import UPill from '@/modules/common/layout/UPill.vue';
+import { UPill } from '@/modules/common';
 
 export default {
   title: 'Layout/Pill',

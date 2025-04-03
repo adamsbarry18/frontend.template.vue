@@ -45,11 +45,9 @@
 </template>
 
 <script setup lang="ts">
-  import UInfo from '@/modules/common/others/UInfo.vue';
-  import UHelpButton from '@/modules/common/others/UHelpButton.vue';
   import i18n from '@/i18n';
-  import { computed, PropType, defineProps } from 'vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { computed, PropType } from 'vue';
+  import { UInfo, UHelpButton, IconBase } from '@/modules/common';
 
   const props = defineProps({
     list: {

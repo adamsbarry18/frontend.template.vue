@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
-  import IconBase from '../icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
   import i18n from '@/i18n';
   defineProps({
     closeable: {

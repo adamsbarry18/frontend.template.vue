@@ -1,4 +1,4 @@
-import UInfo from '@/modules/common/others/UInfo.vue';
+import { UInfo } from '@/modules/common';
 export default {
   title: 'Others/Info',
 };

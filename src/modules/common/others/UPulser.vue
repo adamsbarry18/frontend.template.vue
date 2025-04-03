@@ -5,7 +5,6 @@
 
 <style lang="scss" scoped>
   .u-pulser {
-    /** Using a css var instead of a prop for the color as prop binding glitches with animation */
     --color-pulser: var(--color-red-500);
     display: block;
     position: relative;

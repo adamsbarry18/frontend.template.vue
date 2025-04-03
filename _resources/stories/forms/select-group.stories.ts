@@ -1,6 +1,6 @@
 import { ref } from 'vue';
-import USelectGroup from '@/modules/common/forms/USelectGroup.vue';
-import UButton from '@/modules/common/basic/UButton.vue';
+import { USelectGroup } from '@/modules/common';
+import { UButton } from '@/modules/common/basic';
 
 export default {
   title: 'Forms/SelectGroup',

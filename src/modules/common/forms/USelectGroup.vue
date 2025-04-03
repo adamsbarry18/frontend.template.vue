@@ -105,9 +105,8 @@
   } from 'vue';
   import { groupBy as _groupBy } from '@/libs/utils/Array';
   import { isObject } from '@/libs/utils/Object';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
   import { ElSelect, ElOption, ElOptionGroup } from 'element-plus';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { IconBase, UTooltip } from '@/modules/common';
 
   // Props
   const props = defineProps({

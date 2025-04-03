@@ -26,8 +26,14 @@
 
 <script setup lang="ts">
   /* global NodeJS */
-  import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
-  import { useSlots } from 'vue';
+  import {
+    ref,
+    reactive,
+    computed,
+    onMounted,
+    onUnmounted,
+    useSlots,
+  } from 'vue';
 
   // Références et états réactifs
   const sectionsDiv = ref<HTMLElement | null>(null);

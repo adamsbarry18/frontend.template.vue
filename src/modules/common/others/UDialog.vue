@@ -84,8 +84,7 @@
 <script setup lang="ts">
   import { ref, computed, watch, type PropType } from 'vue';
   import { ElDialog } from 'element-plus';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
-  import UHelpButton from '@/modules/common/others/UHelpButton.vue';
+  import { IconBase, UHelpButton } from '@/modules/common';
 
   // Define props with type annotations
   const props = defineProps({

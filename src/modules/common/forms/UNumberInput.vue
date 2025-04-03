@@ -97,8 +97,7 @@
 <script setup lang="ts">
   import { ref, computed, watch, onMounted } from 'vue';
   import { debounce } from '@/libs/utils/Debounce.js';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { UTooltip, IconBase } from '@/modules/common';
   import { MIN_INT, MAX_INT } from '@/libs/utils/Number';
 
   // Déclaration des props en utilisant l'objet

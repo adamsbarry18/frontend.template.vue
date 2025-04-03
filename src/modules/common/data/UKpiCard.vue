@@ -1,9 +1,6 @@
 <script setup lang="ts">
-  import { computed, defineProps, withDefaults, useSlots } from 'vue';
-  import UFigure from '@/modules/common/data/UFigure.vue';
-  import UInfo from '@/modules/common/others/UInfo.vue';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import IconBase from '../icons/IconBase.vue';
+  import { computed, useSlots } from 'vue';
+  import { UFigure, UInfo, UTooltip, IconBase } from '@/modules/common';
 
   // Interface pour typer les props
   interface Props {

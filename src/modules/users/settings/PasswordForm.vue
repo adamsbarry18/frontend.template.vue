@@ -62,15 +62,13 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, reactive } from 'vue';
-  import UPasswordInput from '@/modules/common/forms/UPasswordInput.vue';
+  import { UPasswordInput, IconBase } from '@/modules/common';
   import PasswordSecurityIndicators from '../_components/PasswordSecurityIndicators.vue';
   import {
     passwordRules,
     getPasswordIndicators,
     isPasswordSecure,
   } from '@/libs/utils/Security';
-  import { isValidEmail } from '@/libs/utils/String';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
   import i18n from '@/i18n';
 
   const props = defineProps({

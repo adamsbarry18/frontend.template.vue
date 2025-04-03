@@ -21,6 +21,7 @@ import UDataKpiCard from './UDataKpiCard.vue';
 import UDonutGauge from './UDonutGauge.vue';
 import UKpiCard from './UKpiCard.vue';
 import URatioKpiCard from './URatioKpiCard.vue';
+import UDonutKpiCard from './UDonutKpiCard.vue';
 
 export * from '@/modules/common/data/services';
 
@@ -48,4 +49,5 @@ export {
   UDonutGauge,
   UKpiCard,
   URatioKpiCard,
+  UDonutKpiCard,
 };

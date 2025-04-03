@@ -18,6 +18,8 @@ import UCopyToClipboardButton from './UCopyToClipboardButton.vue';
 import UEntityTagSummary from './UEntityTagSummary.vue';
 import UCascaderMenu from './UCascaderMenu.vue';
 import UCodeEditor from './UCodeEditor.vue';
+import UColorInitials from './UColorInitials.vue';
+import UDialog from './UDialog.vue';
 
 export {
   UHelpButton,
@@ -40,4 +42,6 @@ export {
   UEntityTagSummary,
   UCascaderMenu,
   UCodeEditor,
+  UColorInitials,
+  UDialog,
 };

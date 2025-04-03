@@ -95,13 +95,15 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, reactive } from 'vue';
-  import UFormInput from '@/modules/common/forms/UFormInput.vue';
-  import UColorPicker from '@/modules/common/forms/UColorPicker.vue';
-  import URadio from '@/modules/common/forms/URadio.vue';
-  import UAlertCard from '@/modules/common/others/UAlertCard.vue';
-  import UColorInitials from '@/modules/common/others/UColorInitials.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
-  import { useUsersStore } from '@/stores/users/user';
+  import {
+    IconBase,
+    UColorInitials,
+    UFormInput,
+    UColorPicker,
+    URadio,
+    UAlertCard,
+  } from '@/modules/common';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import { debounce } from '@/libs/utils/Debounce';
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';

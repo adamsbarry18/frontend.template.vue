@@ -32,7 +32,7 @@
 <script setup lang="ts">
   import { computed, ref, watch, onMounted } from 'vue';
   import { DAYS_OF_WEEK } from '@/libs/utils/Date';
-  import UInfo from '../others/UInfo.vue';
+  import { UInfo } from '@/modules/common';
   import { ElSelect, ElOption, ElTimeSelect } from 'element-plus';
   import i18n from '@/i18n';
 

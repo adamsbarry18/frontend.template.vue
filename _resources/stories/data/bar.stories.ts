@@ -1,4 +1,4 @@
-import UBar from '@/modules/common/data/UBar.vue';
+import { UBar } from '@/modules/common';
 
 export default {
   title: 'data/Bar',

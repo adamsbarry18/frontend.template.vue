@@ -1,4 +1,4 @@
-import UDonutChart from '@/modules/common/data/UDonutChart.vue';
+import { UDonutChart } from '@/modules/common';
 
 export default {
   title: 'data/DonutChart',

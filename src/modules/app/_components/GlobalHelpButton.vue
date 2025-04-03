@@ -11,7 +11,7 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
   import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
-  import { useUsersStore } from '@/stores/users/user';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import { useRouter } from 'vue-router';
 
   const emits = defineEmits(['open-contextual']);

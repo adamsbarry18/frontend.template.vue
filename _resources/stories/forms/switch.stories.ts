@@ -1,4 +1,4 @@
-import USwitch from '@/modules/common/forms/USwitch.vue';
+import { USwitch } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

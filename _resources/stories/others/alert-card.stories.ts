@@ -1,4 +1,4 @@
-import UAlertCard from '@/modules/common/others/UAlertCard.vue';
+import { UAlertCard } from '@/modules/common';
 
 export default {
   title: 'Others/AlertCard',

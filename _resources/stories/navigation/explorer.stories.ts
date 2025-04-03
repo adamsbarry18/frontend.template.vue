@@ -1,6 +1,5 @@
 import { ref } from 'vue';
-import UExplorer from '@/modules/common/navigation/UExplorer.vue';
-import UButton from '@/modules/common/basic/UButton.vue';
+import { UButton, UExplorer } from '@/modules/common';
 
 export default {
   title: 'Navigation/Explorer',
@@ -52,7 +51,7 @@ export const Explorer = () => ({
     // Cas de test 1 : affichage de l'explorateur avec un item racine
     function displayExplorer(): void {
       if (explorer.value && button.value) {
-        explorer.value.showExplorer(button.value, {
+        explorer.value.showExplorer({
           id: 0,
           label: 'Root Folder',
           icon: 'icon-folder',
@@ -64,7 +63,7 @@ export const Explorer = () => ({
     // Cas de test 2 : affichage de l'explorateur sans item racine (null)
     function displayExplorerWithoutRoot(): void {
       if (explorer.value && button2.value) {
-        explorer.value.showExplorer(button2.value, null);
+        explorer.value.showExplorer();
       }
     }
 

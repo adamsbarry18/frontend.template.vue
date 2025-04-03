@@ -49,8 +49,7 @@
 </template>
 
 <script setup lang="ts">
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
+  import { UButton, UTooltip } from '@/modules/common';
 
   defineProps({
     activeStep: {

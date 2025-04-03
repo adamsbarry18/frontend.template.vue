@@ -54,10 +54,8 @@
 <script setup lang="ts">
   import { computed, getCurrentInstance } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useUsersStore } from '@/stores/users/user';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import UColorInitials from '@/modules/common/others/UColorInitials.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { useUsersStore } from '@/stores/modules/users/user';
+  import { UTooltip, UColorInitials, IconBase } from '@/modules/common';
 
   // Accès au store et au router
   const usersStore = useUsersStore();

@@ -61,10 +61,12 @@
 
 <script setup lang="ts">
   import { computed, onMounted } from 'vue';
-  import BaseListSearchBar from './BaseListSearchBar.vue';
-  import UFilter from '@/modules/common/filter/UFilter.vue';
-  import USelectGroup from '@/modules/common/forms/USelectGroup.vue';
-  import IconBase from '../icons/IconBase.vue';
+  import {
+    BaseListSearchBar,
+    UFilter,
+    USelectGroup,
+    IconBase,
+  } from '@/modules/common';
   import ListService from './services/listService';
 
   const props = withDefaults(

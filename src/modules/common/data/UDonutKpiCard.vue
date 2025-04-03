@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
   import { numberFormat } from '@/libs/utils/Number';
-  import UDonutChart from '@/modules/common/data/UDonutChart.vue';
+  import { UDonutChart } from '@/modules/common';
 
   interface Props {
     title: string;

@@ -1,4 +1,4 @@
-import UDateDisplay from '@/modules/common/data/UDateDisplay.vue';
+import { UDateDisplay } from '@/modules/common';
 
 export default {
   title: 'data/DateDisplay',

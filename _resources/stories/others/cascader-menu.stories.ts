@@ -1,4 +1,4 @@
-import UCascaderMenu from '@/modules/common/others/UCascaderMenu.vue';
+import { UCascaderMenu } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

@@ -17,8 +17,7 @@
 </template>
 
 <script setup lang="ts">
-  import UGrid from '../layout/UGrid.vue';
-  import BaseList from './BaseList.vue';
+  import { BaseList, UGrid } from '@/modules/common';
   import { PropType } from 'vue';
   import type ListService from './services/listService';
 

@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
   import { PropType, onMounted } from 'vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
 
   interface ToggleButtonOption {
     value: string | number;

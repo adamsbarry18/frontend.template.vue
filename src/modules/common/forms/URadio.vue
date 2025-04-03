@@ -35,7 +35,7 @@
 <script setup lang="ts">
   import { ref, watch, onMounted } from 'vue';
   import type { PropType } from 'vue';
-  import UInfo from '@/modules/common/others/UInfo.vue';
+  import { UInfo } from '@/modules/common';
   import { ElRadio, ElRadioGroup } from 'element-plus';
 
   const props = defineProps({

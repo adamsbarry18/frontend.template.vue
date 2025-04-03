@@ -35,13 +35,15 @@
 </template>
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
-  import UPopper from '../others/UPopper.vue';
-  import IconBase from '../icons/IconBase.vue';
   import i18n from '@/i18n';
-  import UfilterItemBool from './types/UfilterItemBool.vue';
-  import UFilterItemEnum from './types/UFilterItemEnum.vue';
-  import UFilterItemNumberrange from './types/UFilterItemNumberrange.vue';
-  import UFilterItemDatePicker from '@/modules/common/filter/types/UFilterItemDatePicker.vue';
+  import {
+    UFilterItemDatePicker,
+    UPopper,
+    IconBase,
+    UFilterItemNumberrange,
+    UFilterItemEnum,
+    UfilterItemBool,
+  } from '@/modules/common';
 
   interface ConfigType {
     label: string;

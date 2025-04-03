@@ -4,7 +4,7 @@ import {
   SearchService,
   SortService,
 } from '@/modules/common';
-import UGridList from '@/modules/common/data/UGridList.vue';
+import { UGridList } from '@/modules/common';
 import { reactive } from 'vue';
 
 export default {

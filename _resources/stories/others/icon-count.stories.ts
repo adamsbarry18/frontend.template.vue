@@ -1,4 +1,4 @@
-import UIconCount from '@/modules/common/others/UIconCount.vue';
+import { UIconCount } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

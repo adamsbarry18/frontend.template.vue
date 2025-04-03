@@ -7,5 +7,6 @@ export * from './layout';
 export * from './forms';
 export * from './notice';
 export * from './data';
+export * from './filter';
 
 export { IconBase };

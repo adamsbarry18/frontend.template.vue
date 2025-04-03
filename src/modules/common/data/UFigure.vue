@@ -23,7 +23,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import IconBase from '../icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
 
   defineProps({
     modelValue: {

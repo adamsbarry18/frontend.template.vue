@@ -26,8 +26,7 @@
 </template>
 
 <script setup lang="ts">
-  import ULoader from '@/modules/common/others/ULoader.vue';
-  import UActionButtonBar from '@/modules/common/others/UActionButtonBar.vue';
+  import { ULoader, UActionButtonBar } from '@/modules/common';
   import { onMounted, ref, watch } from 'vue';
 
   const props = defineProps({

@@ -1,5 +1,4 @@
-import UAccordion from '@/modules/common/others/UAccordion.vue';
-import UAccordionItem from '@/modules/common/others/UAccordionItem.vue';
+import { UAccordion, UAccordionItem } from '@/modules/common';
 import IconBase from '@/modules/common/icons/IconBase.vue';
 
 export default {

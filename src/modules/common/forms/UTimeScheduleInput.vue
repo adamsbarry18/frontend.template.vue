@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
   import { computed, ref, watch, onMounted } from 'vue';
-  import UInfo from '../others/UInfo.vue';
+  import { UInfo } from '@/modules/common';
   import { ElTimeSelect } from 'element-plus';
 
   // Interface pour typer les props

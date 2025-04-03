@@ -45,8 +45,7 @@
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
   import type { PropType } from 'vue';
-  import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { UContextualMenu, IconBase } from '@/modules/common';
 
   // Props du composant
   const props = defineProps({

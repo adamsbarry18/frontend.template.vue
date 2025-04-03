@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import IconBase from '../icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
 
   interface Props {
     type: 'info' | 'success' | 'warning' | 'danger';

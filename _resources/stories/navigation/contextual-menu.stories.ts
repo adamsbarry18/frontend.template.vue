@@ -1,5 +1,4 @@
-import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
-import UButton from '@/modules/common/basic/UButton.vue';
+import { UButton, UContextualMenu } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

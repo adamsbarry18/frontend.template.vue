@@ -62,10 +62,7 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import UPopper from '@/modules/common/others/UPopper.vue';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { UButton, UPopper, UTooltip, IconBase } from '@/modules/common';
 
   interface IMultiActionItem {
     label: string;

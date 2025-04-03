@@ -13,8 +13,8 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
   import BaseNav from './_components/BaseNav.vue';
-  import { useUsersStore } from '@/stores/users/user';
-  import { useNavStore } from '@/stores/menu/nav';
+  import { useUsersStore } from '@/stores/modules/users/user';
+  import { useNavStore } from '@/stores/modules/menu/nav';
   import { useRouter } from 'vue-router';
 
   const router = useRouter();

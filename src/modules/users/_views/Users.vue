@@ -146,12 +146,14 @@
 <script setup lang="ts">
   import { ref, computed, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import UContentWrapper from '@/modules/common/layout/UContentWrapper.vue';
-  import UList from '@/modules/common/data/UList.vue';
-  import UListColumn from '@/modules/common/data/UListColumn.vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
+  import {
+    UContentWrapper,
+    UButton,
+    UListColumn,
+    UList,
+  } from '@/modules/common';
   import { useNotification } from '@/composables/notfication';
-  import { useUsersStore } from '@/stores/users/user';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import { usersList } from '../../../../_resources/stories/_data/users-list';
   // import { useAuthorisationsStore } from '@/stores/modules/authorisations/authorisations';
   import i18n from '@/i18n';

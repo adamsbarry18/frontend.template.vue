@@ -48,7 +48,7 @@
 
 <script lang="ts" setup>
   import { ref, computed, watch, nextTick, PropType } from 'vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
 
   const props = defineProps({
     modelValue: {

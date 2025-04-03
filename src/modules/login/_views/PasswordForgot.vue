@@ -33,9 +33,8 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
   import Home from '@/modules/login/_components/Home.vue';
-  import UFormInput from '@/modules/common/forms/UFormInput.vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import { useUsersStore } from '@/stores/users/user';
+  import { UFormInput, UButton } from '@/modules/common';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';

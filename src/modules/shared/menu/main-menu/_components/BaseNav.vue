@@ -88,8 +88,8 @@
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
   import NavSection from './NavSection.vue';
-  import { NavItem } from '@/stores/menu/nav';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { NavItem } from '@/stores/modules/menu/nav';
+  import { IconBase } from '@/modules/common';
 
   interface Config {
     univers?: any[];

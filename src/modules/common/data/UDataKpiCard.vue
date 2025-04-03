@@ -49,7 +49,7 @@
 <script setup lang="ts">
   import { computed, useSlots } from 'vue';
   import { checkIsReducedNumberZero, numberFormat } from '@/libs/utils/Number';
-  import UInfo from '../others/UInfo.vue';
+  import { UInfo } from '@/modules/common';
 
   interface Props {
     title: string;

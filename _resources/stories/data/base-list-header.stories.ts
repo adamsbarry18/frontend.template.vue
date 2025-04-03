@@ -1,4 +1,4 @@
-import BaseListHeader from '@/modules/common/data/BaseListHeader.vue';
+import { BaseListHeader } from '@/modules/common';
 import { reactive, ref } from 'vue';
 
 export default {

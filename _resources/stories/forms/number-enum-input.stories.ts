@@ -1,4 +1,4 @@
-import UNumberEnumInput from '@/modules/common/forms/UNumberEnumInput.vue';
+import { UNumberEnumInput } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

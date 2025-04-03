@@ -1,4 +1,4 @@
-import UNumberInput from '@/modules/common/forms/UNumberInput.vue';
+import { UNumberInput } from '@/modules/common';
 
 export default {
   title: 'Forms/NumberInput',

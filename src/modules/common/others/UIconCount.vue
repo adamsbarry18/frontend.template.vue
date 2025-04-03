@@ -23,8 +23,7 @@
   </u-tooltip>
 </template>
 <script setup lang="ts">
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import IconBase from '../icons/IconBase.vue';
+  import { UTooltip, IconBase } from '@/modules/common';
 
   defineProps({
     icon: {

@@ -7,8 +7,8 @@ import {
 } from 'vue-router';
 import i18n from '@/i18n';
 import loginRoutes from './login.routes';
-import { useUsersStore } from '@/stores/users/user';
-import { useNavStore } from '@/stores/menu/nav';
+import { useUsersStore } from '@/stores/modules/users/user';
+import { useNavStore } from '@/stores/modules/menu/nav';
 import testRoutes from './test.routes';
 import administationRoutes from './administration.routes';
 // import { useBreadcrumbStore } from '@/stores/breadcrumb';

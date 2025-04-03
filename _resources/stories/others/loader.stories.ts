@@ -1,4 +1,4 @@
-import ULoader from '@/modules/common/others/ULoader.vue';
+import { ULoader } from '@/modules/common';
 
 export default {
   title: 'Others/Loader',

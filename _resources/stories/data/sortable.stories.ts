@@ -1,4 +1,4 @@
-import USortableList from '@/modules/common/data/USortableList.vue';
+import { USortableList } from '@/modules/common';
 import { ref } from 'vue';
 import { action } from '@storybook/addon-actions';
 import IconBase from '@/modules/common/icons/IconBase.vue';

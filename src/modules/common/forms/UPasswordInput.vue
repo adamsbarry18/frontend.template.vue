@@ -52,7 +52,7 @@
   import { computed, ref, watch, onMounted, PropType } from 'vue';
   import { debounce } from '@/libs/utils/Debounce';
   import { ElProgress } from 'element-plus';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
 
   const props = defineProps({
     modelValue: {

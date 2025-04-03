@@ -24,7 +24,7 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
   import { initializeDateLocale } from '@/libs/utils/Date';
-  import { useUsersStore } from '@/stores/users/user';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import GlobalHelpButton from '@/modules/app/_components/GlobalHelpButton.vue';
   import MainNav from '@/modules/shared/menu/main-menu/MainNav.vue';
   import MainHeader from '@/modules/shared/menu/main-header/MainHeader.vue';

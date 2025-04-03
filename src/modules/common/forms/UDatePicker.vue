@@ -104,7 +104,7 @@
   );
 
   const firstDayOfWeek = computed(() =>
-    i18n.global.locale.value === 'fr-FR' ? 1 : 7
+    i18n.global.locale.value === 'fr' ? 1 : 7
   );
 
   const popperClass = computed(() => {

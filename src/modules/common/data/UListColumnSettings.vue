@@ -47,9 +47,7 @@
 
 <script setup lang="ts">
   import { ref, reactive, PropType } from 'vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import UPopper from '../others/UPopper.vue';
+  import { UButton, UTooltip, UPopper } from '@/modules/common';
   import { ElCheckbox } from 'element-plus';
   import {
     isColumnVisible,

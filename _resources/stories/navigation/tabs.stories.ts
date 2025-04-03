@@ -1,9 +1,5 @@
-import UButton from '@/modules/common/basic/UButton.vue';
-import IconBase from '@/modules/common/icons/IconBase.vue';
-import UTabPane from '@/modules/common/navigation/UTabPane.vue';
-import UTabs from '@/modules/common/navigation/UTabs.vue';
-import URadio from '@/modules/common/forms/URadio.vue';
 import { ref } from 'vue';
+import { UButton, IconBase, UTabPane, UTabs, URadio } from '@/modules/common';
 
 export default {
   title: 'Navigation/Tabs',

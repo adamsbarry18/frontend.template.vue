@@ -52,8 +52,8 @@
             <span class="item-label">{{ item.label }}</span>
             <icon-base
               v-if="!item.disabled"
+              :icon="'icon-arrow'"
               :title="$t('commons.explorer.gotofolder', { item: item.label })"
-              icon="icon-arrow"
               class="item-arrow -button-like"
               color="var(--color-neutral-800)"
               :size="16"
@@ -81,8 +81,7 @@
 
 <script setup lang="ts">
   import { ref, PropType } from 'vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { UButton, IconBase } from '@/modules/common';
   import i18n from '@/i18n';
 
   // Définition de l'interface pour les éléments de l'explorateur

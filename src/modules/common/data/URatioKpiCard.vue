@@ -45,8 +45,7 @@
 
 <script setup lang="ts">
   import { computed, withDefaults, useSlots } from 'vue';
-  import UProgressBar from '../others/UProgressBar.vue';
-  import UInfo from '../others/UInfo.vue';
+  import { UProgressBar, UInfo } from '@/modules/common';
   import { numberFormat } from '@/libs/utils/Number';
 
   // Interface pour typer les props

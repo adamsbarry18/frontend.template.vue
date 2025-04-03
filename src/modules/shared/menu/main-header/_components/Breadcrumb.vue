@@ -66,8 +66,8 @@
 
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { useNavStore } from '@/stores/menu/nav';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { useNavStore } from '@/stores/modules/menu/nav';
+  import { IconBase } from '@/modules/common';
   import { ElInput } from 'element-plus';
 
   // Définition des types pour les props

@@ -1,4 +1,4 @@
-import UButton from '@/modules/common/basic/UButton.vue';
+import { UButton } from '@/modules/common';
 import { useNotification } from '@/composables/notfication';
 
 const { $message } = useNotification();

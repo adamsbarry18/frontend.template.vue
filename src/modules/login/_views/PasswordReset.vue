@@ -41,7 +41,7 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { useUsersStore } from '@/stores/users/user';
+  import { useUsersStore } from '@/stores/modules/users/user';
   import {
     passwordRules,
     getPasswordIndicators,
@@ -50,8 +50,7 @@
   import { isValidEmail } from '@/libs/utils/String';
   import { useNotification } from '@/composables/notfication';
   import Home from '../_components/Home.vue';
-  import UFormInput from '@/modules/common/forms/UFormInput.vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
+  import { UFormInput, UButton } from '@/modules/common';
   import PasswordSecurityIndicators from '@/modules/users/_components/PasswordSecurityIndicators.vue';
   import i18n from '@/i18n';
 

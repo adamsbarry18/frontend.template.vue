@@ -252,6 +252,13 @@
 </template>
 
 <script setup lang="ts">
+  import { v4 as uuidv4 } from 'uuid';
+  import i18n from '@/i18n';
+  import { useRoute, useRouter } from 'vue-router';
+  import { ElTable, ElTableColumn, TreeNode } from 'element-plus';
+  import { applyFiltersToList } from '@/libs/utils/Filter';
+  import { debounce } from '@/libs/utils/Debounce';
+  import { orderBy } from '@/libs/utils/Sort';
   import {
     ref,
     computed,
@@ -262,23 +269,22 @@
     nextTick,
     provide,
   } from 'vue';
-  import { v4 as uuidv4 } from 'uuid';
-  import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
-  import UFilter from '@/modules/common/filter/UFilter.vue';
-  import UFilterResume from '@/modules/common/filter/UFilterResume.vue';
-  import USearchBar from '@/modules/common/others/USearchBar.vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import UListColumnSettings from '@/modules/common/data/UListColumnSettings.vue';
-  import UListPagination from '@/modules/common/data/UListPagination.vue';
-  import USelectGroup from '@/modules/common/forms/USelectGroup.vue';
-  import UInfo from '@/modules/common/others/UInfo.vue';
-  import IconBase from '../icons/IconBase.vue';
-  import { applyFiltersToList } from '@/libs/utils/Filter';
-  import { debounce } from '@/libs/utils/Debounce';
-  import { orderBy } from '@/libs/utils/Sort';
-  import { ElTable, ElTableColumn, TreeNode } from 'element-plus';
-  import UListRowButtons from './UListRowButtons.vue';
-  import UListSelectionActions from './UListSelectionActions.vue';
+
+  import {
+    UContextualMenu,
+    UFilter,
+    UFilterResume,
+    USearchBar,
+    UButton,
+    UListColumnSettings,
+    UListPagination,
+    USelectGroup,
+    UInfo,
+    IconBase,
+    UListRowButtons,
+    UListSelectionActions,
+  } from '@/modules/common';
+
   import {
     setSort,
     getListSort,
@@ -288,8 +294,6 @@
     hasSavedVisibility,
     LIST_COLUMN_VISIBILITY,
   } from '@/libs/utils/List';
-  import i18n from '@/i18n';
-  import { useRoute, useRouter } from 'vue-router';
 
   const props = defineProps({
     data: { type: Array, default: () => [] },

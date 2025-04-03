@@ -17,8 +17,7 @@
 
 <script setup lang="ts">
   import { computed, ref, watch, onMounted } from 'vue';
-  import UNumberInput from './UNumberInput.vue';
-  import UInfo from '../others/UInfo.vue';
+  import { UNumberInput, UInfo } from '@/modules/common';
 
   // Interface pour typer les props
   interface Props {

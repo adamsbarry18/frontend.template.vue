@@ -1,4 +1,4 @@
-import UFormInput from '@/modules/common/forms/UFormInput.vue';
+import { UFormInput } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

@@ -1,7 +1,6 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 
 interface InterceptorOptions {
-  store: any;
   router: any;
   i18n: any;
 }
@@ -9,15 +8,12 @@ interface InterceptorOptions {
 export class BaseInterceptor {
   private _requestInterceptor: number | null = null;
   private _responseInterceptor: number | null = null;
-
-  protected $store: any;
   protected $router: any;
   protected $i18n: any;
 
   static registeredInterceptors: BaseInterceptor[] = [];
 
-  constructor({ store, router, i18n }: InterceptorOptions) {
-    this.$store = store;
+  constructor({ router, i18n }: InterceptorOptions) {
     this.$router = router;
     this.$i18n = i18n;
   }

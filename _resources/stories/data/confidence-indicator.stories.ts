@@ -1,4 +1,4 @@
-import UConfidenceIndicator from '@/modules/common/data/UConfidenceIndicator.vue';
+import { UConfidenceIndicator } from '@/modules/common';
 
 export default {
   title: 'data/ConfidenceIndicator',

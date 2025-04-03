@@ -1,5 +1,4 @@
-import UWiredVerticalStepper from '@/modules/common/navigation/UWiredVerticalStepper.vue';
-import UButton from '@/modules/common/basic/UButton.vue';
+import { UButton, UWiredVerticalStepper } from '@/modules/common';
 import { ref } from 'vue';
 
 export default {

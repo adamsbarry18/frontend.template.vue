@@ -5,6 +5,8 @@ import UDashboardHeaderCard from '@/modules/common/layout/UDashboardHeaderCard.v
 import UContentWrapper from '@/modules/common/layout/UContentWrapper.vue';
 import UPrinterLayout from '@/modules/common/layout/UPrinterLayout.vue';
 import USectionsWithMenu from '@/modules/common/layout/USectionsWithMenu.vue';
+import UPill from './UPill.vue';
+import UIndexedSection from './UIndexedSection.vue';
 
 export {
   UCard,
@@ -14,4 +16,6 @@ export {
   UContentWrapper,
   UPrinterLayout,
   USectionsWithMenu,
+  UPill,
+  UIndexedSection,
 };

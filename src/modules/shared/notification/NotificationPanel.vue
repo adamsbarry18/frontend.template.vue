@@ -60,12 +60,14 @@
   import { reactBus, STATE } from '@/plugins/reactBus';
   import { compile } from 'vue/dist/vue.esm-bundler.js';
   import dayjs from 'dayjs';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
-  import UDismissable from '@/modules/common/others/UDismissable.vue';
+  import {
+    IconBase,
+    UDismissable,
+    UShortcutSubscriber,
+  } from '@/modules/common';
   import i18n from '@/i18n';
   import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
   import { useNotification } from '@/composables/notfication';
-  import UShortcutSubscriber from '@/modules/common/others/UShortcutSubscriber.vue';
 
   // composables
   const { $notification } = useNotification();

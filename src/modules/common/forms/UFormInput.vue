@@ -105,12 +105,14 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
-  import UDatePicker from '@/modules/common/forms/UDatePicker.vue';
-  import USelectGroup from '@/modules/common/forms/USelectGroup.vue';
-  import URadio from '@/modules/common/forms/URadio.vue';
-  import UNumberInput from '@/modules/common/forms/UNumberInput.vue';
-  import UPasswordInput from '@/modules/common/forms/UPasswordInput.vue';
+  import {
+    IconBase,
+    UDatePicker,
+    USelectGroup,
+    URadio,
+    UNumberInput,
+    UPasswordInput,
+  } from '@/modules/common';
 
   const props = defineProps({
     modelValue: {

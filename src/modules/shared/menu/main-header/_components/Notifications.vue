@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { IconBase } from '@/modules/common';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
 
   // Accès au store Pinia

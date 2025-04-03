@@ -24,8 +24,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-
+  import { UTooltip } from '@/modules/common';
   import { formatToString } from '@/libs/utils/String';
   import { computed } from 'vue';
 

@@ -1,4 +1,4 @@
-import UCodeEditor from '@/modules/common/others/UCodeEditor.vue';
+import { UCodeEditor } from '@/modules/common';
 import { ref } from 'vue';
 
 // Configuration Storybook

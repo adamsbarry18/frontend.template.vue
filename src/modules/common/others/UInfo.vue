@@ -19,8 +19,7 @@
 
 <script lang="ts" setup>
   import { ref, computed } from 'vue';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { UTooltip, IconBase } from '@/modules/common';
   import type { Placement } from 'element-plus';
 
   const props = defineProps({

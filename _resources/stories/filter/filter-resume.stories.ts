@@ -1,4 +1,4 @@
-import UFilterResume from '@/modules/common/filter/UFilterResume.vue';
+import { UFilterResume } from '@/modules/common';
 import { reactive } from 'vue';
 
 export default {

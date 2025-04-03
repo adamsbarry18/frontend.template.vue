@@ -31,7 +31,7 @@
 <script lang="ts" setup>
   import { ref, watch } from 'vue';
   import { ElSwitch, Placement } from 'element-plus';
-  import UInfo from '@/modules/common/others/UInfo.vue';
+  import { UInfo } from '@/modules/common';
 
   const props = defineProps({
     modelValue: {

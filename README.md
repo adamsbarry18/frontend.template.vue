@@ -23,7 +23,7 @@ A comprehensive Vue 3 design system with a rich set of components and utilities.
 
 ### Navigation
 
-- `UTabTitle` - Tab navigation component
+- `UTabs` - Tab navigation component
 - `UWizardNav` - Wizard navigation interface
 
 ### Notice Components

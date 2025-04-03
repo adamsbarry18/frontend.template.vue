@@ -1,4 +1,4 @@
-import UPrinterLayout from '@/modules/common/layout/UPrinterLayout.vue';
+import { UPrinterLayout } from '@/modules/common';
 
 export default {
   title: 'Layout/UPrinterLayout',

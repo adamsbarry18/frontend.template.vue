@@ -152,9 +152,7 @@
     getCurrentInstance,
   } from 'vue';
   import { ellipsis } from '@/libs/utils/String';
-  import UTooltip from '@/modules/common/others/UTooltip.vue';
-  import USelectGroup from '@/modules/common/forms/USelectGroup.vue';
-  import IconBase from '@/modules/common/icons/IconBase.vue';
+  import { UTooltip, USelectGroup, IconBase } from '@/modules/common';
   import { ElTag, ElAutocomplete, ElInput } from 'element-plus';
   import i18n from '@/i18n';
 

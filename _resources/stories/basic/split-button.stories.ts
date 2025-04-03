@@ -1,4 +1,4 @@
-import USplitButton from '@/modules/common/basic/USplitButton.vue';
+import { USplitButton } from '@/modules/common';
 
 export default {
   title: 'basic/SplitButton',

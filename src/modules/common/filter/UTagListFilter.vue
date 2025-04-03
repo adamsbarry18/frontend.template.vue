@@ -37,8 +37,7 @@
 </template>
 <script setup lang="ts">
   import { ref, watch, onMounted } from 'vue';
-  import IconBase from '../icons/IconBase.vue';
-  import UTag from '@/modules/common/others/UTag.vue';
+  import { IconBase, UTag } from '@/modules/common';
 
   const props = defineProps({
     options: {

@@ -1,4 +1,4 @@
-import UTag from '@/modules/common/others/UTag.vue';
+import { UTag } from '@/modules/common';
 
 export default {
   title: 'Others/Tag',

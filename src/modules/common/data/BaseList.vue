@@ -46,9 +46,13 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
+  import {
+    UListPagination,
+    BaseListHeader,
+    IconBase,
+    UTooltip,
+  } from '@/modules/common';
   import ListService from './services/listService';
-  import UListPagination from './UListPagination.vue';
-  import BaseListHeader from './BaseListHeader.vue';
 
   const props = defineProps<{
     listService: ListService | null;

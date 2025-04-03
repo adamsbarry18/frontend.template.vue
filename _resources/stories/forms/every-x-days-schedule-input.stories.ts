@@ -1,4 +1,4 @@
-import UEveryXDaysScheduleInput from '@/modules/common/forms/UEveryXDaysScheduleInput.vue';
+import { UEveryXDaysScheduleInput } from '@/modules/common';
 export default {
   title: 'forms/EveryXDaysScheduleInput',
   component: UEveryXDaysScheduleInput,

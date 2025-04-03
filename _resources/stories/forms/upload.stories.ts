@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import UUploader from '@/modules/common/forms/UUploader.vue';
+import { UUploader } from '@/modules/common';
 
 export default {
   title: 'Forms/Uploader',

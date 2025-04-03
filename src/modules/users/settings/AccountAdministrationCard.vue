@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
   import { PropType } from 'vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
+  import { UButton } from '@/modules/common';
 
   defineProps({
     user: {

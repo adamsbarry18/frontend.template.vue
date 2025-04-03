@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-  const props = defineProps({
+  defineProps({
     indicators: {
       type: Object,
       required: true,

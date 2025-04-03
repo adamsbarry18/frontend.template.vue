@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
   import { computed, PropType } from 'vue';
-  import UTooltip from '../others/UTooltip.vue';
+  import { UTooltip } from '@/modules/common';
   import i18n from '@/i18n';
 
   const props = defineProps({
