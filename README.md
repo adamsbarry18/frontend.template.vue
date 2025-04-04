@@ -1,6 +1,6 @@
-# My Design System Vue
+# frontend.template.vue
 
-A comprehensive Vue 3 design system with a rich set of components and utilities.
+A comprehensive Vue 3 frontend.template.vue with a rich set of components and utilities.
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4.x-blue)

@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'DesignSystem',
+      name: 'frontend.template.vue3',
     },
     rollupOptions: {
       external: [
