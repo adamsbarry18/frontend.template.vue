@@ -84,7 +84,7 @@ function resetBreadcrumb(to) {
 
 /* Guard global */
 router.beforeEach(async (to, from, next) => {
-  const usersStore = useUsersStore();
+  // const usersStore = useUsersStore();
   const navStore = useNavStore();
   if (from.name !== to.name) {
     resetBreadcrumb(to);

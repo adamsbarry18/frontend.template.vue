@@ -10,44 +10,46 @@
       size="30"
       font-size="14"
     />
-    <div slot="content" class="user-tooltip-content">
-      <div class="user-profile-wrapper">
-        <u-color-initials
-          :initial="userInitial"
-          class="user-initials -button-like"
-          size="37"
-          font-size="17"
-        />
-        <div class="user-informations">
-          <h3>
-            {{ userName }}
-          </h3>
-          <span class="user-email">{{ userEmail }}</span>
+    <template v-slot:content>
+      <div class="user-tooltip-content">
+        <div class="user-profile-wrapper">
+          <u-color-initials
+            :initial="userInitial"
+            class="user-initials -button-like"
+            size="37"
+            font-size="17"
+          />
+          <div class="user-informations">
+            <h3>
+              {{ userName }}
+            </h3>
+            <span class="user-email">{{ userEmail }}</span>
+          </div>
+        </div>
+        <div class="user-action">
+          <div
+            class="-button-like"
+            datu-nav="user.view-account"
+            @click="goToMyAccountScreen"
+          >
+            <icon-base
+              icon="icon-account"
+              size="16"
+              color="var(--color-neutral-800)"
+            />
+            <span>{{ $t('globals.account.title') }}</span>
+          </div>
+          <div class="-button-like" @click="goToLoginScreen">
+            <icon-base
+              icon="icon-logout"
+              size="16"
+              color="var(--color-neutral-800)"
+            />
+            <span>{{ $t('globals.logout.title') }}</span>
+          </div>
         </div>
       </div>
-      <div class="user-action">
-        <div
-          class="-button-like"
-          datu-nav="user.view-account"
-          @click="goToMyAccountScreen"
-        >
-          <icon-base
-            icon="icon-account"
-            size="16"
-            color="var(--color-neutral-800)"
-          />
-          <span>{{ $t('globals.account.title') }}</span>
-        </div>
-        <div class="-button-like" @click="goToLoginScreen">
-          <icon-base
-            icon="icon-logout"
-            size="16"
-            color="var(--color-neutral-800)"
-          />
-          <span>{{ $t('globals.logout.title') }}</span>
-        </div>
-      </div>
-    </div>
+    </template>
   </u-tooltip>
 </template>
 

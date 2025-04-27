@@ -13,28 +13,35 @@ export enum PasswordStatus {
   EXPIRED = 'EXPIRED',
 }
 
-export interface IUser {
-  id: number;
-  uid: string | null;
-  email: string;
-  name: string | null;
-  surname: string | null;
-  level: number;
-  internalLevel: number;
-  internal: boolean;
-  color: string | null;
-  passwordStatus: PasswordStatus;
-  createdAt: string | null;
-  updatedAt: string | null;
-  passwordUpdatedAt: string | null;
-  preferences: Record<string, any> | null;
-  permissionsExpireAt: string | null;
-  authorisationOverrides: string | null;
-  token?: string;
-  security?: string;
-
+// Export SecurityLevel enum for use in other stores
+export enum SecurityLevel {
+  EXTERNAL = 1,
+  READER = 2,
+  USER = 3,
+  INTEGRATOR = 4,
+  ADMIN = 5,
+  NOBODY = 999, // Match backend definition
 }
 
+export type IUser = {
+  id?: number | null;
+  uid?: string | null;
+  email: string;
+  password?: string;
+  name: string;
+  surname?: string | null;
+  level: number;
+  internalLevel?: number;
+  internal?: boolean;
+  color?: string | null;
+  passwordStatus?: PasswordStatus;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  passwordUpdatedAt?: string | null;
+  preferences?: Record<string, any> | null;
+  permissions?: Record<string, any> | null;
+  permissionsExpireAt?: string | null;
+};
 
 export default class UserModel {
   id: number;
@@ -52,12 +59,11 @@ export default class UserModel {
   passwordUpdatedAt: Date | null;
   preferences: Record<string, any> | null;
   permissionsExpireAt: Date | null;
+  permissions: Record<string, any> | null;
   authorisationOverrides: string | null;
 
   // Jetons d'authentification frontend uniquement
   token?: string;
-  security?: string;
-
 
   /**
    * Construct a UserModel from partial backend data (dates as string or Date)
@@ -73,14 +79,22 @@ export default class UserModel {
     this.internal = data?.internal ?? false;
     this.color = data?.color ?? null;
     this.passwordStatus = data?.passwordStatus ?? PasswordStatus.ACTIVE;
-    this.createdAt = data?.createdAt ? dayjs(data.createdAt).toDate() : null;
-    this.updatedAt = data?.updatedAt ? dayjs(data.updatedAt).toDate() : null;
-    this.passwordUpdatedAt = data?.passwordUpdatedAt ? dayjs(data.passwordUpdatedAt).toDate() : null;
+    this.createdAt = data?.createdAt
+      ? dayjs(data.createdAt).toDate()
+      : new Date();
+    this.updatedAt = data?.updatedAt
+      ? dayjs(data.updatedAt).toDate()
+      : new Date();
+    this.passwordUpdatedAt = data?.passwordUpdatedAt
+      ? dayjs(data.passwordUpdatedAt).toDate()
+      : null;
     this.preferences = data?.preferences ?? null;
-    this.permissionsExpireAt = data?.permissionsExpireAt ? dayjs(data.permissionsExpireAt).toDate() : null;
+    this.permissionsExpireAt = data?.permissionsExpireAt
+      ? dayjs(data.permissionsExpireAt).toDate()
+      : null;
+    this.permissions = data?.permissions ?? null;
     this.authorisationOverrides = data?.authorisationOverrides ?? null;
     this.token = data?.token;
-    this.security = data?.security;
   }
 
   static sort(a: UserModel, b: UserModel): number {
@@ -95,14 +109,21 @@ export default class UserModel {
    * Transform API object into UserModel instance (dates as string or Date)
    */
   static fromAPI(user: Partial<IUser>): UserModel {
-    return new UserModel({
+    const modelData = {
       ...user,
+      name: user.name ?? null,
       createdAt: user.createdAt ? dayjs(user.createdAt).toDate() : null,
       updatedAt: user.updatedAt ? dayjs(user.updatedAt).toDate() : null,
-      passwordUpdatedAt: user.passwordUpdatedAt ? dayjs(user.passwordUpdatedAt).toDate() : null,
-      permissionsExpireAt: user.permissionsExpireAt ? dayjs(user.permissionsExpireAt).toDate() : null,
-      authorisationOverrides: user.authorisationOverrides ?? null,
-    });
+      passwordUpdatedAt: user.passwordUpdatedAt
+        ? dayjs(user.passwordUpdatedAt).toDate()
+        : null,
+      permissionsExpireAt: user.permissionsExpireAt
+        ? dayjs(user.permissionsExpireAt).toDate()
+        : null,
+      permissions: user.permissions ?? null,
+    };
+    delete modelData.password;
+    return new UserModel(modelData);
   }
 
   /**
@@ -118,25 +139,24 @@ export default class UserModel {
   /**
    * Prepare object for API (convert dates to ISO string, remove frontend-only fields)
    */
-  toAPI(): Partial<IUser> {
-    return {
-      id: this.id,
-      uid: this.uid,
-      email: this.email,
-      name: this.name,
-      surname: this.surname,
-      level: this.level,
-      internalLevel: this.internalLevel,
-      internal: this.internal,
-      color: this.color,
-      passwordStatus: this.passwordStatus,
-      createdAt: this.createdAt ? this.createdAt.toISOString() : null,
-      updatedAt: this.updatedAt ? this.updatedAt.toISOString() : null,
-      passwordUpdatedAt: this.passwordUpdatedAt ? this.passwordUpdatedAt.toISOString() : null,
-      preferences: this.preferences,
-      permissionsExpireAt: this.permissionsExpireAt ? this.permissionsExpireAt.toISOString() : null,
-      authorisationOverrides: this.authorisationOverrides ?? null,
-    };
+  toAPI() {
+    const res = { ...this };
+    if (res.id === null) {
+      delete res.id;
+    }
+    const clearFields = [
+      'createdAt',
+      'updatedAt',
+      'passwordStatus',
+      'passwordUpdatedAt',
+      'token',
+      'level',
+    ];
+    for (const field of clearFields) {
+      delete res[field];
+    }
+
+    return res;
   }
 
   clone(): UserModel {
@@ -158,9 +178,18 @@ export default class UserModel {
    * Validate the user model (basic checks)
    */
   isValid(): boolean {
-    if (!isValidEmail(this.email)) return false;
-    if (!this.name || !this.name.trim()) return false;
-    if (!this.level || this.level < 0) return false;
+    if (!isValidEmail(this.email)) {
+      return false;
+    }
+
+    const fields = ['email', 'name', 'level'];
+
+    for (const field of fields) {
+      if (!this[field] || this[field].trim() === '') {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -180,6 +209,7 @@ export default class UserModel {
     this.passwordUpdatedAt = null;
     this.preferences = null;
     this.permissionsExpireAt = null;
+    this.authorisationOverrides = null;
   }
 
   /**

@@ -7,12 +7,13 @@ import router from '@/router';
 import { registerInterceptor } from '@/libs/interceptors/Interceptor';
 import plugins from './plugins';
 
-registerInterceptor({ router, i18n });
-
 const app = createApp(App);
 
 app.use(pinia);
 app.use(router);
 app.use(i18n);
 app.use(plugins);
+
+registerInterceptor({ router, i18n });
+
 app.mount('#app');

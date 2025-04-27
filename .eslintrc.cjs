@@ -23,6 +23,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'import/prefer-default-export': 'off',
+    'vue/multi-word-component-names': 'off',
     'vue/no-unused-vars': 'warn',
     'no-prototype-builtins': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

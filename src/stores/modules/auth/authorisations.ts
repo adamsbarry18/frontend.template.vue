@@ -2,9 +2,9 @@ import { defineStore } from 'pinia';
 import dayjs from 'dayjs';
 import { useApiStore } from '@/stores/modules/api';
 import { useUsersStore } from '@/stores/modules/users/user';
+import { SecurityLevel } from '@/stores/modules/users/models/UserModel';
 import { computed, ref } from 'vue';
 import { ServerError } from '@/libs/utils/Errors';
-
 
 export const useAuthorisationsStore = defineStore('authorisations', () => {
   const features = ref<any[] | null>(null);
@@ -15,55 +15,55 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   const currentUser = computed(() => usersStore.currentUser);
 
   // Getters typés
-  const level = computed(() => currentUser.value?.level ?? 0);
-  const internalLevel = computed(() => currentUser.value?.internalLevel ?? 0);
+  const level = computed(() => currentUser.value?.level ?? 1);
+  const internalLevel = computed(() => currentUser.value?.internalLevel ?? 1);
   const internal = computed(() => currentUser.value?.internal ?? false);
-  const permissionsExpireAt = computed(() => currentUser.value?.permissionsExpireAt ? dayjs(currentUser.value.permissionsExpireAt) : null);
+  const permissionsExpireAt = computed(() =>
+    currentUser.value?.permissionsExpireAt
+      ? dayjs(currentUser.value.permissionsExpireAt)
+      : null
+  );
   const hasExpired = computed(() => {
     if (!permissionsExpireAt.value) return false;
     return dayjs().isAfter(permissionsExpireAt.value);
   });
-  const authorisationOverrides = computed(() => {
-    if (!currentUser.value?.authorisationOverrides) return null;
-    try {
-      return JSON.parse(currentUser.value.authorisationOverrides);
-    } catch {
-      return null;
-    }
+
+  // Rôles standards using SecurityLevel enum
+  const isUser = computed(() => level.value >= SecurityLevel.USER);
+  const isIntegrator = computed(() => level.value >= SecurityLevel.INTEGRATOR);
+  const isAdmin = computed(() => level.value >= SecurityLevel.ADMIN);
+
+  // Vérification des autorisations spécifiques
+  const hasCurrentUserAuthorisation = computed(() => {
+    return (feature: string, action: string): boolean => {
+      if (isAdmin.value) {
+        return true;
+      }
+
+      const permissions = currentUser.value?.permissions;
+      if (!permissions) {
+        return false;
+      }
+
+      const featurePermissions = permissions[feature];
+      if (!featurePermissions) {
+        return false;
+      }
+      return featurePermissions.includes(action);
+    };
   });
 
-  // Rôles standards
-  const isUser = computed(() => level.value >= 3);
-  const isIntegrator = computed(() => level.value >= 4);
-  const isAdmin = computed(() => level.value >= 5);
-
-  // Vérifie s'il existe un override pour une fonctionnalité/action
-  function hasOverride(feature: string, action: string): boolean {
-    const overrides = authorisationOverrides.value;
-    if (!overrides || !overrides[feature]) return false;
-    return Array.isArray(overrides[feature]) ? overrides[feature].includes(action) : false;
-  }
-
-  // Logique centrale d'autorisation
-  function isAllowed(feature: string, action: string): boolean {
-    if (hasExpired.value) return false;
-    if (hasOverride(feature, action)) return true;
-    if (feature === 'admin') return isAdmin.value;
-    if (feature === 'integrator') return isIntegrator.value;
-    if (feature === 'user') return isUser.value;
-    return false;
-  }
+  const isUserAllowed = computed(() => hasCurrentUserAuthorisation.value);
 
   // Actions
   const apiStore = useApiStore();
-
 
   /**
    * Récupère toutes les features/actions disponibles (admin)
    */
   async function fetchAllFeatures() {
     try {
-      const response = await apiStore.api.get('/authorization/features');
+      const response = await apiStore.api.get('/api/v1/authorization/features');
       features.value = response.data.data;
       return features.value;
     } catch (error) {
@@ -77,7 +77,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function fetchLevels() {
     try {
-      const response = await apiStore.api.get('/authorization/levels');
+      const response = await apiStore.api.get('/api/v1/authorization/levels');
       levelsAuthorisations.value = response.data.data;
       return levelsAuthorisations.value;
     } catch (error) {
@@ -91,7 +91,9 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function getLevel(level: number) {
     try {
-      const response = await apiStore.api.get(`/authorization/levels/${level}`);
+      const response = await apiStore.api.get(
+        `/api/v1/authorization/levels/${level}`
+      );
       return response.data.data;
     } catch (error) {
       if (error.response?.status === 403) return null;
@@ -104,26 +106,35 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function getUserAuthorisations(userId: number) {
     try {
-      const response = await apiStore.api.get(`/authorization/users/${userId}`);
+      const response = await apiStore.api.get(
+        `/api/v1/authorization/users/${userId}`
+      );
       return response.data.data;
     } catch (error) {
       if ([403, 404].includes(error.response?.status)) return null;
-      throw new ServerError('authorisations', 'getUserAuthorisations', error, { userId });
+      throw new ServerError('authorisations', 'getUserAuthorisations', error, {
+        userId,
+      });
     }
   }
 
-  /**
-   * Met à jour le niveau et/ou les overrides d'un utilisateur (admin)
-   * @param userId number
-   * @param payload { level?: number, authorisationOverrides?: any }
-   */
-  async function updateUserAuthorization(userId: number, payload: { level?: number, authorisationOverrides?: any }) {
+  async function updateUserAuthorization(
+    userId: number,
+    payload: { level?: number; permissions?: Record<string, string[]> | null }
+  ) {
     if (!userId) throw new Error('Aucun userId fourni');
     try {
-      await apiStore.api.put(`/authorization/users/${userId}`, { data: payload });
+      await apiStore.api.put(`/api/v1/authorization/users/${userId}`, {
+        data: payload,
+      });
     } catch (error) {
       if (error.response?.status === 403) return null;
-      throw new ServerError('authorisations', 'updateUserAuthorization', error, { userId, payload });
+      throw new ServerError(
+        'authorisations',
+        'updateUserAuthorization',
+        error,
+        { userId, payload }
+      );
     }
   }
 
@@ -134,10 +145,15 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   async function deleteUserAuthorizations(userId: number) {
     if (!userId) throw new Error('Aucun userId fourni');
     try {
-      await apiStore.api.delete(`/authorization/users/${userId}`);
+      await apiStore.api.delete(`/api/v1/authorization/users/${userId}`);
     } catch (error) {
       if (error.response?.status === 403) return null;
-      throw new ServerError('authorisations', 'deleteUserAuthorizations', error, { userId });
+      throw new ServerError(
+        'authorisations',
+        'deleteUserAuthorizations',
+        error,
+        { userId }
+      );
     }
   }
 
@@ -146,11 +162,18 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function createTemporaryAuthorisationForUser(userId: number) {
     try {
-      const response = await apiStore.api.post(`/authorization/users/${userId}/temporary`);
+      const response = await apiStore.api.post(
+        `/api/v1/authorization/users/${userId}/temporary`
+      );
       return response.data.data;
     } catch (error) {
       if (error.response?.status === 403) return null;
-      throw new ServerError('authorisations', 'createTemporaryAuthorisationForUser', error, { userId });
+      throw new ServerError(
+        'authorisations',
+        'createTemporaryAuthorisationForUser',
+        error,
+        { userId }
+      );
     }
   }
 
@@ -163,13 +186,12 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
     internal,
     permissionsExpireAt,
     hasExpired,
-    authorisationOverrides,
     isUser,
     isIntegrator,
     isAdmin,
+    hasCurrentUserAuthorisation,
+    isUserAllowed,
     // Actions
-    hasOverride,
-    isAllowed,
     fetchAllFeatures,
     fetchLevels,
     getLevel,

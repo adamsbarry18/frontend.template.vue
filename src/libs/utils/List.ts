@@ -1,5 +1,4 @@
-// On peut utiliser le localStorage du navigateur
-const userStorage: Storage = window.localStorage;
+import { storageService } from './StorageService'; // Importer le service
 
 export const LIST_COLUMN_VISIBILITY = {
   ALWAYS: 'always',
@@ -16,14 +15,11 @@ interface SetVisibilityParams {
 }
 
 export function setVisibility({ column, value }: SetVisibilityParams): void {
-  let columnVisibility: Record<string, VisibilityValue> | null = JSON.parse(
-    userStorage.getItem('column-visibility') || 'null'
-  );
-  if (!columnVisibility) {
-    columnVisibility = {};
-  }
+  // Utiliser storageService pour récupérer et définir la visibilité
+  const columnVisibility =
+    storageService.getColumnVisibility<Record<string, VisibilityValue>>() ?? {};
   columnVisibility[column] = value;
-  userStorage.setItem('column-visibility', JSON.stringify(columnVisibility));
+  storageService.setColumnVisibility(columnVisibility);
 }
 
 interface SortValue {
@@ -37,43 +33,37 @@ interface SetSortParams {
 }
 
 export function setSort({ list, value }: SetSortParams): void {
-  let listSort: Record<string, SortValue> | null = JSON.parse(
-    userStorage.getItem('list-sort') || 'null'
-  );
-  if (!listSort) {
-    listSort = {};
-  }
+  // Utiliser storageService pour récupérer et définir le tri
+  const listSort =
+    storageService.getListSort<Record<string, SortValue>>() ?? {};
   listSort[list] = value;
-  userStorage.setItem('list-sort', JSON.stringify(listSort));
+  storageService.setListSort(listSort);
 }
 
 export function getListSort(listKey: string): SortValue {
-  const columnSort: Record<string, SortValue> | null = JSON.parse(
-    userStorage.getItem('list-sort') || 'null'
-  );
-  if (!columnSort || !columnSort.hasOwnProperty(listKey)) {
-    return { prop: null, order: null };
-  }
-  return columnSort[listKey];
+  // Utiliser storageService pour récupérer le tri
+  const listSort = storageService.getListSort<Record<string, SortValue>>();
+  return listSort?.[listKey] ?? { prop: null, order: null };
 }
 
 export function isColumnVisible(columnKey: string): boolean {
-  const columnVisibility: Record<string, VisibilityValue> | null = JSON.parse(
-    userStorage.getItem('column-visibility') || 'null'
-  );
+  // Utiliser storageService pour vérifier la visibilité
+  const columnVisibility =
+    storageService.getColumnVisibility<Record<string, VisibilityValue>>();
+  // Vérifier si la clé existe et si la valeur n'est pas 'invisible' (ou une autre logique si nécessaire)
+  // Ici, on vérifie simplement si la clé existe dans l'objet récupéré.
   return !!columnVisibility?.[columnKey];
 }
 
 export function hasSavedVisibility(columnKey: string): boolean {
-  const columnVisibility: Record<string, VisibilityValue> | null = JSON.parse(
-    userStorage.getItem('column-visibility') || 'null'
-  );
-  return columnVisibility ? columnVisibility.hasOwnProperty(columnKey) : false;
+  // Utiliser storageService pour vérifier si une visibilité est sauvegardée
+  const columnVisibility =
+    storageService.getColumnVisibility<Record<string, VisibilityValue>>();
+  return !!columnVisibility && columnVisibility.hasOwnProperty(columnKey);
 }
 
 export function hasSavedSort(listKey: string): boolean {
-  const savedSort: Record<string, SortValue> | null = JSON.parse(
-    userStorage.getItem('list-sort') || 'null'
-  );
-  return savedSort ? savedSort.hasOwnProperty(listKey) : false;
+  // Utiliser storageService pour vérifier si un tri est sauvegardé
+  const listSort = storageService.getListSort<Record<string, SortValue>>();
+  return !!listSort && listSort.hasOwnProperty(listKey);
 }

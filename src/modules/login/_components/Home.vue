@@ -2,14 +2,16 @@
   <div class="unconnected-home">
     <transition name="slide-fade">
       <el-card v-if="show" class="box-card">
-        <div slot="header" class="header">
-          <div class="logo-wrapper">
-            <img
-              class="header-logo"
-              src="@/assets/images/logo_mabarry_title.jpg"
-            />
+        <template v-slot:header>
+          <div class="header">
+            <div class="logo-wrapper">
+              <img
+                class="header-logo"
+                src="@/assets/images/logo_mabarry_title.jpg"
+              />
+            </div>
           </div>
-        </div>
+        </template>
         <div>
           <slot />
         </div>

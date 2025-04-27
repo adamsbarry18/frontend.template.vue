@@ -28,12 +28,13 @@
           @delete="onDeleteAccount"
         />
       </u-indexed-section>
-      <img
-        slot="menu-illustration"
-        class="picture"
-        src="@/assets/images/svg/user-settings.svg"
-        alt="user-settings"
-      />
+      <template v-slot:menu-illustration>
+        <img
+          class="picture"
+          src="@/assets/images/svg/user-settings.svg"
+          alt="user-settings"
+        />
+      </template>
     </u-sections-with-menu>
     <u-action-button-bar class="validate-button" placement="mid">
       <u-button

@@ -1,8 +1,13 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import {
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from 'axios'; // Importer AxiosInstance
 
 interface InterceptorOptions {
   router: any;
   i18n: any;
+  axiosInstance: AxiosInstance; // Ajouter l'instance Axios aux options
 }
 
 export class BaseInterceptor {
@@ -10,12 +15,15 @@ export class BaseInterceptor {
   private _responseInterceptor: number | null = null;
   protected $router: any;
   protected $i18n: any;
+  protected axiosInstance: AxiosInstance; // Stocker l'instance Axios
 
   static registeredInterceptors: BaseInterceptor[] = [];
 
-  constructor({ router, i18n }: InterceptorOptions) {
+  constructor({ router, i18n, axiosInstance }: InterceptorOptions) {
+    // Recevoir l'instance Axios
     this.$router = router;
     this.$i18n = i18n;
+    this.axiosInstance = axiosInstance; // Assigner l'instance reçue
   }
 
   public getType(): string {
@@ -40,12 +48,17 @@ export class BaseInterceptor {
 
   public attachRequestInterceptor(): void {
     const { request, error } = this.requestInterceptor();
-    this._requestInterceptor = axios.interceptors.request.use(request, error);
+    // Utiliser l'instance Axios stockée
+    this._requestInterceptor = this.axiosInstance.interceptors.request.use(
+      request,
+      error
+    );
   }
 
   public attachResponseInterceptor(): void {
     const { response, error } = this.responseInterceptor();
-    this._responseInterceptor = axios.interceptors.response.use(
+    // Utiliser l'instance Axios stockée
+    this._responseInterceptor = this.axiosInstance.interceptors.response.use(
       response,
       error
     );
@@ -53,14 +66,16 @@ export class BaseInterceptor {
 
   public detachRequestInterceptor(): void {
     if (this._requestInterceptor !== null) {
-      axios.interceptors.request.eject(this._requestInterceptor);
+      // Utiliser l'instance Axios stockée
+      this.axiosInstance.interceptors.request.eject(this._requestInterceptor);
       this._requestInterceptor = null;
     }
   }
 
   public detachResponseInterceptor(): void {
     if (this._responseInterceptor !== null) {
-      axios.interceptors.response.eject(this._responseInterceptor);
+      // Utiliser l'instance Axios stockée
+      this.axiosInstance.interceptors.response.eject(this._responseInterceptor);
       this._responseInterceptor = null;
     }
   }

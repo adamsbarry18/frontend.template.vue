@@ -1,71 +1,49 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import UserModel from './models/UserModel';
+import UserModel, { IUser, SecurityLevel } from './models/UserModel';
 import { useApiStore } from '@/stores/modules/api';
-import { debounce } from '@/libs/utils/Debounce';
 import { updateActiveLanguage } from '@/libs/utils/Language';
 import { ServerError } from '@/libs/utils/Errors';
-import { useAuthorisationsStore } from '../auth/authorisations';
-
-const LEVEL_USER = {
-  EXTERNAL: 1,
-  READER: 2,
-  USER: 3,
-  INTEGRATOR: 4,
-  ADMIN: 5,
-};
+import { debounce } from '@/libs/utils/Debounce';
+import { storageService } from '@/libs/utils/StorageService';
 
 export const useUsersStore = defineStore('users', () => {
-  // État
-  const idCurrentUser = ref<number | string | null>(null);
-  const fetched = ref(false);
+  // State
+  const currentUser = ref<UserModel | null>(null);
+  const usersMap = ref<Map<number | string, UserModel>>(new Map());
+  const usersFetched = ref(false);
   const isLoggingOut = ref(false);
-  const users = ref<UserModel[]>([]);
+  const authStatusChecked = ref(false);
 
-  // Persist de l'ID de l'utilisateur courant (adapter via plugin persistant de Pinia)
-  // Par exemple, via pinia-plugin-persistedstate
+  // Getters
 
-  const currentUser = computed(() => {
-    if (!idCurrentUser.value) return null;
-    return users.value.find((u) => u.id === idCurrentUser.value) || null;
-  });
-
-  // Exemple de getters
-  const levelForUser = computed(() => {
-    const authStore = useAuthorisationsStore();
-    return authStore.levelForCurrentUser;
-  });
-
-  const email = computed(() =>
-    currentUser.value ? currentUser.value.email : null
+  const isAuthenticated = computed(() => !!currentUser.value);
+  const currentUserId = computed(() => currentUser.value?.id ?? null);
+  const level = computed(
+    () => currentUser.value?.level ?? SecurityLevel.EXTERNAL
   );
-  const token = computed(() =>
-    currentUser.value ? currentUser.value.token : null
+  const email = computed(() => currentUser.value?.email ?? null);
+  const token = computed(() => storageService.getAuthToken());
+  const internal = computed(() => currentUser.value?.internal ?? false);
+  const language = computed(
+    () => currentUser.value?.preferences?.language?.toLowerCase?.() ?? 'en'
   );
-  const securityToken = computed(() =>
-    currentUser.value ? currentUser.value.security : null
-  );
-  const isConnected = computed(() => !!currentUser.value);
-  const internal = computed(() =>
-    currentUser.value ? currentUser.value.internal : false
-  );
-  const language = computed(() =>
-    currentUser.value?.preferences?.language?.toLowerCase?.() || 'en'
+  const getInitial = computed(() =>
+    currentUser.value?.name
+      ? currentUser.value.name.substring(0, 1).toUpperCase()
+      : '-'
   );
 
-  const getAll = computed(() => users.value);
-  const getUser = (userId: number | string) => {
-    return users.value.find((u) => u.id === userId) || null;
+  const getAllUsers = computed(() => Array.from(usersMap.value.values()));
+  const getUserById = (userId: number | string): UserModel | null => {
+    return usersMap.value.get(userId) ?? null;
   };
+  const getAdminUsers = computed(() =>
+    getAllUsers.value.filter((user) => user.level === SecurityLevel.ADMIN)
+  );
 
-  const getAdmins = computed(() => {
-    return users.value.filter(
-      (user) => !user.internal && user.level === LEVEL_USER.ADMIN
-    );
-  });
-
-  const userColorFromId = (userId: number) => {
-    const user = getUser(userId);
+  const userColorFromId = (userId: number): string => {
+    const user = getUserById(userId);
     const DEFAULT_COLORS = [
       '#fc842c',
       '#b43893',
@@ -75,335 +53,394 @@ export const useUsersStore = defineStore('users', () => {
       '#cf454a',
     ];
     if (!user || !user.color) {
-      return DEFAULT_COLORS[userId % DEFAULT_COLORS.length];
+      const numericId =
+        typeof userId === 'string' ? parseInt(userId, 10) || 0 : userId;
+      return DEFAULT_COLORS[numericId % DEFAULT_COLORS.length];
     }
     return user.color;
   };
 
-  const getInitial = computed(() => {
-    return currentUser.value && currentUser.value.name
-      ? currentUser.value.name.substring(0, 1).toUpperCase()
-      : '-';
-  });
-
-  // Actions
-
-  function getCredentials() {
-    let cleanedPassword = window.localStorage.keepPassword || '';
-    if (
-      cleanedPassword.length > 2 &&
-      cleanedPassword.startsWith('"') &&
-      cleanedPassword.endsWith('"')
-    ) {
-      cleanedPassword = cleanedPassword.slice(1, -1);
-    }
-    return {
-      email: (window.localStorage.keepEmail || '').replace(/"/g, ''),
-      password: cleanedPassword,
-      isHashed: true,
-    };
-  }
-
-  function handleAuthenticationError(error): never {
-    if (error.response?.status === 401) {
-      throw 'BAD_CREDENTIALS';
-    } else if ([400, 403, 422].includes(error.response?.status)) {
-      throw error.response.data ? error.response.data.data.code : error;
-    } else {
-      throw new ServerError('users', 'handleAuthenticationError', error);
-    }
-  }
-
-  function hasValidCredentials() {
-    return (
-      window.localStorage.keepEmail &&
-      window.localStorage.keepEmail.replace(/"/g, '').length &&
-      window.localStorage.keepPassword &&
-      window.localStorage.keepPassword.replace(/"/g, '').length
-    );
-  }
-
+  // Actions - Helpers Internes
   const apiStore = useApiStore();
 
-  async function ensureUsers() {
-    if (!fetched.value) {
-      debounce(async () => {
-        await fetchUsers();
-      }, 300)();
-    }
-    return true;
+  function _updateUserInMap(user: UserModel): void {
+    usersMap.value.set(user.id, user);
   }
 
-  async function fetchUsers() {
-    try {
-      const response = await apiStore.api.get('/users');
-      users.value = response.data.data.map((u: any) => UserModel.fromAPI(u));
-      fetched.value = true;
-    } catch (error) {
-      throw new ServerError('users', 'fetchUsers', error, {});
-    }
-  }
+  /** Gère les erreurs d'authentification */
+  function _handleAuthenticationError(error: any, context: string): never {
+    console.error(`Authentication error in ${context}:`, error);
+    const apiErrorMessage =
+      error.response?.data?.message || error.response?.data?.data?.message;
+    const apiErrorCode = error.response?.data?.data?.code;
 
-  async function fetchUser(userId: number | string) {
-    try {
-      const response = await apiStore.api.get(`/users/${userId}`);
-      const user = UserModel.fromAPI(response.data.data);
-      const index = users.value.findIndex((u) => u.id === user.id);
-      if (index !== -1) {
-        users.value[index] = user;
-      } else {
-        users.value.push(user);
-      }
-      return user;
-    } catch (error) {
-      throw new ServerError('users', 'fetchUser', error, { userId });
-    }
-  }
-
-  async function fetchCurrentUser() {
-    try {
-      const response = await apiStore.api.get('/users/me');
-      const user = UserModel.fromAPI(response.data.data);
-      idCurrentUser.value = user.id;
-      const index = users.value.findIndex((u) => u.id === user.id);
-      if (index !== -1) {
-        users.value[index] = user;
-      } else {
-        users.value.push(user);
-      }
-      return user;
-    } catch (error) {
-      throw new ServerError('users', 'fetchCurrentUser', error);
-    }
-  }
-
-  async function login({ email, password }) {
-    if (!email || !password) {
-      throw new Error('Bad credentials');
-    }
-    try {
-      await apiStore.api.post('/auth/login', { data: { email, password } });
-      await fetchCurrentUser();
-      return true;
-    } catch (error) {
-      if (error.message === 'Internal only') {
-        throw 'INTERNAL_ONLY';
-      }
-      handleAuthenticationError(error);
-    }
-  }
-
-  async function relogin() {
-    if (hasValidCredentials()) {
-      const credentials = getCredentials();
-      await login(credentials);
-      return true;
-    }
-    throw "Can't login";
-  }
-
-  async function logout() {
-    try {
-      await apiStore.api.post('/auth/logout');
-      idCurrentUser.value = null;
-      users.value = [];
-      fetched.value = false;
-    } catch (error) {
-      throw new ServerError('users', 'logout', error);
-    }
-  }
-
-  function grantUser(user: UserModel) {
-    if (!user) throw 'User not defined';
-    sessionStorage.setItem('user', JSON.stringify(user));
-    const userInstance = new UserModel(user);
-    const index = users.value.findIndex((u) => u.id === userInstance.id);
-    if (index !== -1) {
-      users.value[index] = userInstance;
+    if (error.response?.status === 401) {
+      logout();
+      throw apiErrorMessage || 'BAD_CREDENTIALS';
+    } else if ([400, 403, 422].includes(error.response?.status)) {
+      throw apiErrorCode || apiErrorMessage || 'AUTH_VALIDATION_ERROR';
     } else {
-      users.value.push(userInstance);
-    }
-    const lang = user.preferences?.language;
-    if (lang) {
-      updateActiveLanguage(lang.toLowerCase(), false);
-    }
-    idCurrentUser.value = user.id;
-  }
-
-  async function resetPassword({ email }: { email: string }) {
-    try {
-      await apiStore.api.post('/api/v1/password/reset', {
-        data: { email },
+      throw new ServerError('users', context, error, {
+        message: apiErrorMessage,
       });
-    } catch (error) {
-      handleAuthenticationError(error);
     }
   }
 
-  async function changePassword({
+  function _setCurrentUser(user: UserModel | null): void {
+    currentUser.value = user;
+    if (user) {
+      _updateUserInMap(user);
+
+      if (user.preferences?.language) {
+        updateActiveLanguage(user.preferences.language.toLowerCase(), false);
+      }
+    }
+  }
+
+  // Actions - Authentification
+  /**
+   * Tente de récupérer l'utilisateur courant basé sur le token stocké.
+   * À appeler au démarrage de l'application.
+   */
+  async function initializeAuth(): Promise<void> {
+    if (authStatusChecked.value) return;
+
+    const storedToken = storageService.getAuthToken();
+    if (storedToken) {
+      apiStore.setAuthToken(storedToken);
+      try {
+        console.log('Initializing auth: Found token, fetching current user...');
+        const response = await apiStore.api.get('/api/v1/users/me');
+        const user = UserModel.fromAPI(response.data.data);
+        _setCurrentUser(user);
+        console.log('Initializing auth: User fetched successfully.');
+      } catch (error: any) {
+        console.error(
+          'Initializing auth: Failed to fetch user with stored token.',
+          error
+        );
+        if (
+          error.response?.status === 401 ||
+          error.message === 'BAD_CREDENTIALS'
+        ) {
+          storageService.removeAuthToken();
+          apiStore.clearAuthToken();
+          _setCurrentUser(null);
+        } else {
+          console.error('Initialization failed due to non-auth error:', error);
+        }
+      }
+    } else {
+      console.log('Initializing auth: No token found.');
+      _setCurrentUser(null);
+    }
+    authStatusChecked.value = true;
+  }
+
+  async function login({
     email,
     password,
-    newPassword,
   }: {
     email: string;
     password: string;
-    newPassword: string;
-  }) {
+  }): Promise<boolean> {
+    if (!email || !password) {
+      throw new Error('Email and password are required');
+    }
     try {
-      await apiStore.api.post('/api/v1/password/update', {
-        data: { email, password, newPassword },
+      const response = await apiStore.api.post('/api/v1/auth/login', {
+        data: { email, password },
+      });
+
+      const tokenFromResponse =
+        response.data?.token || response.data?.data?.token;
+      if (tokenFromResponse) {
+        storageService.setAuthToken(tokenFromResponse);
+        apiStore.setAuthToken(tokenFromResponse);
+      } else {
+        console.warn(
+          'Login successful, but no token received in response body. Assuming cookie-based session or stateless API.'
+        );
+      }
+
+      await fetchCurrentUser();
+      return true;
+    } catch (error) {
+      _handleAuthenticationError(error, 'login');
+    }
+  }
+
+  async function logout(): Promise<void> {
+    if (isLoggingOut.value) return;
+
+    isLoggingOut.value = true;
+    console.warn('Logging out...');
+
+    try {
+      await apiStore.api.post('/api/v1/auth/logout', {
         skipAuthErrorInterceptor: true,
       });
     } catch (error) {
-      handleAuthenticationError(error);
+      console.error('Logout API call failed (ignoring):', error);
+    } finally {
+      storageService.removeAuthToken();
+      apiStore.clearAuthToken();
+      _setCurrentUser(null);
+      usersMap.value.clear();
+      usersFetched.value = false;
+      isLoggingOut.value = false;
+      authStatusChecked.value = false;
+      console.warn('Logged out.');
+    }
+  }
+
+  async function resetPassword({ email }: { email: string }): Promise<void> {
+    try {
+      await apiStore.api.post('/api/v1/auth/password/reset', {
+        data: { email },
+      });
+    } catch (error) {
+      _handleAuthenticationError(error, 'resetPassword');
     }
   }
 
   async function confirmResetPassword({
-    email,
     password,
     code,
   }: {
-    email: string;
     password: string;
     code: string;
-  }) {
+  }): Promise<void> {
     try {
-      await apiStore.api.post(`/api/v1/password/reset/${code}/confirm`, {
-        data: { email, password },
+      await apiStore.api.post(`/api/v1/auth/password/reset/${code}/confirm`, {
+        data: { password },
       });
     } catch (error) {
-      handleAuthenticationError(error);
+      _handleAuthenticationError(error, 'confirmResetPassword');
     }
   }
 
-  async function passwordConfirm({ code }: { code: string }) {
+  async function passwordConfirm({ code }: { code: string }): Promise<void> {
     try {
-      await apiStore.api.post(`/api/v1/password/${code}/confirm`, {});
+      await apiStore.api.post(`/api/v1/auth/password/${code}/confirm`);
     } catch (error) {
-      throw new ServerError('users', 'passwordConfirm', error, {});
+      throw new ServerError('users', 'passwordConfirm', error, { code });
     }
   }
 
-  /**
-   * Recherche un utilisateur par id numérique ou email (route RESTful backend)
-   * @param identifier string | number (id ou email)
-   * @returns UserModel | null
-   */
-  async function searchUser(identifier: string | number): Promise<UserModel | null> {
+  async function fetchCurrentUser(): Promise<UserModel | null> {
     try {
-      const response = await apiStore.api.get(`/users/${identifier}`);
-      return response.data && response.data.data ? UserModel.fromAPI(response.data.data) : null;
+      const response = await apiStore.api.get('/api/v1/users/me');
+      const user = UserModel.fromAPI(response.data.data);
+      _setCurrentUser(user);
+      return user;
     } catch (error) {
-      if (error.response?.status === 404) {
-        return null;
+      console.error('Failed to fetch current user:', error);
+      storageService.removeAuthToken();
+      apiStore.clearAuthToken();
+      _setCurrentUser(null);
+      throw new ServerError('users', 'fetchCurrentUser', error);
+    }
+  }
+
+  async function fetchUser(userId: number | string): Promise<UserModel | null> {
+    try {
+      const response = await apiStore.api.get(`/api/v1/users/${userId}`);
+      const user = UserModel.fromAPI(response.data.data);
+      _updateUserInMap(user);
+      if (currentUser.value && currentUser.value.id === user.id) {
+        _setCurrentUser(user);
       }
-      if (error.response?.status === 403) {
+      return user;
+    } catch (error: any) {
+      if (error.response?.status === 404) return null;
+      throw new ServerError('users', 'fetchUser', error, { userId });
+    }
+  }
+
+  async function fetchUsers(): Promise<void> {
+    try {
+      const response = await apiStore.api.get('/api/v1/users');
+      const fetchedUsers = response.data.data.map((u: any) =>
+        UserModel.fromAPI(u)
+      );
+      fetchedUsers.forEach(_updateUserInMap);
+      usersFetched.value = true;
+    } catch (error) {
+      throw new ServerError('users', 'fetchUsers', error);
+    }
+  }
+
+  const debouncedFetchUsers = debounce(fetchUsers, 300);
+  async function ensureUsersFetched(): Promise<void> {
+    if (!usersFetched.value) {
+      await debouncedFetchUsers();
+    }
+  }
+
+  async function searchUser(
+    identifier: string | number
+  ): Promise<UserModel | null> {
+    try {
+      if (typeof identifier === 'number' || !isNaN(Number(identifier))) {
+        const cachedUser = usersMap.value.get(identifier);
+        if (cachedUser) return cachedUser;
+      }
+      const response = await apiStore.api.get(`/api/v1/users/${identifier}`);
+      if (response.data?.data) {
+        const user = UserModel.fromAPI(response.data.data);
+        _updateUserInMap(user);
+        return user;
+      }
+      return null;
+    } catch (error: any) {
+      if ([403, 404].includes(error.response?.status)) {
         return null;
       }
       throw new ServerError('users', 'searchUser', error, { identifier });
     }
   }
 
-  async function updateUser(user: UserModel) {
+  async function updateUser(user: UserModel): Promise<UserModel> {
+    const dataToSend = user.toAPI ? user.toAPI() : { ...user };
+
+    delete dataToSend.id;
+    delete dataToSend.createdAt;
+    delete dataToSend.updatedAt;
+
     try {
-      await apiStore.api.put(`/users/${user.id}`, { data: user.toAPI() });
-      user.updatedAt = new Date();
-      const index = users.value.findIndex((u) => u.id === user.id);
-      if (index !== -1) {
-        users.value[index] = user;
+      const response = await apiStore.api.put(`/api/v1/users/${user.id}`, {
+        data: dataToSend,
+      });
+      const updatedUser = UserModel.fromAPI(response.data.data);
+      _updateUserInMap(updatedUser);
+
+      if (currentUser.value && currentUser.value.id === updatedUser.id) {
+        _setCurrentUser(updatedUser);
       }
+      return updatedUser;
     } catch (error) {
-      throw new ServerError('users', 'updateUser', error, { user });
+      throw new ServerError('users', 'updateUser', error, { userId: user.id });
     }
   }
 
-  async function setPreference({ key, value }) {
-    try {
-      if (!currentUser.value) return;
-      const clonedUser = currentUser.value.clone();
-      clonedUser.setPreference(key, value);
-      clonedUser.updatedAt = new Date();
-      const index = users.value.findIndex((u) => u.id === clonedUser.id);
-      if (index !== -1) {
-        users.value[index] = clonedUser;
-      }
-      await apiStore.api.put(
-        `/users/${clonedUser.id}/preferences/${key}`,
-        { data: { value } }
-      );
-    } catch (error) {
-      throw new ServerError('users', 'setPreference', error, { key, value });
-    }
-  }
+  async function addUser(userData: IUser): Promise<UserModel> {
+    const dataToSend: Partial<IUser> = {
+      email: userData.email,
+      password: userData.password,
+      name: userData.name,
+      surname: userData.surname,
+      level: userData.level,
+      internalLevel: userData.internalLevel,
+      internal: userData.internal,
+      color: userData.color,
+      preferences: userData.preferences,
+      permissions: userData.permissions,
+      permissionsExpireAt: userData.permissionsExpireAt,
+    };
 
-  async function addUser({ email, language, color, name, surname, password }) {
+    if (!dataToSend.password) {
+      console.warn('Password not provided for new user. API might require it.');
+    }
+
     try {
-      const data: Partial<UserModel> & { password?: string } = {
-        email,
-        internal: internal.value,
-        level: 3,
-        name,
-        color,
-        surname,
-        password,
-        preferences: { language },
-      };
-      const response = await apiStore.api.post('/users', { data });
+      const response = await apiStore.api.post('/api/v1/users', {
+        data: dataToSend,
+      });
       const newUser = UserModel.fromAPI(response.data.data);
-      users.value.push(newUser);
-      return newUser.id;
-    } catch (err) {
-      throw new ServerError('users', 'addUser', err, { email, language, color, name, surname });
+      _updateUserInMap(newUser);
+      return newUser;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(
+          `Erreur lors de l'ajout : ${error.response.data.message}`
+        );
+      }
+      throw new ServerError('users', 'addUser', error, {
+        email: userData.email,
+      });
     }
   }
 
-  // Supprime un utilisateur par son id
-  async function deleteUser(userId: number | string) {
-    if (!userId) throw new Error('Aucun userId fourni');
+  async function deleteUser(userId: number | string): Promise<void> {
+    if (!userId) throw new Error('User ID is required');
     try {
-      await apiStore.api.delete(`/users/${userId}`);
+      await apiStore.api.delete(`/api/v1/users/${userId}`);
+      const deleted = usersMap.value.delete(userId);
+      if (deleted) {
+        console.log(`User ${userId} deleted from local map.`);
+      }
+      if (currentUser.value && currentUser.value.id === userId) {
+        await logout();
+      }
     } catch (error) {
       throw new ServerError('users', 'deleteUser', error, { userId });
     }
-    if (currentUser.value && currentUser.value.id === userId) {
-      await logout();
+  }
+
+  async function setPreference({
+    key,
+    value,
+  }: {
+    key: string;
+    value: any;
+  }): Promise<void> {
+    if (!currentUser.value) {
+      console.warn('Cannot set preference: no user logged in.');
+      return;
+    }
+    const userId = currentUser.value.id;
+    try {
+      await apiStore.api.put(`/api/v1/users/${userId}/preferences/${key}`, {
+        data: { value },
+      });
+      const updatedUser = currentUser.value.clone();
+      updatedUser.setPreference(key, value);
+      updatedUser.updatedAt = new Date();
+      _setCurrentUser(updatedUser);
+
+      if (key === 'language' && typeof value === 'string') {
+        updateActiveLanguage(value.toLowerCase(), false);
+      }
+    } catch (error) {
+      throw new ServerError('users', 'setPreference', error, {
+        userId,
+        key,
+        value,
+      });
     }
   }
 
   return {
-    idCurrentUser,
-    fetched,
-    isLoggingOut,
+    isAuthenticated,
     currentUser,
-    id: idCurrentUser,
-    levelForUser,
+    currentUserId,
+    level,
     email,
     token,
-    securityToken,
-    isConnected,
     internal,
     language,
-    getAll,
-    getAdmins,
     getInitial,
-    getUser,
+    getAllUsers,
+    getAdminUsers,
+    usersFetched,
+    authStatusChecked,
     userColorFromId,
-    ensureUsers,
-    fetchUsers,
-    fetchUser,
+    getUserById,
+    initializeAuth,
     login,
-    relogin,
     logout,
-    grantUser,
     resetPassword,
-    changePassword,
     confirmResetPassword,
     passwordConfirm,
+    fetchCurrentUser,
+    fetchUser,
+    fetchUsers,
+    ensureUsersFetched,
     searchUser,
     updateUser,
-    setPreference,
     addUser,
     deleteUser,
+    setPreference,
   };
 });

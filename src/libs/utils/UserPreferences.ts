@@ -10,8 +10,12 @@ export async function setUserPreference(
   value: any
 ): Promise<void> {
   const usersStore = useUsersStore();
-  const { isConnected, isLoggingOut } = usersStore;
-  if (!isConnected || isLoggingOut) {
+  // Utiliser la propriété computed 'isAuthenticated' du store réécrit
+  const { isAuthenticated } = usersStore;
+  // La vérification isLoggingOut n'est plus nécessaire/disponible ici.
+  // Si l'utilisateur n'est pas authentifié, on ne peut pas définir de préférence.
+  if (!isAuthenticated) {
+    console.warn('Attempted to set preference while not authenticated.');
     return;
   }
   try {

@@ -3,9 +3,8 @@
     <u-list
       list-key="users"
       :loading="loading"
-      :data="filteredUsers"
+      :data="usersToDisplay"
       :default-sort="{ prop: 'name', order: 'ascending' }"
-      :selectable="isUserAllowed('user', 'write')"
       :list-actions="listActions"
       :search-function="searchUser"
       entity-icon="icon-account"
@@ -100,7 +99,7 @@
         :filter-config="{ shortcuts: 'past', defaultEnd: new Date() }"
       >
         <template #default="{ row }">
-          {{ $d(new Date(row.created_time), 'middle') }}
+          {{ $d(new Date(row.createdAt), 'middle') }}
         </template>
       </u-list-column>
 
@@ -117,7 +116,7 @@
         :filter-config="{ shortcuts: 'past', defaultEnd: new Date() }"
       >
         <template #default="{ row }">
-          {{ $d(new Date(row.updated_time), 'middle') }}
+          {{ $d(new Date(row.updatedAt), 'middle') }}
         </template>
       </u-list-column>
 
@@ -154,9 +153,10 @@
   } from '@/modules/common';
   import { useNotification } from '@/composables/notfication';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { usersList } from '../../../../_resources/stories/_data/users-list';
+  // import { usersList } from '../../../../_resources/stories/_data/users-list';
   // import { useAuthorisationsStore } from '@/stores/modules/authorisations/authorisations';
   import i18n from '@/i18n';
+  // Supprimer l'import inutile de useApiStore
 
   const loading = ref(true);
   const usersStore = useUsersStore();
@@ -165,28 +165,15 @@
 
   const router = useRouter();
 
-  const users = ref([]);
-
-  /* Pour l'exemple, nous utilisons usersStore.getAll comme liste d'utilisateurs
-  const users = ref([]);
-  usersStore.getAll().then((res: any[]) => {
-    users.value = res;
-  });
-
-  */
+  // Supprimer la variable locale 'users' et l'appel fetchUsers().then() incorrect
 
   // On suppose qu'une fonction globale ou store permet de savoir si l'utilisateur courant a la permission
-  function isUserAllowed(resource: string, action: string): boolean {
-    // Remplacer par votre logique réelle
-    return true;
-  }
 
-  const filteredUsers = computed(() =>
-    users.value.filter((user: any) => {
-      const authorisation = user;
-      return !!authorisation && authorisation.level > 0;
-    })
-  );
+  // Utiliser directement usersStore.getAll et gérer le cas initial
+  const usersToDisplay = computed(() => {
+    // Retourner directement la liste du store. Le composant UList gère le cas où elle est vide.
+    return usersStore.getAll || [];
+  });
 
   // Actions listées dans le header du UList
   const listActions = computed(() => [
@@ -281,8 +268,8 @@
         type: 'success',
       });
     }
-    users.value = usersList;
-    // await usersStore.getAll();
+    // Assurer que les utilisateurs sont chargés
+    await usersStore.fetchUsers(); // Utiliser ensureUsers pour éviter les appels multiples si déjà fait
     loading.value = false;
   });
 </script>

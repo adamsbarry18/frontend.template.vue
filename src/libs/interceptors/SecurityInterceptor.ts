@@ -4,13 +4,10 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { BaseInterceptor } from './BaseInterceptor';
-import { useRouter } from 'vue-router';
 import RootNotification from '../utils/Notification';
 import { useUsersStore } from '@/stores/modules/users/user';
 
 export class SecurityInterceptor extends BaseInterceptor {
-  protected readonly $router = useRouter();
-
   /** Retourne le type de l'intercepteur */
   getType(): string {
     return 'SecurityInterceptor';
@@ -114,12 +111,11 @@ export class SecurityInterceptor extends BaseInterceptor {
     config: InternalAxiosRequestConfig
   ): InternalAxiosRequestConfig {
     const usersStore = useUsersStore();
-    const { language, token, securityToken } = usersStore;
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImxldmVsIjo1LCJpbnRlcm5hbCI6dHJ1ZSwiaWF0IjoxNzQ1NzUyMzY5LCJleHAiOjE3NDgzNDQzNjl9.m3mM1ECXYCKJZW8HGohrVoZJwwsKLjmGAs05_G_CEKo';
+    const { language } = usersStore;
     if (token) {
-      config.headers['X-API-key'] = token;
-    }
-    if (securityToken?.access_token) {
-      config.headers.Authorization = `Bearer ${securityToken.access_token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     config.headers['Content-type'] = 'application/json';
     config.headers['X-Requested-With'] = 'XMLHttpRequest';

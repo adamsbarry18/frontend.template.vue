@@ -27,7 +27,7 @@ async function login(userCredentials: any): Promise<void> {
 
 // This logic will run when the module is imported
 try {
-  let userCredentialsCookie = getCookie(CREDS_KEY);
+  const userCredentialsCookie = getCookie(CREDS_KEY);
   if (userCredentialsCookie && userCredentialsCookie !== '') {
     try {
       const userCredentials = JSON.parse(

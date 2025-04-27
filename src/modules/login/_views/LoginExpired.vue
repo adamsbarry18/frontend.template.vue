@@ -1,8 +1,10 @@
 <template>
   <home class="login-expired">
-    <h1 slot="title">
-      {{ $t('login.change.expired.pwd.title') }}
-    </h1>
+    <template v-slot:title>
+      <h1>
+        {{ $t('login.change.expired.pwd.title') }}
+      </h1>
+    </template>
     <form class="form" @submit.prevent="onSubmit">
       <u-form-input
         v-model="email"
