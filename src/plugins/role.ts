@@ -1,4 +1,4 @@
-import { useAuthorisationsStore } from '@/stores/modules/authorisations/authorisations';
+import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
 import type { App } from 'vue';
 
 export default {

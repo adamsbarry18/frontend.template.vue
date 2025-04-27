@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, withDefaults, useSlots } from 'vue';
+  import { computed, useSlots } from 'vue';
   import { UProgressBar, UInfo } from '@/modules/common';
   import { numberFormat } from '@/libs/utils/Number';
 

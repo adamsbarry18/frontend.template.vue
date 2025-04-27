@@ -7,57 +7,80 @@ const sortById = (a: UserModel, b: UserModel): number => {
   return Number(a.id) - Number(b.id);
 };
 
-export interface IUser {
-  id: number | string | null;
-  email: string;
-  language: string;
-  level: number | null;
-  name: string;
-  surname: string;
-  token: string | null;
-  security: any;
-  internal: boolean;
-  created_time: Date | null;
-  passwordStatus: string;
-  password_time: Date | null;
-  updated_time: Date | null;
-  color: string | null;
-  preferences: Record<string, any> | null;
+export enum PasswordStatus {
+  ACTIVE = 'ACTIVE',
+  VALIDATING = 'VALIDATING',
+  EXPIRED = 'EXPIRED',
 }
 
-export default class UserModel implements IUser {
-  id: number | string | null;
+export interface IUser {
+  id: number;
+  uid: string | null;
   email: string;
-  language: string;
-  level: number | null;
-  name: string;
-  surname: string;
-  token: string | null;
-  security: any;
+  name: string | null;
+  surname: string | null;
+  level: number;
+  internalLevel: number;
   internal: boolean;
-  created_time: Date | null;
-  passwordStatus: string;
-  password_time: Date | null;
-  updated_time: Date | null;
   color: string | null;
+  passwordStatus: PasswordStatus;
+  createdAt: string | null;
+  updatedAt: string | null;
+  passwordUpdatedAt: string | null;
   preferences: Record<string, any> | null;
+  permissionsExpireAt: string | null;
+  authorisationOverrides: string | null;
+  token?: string;
+  security?: string;
 
-  constructor(data?: Partial<IUser>) {
-    this.id = data?.id ?? null;
+}
+
+
+export default class UserModel {
+  id: number;
+  uid: string | null;
+  email: string;
+  name: string | null;
+  surname: string | null;
+  level: number;
+  internalLevel: number;
+  internal: boolean;
+  color: string | null;
+  passwordStatus: PasswordStatus;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  passwordUpdatedAt: Date | null;
+  preferences: Record<string, any> | null;
+  permissionsExpireAt: Date | null;
+  authorisationOverrides: string | null;
+
+  // Jetons d'authentification frontend uniquement
+  token?: string;
+  security?: string;
+
+
+  /**
+   * Construct a UserModel from partial backend data (dates as string or Date)
+   */
+  constructor(data?: Partial<UserModel>) {
+    this.id = data?.id ?? 0;
+    this.uid = data?.uid ?? null;
     this.email = data?.email ?? '';
-    this.language = data?.language ?? 'en';
-    this.level = data?.level ?? null;
-    this.name = data?.name ?? '';
-    this.surname = data?.surname ?? '';
-    this.token = data?.token ?? null;
-    this.security = data?.security ?? null;
+    this.name = data?.name ?? null;
+    this.surname = data?.surname ?? null;
+    this.level = data?.level ?? 0;
+    this.internalLevel = data?.internalLevel ?? 0;
     this.internal = data?.internal ?? false;
-    this.created_time = data?.created_time ?? null;
-    this.passwordStatus = data?.passwordStatus ?? '';
-    this.password_time = data?.password_time ?? null;
-    this.updated_time = data?.updated_time ?? null;
     this.color = data?.color ?? null;
+    this.passwordStatus = data?.passwordStatus ?? PasswordStatus.ACTIVE;
+    this.createdAt = data?.createdAt ? dayjs(data.createdAt).toDate() : null;
+    this.updatedAt = data?.updatedAt ? dayjs(data.updatedAt).toDate() : null;
+    this.passwordUpdatedAt = data?.passwordUpdatedAt ? dayjs(data.passwordUpdatedAt).toDate() : null;
     this.preferences = data?.preferences ?? null;
+    this.permissionsExpireAt = data?.permissionsExpireAt ? dayjs(data.permissionsExpireAt).toDate() : null;
+    this.authorisationOverrides = data?.authorisationOverrides ?? null;
+    this.token = data?.token;
+    this.security = data?.security;
   }
 
   static sort(a: UserModel, b: UserModel): number {
@@ -68,41 +91,52 @@ export default class UserModel implements IUser {
    * Transforme un objet brut issu de l'API en instance de UserModel.
    * Ici, on ne traite plus de partitions.
    */
-  static fromAPI(user: any): UserModel {
-    const res = { ...user };
-    // Conversion des dates
-    if (res.created_time) res.created_time = dayjs(res.created_time).toDate();
-    if (res.updated_time) res.updated_time = dayjs(res.updated_time).toDate();
-    if (res.password_time)
-      res.password_time = dayjs(res.password_time).toDate();
-    return new UserModel(res);
+  /**
+   * Transform API object into UserModel instance (dates as string or Date)
+   */
+  static fromAPI(user: Partial<IUser>): UserModel {
+    return new UserModel({
+      ...user,
+      createdAt: user.createdAt ? dayjs(user.createdAt).toDate() : null,
+      updatedAt: user.updatedAt ? dayjs(user.updatedAt).toDate() : null,
+      passwordUpdatedAt: user.passwordUpdatedAt ? dayjs(user.passwordUpdatedAt).toDate() : null,
+      permissionsExpireAt: user.permissionsExpireAt ? dayjs(user.permissionsExpireAt).toDate() : null,
+      authorisationOverrides: user.authorisationOverrides ?? null,
+    });
   }
 
+  /**
+   * Returns the full name (handles null/undefined)
+   */
   get fullName(): string {
-    return `${this.name} ${this.surname}`.trim();
+    return [this.name, this.surname].filter(Boolean).join(' ').trim();
   }
 
   /**
    * Prépare l'objet pour l'envoi vers l'API, en supprimant certains champs.
    */
+  /**
+   * Prepare object for API (convert dates to ISO string, remove frontend-only fields)
+   */
   toAPI(): Partial<IUser> {
-    const res: any = { ...this };
-    if (res.id === null) {
-      delete res.id;
-    }
-    const clearFields = [
-      'created_time',
-      'updated_time',
-      'passwordStatus',
-      'password_time',
-      'token',
-      'security',
-      'level',
-    ];
-    for (const field of clearFields) {
-      delete res[field];
-    }
-    return res;
+    return {
+      id: this.id,
+      uid: this.uid,
+      email: this.email,
+      name: this.name,
+      surname: this.surname,
+      level: this.level,
+      internalLevel: this.internalLevel,
+      internal: this.internal,
+      color: this.color,
+      passwordStatus: this.passwordStatus,
+      createdAt: this.createdAt ? this.createdAt.toISOString() : null,
+      updatedAt: this.updatedAt ? this.updatedAt.toISOString() : null,
+      passwordUpdatedAt: this.passwordUpdatedAt ? this.passwordUpdatedAt.toISOString() : null,
+      preferences: this.preferences,
+      permissionsExpireAt: this.permissionsExpireAt ? this.permissionsExpireAt.toISOString() : null,
+      authorisationOverrides: this.authorisationOverrides ?? null,
+    };
   }
 
   clone(): UserModel {
@@ -120,26 +154,39 @@ export default class UserModel implements IUser {
     this.preferences[key] = value;
   }
 
+  /**
+   * Validate the user model (basic checks)
+   */
   isValid(): boolean {
     if (!isValidEmail(this.email)) return false;
-    const requiredFields = ['language', 'name', 'surname'];
-    for (const field of requiredFields) {
-      if (
-        !this[field] ||
-        (typeof this[field] === 'string' && this[field].trim() === '')
-      ) {
-        return false;
-      }
-    }
+    if (!this.name || !this.name.trim()) return false;
+    if (!this.level || this.level < 0) return false;
     return true;
   }
 
+  /**
+   * Reset user to default values (except id)
+   */
   reset(): void {
-    this.id = null;
-    this.name = '';
-    this.surname = '';
-    this.language = 'en';
+    this.name = null;
+    this.surname = null;
+    this.level = 0;
+    this.internalLevel = 0;
     this.internal = false;
-    this.level = 2;
+    this.color = null;
+    this.passwordStatus = PasswordStatus.ACTIVE;
+    this.createdAt = null;
+    this.updatedAt = null;
+    this.passwordUpdatedAt = null;
+    this.preferences = null;
+    this.permissionsExpireAt = null;
+  }
+
+  /**
+   * Returns true if the user's permissions have expired
+   */
+  hasExpired(): boolean {
+    if (!this.permissionsExpireAt) return false;
+    return dayjs().isAfter(dayjs(this.permissionsExpireAt));
   }
 }

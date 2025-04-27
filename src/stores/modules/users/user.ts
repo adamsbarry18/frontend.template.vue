@@ -5,12 +5,12 @@ import { useApiStore } from '@/stores/modules/api';
 import { debounce } from '@/libs/utils/Debounce';
 import { updateActiveLanguage } from '@/libs/utils/Language';
 import { ServerError } from '@/libs/utils/Errors';
-import { useAuthorisationsStore } from '../authorisations/authorisations';
+import { useAuthorisationsStore } from '../auth/authorisations';
 
 const LEVEL_USER = {
-  EXTERNAL: 0,
-  READER: 1,
-  USER: 2,
+  EXTERNAL: 1,
+  READER: 2,
+  USER: 3,
   INTEGRATOR: 4,
   ADMIN: 5,
 };
@@ -50,7 +50,7 @@ export const useUsersStore = defineStore('users', () => {
     currentUser.value ? currentUser.value.internal : false
   );
   const language = computed(() =>
-    currentUser.value ? currentUser.value.language.toLowerCase() : 'en'
+    currentUser.value?.preferences?.language?.toLowerCase?.() || 'en'
   );
 
   const getAll = computed(() => users.value);
@@ -110,7 +110,7 @@ export const useUsersStore = defineStore('users', () => {
     } else if ([400, 403, 422].includes(error.response?.status)) {
       throw error.response.data ? error.response.data.data.code : error;
     } else {
-      throw error;
+      throw new ServerError('users', 'handleAuthenticationError', error);
     }
   }
 
@@ -136,9 +136,8 @@ export const useUsersStore = defineStore('users', () => {
 
   async function fetchUsers() {
     try {
-      const response = await apiStore.api.get('api/v1/users');
-      // Convertir les utilisateurs reçus en instances de UserModel
-      users.value = response.data.data.map((u) => UserModel.fromAPI(u));
+      const response = await apiStore.api.get('/users');
+      users.value = response.data.data.map((u: any) => UserModel.fromAPI(u));
       fetched.value = true;
     } catch (error) {
       throw new ServerError('users', 'fetchUsers', error, {});
@@ -147,17 +146,34 @@ export const useUsersStore = defineStore('users', () => {
 
   async function fetchUser(userId: number | string) {
     try {
-      const response = await apiStore.api.get(`api/v1/users/${userId}`);
-      const userData = response.data.data;
-      const userInstance = UserModel.fromAPI(userData);
-      const index = users.value.findIndex((u) => u.id === userInstance.id);
+      const response = await apiStore.api.get(`/users/${userId}`);
+      const user = UserModel.fromAPI(response.data.data);
+      const index = users.value.findIndex((u) => u.id === user.id);
       if (index !== -1) {
-        users.value[index] = userInstance;
+        users.value[index] = user;
       } else {
-        users.value.push(userInstance);
+        users.value.push(user);
       }
+      return user;
     } catch (error) {
-      throw new ServerError('users', 'fetchUser', error, {});
+      throw new ServerError('users', 'fetchUser', error, { userId });
+    }
+  }
+
+  async function fetchCurrentUser() {
+    try {
+      const response = await apiStore.api.get('/users/me');
+      const user = UserModel.fromAPI(response.data.data);
+      idCurrentUser.value = user.id;
+      const index = users.value.findIndex((u) => u.id === user.id);
+      if (index !== -1) {
+        users.value[index] = user;
+      } else {
+        users.value.push(user);
+      }
+      return user;
+    } catch (error) {
+      throw new ServerError('users', 'fetchCurrentUser', error);
     }
   }
 
@@ -166,11 +182,9 @@ export const useUsersStore = defineStore('users', () => {
       throw new Error('Bad credentials');
     }
     try {
-      const { data } = await apiStore.api.post('/api/v1/login', {
-        data: { email, password },
-        skipAuthErrorInterceptor: true,
-      });
-      await grantUser(data.data);
+      await apiStore.api.post('/auth/login', { data: { email, password } });
+      await fetchCurrentUser();
+      return true;
     } catch (error) {
       if (error.message === 'Internal only') {
         throw 'INTERNAL_ONLY';
@@ -190,18 +204,12 @@ export const useUsersStore = defineStore('users', () => {
 
   async function logout() {
     try {
-      if (!isLoggingOut.value) {
-        isLoggingOut.value = true;
-        if (token.value || securityToken.value) {
-          await apiStore.api.delete('/api/v1/logout', {
-            skipAuthErrorInterceptor: true,
-          });
-        }
-      }
-    } catch (err) {
-      console.error('logout error', err);
-    } finally {
-      isLoggingOut.value = false;
+      await apiStore.api.post('/auth/logout');
+      idCurrentUser.value = null;
+      users.value = [];
+      fetched.value = false;
+    } catch (error) {
+      throw new ServerError('users', 'logout', error);
     }
   }
 
@@ -215,8 +223,9 @@ export const useUsersStore = defineStore('users', () => {
     } else {
       users.value.push(userInstance);
     }
-    if (user.language) {
-      updateActiveLanguage(user.language.toLowerCase(), false);
+    const lang = user.preferences?.language;
+    if (lang) {
+      updateActiveLanguage(lang.toLowerCase(), false);
     }
     idCurrentUser.value = user.id;
   }
@@ -253,14 +262,14 @@ export const useUsersStore = defineStore('users', () => {
   async function confirmResetPassword({
     email,
     password,
-    token,
+    code,
   }: {
     email: string;
     password: string;
-    token: string;
+    code: string;
   }) {
     try {
-      await apiStore.api.post(`/api/v1/password/reset/${token}/confirm`, {
+      await apiStore.api.post(`/api/v1/password/reset/${code}/confirm`, {
         data: { email, password },
       });
     } catch (error) {
@@ -276,26 +285,30 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function searchUserFromEmail({ email }: { email: string }) {
+  /**
+   * Recherche un utilisateur par id numérique ou email (route RESTful backend)
+   * @param identifier string | number (id ou email)
+   * @returns UserModel | null
+   */
+  async function searchUser(identifier: string | number): Promise<UserModel | null> {
     try {
-      const response = await apiStore.api.get('/api/v1/users/search', {
-        params: { email },
-      });
-      return response.data.data;
+      const response = await apiStore.api.get(`/users/${identifier}`);
+      return response.data && response.data.data ? UserModel.fromAPI(response.data.data) : null;
     } catch (error) {
       if (error.response?.status === 404) {
         return null;
       }
-      throw error;
+      if (error.response?.status === 403) {
+        return null;
+      }
+      throw new ServerError('users', 'searchUser', error, { identifier });
     }
   }
 
   async function updateUser(user: UserModel) {
     try {
-      await apiStore.api.put(`/api/v1/users/${user.id}`, {
-        data: user.toAPI(),
-      });
-      user.updated_time = new Date();
+      await apiStore.api.put(`/users/${user.id}`, { data: user.toAPI() });
+      user.updatedAt = new Date();
       const index = users.value.findIndex((u) => u.id === user.id);
       if (index !== -1) {
         users.value[index] = user;
@@ -310,19 +323,17 @@ export const useUsersStore = defineStore('users', () => {
       if (!currentUser.value) return;
       const clonedUser = currentUser.value.clone();
       clonedUser.setPreference(key, value);
-      clonedUser.updated_time = new Date();
+      clonedUser.updatedAt = new Date();
       const index = users.value.findIndex((u) => u.id === clonedUser.id);
       if (index !== -1) {
         users.value[index] = clonedUser;
       }
       await apiStore.api.put(
-        `/api/v1/users/${clonedUser.id}/preferences/${key}`,
-        {
-          data: { value },
-        }
+        `/users/${clonedUser.id}/preferences/${key}`,
+        { data: { value } }
       );
     } catch (error) {
-      throw new ServerError('users', 'setPreference', error);
+      throw new ServerError('users', 'setPreference', error, { key, value });
     }
   }
 
@@ -331,25 +342,32 @@ export const useUsersStore = defineStore('users', () => {
       const data: Partial<UserModel> & { password?: string } = {
         email,
         internal: internal.value,
-        language,
-        level: 2,
+        level: 3,
         name,
         color,
         surname,
         password,
+        preferences: { language },
       };
-      const response = await apiStore.api.post('api/v1/users', { data });
-      data.id = response.data.data;
-      const newUser = new UserModel(data);
-      const index = users.value.findIndex((u) => u.id === newUser.id);
-      if (index !== -1) {
-        users.value[index] = newUser;
-      } else {
-        users.value.push(newUser);
-      }
+      const response = await apiStore.api.post('/users', { data });
+      const newUser = UserModel.fromAPI(response.data.data);
+      users.value.push(newUser);
       return newUser.id;
     } catch (err) {
-      throw new Error(err);
+      throw new ServerError('users', 'addUser', err, { email, language, color, name, surname });
+    }
+  }
+
+  // Supprime un utilisateur par son id
+  async function deleteUser(userId: number | string) {
+    if (!userId) throw new Error('Aucun userId fourni');
+    try {
+      await apiStore.api.delete(`/users/${userId}`);
+    } catch (error) {
+      throw new ServerError('users', 'deleteUser', error, { userId });
+    }
+    if (currentUser.value && currentUser.value.id === userId) {
+      await logout();
     }
   }
 
@@ -382,9 +400,10 @@ export const useUsersStore = defineStore('users', () => {
     changePassword,
     confirmResetPassword,
     passwordConfirm,
-    searchUserFromEmail,
+    searchUser,
     updateUser,
     setPreference,
     addUser,
+    deleteUser,
   };
 });

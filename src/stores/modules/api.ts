@@ -1,6 +1,11 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { defineStore } from 'pinia';
 
+// Axios instance with baseURL from environment
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
 // Interface for class-specific options
 interface ApiRequestParams extends AxiosRequestConfig {
   skipAuthErrorInterceptor?: boolean;
@@ -18,7 +23,7 @@ class ApiClient {
     url: string,
     params: ApiRequestParams = { skipVersion: false }
   ): Promise<AxiosResponse> {
-    return await axios({ method: 'GET', url, ...params });
+    return await apiClient({ method: 'GET', url, ...params });
   }
 
   /**
@@ -31,7 +36,7 @@ class ApiClient {
     url: string,
     params: ApiRequestParams = { skipVersion: false }
   ): Promise<AxiosResponse> {
-    return await axios({ method: 'POST', url, ...params });
+    return await apiClient({ method: 'POST', url, ...params });
   }
 
   /**
@@ -44,7 +49,7 @@ class ApiClient {
     url: string,
     params: ApiRequestParams = { skipVersion: false }
   ): Promise<AxiosResponse> {
-    return await axios({ method: 'DELETE', url, ...params });
+    return await apiClient({ method: 'DELETE', url, ...params });
   }
 
   /**
@@ -57,7 +62,7 @@ class ApiClient {
     url: string,
     params: ApiRequestParams = { skipVersion: false }
   ): Promise<AxiosResponse> {
-    return await axios({ method: 'PUT', url, ...params });
+    return await apiClient({ method: 'PUT', url, ...params });
   }
 
   /**
@@ -70,7 +75,7 @@ class ApiClient {
     url: string,
     params: ApiRequestParams = { skipVersion: false }
   ): Promise<AxiosResponse> {
-    return await axios({ method: 'PATCH', url, ...params });
+    return await apiClient({ method: 'PATCH', url, ...params });
   }
 }
 

@@ -4,6 +4,9 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [vue()],
+  server: {
+    port: 8080,
+  },
   resolve: {
     dedupe: ['@storybook/client-api'],
     alias: {
