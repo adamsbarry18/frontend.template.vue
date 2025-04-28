@@ -240,7 +240,7 @@
   "login.change.expired.pwd.title": "Changer votre mot de passe expiré",
   "login.confirm.new.password": "Confirmez votre nouveau mot de passe",
   "login.email.label": "Email",
-  "login.email.placeholder": "prenom@domain",
+  "login.email.placeholder": "email@exemple.com",
   "login.email.required": "Un email est requis",
   "login.enter.new.password": "Entrez votre nouveau mot de passe",
   "login.error.password-expired": "Votre mot de passe est expiré",

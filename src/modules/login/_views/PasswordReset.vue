@@ -1,38 +1,49 @@
 <template>
-  <home class="password-reset">
-    <template v-slot:title>
-      <h1>
-        {{ $t('login.change.expired.pwd.title') }}
-      </h1>
-    </template>
-    <form class="form" @submit.prevent="onSubmit">
-      <u-form-input
-        v-model="email"
-        :label="$t('login.email.label')"
-        :placeholder="$t('login.email.placeholder')"
-        input-name="username"
-        autocomplete="email"
-        :validator="emailValidator"
-      />
+  <home class="password-reset" v-loading="isLoading">
+    <h1>
+      {{ $t('login.resetPassword.title') }}
+    </h1>
+
+    <form class="form" @submit.prevent="onSubmit" data-cy="reset-password-form">
+      <div
+        class="email-display"
+        v-if="email"
+        data-cy="reset-password-email-display"
+      >
+        {{ $t('login.resetPassword.resettingFor', { email: email }) }}
+      </div>
+
       <u-form-input
         v-model="newPassword"
         type="password"
-        :label="$t('login.enter.new.password')"
+        :label="$t('login.enterNewPassword')"
+        :placeholder="$t('login.password.placeholder')"
         :validator="newPasswordValidator"
         :rules="passwordRules"
         autocomplete="new-password"
         progress
+        :disabled="isLoading"
+        data-cy="reset-password-new-input"
       />
       <u-form-input
         v-model="confirmPassword"
         type="password"
-        :label="$t('login.confirm.new.password')"
+        :label="$t('login.confirmNewPassword')"
+        :placeholder="$t('login.password.placeholder')"
         :validator="confirmPasswordValidator"
         autocomplete="new-password"
+        :disabled="isLoading"
+        data-cy="reset-password-confirm-input"
       />
       <password-security-indicators :indicators="passwordIndicators" />
+
       <div class="form-action">
-        <u-button type="primary" :disabled="!canSubmit">
+        <u-button
+          native-type="submit"
+          type="primary"
+          :disabled="!canSubmit || isLoading"
+          data-cy="reset-password-submit-button"
+        >
           {{ $t('commons.form.confirm') }}
         </u-button>
       </div>
@@ -49,83 +60,108 @@
     getPasswordIndicators,
     isPasswordSecure,
   } from '@/libs/utils/Security';
-  import { isValidEmail } from '@/libs/utils/String';
   import { useNotification } from '@/composables/notfication';
   import Home from '../_components/Home.vue';
   import { UFormInput, UButton } from '@/modules/common';
   import PasswordSecurityIndicators from '@/modules/users/_components/PasswordSecurityIndicators.vue';
   import i18n from '@/i18n';
 
+  // --- State ---
   const email = ref('');
   const newPassword = ref('');
   const confirmPassword = ref('');
-  const token = ref('');
+  const code = ref('');
+  const isLoading = ref(false);
 
   const { $errorMsg } = useNotification();
-
   const usersStore = useUsersStore();
   const route = useRoute();
   const router = useRouter();
 
+  // --- Computed ---
   const passwordIndicators = computed(() =>
     getPasswordIndicators(newPassword.value)
   );
 
   const canSubmit = computed(() => {
     return (
-      !emailValidator(email.value) &&
+      !!code.value &&
       !newPasswordValidator(newPassword.value) &&
-      !confirmPasswordValidator(confirmPassword.value)
+      !confirmPasswordValidator(confirmPassword.value) &&
+      !isLoading.value
     );
   });
 
-  function emailValidator(value: string): string | null {
-    if (value.length === 0) return i18n.global.t('login.email.required');
-    if (!isValidEmail(value)) return i18n.global.t('login.valid.email');
-    return null;
-  }
-
-  function newPasswordValidator(value: string): string | null {
-    if (value.length === 0) return i18n.global.t('login.password.required');
+  // --- Validation ---
+  type ValidatorFn = (value: string) => string | null;
+  const newPasswordValidator: ValidatorFn = (value) => {
+    if (!value || value.length === 0)
+      return i18n.global.t('login.password.required');
     if (!isPasswordSecure(value))
-      return i18n.global.t('login-expired.password-do-not-respect-rules');
+      return i18n.global.t('login.error.passwordPolicy');
     return null;
-  }
+  };
 
-  function confirmPasswordValidator(value: string): string | null {
-    if (value.length === 0) return i18n.global.t('login.password.required');
+  const confirmPasswordValidator: ValidatorFn = (value) => {
+    if (!value || value.length === 0)
+      return i18n.global.t('login.password.required');
     if (value !== newPassword.value)
-      return i18n.global.t('login-expired.password-are-not-equal');
+      return i18n.global.t('login.error.passwordMismatch');
     return null;
-  }
+  };
 
+  // --- Methods ---
   async function onSubmit() {
+    if (!canSubmit.value) return;
+
+    isLoading.value = true;
     try {
+      console.log(
+        `Attempting password reset confirmation with code: ${code.value}`
+      );
       await usersStore.confirmResetPassword({
-        email: email.value,
         password: newPassword.value,
-        token: token.value,
+        code: code.value,
       });
-      router.push({ name: 'login', params: { updatePassword: 'true' } });
-    } catch (error) {
+      console.log('Password reset confirmation successful.');
+      router.push({ name: 'login', query: { passwordUpdated: 'true' } });
+    } catch (error: any) {
+      console.error('Password reset confirmation failed:', error);
       newPassword.value = '';
-      if (error === 'BAD_CREDENTIALS') {
-        $errorMsg(i18n.global.t('login.bad.credentials'));
-      } else if (error === 'ERR_PWD_IDENTICAL') {
-        $errorMsg(i18n.global.t('reset.error.same.password'));
-      } else {
-        $errorMsg(i18n.global.t('login-expired.notification.error'));
-        console.error('Unknown password reset error!', error);
+      confirmPassword.value = '';
+
+      const errorCode =
+        error?.response?.data?.data?.code || error?.message || 'UNKNOWN_ERROR';
+      let errorKey = `login.error.${errorCode}`;
+
+      if (errorCode === 'ERR_PWD_IDENTICAL') {
+        errorKey = 'login.error.passwordIdentical';
+      } else if (error === 'AUTH_VALIDATION_ERROR') {
+        errorKey = 'login.error.invalidCodeOrData';
       }
+
+      $errorMsg(
+        i18n.global.t(
+          errorKey,
+          i18n.global.t('login.resetPassword.errorGeneric')
+        )
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 
+  // --- Lifecycle Hooks ---
   onMounted(() => {
-    if (route.params.email) {
-      email.value = route.params.email as string;
+    if (route.params.email && typeof route.params.email === 'string') {
+      email.value = route.params.email;
     }
-    if (route.params.token) {
-      token.value = route.params.token as string;
+    if (route.params.token && typeof route.params.token === 'string') {
+      code.value = route.params.token;
+    } else {
+      console.error('Reset token missing from route parameters.');
+      $errorMsg(i18n.global.t('login.resetPassword.errorMissingToken'));
+      router.push({ name: 'login' });
     }
   });
 </script>
@@ -133,14 +169,27 @@
 <style lang="scss" scoped>
   .password-reset {
     .form {
-      width: 425px;
+      width: 100%; // Responsive
+      max-width: 450px; // Limite max
+      margin: 0 auto; // Centrer
+      padding: 20px;
+
+      .email-display {
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background-color: var(--color-neutral-200); // Fond léger
+        border-radius: 4px;
+        color: var(--color-text-secondary);
+        text-align: center;
+        font-size: var(--paragraph-03);
+      }
 
       :deep(.u-form-input) {
         margin-bottom: 24px;
       }
 
       .form-action {
-        margin-top: 12px;
+        margin-top: 20px; // Espace ajusté
         text-align: center;
       }
     }

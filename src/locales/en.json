@@ -242,7 +242,7 @@
   "login.change.expired.pwd.title": "Change your expired password",
   "login.confirm.new.password": "Confirm your new password",
   "login.email.label": "Email",
-  "login.email.placeholder": "surname@domain",
+  "login.email.placeholder": "email@example.com",
   "login.email.required": "Email is required",
   "login.enter.new.password": "Enter a new password",
   "login.error.password-expired": "Your password is expired",

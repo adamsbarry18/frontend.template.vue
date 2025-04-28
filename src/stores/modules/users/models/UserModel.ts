@@ -49,6 +49,7 @@ export default class UserModel {
   email: string;
   name: string | null;
   surname: string | null;
+  password: string | null;
   level: number;
   internalLevel: number;
   internal: boolean;
@@ -77,6 +78,7 @@ export default class UserModel {
     this.level = data?.level ?? 0;
     this.internalLevel = data?.internalLevel ?? 0;
     this.internal = data?.internal ?? false;
+    this.password = data?.password ?? null;
     this.color = data?.color ?? null;
     this.passwordStatus = data?.passwordStatus ?? PasswordStatus.ACTIVE;
     this.createdAt = data?.createdAt

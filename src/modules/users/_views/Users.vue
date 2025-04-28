@@ -164,15 +164,8 @@
   const { $errorMsg, $successMsg, $msgbox, $notification } = useNotification();
 
   const router = useRouter();
-
-  // Supprimer la variable locale 'users' et l'appel fetchUsers().then() incorrect
-
-  // On suppose qu'une fonction globale ou store permet de savoir si l'utilisateur courant a la permission
-
-  // Utiliser directement usersStore.getAll et gérer le cas initial
   const usersToDisplay = computed(() => {
-    // Retourner directement la liste du store. Le composant UList gère le cas où elle est vide.
-    return usersStore.getAll || [];
+    return usersStore.getAllUsers || [];
   });
 
   // Actions listées dans le header du UList
@@ -194,9 +187,9 @@
   function searchUser(user: any, searchInput: string): boolean {
     const lower = searchInput.toLowerCase();
     return (
-      user.name.toLowerCase().includes(lower) ||
-      user.surname.toLowerCase().includes(lower) ||
-      user.email.toLowerCase().includes(lower)
+      user.name?.toLowerCase().includes(lower) ||
+      user.surname?.toLowerCase().includes(lower) ||
+      user.email?.toLowerCase().includes(lower)
     );
   }
 

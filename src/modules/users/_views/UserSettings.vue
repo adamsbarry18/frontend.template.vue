@@ -65,13 +65,13 @@
   import PersonalInfoForm from '../settings/PersonalInfoForm.vue';
   import AccountAdministrationCard from '../settings/AccountAdministrationCard.vue';
   import PasswordForm from '../settings/PasswordForm.vue';
-
-  // import { useAuthorisationsStore } from '@/stores/modules/authorisations/authorisations';
   import { useUsersStore } from '@/stores/modules/users/user';
   // import { useAppStore } from '@/stores/app';
   import { updateActiveLanguage } from '@/libs/utils/Language';
   import { useNotification } from '@/composables/notfication';
   import i18n from '@/i18n';
+  import UserModel from '@/stores/modules/users/models/UserModel';
+  import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
 
   const props = defineProps({
     // creation, admin-edit, user-edit
@@ -88,7 +88,7 @@
 
   // Store actions and state
   const usersStore = useUsersStore();
-  // const authorisationsStore = useAuthorisationsStore();
+  const authorizationStore = useAuthorisationsStore();
   // const appStore = useAppStore();
   const currentUser = computed(() => usersStore.currentUser);
 
@@ -99,7 +99,7 @@
   const pwdFormRef = ref<InstanceType<typeof PasswordForm> | null>(null);
 
   // Reactive state
-  const user = ref(null);
+  const user = ref<UserModel | null>(null);
   const level = ref<number | null>(null);
   const password = ref('');
   const lastPassword = ref('');
@@ -118,12 +118,11 @@
   // ...
 
   // Computed properties
-  const userId = ref(1);
-  /*const userId = computed(() => {
+  const userId = computed(() => {
     return route.params.id
       ? parseInt(route.params.id as string)
       : currentUser.value.id;
-  });*/
+  });
 
   const isFormValid = computed(() => {
     if (props.mode === 'creation' && user.value?.id) {
@@ -140,7 +139,7 @@
 
   const isUserAlreadyRegistered = computed(() => {
     if (!user.value?.id) return false;
-    return !!usersStore.getUser(user.value.id);
+    return !!usersStore.getUserById(user.value.id);
   });
 
   const isDirty = computed(() => {
@@ -160,7 +159,7 @@
     }
 
     return (
-      JSON.stringify(usersStore.getUser(user.value.id)) !==
+      JSON.stringify(usersStore.getUserById(user.value.id)) !==
       JSON.stringify(user.value)
     );
   });
@@ -191,11 +190,10 @@
     return isDirty.value;
   });
 
-  /* Watchers
   watch(userId, async () => {
     await loadUser();
     setBreadcrumb();
-  });*/
+  });
 
   watch(
     props,
@@ -218,12 +216,12 @@
 
   // Methods
   async function loadUser() {
-    await usersStore.getAll();
+    await usersStore.getAllUsers;
 
     if (props.mode === 'creation') {
       user.value = { level: 2 };
     } else {
-      const userFromStore = usersStore.getUser(userId.value);
+      const userFromStore = usersStore.getUserById(userId.value);
       user.value = userFromStore ? userFromStore : null;
     }
 
@@ -302,10 +300,10 @@
     if (!user.value || level.value === null) return null;
 
     try {
-      /*await authorisationsStore.addUserLevel({
-          userId: user.value.id,
-          level: level.value,
-        });*/
+      await authorizationStore.addUserLevel({
+        userId: user.value.id,
+        level: level.value,
+      });
 
       $successMsg(i18n.global.t('users.created.text'));
       return user.value.id;
@@ -337,8 +335,8 @@
     if (!user.value) return;
 
     try {
-      const oldUser = usersStore.getUser(user.value.id);
-      const oldLang = oldUser?.language;
+      const oldUser = usersStore.getUserById(user.value.id);
+      const oldLang = oldUser?.preferences?.language;
 
       if (props.mode === 'user-edit') {
         await usersStore.updateUser(user.value);
@@ -354,14 +352,10 @@
       }
 
       if (password.value !== '') {
-        await usersStore.updateUserPassword({
+        await usersStore.updatePassword({
           user: user.value,
           password: password.value,
         });
-
-        if (currentUser.value.id === user.value.id) {
-          localStorage.setItem('keepPassword', JSON.stringify(password.value));
-        }
 
         lastPassword.value = password.value;
       }
@@ -369,10 +363,10 @@
       $successMsg(i18n.global.t('user.settings.updated.success'));
 
       if (
-        oldLang !== user.value.language &&
+        oldLang !== user.value?.preferences?.language &&
         currentUser.value.id === user.value.id
       ) {
-        updateActiveLanguage(user.value.language, true);
+        updateActiveLanguage(user.value.preferences.language, true);
       }
     } catch (err) {
       console.error('User update error', err);
@@ -396,9 +390,7 @@
       });
 
       if (result) {
-        /*await authorisationsStore.deleteUser({
-            userId: user.value.id,
-          });*/
+        await authorizationStore.deleteUserAuthorizations(user.value.id);
 
         $successMsg(i18n.global.t('user.delete.success', 1));
 

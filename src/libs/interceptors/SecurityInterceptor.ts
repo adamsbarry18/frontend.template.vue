@@ -3,6 +3,8 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
+import router from '@/router';
+import i18n from '@/i18n';
 import { BaseInterceptor } from './BaseInterceptor';
 import RootNotification from '../utils/Notification';
 import { useUsersStore } from '@/stores/modules/users/user';
@@ -23,8 +25,10 @@ export class SecurityInterceptor extends BaseInterceptor {
         config = this.setVersion(config);
         return config;
       },
-      error: (error: AxiosError): Promise<never> =>
-        Promise.reject(error) as Promise<never>,
+      error: (error: AxiosError): Promise<never> => {
+        console.error('Request interceptor error:', error);
+        return Promise.reject(error);
+      },
     };
   }
 
@@ -35,59 +39,113 @@ export class SecurityInterceptor extends BaseInterceptor {
       error: async (error: AxiosError): Promise<never> => {
         const originalRequest = error.config;
         const errorResponse = error.response;
+
         if (!originalRequest || !errorResponse) {
+          console.error(
+            'Interceptor error without originalRequest or errorResponse',
+            error
+          );
           throw error;
         }
-        if (!(originalRequest as any).skipAuthErrorInterceptor) {
-          if (errorResponse.status === 401) {
+
+        if ((originalRequest as any).skipAuthErrorInterceptor) {
+          console.log('Skipping auth error interceptor for this request.');
+          throw error;
+        }
+
+        const usersStore = useUsersStore();
+
+        // --- Gestion 401 Unauthorized ---
+        if (errorResponse.status === 401) {
+          console.warn('Received 401 Unauthorized. Attempting relogin...');
+          if (!(originalRequest as any)._retry) {
+            (originalRequest as any)._retry = true;
             this.detachResponseInterceptor();
             try {
-              const usersStore = useUsersStore();
-              const result = await usersStore.relogin();
-              if (!result) return null as never;
+              const user = await usersStore.fetchCurrentUser();
+              if (!user) {
+                console.warn('fetchCurrentUser failed after 401.');
+                throw new Error('Relogin failed');
+              }
+
+              console.log('Relogin successful. Retrying original request...');
+              const updatedConfig = this.setRequestHeaders(originalRequest);
               this.attachResponseInterceptor();
-              this.setRequestHeaders(originalRequest);
-              this.setVersion(originalRequest);
-              return await axios(originalRequest);
-            } catch (err) {
-              console.error('responseInterceptor', err);
+              return await axios(updatedConfig);
+            } catch (reloginError) {
+              console.error(
+                'Relogin attempt failed. Forcing logout.',
+                reloginError
+              );
               this.attachResponseInterceptor();
-              await this.forceLogout();
+              await this.forceLogout(usersStore);
+
               const query: { redirect?: string } = {};
-              const route = this.$router.currentRoute.value;
-              const skipRedirect = route?.meta?.authenticated === false;
+              const currentRoute = router.currentRoute.value;
+              const skipRedirect = currentRoute?.meta?.authenticated === false;
 
               if (!skipRedirect) {
-                if (route?.query?.redirect) {
-                  query.redirect = route.query.redirect as string;
-                } else {
-                  query.redirect = `${location.pathname}${location.hash}`;
-                }
+                query.redirect = currentRoute.fullPath;
+                console.log(
+                  `Redirecting to login with redirect query: ${query.redirect}`
+                );
               } else {
                 console.info(
-                  'Skip unauthenticated route redirect',
-                  route?.name
+                  `Skipping redirect for unauthenticated route: ${String(currentRoute?.name)}` // Convertir en String
                 );
               }
 
-              this.$router.push({ name: 'login', query });
+              router.push({ name: 'login', query }).catch((navError) => {
+                console.error('Failed to redirect to login:', navError);
+              });
               throw error;
             }
-          } else if (errorResponse.status === 403) {
-            const usersStore = useUsersStore();
-            const errorData = errorResponse.data as any;
-            if (errorData.data.code === 'ERR_PWD_EXPIRED') {
-              const { email } = usersStore;
-              await this.forceLogout();
-              this.$router.push({ name: 'login.expired', params: { email } });
-            } else {
-              RootNotification.error({
-                title: this.$i18n.t('notify.error'),
-                message: this.$i18n.t('error.action-not-allowed'),
-              });
-            }
+          } else {
+            console.warn(
+              'Relogin already attempted for this request. Forcing logout.'
+            );
+            await this.forceLogout(usersStore);
+            router.push({ name: 'login' }).catch((navError) => {
+              console.error(
+                'Failed to redirect to login after repeated 401:',
+                navError
+              );
+            });
+            throw error;
           }
         }
+        // --- Gestion 403 Forbidden ---
+        else if (errorResponse.status === 403) {
+          console.warn('Received 403 Forbidden.');
+          const errorData = errorResponse.data as any;
+
+          if (errorData?.data?.code === 'ERR_PWD_EXPIRED') {
+            console.warn(
+              'Password expired (ERR_PWD_EXPIRED). Forcing logout and redirecting...'
+            );
+            const userEmail = usersStore.email;
+            await this.forceLogout(usersStore);
+            router
+              .push({
+                name: 'login-expired',
+                params: { email: userEmail ?? '' },
+              })
+              .catch((navError) => {
+                console.error('Failed to redirect to login-expired:', navError);
+              });
+          } else {
+            console.warn('Generic 403 error. Displaying notification.');
+            RootNotification.error({
+              title: i18n.global.t('notification.errorTitle', 'Error'),
+              message: i18n.global.t(
+                'error.actionNotAllowed',
+                'Action not allowed'
+              ),
+            });
+          }
+          throw error;
+        }
+
         throw error;
       },
     };
@@ -99,7 +157,7 @@ export class SecurityInterceptor extends BaseInterceptor {
       if (!config.params) {
         config.params = {};
       }
-      if (!config.params.version) {
+      if (config.params && !config.params.version) {
         config.params.version = 2;
       }
     }
@@ -111,28 +169,37 @@ export class SecurityInterceptor extends BaseInterceptor {
     config: InternalAxiosRequestConfig
   ): InternalAxiosRequestConfig {
     const usersStore = useUsersStore();
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImxldmVsIjo1LCJpbnRlcm5hbCI6dHJ1ZSwiaWF0IjoxNzQ1NzUyMzY5LCJleHAiOjE3NDgzNDQzNjl9.m3mM1ECXYCKJZW8HGohrVoZJwwsKLjmGAs05_G_CEKo';
-    const { language } = usersStore;
+    const { language, token } = usersStore;
+
+    // Initialiser headers de manière plus sûre si nécessaire
+    config.headers = config.headers ?? new axios.AxiosHeaders();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete config.headers.Authorization;
     }
-    config.headers['Content-type'] = 'application/json';
+
+    config.headers['Content-Type'] = 'application/json';
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
-    config.headers['Accept-Language'] = language || 'en';
+    config.headers['Accept-Language'] = language;
+
     return config;
   }
 
   /** Force la déconnexion de l'utilisateur */
-  async forceLogout(): Promise<void> {
-    const usersStore = useUsersStore();
-    if (!usersStore.isLoggingOut) {
-      try {
-        console.error('Force logout');
-        await usersStore.logout();
-      } catch (error) {
-        console.error(error);
-      }
+  async forceLogout(
+    usersStore: ReturnType<typeof useUsersStore>
+  ): Promise<void> {
+    try {
+      console.warn('SecurityInterceptor: Forcing logout...');
+      await usersStore.logout();
+      console.warn('SecurityInterceptor: Logout completed.');
+    } catch (logoutError) {
+      console.error(
+        'SecurityInterceptor: Error during force logout:',
+        logoutError
+      );
     }
   }
 }

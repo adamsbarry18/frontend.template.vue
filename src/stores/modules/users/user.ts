@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import UserModel, { IUser, SecurityLevel } from './models/UserModel';
+import UserModel, { SecurityLevel } from './models/UserModel';
 import { useApiStore } from '@/stores/modules/api';
 import { updateActiveLanguage } from '@/libs/utils/Language';
 import { ServerError } from '@/libs/utils/Errors';
@@ -324,8 +324,8 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function addUser(userData: IUser): Promise<UserModel> {
-    const dataToSend: Partial<IUser> = {
+  async function addUser(userData: UserModel): Promise<UserModel> {
+    const dataToSend: Partial<UserModel> = {
       email: userData.email,
       password: userData.password,
       name: userData.name,
