@@ -7,6 +7,8 @@ const sortById = (a: UserModel, b: UserModel): number => {
   return Number(a.id) - Number(b.id);
 };
 
+const INTERNAL_EMAIL_DOMAINS = ['myapp.io', 'myapp.com'];
+
 export enum PasswordStatus {
   ACTIVE = 'ACTIVE',
   VALIDATING = 'VALIDATING',
@@ -22,26 +24,6 @@ export enum SecurityLevel {
   ADMIN = 5,
   NOBODY = 999, // Match backend definition
 }
-
-export type IUser = {
-  id?: number | null;
-  uid?: string | null;
-  email: string;
-  password?: string;
-  name: string;
-  surname?: string | null;
-  level: number;
-  internalLevel?: number;
-  internal?: boolean;
-  color?: string | null;
-  passwordStatus?: PasswordStatus;
-  createdAt?: string | null;
-  updatedAt?: string | null;
-  passwordUpdatedAt?: string | null;
-  preferences?: Record<string, any> | null;
-  permissions?: Record<string, any> | null;
-  permissionsExpireAt?: string | null;
-};
 
 export default class UserModel {
   id: number;
@@ -110,7 +92,7 @@ export default class UserModel {
   /**
    * Transform API object into UserModel instance (dates as string or Date)
    */
-  static fromAPI(user: Partial<IUser>): UserModel {
+  static fromAPI(user: Partial<UserModel>): UserModel {
     const modelData = {
       ...user,
       name: user.name ?? null,
@@ -183,13 +165,15 @@ export default class UserModel {
     if (!isValidEmail(this.email)) {
       return false;
     }
-
-    const fields = ['email', 'name', 'level'];
-
-    for (const field of fields) {
-      if (!this[field] || this[field].trim() === '') {
+    const stringFields: (keyof this)[] = ['email', 'name'];
+    for (const field of stringFields) {
+      const value = this[field];
+      if (typeof value !== 'string' || !value.trim()) {
         return false;
       }
+    }
+    if (this.level === undefined || this.level === null || this.level <= 0) {
+      return false;
     }
 
     return true;
@@ -212,6 +196,12 @@ export default class UserModel {
     this.preferences = null;
     this.permissionsExpireAt = null;
     this.authorisationOverrides = null;
+  }
+
+  static isEmailInternal(email: string) {
+    return INTERNAL_EMAIL_DOMAINS.some((domain) =>
+      email.endsWith(`@${domain}`)
+    );
   }
 
   /**

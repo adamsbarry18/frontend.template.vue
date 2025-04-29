@@ -1,63 +1,66 @@
 <template>
   <div class="u-breadcrumb">
-    <div v-if="currentGroupInfo" class="u-breadcrumb-item-wrapper">
-      <div class="u-breadcrumb-item univers-item">
-        <icon-base
-          :icon="`icon-${currentGroupInfo.icon}`"
-          :color="currentGroupInfo.color"
-          size="24"
-        />
-        <span>{{ $t(`groups-nav.${currentGroupInfo.name}.title`) }}</span>
-      </div>
-    </div>
-    <div v-else-if="settingsInfo" class="u-breadcrumb-item-wrapper">
-      <div class="u-breadcrumb-item univers-item">
-        <icon-base
-          :icon="`icon-${settingsInfo.icon}`"
-          :color="settingsInfo.color"
-          size="24"
-        />
-        <span>{{ $t(`settings.${settingsInfo.name}.title`) }}</span>
-      </div>
-    </div>
     <div
       v-for="(link, index) in links"
-      :key="link.path + index"
+      :key="link.path + '-' + link.label + '-' + index"
       :title="link.label"
       class="u-breadcrumb-item-wrapper"
     >
-      <icon-base icon="icon-arrow" color="var(--color-neutral-400)" size="12" />
+      <icon-base
+        v-if="index > 0"
+        icon="icon-arrow"
+        color="var(--color-neutral-400)"
+        size="12"
+      />
+
       <router-link
-        class="u-breadcrumb-item"
-        :to="{ path: formatPath(link.path), query: { breadcrumb: 'true' } }"
-        :class="{
-          '-button-like': index !== links.length - 1,
-          '-last': index === links.length - 1 && !editable,
-        }"
+        v-if="link.path && !(index === links.length - 1 && !editable)"
+        class="u-breadcrumb-item -button-like"
+        :to="{ path: link.path }"
       >
         <icon-base
           v-if="link.icon"
           :icon="link.icon"
           :title="link.label"
-          class="breadcrumb-icon -button-like"
+          class="breadcrumb-icon"
           color="var(--color-neutral-700)"
           size="22"
         />
         <span v-if="!link.icon || link.showIconLabel">{{ link.label }}</span>
       </router-link>
+
+      <div
+        v-else
+        class="u-breadcrumb-item"
+        :class="{ '-last': index === links.length - 1 && !editable }"
+      >
+        <icon-base
+          v-if="link.icon"
+          :icon="link.icon"
+          :title="link.label"
+          class="breadcrumb-icon"
+          color="var(--color-neutral-700)"
+          size="22"
+        />
+        <span v-if="!link.icon || link.showIconLabel">{{ link.label }}</span>
+      </div>
     </div>
-    <div v-if="editable" class="u-breadcrumb-item-wrapper -editable">
+
+    <div
+      v-if="editable && links.length > 0"
+      class="u-breadcrumb-item-wrapper -editable"
+    >
       <icon-base icon="icon-arrow" color="var(--color-neutral-400)" size="12" />
       <el-input
-        :value="value"
+        :model-value="value"
         :placeholder="$t(placeholder)"
         class="breadcrumb-input"
-        @input="onInput"
+        @update:model-value="onInput"
       />
       <icon-base
         icon="icon-edit"
         class="breadcrumb-icon-edit"
-        color="#000000"
+        color="var(--color-neutral-500)"
         size="20"
       />
     </div>
@@ -65,86 +68,76 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
-  import { useNavStore } from '@/stores/modules/menu/nav';
   import { IconBase } from '@/modules/common';
   import { ElInput } from 'element-plus';
+  import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 
-  // Définition des types pour les props
   interface Link {
-    path: string;
+    path?: string;
     label: string;
     icon?: string;
     showIconLabel?: boolean;
   }
 
+  // Props are implicitly used by withDefaults and the template
   withDefaults(
     defineProps<{
       links: Link[];
       editable?: boolean;
       placeholder?: string;
-      value?: string;
+      value?: string | null;
     }>(),
     {
       editable: false,
       placeholder: 'breadcrumb.default-placeholder',
+      value: null,
     }
   );
 
-  // Définition des événements émis
-  const emit = defineEmits(['input']);
+  const breadcrumbStore = useBreadcrumbStore();
 
-  // Accès au store Pinia
-  const navStore = useNavStore();
-
-  // Propriétés calculées basées sur le store
-  const currentGroupInfo = computed(() => navStore.currentGroupInfo);
-  const currentItem = computed(() => navStore.currentItem);
-  const settings = computed(() => navStore.availableSettings);
-
-  // Propriété calculée pour settingsInfo
-  const settingsInfo = computed(() => {
-    const univers = settings.value
-      .map((u) => u.children.map((s) => ({ ...s, universe: u })))
-      .flat(2)
-      .filter((i) => !!i);
-    return univers.find((u) => u.activesStates.includes(currentItem.value))
-      ?.universe;
-  });
-
-  // Gestion de l'événement input
-  const onInput = (value: string) => {
-    emit('input', value);
-  };
-
-  const formatPath = (path: string) => {
-    return null;
+  // onInput is used in the template by @update:model-value
+  const onInput = (newValue: string) => {
+    breadcrumbStore.setBreadcrumbValue(newValue);
   };
 </script>
+
 <style lang="scss">
   .u-breadcrumb {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     min-width: 0;
+
     .u-breadcrumb-item-wrapper {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      margin-top: 4px;
-      min-width: 40px;
-      overflow: hidden;
-      & > svg {
+      min-width: 0;
+
+      & > .icon-base {
         margin: 0 6px;
+        flex-shrink: 0;
       }
+
       &.-editable {
+        min-width: auto;
+        overflow: visible;
+
         .el-input {
           width: 185px;
-          .el-input__inner {
-            border: none;
+          margin-left: 6px;
+
+          .el-input__wrapper {
+            box-shadow: none !important;
+            background-color: transparent;
+            padding: 0;
             border-bottom: 1px solid var(--color-neutral-300);
             border-radius: 0;
-            background-color: var(--color-white);
+          }
+          .el-input__inner {
+            border: none;
+            background-color: transparent;
             padding: 0;
             height: 20px;
             line-height: 20px;
@@ -156,41 +149,48 @@
           }
         }
         .breadcrumb-icon-edit {
+          margin-left: 4px;
+          flex-shrink: 0;
           & > * {
             fill: var(--color-neutral-500);
           }
         }
       }
+
       .u-breadcrumb-item {
         display: flex;
         align-items: center;
-        max-width: 15vw;
+        max-width: 25vw;
         overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: var(--paragraph-03);
+
+        .breadcrumb-icon {
+          margin-right: 4px;
+          flex-shrink: 0;
+        }
+
         & > span {
-          white-space: nowrap;
-          text-overflow: ellipsis;
           overflow: hidden;
-          font-size: var(--paragraph-03);
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
-        &:not(.-last) {
-          &:hover:not(.univers-item) {
-            color: var(--color-neutral-300);
-          }
-        }
+
         &.-button-like {
-          text-decoration: underline;
+          text-decoration: none;
           color: var(--color-neutral-800);
-        }
-        &.-last {
-          color: var(--color-neutral-400);
-          pointer-events: none;
-        }
-        &.univers-item {
-          color: var(--color-neutral-400);
-          pointer-events: none;
-          svg {
-            margin-right: 4px;
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+            color: var(--color-primary-base);
           }
+        }
+
+        &.-last {
+          color: var(--color-neutral-700);
+          pointer-events: none;
+          font-weight: 500;
         }
       }
     }

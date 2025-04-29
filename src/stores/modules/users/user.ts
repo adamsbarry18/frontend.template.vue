@@ -228,6 +228,21 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  async function updateUserPassword({ user, password }) {
+    const apiStore = useApiStore();
+    try {
+      if (!user) throw 'No user provided';
+      await apiStore.api.put(`/api/v1/users/${user.id}/password`, {
+        data: {
+          password,
+        },
+        skipAuthErrorInterceptor: true,
+      });
+    } catch (error) {
+      throw new ServerError('users', 'updateUserPassword', error, {});
+    }
+  }
+
   async function fetchCurrentUser(): Promise<UserModel | null> {
     try {
       const response = await apiStore.api.get('/api/v1/users/me');
@@ -432,6 +447,7 @@ export const useUsersStore = defineStore('users', () => {
     logout,
     resetPassword,
     confirmResetPassword,
+    updateUserPassword,
     passwordConfirm,
     fetchCurrentUser,
     fetchUser,

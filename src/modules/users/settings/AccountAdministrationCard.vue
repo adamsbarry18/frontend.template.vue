@@ -10,12 +10,12 @@
 </template>
 
 <script setup lang="ts">
-  import { PropType } from 'vue';
   import { UButton } from '@/modules/common';
+  import UserModel from '@/stores/modules/users/models/UserModel';
 
   defineProps({
     user: {
-      type: Object as PropType<any>,
+      type: Object as () => UserModel | null,
       required: true,
     },
     mode: {

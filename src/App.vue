@@ -147,23 +147,13 @@
     i18n.global.locale.value = langToUse; // Plus besoin de cast
     console.log(`Language set to: ${langToUse}`);
 
-    // 2. Vérifier l'état d'authentification
-    try {
-      console.log('App.vue: Calling initializeAuth...');
-      await usersStore.initializeAuth();
-      console.log(
-        `App.vue: initializeAuth completed. Auth status checked: ${usersStore.authStatusChecked}, Is Authenticated: ${usersStore.isAuthenticated}`
-      );
-    } catch (error) {
-      console.error('App.vue: Error during initializeAuth:', error);
-      // L'erreur est normalement gérée dans initializeAuth (logout, clear token)
-      // La redirection se fera via le watchEffect
-    }
-
-    // 3. Vérifier AdBlocker (après un délai)
+    // 2. Vérifier AdBlocker (après un délai)
+    // L'initialisation de l'authentification est maintenant gérée dans router.beforeEach
     checkAdBlocker();
 
-    console.log('App.vue onMounted: Initialization complete.');
+    console.log(
+      'App.vue onMounted: Initialization complete (Auth check deferred to router).'
+    );
   });
 </script>
 

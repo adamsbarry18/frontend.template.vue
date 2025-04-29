@@ -4,20 +4,41 @@ import {
   isNavigationFailure,
   NavigationFailureType,
   RouteRecordRaw,
+  RouteLocationNormalized,
 } from 'vue-router';
 import i18n from '@/i18n';
 import loginRoutes from './login.routes';
+import administrationRoutes from './administration.routes';
+import testRoutes from './test.routes';
 import { useUsersStore } from '@/stores/modules/users/user';
 import { useNavStore } from '@/stores/modules/menu/nav';
-import testRoutes from './test.routes';
-import administationRoutes from './administration.routes';
-// import { useBreadcrumbStore } from '@/stores/breadcrumb';
+import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
+import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
+import { UMessage } from '@/modules/common';
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    authenticated?: boolean;
+    guest?: boolean;
+    breadcrumb?: { label: string; path?: string }[];
+    authorisation?: {
+      level?: number;
+      feature?: string;
+      action?: string;
+      onlyInternal?: boolean;
+      allowInternal?: boolean;
+    };
+  }
+}
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'dashboard',
     component: () => import('@/modules/dashboard/_views/Dashboard.vue'),
+    meta: {
+      breadcrumb: [{ label: 'dashboard' }],
+    },
   },
   {
     path: '/404',
@@ -27,14 +48,10 @@ const routes: RouteRecordRaw[] = [
   },
   ...loginRoutes,
   ...testRoutes,
-  ...administationRoutes,
+  ...administrationRoutes,
   {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
-  },
-  {
-    path: '/',
-    redirect: '/login',
   },
 ];
 
@@ -44,69 +61,137 @@ const router = createRouter({
 });
 
 /**
- * Gère les erreurs de navigation non critiques
+ * Handles non-critical navigation errors (duplicates, cancellations).
  */
-function NavigationErrorHandler(err: any) {
+function handleNavigationError(err: any) {
   if (isNavigationFailure(err, NavigationFailureType.duplicated)) {
-    console.info('Navigation duplicated', err);
+    console.info('Navigation duplicated:', err.to.path);
   } else if (isNavigationFailure(err, NavigationFailureType.cancelled)) {
-    console.info('Navigation cancelled', err);
+    console.info('Navigation cancelled.');
   } else if (isNavigationFailure(err, NavigationFailureType.aborted)) {
-    console.info('Navigation aborted', err);
+    console.info('Navigation aborted.');
   } else {
-    throw err;
+    console.error('Navigation error:', err);
   }
 }
 
-// Remplacement de push et replace pour intercepter les erreurs de navigation
 const originalPush = router.push;
-router.push = ((location) => {
-  return originalPush.call(router, location).catch(NavigationErrorHandler);
-}) as typeof router.push;
+router.push = (location) => {
+  return originalPush.call(router, location).catch(handleNavigationError);
+};
 
 const originalReplace = router.replace;
-router.replace = ((location) => {
-  return originalReplace.call(router, location).catch(NavigationErrorHandler);
-}) as typeof router.replace;
+router.replace = (location) => {
+  return originalReplace.call(router, location).catch(handleNavigationError);
+};
 
-// Exemple de fonction pour réinitialiser le breadcrumb
-// (Adaptez-la selon votre store de breadcrumb)
-function resetBreadcrumb(to) {
+function updateBreadcrumb(to: RouteLocationNormalized) {
+  const breadcrumbStore = useBreadcrumbStore();
   const links = to.meta.breadcrumb
     ? to.meta.breadcrumb.map((l) => ({
-        path: l.path,
+        path: l.path || '',
         label: i18n.global.t(`breadcrumb.${l.label}`),
       }))
     : [];
-  // Si vous utilisez Pinia pour le breadcrumb, appelez ici une action
-  // useBreadcrumbStore().setBreadcrumb({ links });
+  breadcrumbStore.setBreadcrumb(links, null);
 }
 
-/* Guard global */
 router.beforeEach(async (to, from, next) => {
-  // const usersStore = useUsersStore();
+  const usersStore = useUsersStore();
   const navStore = useNavStore();
+  const authorisationsStore = useAuthorisationsStore();
+
   if (from.name !== to.name) {
-    resetBreadcrumb(to);
+    updateBreadcrumb(to);
   }
   navStore.setCurrentItem(to.name as string);
 
-  // Si la route contient "confirm_pwd" dans la query, appeler passwordConfirm
   if (to.query.confirm_pwd) {
-    // await usersStore.passwordConfirm({ code: to.query.confirm_pwd as string });
-    next({ name: 'login', params: { updatePassword: 'success' } });
+    try {
+      await usersStore.passwordConfirm({
+        code: to.query.confirm_pwd as string,
+      });
+      UMessage({
+        type: 'success',
+        message: i18n.global.t('login.password_confirmed'),
+      });
+      next({ name: 'login', replace: true, query: {} });
+    } catch (error) {
+      console.error('Password confirmation failed:', error);
+      UMessage({ type: 'error', message: i18n.global.t('error.generic') });
+      next({ name: 'login', replace: true, query: {} });
+    }
     return;
   }
 
-  // Si la route contient "reset_pwd" dans la query, rediriger vers password.reset
   if (to.query.reset_pwd) {
     next({
       name: 'password.reset',
-      params: { email: to.query.email, token: to.query.reset_pwd },
+      params: {
+        email: to.query.email as string,
+        token: to.query.reset_pwd as string,
+      },
+      replace: true,
+      query: {},
     });
     return;
   }
-  next();
+
+  if (!usersStore.authStatusChecked) {
+    await usersStore.initializeAuth();
+  }
+
+  const isAuthenticated = usersStore.isAuthenticated;
+  const requiresAuth = to.meta.authenticated !== false;
+  const requiresGuest = to.meta.guest === true;
+
+  if (requiresAuth && !isAuthenticated) {
+    console.log(`Redirecting to login. Target: ${to.fullPath}`);
+    next({ name: 'login', query: { redirect: to.fullPath }, replace: true });
+  } else if (requiresGuest && isAuthenticated) {
+    console.log(
+      'Redirecting authenticated user to dashboard from guest route.'
+    );
+    next({ name: 'dashboard', replace: true });
+  } else if (requiresAuth && isAuthenticated && to.meta.authorisation) {
+    const authMeta = to.meta.authorisation;
+    let isAuthorized = false;
+
+    if (authMeta.allowInternal && usersStore.internal) {
+      isAuthorized = true;
+    } else if (authMeta.onlyInternal && !usersStore.internal) {
+      isAuthorized = false;
+    } else {
+      if (authMeta.level !== undefined) {
+        isAuthorized = authorisationsStore.level >= authMeta.level;
+      }
+      if (isAuthorized && authMeta.feature && authMeta.action) {
+        isAuthorized = authorisationsStore.isUserAllowed(
+          authMeta.feature,
+          authMeta.action
+        );
+      } else if (!authMeta.level && authMeta.feature && authMeta.action) {
+        isAuthorized = authorisationsStore.isUserAllowed(
+          authMeta.feature,
+          authMeta.action
+        );
+      }
+    }
+
+    if (!isAuthorized) {
+      console.warn(`Authorization failed for user to access ${to.path}`);
+      UMessage({
+        type: 'error',
+        showClose: true,
+        message: i18n.global.t('error.view-not-allowed'),
+      });
+      next({ name: 'dashboard', replace: true });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

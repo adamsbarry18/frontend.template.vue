@@ -1,9 +1,9 @@
 <template>
   <div class="main-nav">
     <base-nav
-      :config="config"
-      :current-group="currentGroupNav"
-      :current-item="currentNavItem"
+      :config="navConfig"
+      :current-group="currentSectionName"
+      :current-item="currentItem"
       :generate-link="generateLink"
       @nav-click="onMenuClick"
     />
@@ -11,115 +11,114 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue';
+  import { computed } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { storeToRefs } from 'pinia';
   import BaseNav from './_components/BaseNav.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { useNavStore } from '@/stores/modules/menu/nav';
-  import { useRouter } from 'vue-router';
+  import { useNavStore, NavItem } from '@/stores/modules/menu/nav'; // Importer NavItem
 
   const router = useRouter();
   const usersStore = useUsersStore();
   const navStore = useNavStore();
 
-  const currentNavItem = ref('');
-  const config = computed(() => ({
-    currentItem: navStore.currentItem,
-    context: navStore.context,
-    univers: navStore.availableGroupsNav,
-    settings: navStore.availableSettings,
-    globals: navStore.availableGlobals.filter((g) => g.isRoot),
+  // Utiliser storeToRefs pour obtenir des références réactives aux getters et états du store
+  const {
+    availableGroupsNav,
+    availableSettings,
+    availableGlobals,
+    currentItem,
+    currentSectionName, // Utiliser le nouveau getter pour la section active
+    context, // Garder le contexte si nécessaire pour prepareState
+  } = storeToRefs(navStore);
+
+  // Créer la configuration pour BaseNav en utilisant les getters du store
+  const navConfig = computed(() => ({
+    currentItem: currentItem.value,
+    context: context.value,
+    univers: availableGroupsNav.value,
+    settings: availableSettings.value,
+    // Filtrer les globals pour ne garder que ceux marqués comme root pour la barre principale
+    globals: availableGlobals.value.filter((g) => g.isRoot),
   }));
 
-  const currentGroupNav = computed(() => {
-    const name = navStore.currentItem;
-    const allGroupsNav = navStore.availableGroupsNav.flatMap((group) =>
-      (group.children || []).map((child) => ({ ...child, group: group.name }))
-    );
-    const current = allGroupsNav.find((child) =>
-      child.activesStates?.includes(name)
-    );
-    if (current) {
-      currentNavItem.value = current.name;
-      return current.group;
-    }
-    const allSettings = navStore.availableSettings
-      .map(
-        (g) =>
-          g.children?.map((child) => ({ ...child, settings: g.name })) || []
-      )
-      .flat()
-      .filter((i) => !!i);
-    const currentSetting = allSettings.find((child) =>
-      child.activesStates?.includes(name)
-    );
-    if (currentSetting) {
-      currentNavItem.value = currentSetting.name;
-      return currentSetting.settings;
-    }
-    const currentGlobal = navStore.availableGlobals.find((g) =>
-      g.activesStates?.includes(name)
-    );
-    if (currentGlobal) {
-      currentNavItem.value = currentGlobal.name;
-      return 'global';
-    }
-    currentNavItem.value = '';
-    return 'global';
-  });
+  // La logique pour déterminer le groupe/item actif est maintenant dans le store (currentSectionName, currentItem)
+  // Plus besoin de currentGroupNav et currentNavItem locaux
 
-  function onMenuClick(item: any) {
+  function onMenuClick(item: NavItem) {
     switch (item.state) {
       case 'logout':
         goToLogout();
         break;
       default:
-        goToState(item);
+        if (item.state) {
+          // S'assurer qu'il y a un état à naviguer
+          goToState(item);
+        } else {
+          console.warn(
+            `Menu item "${item.name}" clicked but has no state defined.`
+          );
+        }
     }
   }
 
-  function generateLink(item: any): string {
-    if (item.disabled) return '';
-    const resolved = router.resolve(prepareState(item.state));
-    return resolved.href;
+  // Génère le lien href pour un item de menu (utilisé par BaseNav pour les `<a>`)
+  function generateLink(item: NavItem): string {
+    if (item.disabled || !item.state) return ''; // Ne pas générer de lien si désactivé ou pas d'état
+    try {
+      const resolved = router.resolve(prepareState(item.state));
+      return resolved.href;
+    } catch (e) {
+      console.error(`Could not resolve route for state: ${item.state}`, e);
+      return ''; // Retourner une chaîne vide en cas d'erreur
+    }
   }
 
+  // Prépare l'objet de localisation pour la navigation (nom de route + query)
   function prepareState(stateName: string) {
-    const route = (router.options.routes as any[]).find(
-      (r) => r.name === stateName
-    );
+    const route = router.options.routes.find((r) => r.name === stateName);
     const query: Record<string, any> = {};
-    if (
-      route &&
-      navStore.context[route.name] &&
-      navStore.context[route.name].query
-    ) {
-      Object.assign(query, navStore.context[route.name].query);
+
+    // Vérifier si un contexte existe pour cette route et s'il contient des query params
+    if (context.value[stateName] && context.value[stateName].query) {
+      Object.assign(query, context.value[stateName].query);
     }
+
     if (!route) {
       console.warn(
-        `State [${stateName}] not implemented; using current route as fallback.`
+        `State [${stateName}] not found in router configuration. Cannot navigate.`
       );
-      return { name: router.currentRoute.value.name, query };
+      // Retourner un objet vide ou la route actuelle pour éviter une erreur complète ?
+      // Ou lancer une erreur ? Pour l'instant, on retourne un objet vide.
+      return {};
     }
     return { name: route.name, query };
   }
 
-  function goToState(item: any) {
-    router.push(prepareState(item.state));
-  }
-
-  async function goToLogout() {
-    await usersStore.logout();
-    router.push({ name: 'login' });
-  }
-
-  router.beforeEach((to, from, next) => {
-    if (to.name) {
-      console.log('Navigating to:', to.name);
-      navStore.setCurrentItem(to.name as string);
+  // Navigue vers l'état défini pour l'item de menu
+  function goToState(item: NavItem) {
+    if (!item.state) return;
+    const location = prepareState(item.state);
+    // S'assurer que la location a un nom avant de pousser
+    if (location && location.name) {
+      router.push(location);
     }
-    next();
-  });
+  }
+
+  // Gère la déconnexion
+  async function goToLogout() {
+    try {
+      await usersStore.logout();
+      // Rediriger vers la page de login après déconnexion réussie
+      router.push({ name: 'login' });
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Afficher une notification d'erreur si nécessaire
+    }
+  }
+
+  // Le router.beforeEach pour mettre à jour currentItem est maintenant dans src/router/index.ts
+  // Il n'est plus nécessaire ici.
 </script>
 
 <style scoped lang="scss">

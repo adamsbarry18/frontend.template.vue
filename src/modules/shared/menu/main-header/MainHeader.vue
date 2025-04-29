@@ -5,10 +5,9 @@
     </router-link>
     <breadcrumb
       class="header-breadcrumb"
-      :links="links"
+      :links="breadcrumbLinks"
       :value="breadcrumbValue"
       :editable="breadcrumbValue !== null"
-      @input="onInputChange"
     />
     <user-info />
     <notifications />
@@ -16,44 +15,41 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, watch, onMounted, ref } from 'vue';
+  import { computed, onMounted, watch } from 'vue';
+  import { storeToRefs } from 'pinia';
 
   import Breadcrumb from './_components/Breadcrumb.vue';
   import UserInfo from './_components/UserInfo.vue';
   import Notifications from './_components/Notifications.vue';
   import i18n from '@/i18n';
+  import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 
-  const emit = defineEmits(['setBreadcrumbValue']);
-  const breadcrumbLinks = ref([]);
-  const breadcrumbValue = ref(null);
+  // Initialiser le store
+  const breadcrumbStore = useBreadcrumbStore();
 
-  const links = computed(() => breadcrumbLinks.value);
+  // Obtenir des références réactives aux états du store
+  const { breadcrumbLinks, breadcrumbValue } = storeToRefs(breadcrumbStore);
+
   const dashboardRedirection = computed(() => ({
     name: 'dashboard',
   }));
 
-  watch(links, onLinksChanged);
-
   onMounted(() => {
-    setDocumentTitle();
+    // Mettre à jour le titre initialement et surveiller les changements
+    watch(breadcrumbLinks, setDocumentTitle, { immediate: true });
   });
 
   function setDocumentTitle() {
-    if (links.value) {
-      const values = [...links.value].reverse().map((l) => l.label);
+    if (breadcrumbLinks.value) {
+      const values = [...breadcrumbLinks.value].reverse().map((l) => l.label);
       document.title = [...values, i18n.global.t('application.name')].join(
         ' - '
       );
     }
   }
 
-  function onInputChange(value: string) {
-    emit('setBreadcrumbValue', value);
-  }
-
-  function onLinksChanged() {
-    setDocumentTitle();
-  }
+  // La fonction onInputChange n'est plus nécessaire ici,
+  // la modification de la valeur se ferait via une action du store si besoin.
 </script>
 
 <style scoped lang="scss">

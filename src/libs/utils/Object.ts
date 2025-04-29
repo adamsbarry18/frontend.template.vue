@@ -122,3 +122,73 @@ export function getWithPath(
 ): any {
   return path.split(separator).reduce((acc, key) => acc?.[key], object);
 }
+
+/**
+ * Compare deux objets en profondeur pour vérifier l'égalité de leur contenu.
+ * Gère les objets, les tableaux, les dates et les types primitifs.
+ * @param obj1 Le premier objet à comparer.
+ * @param obj2 Le second objet à comparer.
+ * @returns `true` si les objets sont profondément égaux, sinon `false`.
+ */
+export function deepEqual(obj1: any, obj2: any): boolean {
+  // Gérer les cas simples et la comparaison de référence stricte
+  if (obj1 === obj2) {
+    return true;
+  }
+
+  // Gérer null, undefined ou types différents
+  if (
+    obj1 == null ||
+    obj2 == null ||
+    typeof obj1 !== 'object' ||
+    typeof obj2 !== 'object'
+  ) {
+    // Si l'un n'est pas un objet mais l'autre l'est, ou s'ils sont de types primitifs différents
+    return obj1 === obj2; // Compare les primitifs directement
+  }
+
+  // Gérer les Dates
+  if (obj1 instanceof Date && obj2 instanceof Date) {
+    return obj1.getTime() === obj2.getTime();
+  }
+  // Si l'un est une Date et l'autre non
+  if (obj1 instanceof Date !== obj2 instanceof Date) {
+    return false;
+  }
+
+  // Gérer les Tableaux
+  if (Array.isArray(obj1) && Array.isArray(obj2)) {
+    if (obj1.length !== obj2.length) {
+      return false;
+    }
+    for (let i = 0; i < obj1.length; i++) {
+      if (!deepEqual(obj1[i], obj2[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  // Si l'un est un tableau et l'autre non
+  if (Array.isArray(obj1) !== Array.isArray(obj2)) {
+    return false;
+  }
+
+  // Gérer les Objets
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (const key of keys1) {
+    if (!Object.prototype.hasOwnProperty.call(obj2, key)) {
+      return false;
+    }
+    if (!deepEqual(obj1[key], obj2[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}

@@ -15,39 +15,49 @@
       <div class="header">
         <h4>{{ $t('user.settings.personal-information') }}</h4>
         <transition name="fade">
-          <div>
+          <div v-if="localUser?.internal">
             <span class="internal">{{ $t('users.list.header.internal') }}</span>
           </div>
         </transition>
       </div>
       <div class="user-infos-layout">
-        <div v-if="user.color" class="wrapper-color">
+        <div v-if="localUser?.color" class="wrapper-color">
           <u-color-initials
-            :color="user.color"
+            :color="localUser.color"
             :initial="userInitial"
             class="-button-like"
             size="80"
             font-size="35"
           />
           <u-color-picker
-            v-model="user.color"
-            :disabled="mode === 'admin-edit' || isAddingUser"
+            :model-value="localUser.color"
+            :disabled="isFieldDisabled"
+            @update:model-value="updateField('color', $event)"
           />
         </div>
         <div class="form">
           <u-form-input
-            v-model="user.email"
-            :loading="loading"
+            :model-value="localUser?.email"
+            :loading="isSearchingUser"
             :error="emailValidationError"
             :disabled="mode !== 'creation'"
             :label="$t('commons.form.email')"
             placeholder="example@domain"
-            @change="onEmailChange"
+            @update:model-value="handleEmailInput"
             @blur="touchField('email')"
           />
           <template v-if="mode === 'creation'">
             <transition name="fade" mode="out-in">
-              <u-alert-card v-if="isUserInternal" key="3" type="info">
+              <u-alert-card v-if="doesUserExist" key="user-exists" type="info">
+                <p>
+                  {{ $t('user.settings.info.user-exists') }}
+                </p>
+              </u-alert-card>
+              <u-alert-card
+                v-else-if="isUserInternal"
+                key="user-internal"
+                type="info"
+              >
                 <p>
                   <span v-html="$t('user.settings.info.user-internal')" />
                 </p>
@@ -55,37 +65,30 @@
             </transition>
           </template>
           <u-form-input
-            v-model="user.name"
-            :error="
-              fieldsTouched.name && !validation.name.valid
-                ? $t('error.required-field')
-                : false
-            "
-            :disabled="mode === 'admin-edit' || isAddingUser"
+            :model-value="localUser?.name"
+            :error="nameValidationError"
+            :disabled="isFieldDisabled"
             :label="$t('commons.form.first-name')"
             placeholder="John"
-            @change="onChange"
+            @update:model-value="updateField('name', $event)"
             @blur="touchField('name')"
           />
           <u-form-input
-            v-model="user.surname"
-            :error="
-              fieldsTouched.surname && !validation.surname.valid
-                ? $t('error.required-field')
-                : false
-            "
-            :disabled="mode === 'admin-edit' || isAddingUser"
+            :model-value="localUser?.surname"
+            :error="surnameValidationError"
+            :disabled="isFieldDisabled"
             :label="$t('commons.form.name')"
             placeholder="Doe"
-            @change="onChange"
+            @update:model-value="updateField('surname', $event)"
             @blur="touchField('surname')"
           />
           <u-radio
-            v-model="user.language"
+            :model-value="localUser?.preferences?.language"
             button
             :options="languageOptions"
-            :disabled="mode === 'admin-edit' || isAddingUser"
+            :disabled="isFieldDisabled"
             datu-nav="user-settings-language-radio"
+            @update:model-value="updateLanguagePreference($event)"
           />
         </div>
       </div>
@@ -107,69 +110,40 @@
   import { debounce } from '@/libs/utils/Debounce';
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';
+  import UserModel from '@/stores/modules/users/models/UserModel';
 
   const props = defineProps({
     user: {
-      type: Object,
+      type: Object as () => UserModel | null,
       required: true,
     },
     mode: {
       type: String,
       required: true,
+      validator: (value: string) =>
+        ['creation', 'admin-edit', 'user-edit'].includes(value),
     },
   });
 
-  const loading = ref(false);
-  const emailChangeDebouncer = ref(null);
-  const errorType = ref(null);
-  const emit = defineEmits(['change']);
+  const emit = defineEmits(['update:user', 'user-found']);
 
-  // Field touched states
+  const usersStore = useUsersStore();
+
+  const localUser = ref<UserModel | null>(null);
+  const isSearchingUser = ref(false);
+  const searchDebounce = ref<ReturnType<typeof debounce> | null>(null);
+
   const fieldsTouched = reactive({
     email: false,
     name: false,
     surname: false,
   });
 
-  // Touch field function
-  function touchField(fieldName) {
-    fieldsTouched[fieldName] = true;
-  }
+  // --- Computed Properties ---
 
-  // Custom validation implementation
-  const validation = reactive({
-    email: computed(() => ({
-      valid: validateEmail(props.user.email),
-      required: !!props.user.email?.trim(),
-    })),
-    name: computed(() => ({
-      valid: !!props.user.name?.trim(),
-    })),
-    surname: computed(() => ({
-      valid: !!props.user.surname?.trim(),
-    })),
-  });
-
-  // Validation functions
-  function validateEmail(email) {
-    return !!email?.trim() && isValidEmail(email);
-  }
-
-  const isFormValid = computed(() => {
-    return (
-      validation.email.valid &&
-      validation.name.valid &&
-      validation.surname.valid
-    );
-  });
-
-  // Accès au store Pinia
-  const usersStore = useUsersStore();
-
-  // Propriétés calculées
   const userInitial = computed(() => {
-    return props.user?.name
-      ? props.user.name.substring(0, 1).toUpperCase()
+    return localUser.value?.name
+      ? localUser.value.name.substring(0, 1).toUpperCase()
       : '-';
   });
 
@@ -178,74 +152,187 @@
     { value: 'en', label: i18n.global.t('commons.lang.en') },
   ]);
 
-  const doesUserExist = computed(() => props.user.id !== null);
-
-  const isUserInternal = computed(() => {
-    // UserModel.isEmailInternal(props.user.email) && $isInternal
-    return props.user.email;
+  const doesUserExist = computed(() => {
+    if (props.mode !== 'creation' || !localUser.value?.id) return false;
+    return !!usersStore.getUserById(localUser.value.id);
   });
 
-  const isAddingUser = computed(
-    () => props.mode === 'creation' && props.user.id !== null
-  );
+  const isUserInternal = computed(() => {
+    return localUser.value?.email
+      ? UserModel.isEmailInternal(localUser.value.email)
+      : false;
+  });
 
-  const canSave = computed(() => isFormValid.value && errorType.value === null);
-
-  const emailValidationError = computed(() => {
-    if (!fieldsTouched.email) return false;
-    if (!validation.email.required)
-      return i18n.global.t('error.required-field');
-    if (!validation.email.valid) return i18n.global.t('login.valid.email');
+  const isFieldDisabled = computed(() => {
+    if (props.mode === 'creation' && doesUserExist.value) {
+      return true;
+    }
+    // return props.mode === 'admin-edit';
     return false;
   });
 
-  // Méthodes
-  const onChange = () => {
-    emit('change', props.user);
-  };
+  // --- Validation ---
 
-  const autoCompleteUser = async (email) => {
-    const userData = await usersStore.searchUserFromEmail({ email });
-    if (userData !== null) {
-      const newUser: any = userData;
-      if (newUser.color === null) {
-        newUser.color = usersStore.userColorFromId(
-          newUser.id ? newUser.id : Date.now()
-        );
-      }
-      emit('change', newUser);
-    } else {
-      if (props.user.id !== null) {
-        props.user.reset();
-      }
-      onChange();
+  function validateEmail(email: string | undefined | null): boolean {
+    return !!email?.trim() && isValidEmail(email);
+  }
+
+  const emailValidationError = computed(() => {
+    if (!fieldsTouched.email) return false;
+    const email = localUser.value?.email;
+    if (!email?.trim()) return i18n.global.t('error.required-field');
+    if (!validateEmail(email)) return i18n.global.t('login.valid.email');
+    return false;
+  });
+
+  const nameValidationError = computed(() => {
+    if (!fieldsTouched.name) return false;
+    if (!localUser.value?.name?.trim())
+      return i18n.global.t('error.required-field');
+    return false;
+  });
+
+  const surnameValidationError = computed(() => {
+    if (!fieldsTouched.surname) return false;
+    if (!localUser.value?.surname?.trim())
+      return i18n.global.t('error.required-field');
+    return false;
+  });
+
+  // --- Methods ---
+
+  function touchField(fieldName: keyof typeof fieldsTouched) {
+    fieldsTouched[fieldName] = true;
+  }
+
+  function updateField<K extends keyof UserModel>(
+    field: K,
+    value: UserModel[K]
+  ) {
+    if (localUser.value && localUser.value[field] !== value) {
+      const updatedUser = localUser.value.clone();
+      updatedUser[field] = value;
+      localUser.value = updatedUser;
+      emit('update:user', updatedUser);
     }
-  };
+  }
 
-  const onEmailChange = (email) => {
-    if (props.mode === 'creation' && validation.email.valid) {
-      if (!emailChangeDebouncer.value) {
-        emailChangeDebouncer.value = debounce(async (email) => {
-          loading.value = true;
-          await autoCompleteUser(email);
-          loading.value = false;
-        }, 350);
+  function updateLanguagePreference(lang: string) {
+    if (localUser.value) {
+      const updatedUser = localUser.value.clone();
+      if (!updatedUser.preferences) {
+        updatedUser.preferences = {};
       }
-      if (validation.email.required) {
-        emailChangeDebouncer.value(email);
+      updatedUser.setPreference('language', lang);
+      localUser.value = updatedUser;
+      emit('update:user', updatedUser);
+    }
+  }
+
+  async function searchAndCompleteUser(email: string) {
+    if (!validateEmail(email)) {
+      isSearchingUser.value = false;
+      if (localUser.value?.id && props.mode === 'creation') {
+        const freshUser = new UserModel({ email: localUser.value.email });
+        localUser.value = freshUser;
+        emit('update:user', freshUser);
+        emit('user-found', null);
+      }
+      return;
+    }
+
+    isSearchingUser.value = true;
+    try {
+      const foundUser = await usersStore.searchUser(email);
+      if (foundUser) {
+        const userToEmit = foundUser.clone();
+        if (!userToEmit.color) {
+          userToEmit.color = usersStore.userColorFromId(userToEmit.id);
+        }
+        localUser.value = userToEmit;
+        emit('update:user', userToEmit);
+        emit('user-found', userToEmit);
       } else {
-        errorType.value = null;
+        if (localUser.value?.id) {
+          const freshUser = new UserModel({ email: localUser.value.email });
+          localUser.value = freshUser;
+          emit('update:user', freshUser);
+          emit('user-found', null);
+        } else {
+          updateField('email', email);
+          emit('user-found', null);
+        }
+      }
+    } catch (error) {
+      console.error('Error searching user:', error);
+      emit('user-found', null);
+      if (localUser.value?.id) {
+        const freshUser = new UserModel({ email: localUser.value.email });
+        localUser.value = freshUser;
+        emit('update:user', freshUser);
+      }
+    } finally {
+      isSearchingUser.value = false;
+    }
+  }
+
+  function handleEmailInput(email: string) {
+    if (localUser.value) {
+      localUser.value.email = email;
+    } else {
+      localUser.value = new UserModel({ email });
+    }
+    emit('update:user', localUser.value.clone());
+
+    if (props.mode === 'creation') {
+      if (!searchDebounce.value) {
+        searchDebounce.value = debounce(searchAndCompleteUser, 400);
+      }
+      if (validateEmail(email)) {
+        searchDebounce.value(email);
+      } else {
+        if (
+          searchDebounce.value &&
+          typeof (searchDebounce.value as any).cancel === 'function'
+        ) {
+          (searchDebounce.value as any).cancel();
+        }
+        isSearchingUser.value = false;
+        if (localUser.value?.id) {
+          const freshUser = new UserModel({ email: localUser.value.email });
+          localUser.value = freshUser;
+          emit('update:user', freshUser);
+          emit('user-found', null);
+        }
       }
     }
-  };
+  }
+
+  // --- Watchers ---
 
   watch(
-    () => props.user.email,
-    (newEmail) => {
-      onEmailChange(newEmail);
-    }
+    () => props.user,
+    (newUser) => {
+      if (newUser) {
+        localUser.value = newUser.clone();
+        if (!localUser.value.preferences) {
+          localUser.value.preferences = {};
+        }
+        if (!localUser.value.preferences.language) {
+          localUser.value.setPreference(
+            'language',
+            i18n.global.locale.value || 'fr'
+          );
+        }
+      } else {
+        localUser.value = null;
+      }
+      Object.keys(fieldsTouched).forEach((key) => {
+        fieldsTouched[key as keyof typeof fieldsTouched] = false;
+      });
+    },
+    { immediate: true, deep: true }
   );
-  defineExpose({ canSave });
 </script>
 
 <style lang="scss">
@@ -268,33 +355,37 @@
         align-items: center;
         justify-content: space-between;
         padding-bottom: 30px;
-        height: 62px;
+        min-height: 62px;
 
         .internal {
           padding-left: 5px;
           font-size: var(--paragraph-03);
           font-weight: 500;
+          color: var(--color-info-text);
+          background-color: var(--color-info-bg);
+          padding: 2px 6px;
+          border-radius: 4px;
         }
       }
 
       .user-infos-layout {
         display: flex;
         flex-direction: row;
+        gap: 40px;
 
         .wrapper-color {
-          display: inline-block;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
           position: relative;
-          padding-right: 40px;
 
           .u-color-picker {
-            position: absolute;
-            top: 55px;
-            left: 50px;
+            margin-top: 10px;
           }
         }
 
         .form {
-          width: 80%;
+          flex-grow: 1;
 
           .u-radio {
             margin-top: 10px;
@@ -304,8 +395,21 @@
           .u-form-input {
             margin-bottom: 15px;
           }
+
+          .u-alert-card {
+            margin-bottom: 15px;
+          }
         }
       }
+    }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.3s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+      opacity: 0;
     }
   }
 </style>
