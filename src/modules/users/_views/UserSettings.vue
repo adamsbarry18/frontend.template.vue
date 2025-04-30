@@ -360,7 +360,7 @@
     try {
       // const existingAuth = await authorizationStore.getUserAuthorisations(user.value.id);
       // if (existingAuth) {
-      //    $errorMsg(i18n.global.t('users.add_existing.error_already_exists'));
+      //    $errorMsg(i18n.global.t('users.add-existing.error-already-exists'));
       //    return false;
       // }
 
@@ -368,12 +368,12 @@
         level: level.value,
       });
 
-      $successMsg(i18n.global.t('users.add_existing.success'));
+      $successMsg(i18n.global.t('users.add-existing.success'));
       await usersStore.fetchUser(user.value.id);
       return true;
     } catch (err) {
       console.error('Error adding existing user:', err);
-      $errorMsg(i18n.global.t('users.add_existing.error'));
+      $errorMsg(i18n.global.t('users.add-existing.error'));
       return false;
     }
   }
@@ -421,7 +421,7 @@
           passwordUpdateSuccess = true;
         } catch (pwdError) {
           console.error('Password update failed:', pwdError);
-          $errorMsg(i18n.global.t('user.settings.update.password_error'));
+          $errorMsg(i18n.global.t('user.settings.update.password-error'));
           passwordUpdateSuccess = false;
         }
       }
@@ -439,7 +439,7 @@
           levelUpdateSuccess = true;
         } catch (levelError) {
           console.error('Level update failed:', levelError);
-          $errorMsg(i18n.global.t('user.settings.update.level_error'));
+          $errorMsg(i18n.global.t('user.settings.update.level-error'));
           levelUpdateSuccess = false;
         }
       }
@@ -458,7 +458,7 @@
         }
       } else {
         if (!overallSuccess)
-          $errorMsg(i18n.global.t('user.settings.updated.error_partial'));
+          $errorMsg(i18n.global.t('user.settings.updated.error-partial'));
       }
 
       return overallSuccess;

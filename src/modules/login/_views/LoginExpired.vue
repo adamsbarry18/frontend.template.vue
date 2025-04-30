@@ -150,7 +150,7 @@
       oldPassword.value = '';
       newPassword.value = '';
       confirmPassword.value = '';
-      if (error === 'BAD_CREDENTIALS') {
+      if (error === 'BAD_CREDENTIALS' || error === 'ERR_UNAUTHORIZED') {
         $errorMsg('login.bad.credentials');
       } else if (error === 'ERR_PWD_IDENTICAL') {
         $errorMsg('login.reset.error.same.password');

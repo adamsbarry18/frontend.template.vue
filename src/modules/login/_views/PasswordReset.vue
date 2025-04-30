@@ -10,13 +10,13 @@
         v-if="email"
         data-cy="reset-password-email-display"
       >
-        {{ $t('login.resetPassword.resettingFor', { email: email }) }}
+        {{ $t('login.reset-password.resetting-for', { email: email }) }}
       </div>
 
       <u-form-input
         v-model="newPassword"
         type="password"
-        :label="$t('login.enterNewPassword')"
+        :label="$t('login.enter.new.password')"
         :placeholder="$t('login.password.placeholder')"
         :validator="newPasswordValidator"
         :rules="passwordRules"
@@ -28,7 +28,7 @@
       <u-form-input
         v-model="confirmPassword"
         type="password"
-        :label="$t('login.confirmNewPassword')"
+        :label="$t('login.confirm.new.password')"
         :placeholder="$t('login.password.placeholder')"
         :validator="confirmPasswordValidator"
         autocomplete="new-password"
@@ -98,7 +98,7 @@
     if (!value || value.length === 0)
       return i18n.global.t('login.password.required');
     if (!isPasswordSecure(value))
-      return i18n.global.t('login.error.passwordPolicy');
+      return i18n.global.t('login.error.password-policy');
     return null;
   };
 
@@ -106,7 +106,7 @@
     if (!value || value.length === 0)
       return i18n.global.t('login.password.required');
     if (value !== newPassword.value)
-      return i18n.global.t('login.error.passwordMismatch');
+      return i18n.global.t('login.error.password-mismatch');
     return null;
   };
 
@@ -135,15 +135,15 @@
       let errorKey = `login.error.${errorCode}`;
 
       if (errorCode === 'ERR_PWD_IDENTICAL') {
-        errorKey = 'login.error.passwordIdentical';
+        errorKey = 'login.error.password-dentical';
       } else if (error === 'AUTH_VALIDATION_ERROR') {
-        errorKey = 'login.error.invalidCodeOrData';
+        errorKey = 'login.error.invalid-code-or-data';
       }
 
       $errorMsg(
         i18n.global.t(
           errorKey,
-          i18n.global.t('login.resetPassword.errorGeneric')
+          i18n.global.t('login.reset-password.error-generic')
         )
       );
     } finally {
@@ -160,7 +160,7 @@
       code.value = route.params.token;
     } else {
       console.error('Reset token missing from route parameters.');
-      $errorMsg(i18n.global.t('login.resetPassword.errorMissingToken'));
+      $errorMsg(i18n.global.t('login.reset-password.error-missing-token'));
       router.push({ name: 'login' });
     }
   });

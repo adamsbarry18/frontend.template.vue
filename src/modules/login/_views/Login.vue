@@ -107,11 +107,12 @@
       console.error('Login failed:', error);
       password.value = '';
       switch (error) {
+        case 'ERR_UNAUTHORIZED':
         case 'BAD_CREDENTIALS':
           $errorMsg(i18n.global.t('login.bad.credentials'));
           break;
         case 'ERR_PWD_EXPIRED':
-          $errorMsg(i18n.global.t('login.error.passwordExpired'));
+          $errorMsg(i18n.global.t('login.error.password-expired'));
           router.push({
             name: 'login-expired',
             params: { email: email.value },
@@ -121,17 +122,10 @@
           $errorMsg(i18n.global.t('login.error.validating.status'));
           break;
         case 'INTERNAL_ONLY':
-          $errorMsg(
-            i18n.global.t('login.error.internalOnly', 'Internal only!')
-          );
+          $errorMsg(i18n.global.t('login.error.internal-only'));
           break;
         default:
-          $errorMsg(
-            i18n.global.t(
-              'login.error.generic',
-              'An unexpected error occurred. Please try again.'
-            )
-          );
+          $errorMsg(i18n.global.t('login.error.generic'));
           console.error('Unknown login error details:', error);
       }
     } finally {
@@ -187,11 +181,8 @@
   onMounted(() => {
     if (route.query.passwordUpdated === 'true') {
       $notification.notify({
-        title: i18n.global.t('notification.successTitle', 'Success'),
-        message: i18n.global.t(
-          'login.notification.passwordUpdated',
-          'Password updated successfully!'
-        ),
+        title: i18n.global.t('notification.success-title'),
+        message: i18n.global.t('login.notification.password-updated'),
         type: 'success',
       });
       router.replace({ query: { ...route.query, passwordUpdated: undefined } });

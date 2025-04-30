@@ -267,3 +267,77 @@ body {
   --color-button-disabled-content: var(--color-neutral-500);
   --color-button-disabled-background: var(--color-neutral-200);
 }
+
+/* Définitions pour le thème sombre */
+:root.dark-theme {
+  // Inverser les couleurs neutres pour le fond et le texte
+  --color-neutral-50: var(--color-grey-900);
+  --color-neutral-100: var(--color-grey-800);
+  --color-neutral-200: var(--color-grey-700);
+  --color-neutral-300: var(--color-grey-600);
+  --color-neutral-400: var(--color-grey-500);
+  --color-neutral-500: var(--color-grey-400);
+  --color-neutral-600: var(--color-grey-300);
+  --color-neutral-700: var(--color-grey-200);
+  --color-neutral-800: var(--color-grey-100);
+  --color-neutral-900: var(--color-grey-50);
+
+  // Ajuster les couleurs primaires si nécessaire (ex: version plus claire)
+  --color-primary-50: var(--color-blue-900);
+  --color-primary-100: var(--color-blue-800);
+  --color-primary-200: var(--color-blue-700);
+  --color-primary-300: var(--color-blue-600);
+  --color-primary-400: var(
+    --color-blue-500
+  ); // Peut rester le même ou s'éclaircir
+  --color-primary-500: var(--color-blue-400); // Plus clair
+  --color-primary-600: var(--color-blue-300);
+  --color-primary-700: var(--color-blue-200);
+  --color-primary-800: var(--color-blue-100);
+  --color-primary-900: var(--color-blue-50);
+
+  // Ajuster les couleurs d'avertissement, alternatives, statut...
+  // (Exemple simple, à affiner selon le design souhaité)
+  --color-warning-500: var(--color-orange-400);
+  --color-warning-700: var(--color-orange-300);
+
+  --color-status-success: var(--color-green-400);
+  --color-status-error: var(--color-red-400);
+
+  // Couleurs spécifiques aux composants
+  --color-input-border: var(--color-neutral-600);
+  --color-input-border-hover: var(--color-neutral-500);
+  --color-input-outline-focus: var(--color-neutral-700);
+
+  --color-secondary-button-border: var(--color-neutral-600);
+  --color-secondary-button-border-hover: var(--color-neutral-500);
+  --color-secondary-button-border-focus: var(--color-neutral-800);
+
+  --color-background-white: var(--color-grey-900); // Fond principal sombre
+  --color-background-light: var(--color-grey-800); // Fond secondaire sombre
+
+  --color-placeholder: var(--color-neutral-500);
+
+  // Couleurs désactivées
+  --color-input-disabled-background: var(--color-neutral-800);
+  --color-input-disabled-border: var(--color-neutral-700);
+  --color-input-disabled-content: var(--color-neutral-600);
+
+  --color-button-disabled-content: var(--color-neutral-500);
+  --color-button-disabled-background: var(--color-neutral-700);
+
+  // Box shadow (peut nécessiter un ajustement pour être visible sur fond sombre)
+  --box-shadow-s: 0px 1px 6px 1px rgba(255, 255, 255, 0.08);
+  --box-shadow-m:
+    0 4px 6px -1px rgba(200, 200, 255, 0.1),
+    0 2px 4px -1px rgba(200, 200, 255, 0.1),
+    0px -3px 5px 0px rgba(200, 200, 255, 0.05);
+  // ... adapter les autres ombres ...
+}
+
+/* Optionnel: Définir explicitement le thème light si ce n'est pas le défaut */
+/*
+:root.light-theme {
+  // ... variables du thème light (celles définies initialement dans body) ...
+}
+*/

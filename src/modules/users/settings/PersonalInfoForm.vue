@@ -82,13 +82,30 @@
             @update:model-value="updateField('surname', $event)"
             @blur="touchField('surname')"
           />
-          <u-radio
-            :model-value="localUser?.preferences?.language"
-            button
-            :options="languageOptions"
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences Section -->
+    <div class="preferences-section">
+      <h4>{{ $t('user.settings.preferences.title') }}</h4>
+      <div class="preferences-layout">
+        <div class="form">
+          <div class="preference-item">
+            <label class="el-form-item__label">{{
+              $t('user.settings.preferences.language')
+            }}</label>
+            <u-radio
+              :model-value="localUser?.preferences?.language"
+              :options="languageOptions"
+              :disabled="isFieldDisabled"
+              @update:model-value="updatePreference('language', $event)"
+            />
+          </div>
+          <theme-selector
+            :model-value="localUser?.preferences?.theme"
             :disabled="isFieldDisabled"
-            datu-nav="user-settings-language-radio"
-            @update:model-value="updateLanguagePreference($event)"
+            @update:model-value="updatePreference('theme', $event)"
           />
         </div>
       </div>
@@ -106,11 +123,14 @@
     URadio,
     UAlertCard,
   } from '@/modules/common';
+  import ThemeSelector from './ThemeSelector.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { debounce } from '@/libs/utils/Debounce';
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';
   import UserModel from '@/stores/modules/users/models/UserModel';
+  import { storageService } from '@/libs/utils/StorageService';
+  import { Theme } from '@/types/Theme';
 
   const props = defineProps({
     user: {
@@ -217,15 +237,26 @@
     }
   }
 
-  function updateLanguagePreference(lang: string) {
+  function updatePreference<K extends keyof UserModel['preferences']>(
+    key: K,
+    value: UserModel['preferences'][K]
+  ) {
     if (localUser.value) {
       const updatedUser = localUser.value.clone();
       if (!updatedUser.preferences) {
         updatedUser.preferences = {};
       }
-      updatedUser.setPreference('language', lang);
+      updatedUser.setPreference(key, value);
       localUser.value = updatedUser;
       emit('update:user', updatedUser);
+
+      if (key === 'theme' && typeof value === 'string') {
+        // Émettre un événement personnalisé pour notifier App.vue de changer le thème
+        window.dispatchEvent(
+          new CustomEvent('apply-theme', { detail: value as Theme })
+        );
+        storageService.setItem('theme', value);
+      }
     }
   }
 
@@ -318,11 +349,16 @@
         if (!localUser.value.preferences) {
           localUser.value.preferences = {};
         }
+        // Ensure default preferences are set if missing
         if (!localUser.value.preferences.language) {
           localUser.value.setPreference(
             'language',
             i18n.global.locale.value || 'fr'
           );
+        }
+        if (!localUser.value.preferences.theme) {
+          // Default to 'system' theme if not set
+          localUser.value.setPreference('theme', 'system');
         }
       } else {
         localUser.value = null;
@@ -402,6 +438,41 @@
         }
       }
     }
+
+    .preferences-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--color-input-border);
+
+      h4 {
+        margin-bottom: 20px;
+      }
+
+      .preferences-layout {
+        display: flex;
+        flex-direction: column; // Keep it simple for now
+
+        .form {
+          flex-grow: 1;
+
+          .preference-item {
+            margin-bottom: 15px; // Spacing between language and theme
+
+            .el-form-item__label {
+              color: var(--color-text-secondary);
+              font-size: var(--paragraph-02);
+              line-height: 20px;
+              margin-bottom: 4px;
+              display: block; // Ensure label is above the radio buttons
+            }
+            .u-radio {
+              margin-top: 0; // Reset default margin if needed
+            }
+          }
+        }
+      }
+    }
+
     .fade-enter-active,
     .fade-leave-active {
       transition: opacity 0.3s ease;

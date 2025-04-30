@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
     path: '/404',
     name: '404',
     component: () => import('@/modules/not-found/_views/404.vue'),
-    meta: { authenticated: false },
+    meta: { guest: true }, // Marquer comme publique
   },
   ...loginRoutes,
   ...testRoutes,
@@ -142,18 +142,23 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const isAuthenticated = usersStore.isAuthenticated;
-  const requiresAuth = to.meta.authenticated !== false;
-  const requiresGuest = to.meta.guest === true;
+  const requiresGuest = to.meta.guest === true; // Route publique si true
+
+  // Une route requiert l'authentification si elle n'est PAS marquée comme guest
+  const requiresAuth = !requiresGuest;
 
   if (requiresAuth && !isAuthenticated) {
+    // Si authentification requise mais utilisateur non connecté -> login
     console.log(`Redirecting to login. Target: ${to.fullPath}`);
     next({ name: 'login', query: { redirect: to.fullPath }, replace: true });
   } else if (requiresGuest && isAuthenticated) {
+    // Si route publique mais utilisateur connecté -> dashboard
     console.log(
       'Redirecting authenticated user to dashboard from guest route.'
     );
     next({ name: 'dashboard', replace: true });
   } else if (requiresAuth && isAuthenticated && to.meta.authorisation) {
+    // Si authentification requise, utilisateur connecté ET règles d'autorisation spécifiques
     const authMeta = to.meta.authorisation;
     let isAuthorized = false;
 

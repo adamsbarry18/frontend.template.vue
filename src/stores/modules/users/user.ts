@@ -67,16 +67,15 @@ export const useUsersStore = defineStore('users', () => {
     usersMap.value.set(user.id, user);
   }
 
-  /** Gère les erreurs d'authentification */
   function _handleAuthenticationError(error: any, context: string): never {
     console.error(`Authentication error in ${context}:`, error);
+    const responseData = error.response?.data;
     const apiErrorMessage =
-      error.response?.data?.message || error.response?.data?.data?.message;
-    const apiErrorCode = error.response?.data?.data?.code;
+      responseData?.message || responseData?.data?.message;
+    const apiErrorCode = responseData?.code || responseData?.data?.code;
 
     if (error.response?.status === 401) {
-      logout();
-      throw apiErrorMessage || 'BAD_CREDENTIALS';
+      throw apiErrorCode || apiErrorMessage || 'BAD_CREDENTIALS';
     } else if ([400, 403, 422].includes(error.response?.status)) {
       throw apiErrorCode || apiErrorMessage || 'AUTH_VALIDATION_ERROR';
     } else {
@@ -97,11 +96,6 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  // Actions - Authentification
-  /**
-   * Tente de récupérer l'utilisateur courant basé sur le token stocké.
-   * À appeler au démarrage de l'application.
-   */
   async function initializeAuth(): Promise<void> {
     if (authStatusChecked.value) return;
 

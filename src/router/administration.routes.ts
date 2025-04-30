@@ -2,56 +2,50 @@ import { SecurityLevel } from '@/stores/modules/users/models/UserModel';
 import { RouteRecordRaw } from 'vue-router';
 
 const administrationRoutes: RouteRecordRaw[] = [
-  // Route pour la page "Mon Compte" de l'utilisateur connecté
   {
-    path: '/account/settings', // Nouveau chemin dédié
-    name: 'user-settings-edit', // Nom de route cohérent avec nav.ts et UserInfo.vue
+    path: '/account/settings',
+    name: 'user-settings-edit',
     component: () => import('@/modules/users/_views/UserSettings.vue'),
-    props: { mode: 'user-edit' }, // Mode spécifique pour l'édition par l'utilisateur
+    props: { mode: 'user-edit' },
     meta: {
-      // Le breadcrumb est géré dynamiquement dans UserSettings.vue pour ce mode.
-      // Authentification requise par défaut.
+      // Breadcrumb géré dynamiquement dans le composant
     },
   },
-  // Section Administration (accessible uniquement aux admins)
   {
-    path: '/admin/users', // Chemin préfixé par /admin pour clarté
-    name: 'users', // Nom pour la liste des utilisateurs
+    path: '/admin/users',
+    name: 'users',
     component: () => import('@/modules/users/_views/Users.vue'),
     meta: {
-      breadcrumb: [{ label: 'admin.users' }], // Breadcrumb pour la liste admin
+      breadcrumb: [{ label: 'admin.users' }],
       authorisation: {
-        level: SecurityLevel.ADMIN, // Seuls les admins peuvent accéder
+        level: SecurityLevel.ADMIN,
       },
     },
   },
   {
-    path: '/admin/users/settings/:id(\\d+)', // Chemin admin + ID numérique
-    name: 'admin-user-settings-edit', // Nom distinct pour l'édition par l'admin
+    path: '/admin/users/settings/:id(\\d+)',
+    name: 'admin-user-settings-edit',
     component: () => import('@/modules/users/_views/UserSettings.vue'),
-    // Passer l'ID comme prop numérique et le mode admin
     props: (route) => ({ mode: 'admin-edit', id: Number(route.params.id) }),
     meta: {
-      // Le breadcrumb est géré dynamiquement dans UserSettings.vue pour ce mode.
+      // Breadcrumb géré dynamiquement dans le composant
       authorisation: {
-        level: SecurityLevel.ADMIN, // Seuls les admins peuvent éditer d'autres utilisateurs
+        level: SecurityLevel.ADMIN,
       },
     },
   },
   {
-    path: '/admin/users/new', // Chemin admin pour la création
-    name: 'user-settings-creation', // Nom distinct pour la création par l'admin
+    path: '/admin/users/new',
+    name: 'user-settings-creation',
     component: () => import('@/modules/users/_views/UserSettings.vue'),
-    props: { mode: 'creation' }, // Mode spécifique pour la création
+    props: { mode: 'creation' },
     meta: {
-      // Le breadcrumb est géré dynamiquement dans UserSettings.vue pour ce mode.
+      // Breadcrumb géré dynamiquement dans le composant
       authorisation: {
-        level: SecurityLevel.ADMIN, // Seuls les admins peuvent créer des utilisateurs
+        level: SecurityLevel.ADMIN,
       },
     },
   },
-  // Les anciennes routes 'my-account', 'user-settings' et 'new-user' ont été
-  // remplacées/renommées par les routes ci-dessus pour plus de clarté et de cohérence.
 ];
 
 export default administrationRoutes;

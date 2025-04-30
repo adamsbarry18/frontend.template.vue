@@ -3,8 +3,8 @@
     <h1>
       {{
         !isFinished
-          ? $t('login.forgotPassword.title')
-          : $t('login.forgotPassword.emailSentTitle')
+          ? $t('login.forgot-password.title')
+          : $t('login.forgot-password.email-sent-title')
       }}
     </h1>
 
@@ -13,7 +13,7 @@
       @submit.prevent="onSubmit"
       data-cy="forgot-password-form"
     >
-      <p class="instructions">{{ $t('login.forgotPassword.instructions') }}</p>
+      <p class="instructions">{{ $t('login.forgot-password.instructions') }}</p>
       <u-form-input
         v-model="email"
         :label="$t('login.email.label')"
@@ -40,7 +40,7 @@
           :disabled="!canSubmit || isLoading"
           data-cy="forgot-password-submit-button"
         >
-          {{ $t('login.forgotPassword.submitButton') }}
+          {{ $t('login.forgot-password.submit-button') }}
         </u-button>
       </div>
     </form>
@@ -50,7 +50,9 @@
       class="confirmation-message"
       data-cy="forgot-password-confirmation"
     >
-      <p>{{ $t('login.forgotPassword.confirmationText', { email: email }) }}</p>
+      <p>
+        {{ $t('login.forgot-password.confirmation-text', { email: email }) }}
+      </p>
       <u-button
         type="primary"
         @click="goToLogin"
@@ -117,7 +119,7 @@
       $errorMsg(
         i18n.global.t(
           `login.error.${errorCode}`,
-          i18n.global.t('login.forgotPassword.errorGeneric')
+          i18n.global.t('login.forgot-password.error-generic')
         )
       );
     } finally {

@@ -48,8 +48,14 @@ export class SecurityInterceptor extends BaseInterceptor {
           throw error;
         }
 
+        // Ne pas tenter de relogin pour les requêtes d'authentification
+        if (originalRequest.url?.includes('/auth/login')) {
+          console.log('Skipping auth error interceptor for login request');
+          throw error;
+        }
+
         if ((originalRequest as any).skipAuthErrorInterceptor) {
-          console.log('Skipping auth error interceptor for this request.');
+          console.log('Skipping auth error interceptor by request flag');
           throw error;
         }
 
@@ -60,7 +66,7 @@ export class SecurityInterceptor extends BaseInterceptor {
           console.warn('Received 401 Unauthorized. Attempting relogin...');
           if (!(originalRequest as any)._retry) {
             (originalRequest as any)._retry = true;
-            // this.detachResponseInterceptor();
+            this.detachResponseInterceptor();
             try {
               const user = await usersStore.fetchCurrentUser();
               if (!user) {
@@ -70,14 +76,14 @@ export class SecurityInterceptor extends BaseInterceptor {
 
               console.log('Relogin successful. Retrying original request...');
               const updatedConfig = this.setRequestHeaders(originalRequest);
-              // this.attachResponseInterceptor();
+              this.attachResponseInterceptor();
               return await axios(updatedConfig);
             } catch (reloginError) {
               console.error(
                 'Relogin attempt failed. Forcing logout.',
                 reloginError
               );
-              // this.attachResponseInterceptor();
+              this.attachResponseInterceptor();
               await this.forceLogout(usersStore);
 
               const query: { redirect?: string } = {};
@@ -193,13 +199,18 @@ export class SecurityInterceptor extends BaseInterceptor {
   ): Promise<void> {
     try {
       console.warn('SecurityInterceptor: Forcing logout...');
-      await usersStore.logout();
-      console.warn('SecurityInterceptor: Logout completed.');
+
+      await usersStore.logout().catch(() => {});
+
+      console.warn('SecurityInterceptor: Local cleanup completed');
+      // Redirection forcee meme si le logout API echoue
+      router.push({ name: 'login', query: { force: '1' } }).catch(() => {});
     } catch (logoutError) {
       console.error(
         'SecurityInterceptor: Error during force logout:',
         logoutError
       );
+      router.push({ name: 'login' }).catch(() => {});
     }
   }
 }
