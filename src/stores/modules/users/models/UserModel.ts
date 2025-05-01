@@ -7,7 +7,7 @@ const sortById = (a: UserModel, b: UserModel): number => {
   return Number(a.id) - Number(b.id);
 };
 
-const INTERNAL_EMAIL_DOMAINS = ['myapp.io', 'myapp.com'];
+const INTERNAL_EMAIL_DOMAINS = ['myapp.fr', 'myapp.com'];
 
 export enum PasswordStatus {
   ACTIVE = 'ACTIVE',
@@ -96,8 +96,8 @@ export default class UserModel {
     const modelData = {
       ...user,
       name: user.name ?? null,
-      createdAt: user.createdAt ? dayjs(user.createdAt).toDate() : null,
-      updatedAt: user.updatedAt ? dayjs(user.updatedAt).toDate() : null,
+      createdAt: user.createdAt ? dayjs(user.createdAt).toDate() : new Date(),
+      updatedAt: user.updatedAt ? dayjs(user.updatedAt).toDate() : new Date(),
       passwordUpdatedAt: user.passwordUpdatedAt
         ? dayjs(user.passwordUpdatedAt).toDate()
         : null,
@@ -105,6 +105,7 @@ export default class UserModel {
         ? dayjs(user.permissionsExpireAt).toDate()
         : null,
       permissions: user.permissions ?? null,
+      preferences: user.preferences ?? null,
     };
     delete modelData.password;
     return new UserModel(modelData);

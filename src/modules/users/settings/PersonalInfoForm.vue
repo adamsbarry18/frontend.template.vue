@@ -129,8 +129,6 @@
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';
   import UserModel from '@/stores/modules/users/models/UserModel';
-  import { storageService } from '@/libs/utils/StorageService';
-  import { Theme } from '@/types/Theme';
 
   const props = defineProps({
     user: {
@@ -243,20 +241,9 @@
   ) {
     if (localUser.value) {
       const updatedUser = localUser.value.clone();
-      if (!updatedUser.preferences) {
-        updatedUser.preferences = {};
-      }
       updatedUser.setPreference(key, value);
       localUser.value = updatedUser;
       emit('update:user', updatedUser);
-
-      if (key === 'theme' && typeof value === 'string') {
-        // Émettre un événement personnalisé pour notifier App.vue de changer le thème
-        window.dispatchEvent(
-          new CustomEvent('apply-theme', { detail: value as Theme })
-        );
-        storageService.setItem('theme', value);
-      }
     }
   }
 
@@ -345,21 +332,19 @@
     () => props.user,
     (newUser) => {
       if (newUser) {
-        localUser.value = newUser.clone();
-        if (!localUser.value.preferences) {
-          localUser.value.preferences = {};
+        const clonedUser = newUser.clone();
+        if (!clonedUser.preferences) {
+          clonedUser.preferences = {};
         }
-        // Ensure default preferences are set if missing
-        if (!localUser.value.preferences.language) {
-          localUser.value.setPreference(
-            'language',
-            i18n.global.locale.value || 'fr'
-          );
+        if (clonedUser.preferences.language == null) {
+          const defaultLang = i18n.global.locale.value || 'fr';
+          clonedUser.setPreference('language', defaultLang);
         }
-        if (!localUser.value.preferences.theme) {
-          // Default to 'system' theme if not set
-          localUser.value.setPreference('theme', 'system');
+        if (clonedUser.preferences.theme == null) {
+          const defaultTheme = 'system';
+          clonedUser.setPreference('theme', defaultTheme);
         }
+        localUser.value = clonedUser;
       } else {
         localUser.value = null;
       }

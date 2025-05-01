@@ -311,6 +311,7 @@
   "user.settings.preferences.themes.dark": "Dark",
   "user.settings.preferences.themes.system": "System",
   "user.settings.update-password": "Update password",
+  "user.settings.update.preferences-error": "Error updating preferences",
   "user.settings.update-info": "The new password will take effect after saving the changes.",
   "user.settings.create-info": "Please set a password to set up the new account.",
   "user.settings.password-no-action": "No action is required, the account has already been activated.",

@@ -70,7 +70,6 @@
   import AccountAdministrationCard from '../settings/AccountAdministrationCard.vue';
   import PasswordForm from '../settings/PasswordForm.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { updateActiveLanguage } from '@/libs/utils/Language';
   import { useNotification } from '@/composables/notfication';
   import i18n from '@/i18n';
   import UserModel from '@/stores/modules/users/models/UserModel';
@@ -136,15 +135,14 @@
 
   const isDirty = computed(() => {
     if (!user.value || !originalUser.value) {
-      return (
+      const dirtyInCreation =
         !!user.value?.email ||
         !!user.value?.name ||
         !!user.value?.surname ||
-        !!password.value
-      );
+        !!password.value;
+      return dirtyInCreation;
     }
 
-    let changed = false;
     const fieldsToCompare: (keyof UserModel)[] = [
       'email',
       'name',
@@ -153,29 +151,34 @@
     ];
     for (const field of fieldsToCompare) {
       if (user.value[field] !== originalUser.value[field]) {
-        changed = true;
-        break;
+        return true;
       }
     }
-    if (
-      user.value.preferences?.language !==
-      originalUser.value.preferences?.language
-    ) {
-      changed = true;
+
+    const originalPrefs = originalUser.value.preferences ?? {};
+    const currentPrefs = user.value.preferences ?? {};
+    const originalLang = originalPrefs.language ?? null;
+    const currentLang = currentPrefs.language ?? null;
+    if (originalLang !== currentLang) {
+      return true;
+    }
+
+    const originalTheme = originalPrefs.theme ?? null;
+    const currentTheme = currentPrefs.theme ?? null;
+    if (originalTheme !== currentTheme) {
+      return true;
     }
 
     if (
       props.mode === 'admin-edit' &&
       level.value !== originalUser.value.level
     ) {
-      changed = true;
+      return true;
     }
-
     if (password.value !== '') {
-      changed = true;
+      return true;
     }
-
-    return changed;
+    return false;
   });
 
   const canSave = computed(() => {
@@ -244,7 +247,6 @@
       let userFromStore = usersStore.getUserById(targetUserId);
       if (!userFromStore) {
         try {
-          console.log(`User ${targetUserId} not in store, fetching...`);
           userFromStore = await usersStore.fetchUser(targetUserId);
         } catch (error) {
           console.error(`Failed to fetch user ${targetUserId}:`, error);
@@ -400,19 +402,32 @@
   async function editUser(): Promise<boolean> {
     if (!user.value?.id || !originalUser.value) return false;
 
-    let updateSuccess = false;
+    let infoUpdateSuccess = false;
     let passwordUpdateSuccess = true;
     let levelUpdateSuccess = true;
+    let preferencesUpdateSuccess = true;
+
+    const originalPrefs = originalUser.value.preferences ?? {};
+    const currentPrefs = user.value.preferences ?? {};
+    const languageChanged = originalPrefs.language !== currentPrefs.language;
+    const themeChanged = originalPrefs.theme !== currentPrefs.theme;
+    const levelChanged =
+      props.mode === 'admin-edit' &&
+      level.value !== null &&
+      level.value !== originalUser.value.level;
+    const passwordChanged = !!password.value;
+    const userCloneForInfoCheck = user.value.clone();
+    const originalUserCloneForInfoCheck = originalUser.value.clone();
+
+    delete userCloneForInfoCheck.preferences;
+    delete originalUserCloneForInfoCheck.preferences;
 
     try {
-      const hasInfoChanged = !deepEqual(user.value, originalUser.value);
-
-      if (hasInfoChanged) {
+      if (!deepEqual(userCloneForInfoCheck, originalUserCloneForInfoCheck)) {
         await usersStore.updateUser(user.value);
       }
-      updateSuccess = true;
-
-      if (password.value) {
+      infoUpdateSuccess = true;
+      if (passwordChanged) {
         try {
           await usersStore.updateUserPassword({
             user: user.value,
@@ -425,17 +440,12 @@
           passwordUpdateSuccess = false;
         }
       }
-
-      if (
-        props.mode === 'admin-edit' &&
-        level.value !== null &&
-        level.value !== originalUser.value.level
-      ) {
+      if (levelChanged) {
         try {
           await authorizationStore.updateUserAuthorization(user.value.id, {
-            level: level.value,
+            level: level.value!,
           });
-          user.value.level = level.value;
+          user.value.level = level.value!;
           levelUpdateSuccess = true;
         } catch (levelError) {
           console.error('Level update failed:', levelError);
@@ -443,27 +453,47 @@
           levelUpdateSuccess = false;
         }
       }
+      const preferencePromises: Promise<void>[] = [];
+      if (languageChanged) {
+        preferencePromises.push(
+          usersStore.setPreference({
+            key: 'language',
+            value: currentPrefs.language,
+          })
+        );
+      }
+      if (themeChanged) {
+        preferencePromises.push(
+          usersStore.setPreference({ key: 'theme', value: currentPrefs.theme })
+        );
+      }
+
+      if (preferencePromises.length > 0) {
+        try {
+          await Promise.all(preferencePromises);
+          preferencesUpdateSuccess = true;
+        } catch (prefError) {
+          console.error('Preferences update failed:', prefError);
+          $errorMsg(i18n.global.t('user.settings.update.preferences-error'));
+          preferencesUpdateSuccess = false;
+        }
+      }
 
       const overallSuccess =
-        updateSuccess && passwordUpdateSuccess && levelUpdateSuccess;
+        infoUpdateSuccess &&
+        passwordUpdateSuccess &&
+        levelUpdateSuccess &&
+        preferencesUpdateSuccess;
 
       if (overallSuccess) {
         $successMsg(i18n.global.t('user.settings.updated.success'));
-        if (
-          user.value.preferences?.language !==
-            originalUser.value.preferences?.language &&
-          currentUser.value?.id === user.value.id
-        ) {
-          updateActiveLanguage(user.value.preferences.language, true);
-        }
       } else {
-        if (!overallSuccess)
-          $errorMsg(i18n.global.t('user.settings.updated.error-partial'));
+        $errorMsg(i18n.global.t('user.settings.updated.error-partial'));
       }
 
       return overallSuccess;
     } catch (err) {
-      console.error('User update error:', err);
+      console.error('User general info update error:', err);
       $errorMsg(i18n.global.t('user.settings.updated.error'));
       return false;
     }

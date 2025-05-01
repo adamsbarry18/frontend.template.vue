@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import UserModel, { SecurityLevel } from './models/UserModel';
 import { useApiStore } from '@/stores/modules/api';
+// import i18n from '@/i18n'; // Removed as it's no longer directly used here
 import { updateActiveLanguage } from '@/libs/utils/Language';
 import { ServerError } from '@/libs/utils/Errors';
 import { debounce } from '@/libs/utils/Debounce';
@@ -409,7 +410,15 @@ export const useUsersStore = defineStore('users', () => {
       _setCurrentUser(updatedUser);
 
       if (key === 'language' && typeof value === 'string') {
-        updateActiveLanguage(value.toLowerCase(), false);
+        const lang = value.toLowerCase() as 'fr' | 'en';
+        updateActiveLanguage(lang, false); // updateActiveLanguage handles setting the locale now
+        storageService.setLanguage(lang);
+        // i18n.global.locale.value = lang; // Remove redundant update
+      } else if (key === 'theme' && typeof value === 'string') {
+        // The useTheme composable now watches the store preference directly.
+        // We only need to update the store and localStorage here.
+        storageService.setItem('theme', value);
+        // window.dispatchEvent(new CustomEvent('apply-theme', { detail: value })); // Removed: Handled by useTheme watcher
       }
     } catch (error) {
       throw new ServerError('users', 'setPreference', error, {

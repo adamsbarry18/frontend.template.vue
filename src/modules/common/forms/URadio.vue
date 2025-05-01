@@ -66,13 +66,13 @@
     },
   });
 
-  const emit = defineEmits(['input', 'change']);
+  const emit = defineEmits(['update:modelValue', 'change']);
 
   const input = ref(props.modelValue);
 
   watch(
     () => props.modelValue,
-    (val) => {
+    (val: any) => {
       input.value = val;
     }
   );
@@ -83,7 +83,7 @@
   });
 
   function handleChange() {
-    emit('input', input.value);
+    emit('update:modelValue', input.value);
     emit('change', input.value);
   }
 </script>

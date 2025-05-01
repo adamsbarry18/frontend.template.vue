@@ -1,4 +1,5 @@
-body {
+/* Define default (light) theme variables on :root */
+:root {
   // BASE COLORS
   --color-grey-50: #f9f9f9;
   --color-grey-100: #f2f2f2;
@@ -266,6 +267,29 @@ body {
 
   --color-button-disabled-content: var(--color-neutral-500);
   --color-button-disabled-background: var(--color-neutral-200);
+
+  // Semantic Text Colors (Light Theme)
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-700);
+  --color-text-placeholder: var(--color-neutral-500); // Alias for placeholder
+  --color-text-disabled: var(--color-neutral-600); // Alias for disabled content
+  --color-text-link: var(--color-primary-600);
+  --color-text-link-hover: var(--color-primary-700);
+  --color-text-on-primary: var(--color-white); // Text on primary background
+  --color-text-on-warning: var(--color-white); // Text on warning background
+  --color-text-on-error: var(--color-white); // Text on error background
+  --color-text-on-success: var(--color-white); // Text on success background
+}
+
+/* Add base body styles separately if needed */
+body {
+  /* Example: font-family, margin, etc. */
+  /* Colors should rely on :root variables */
+  background-color: var(--color-background-light); /* Example using semantic variable */
+  color: var(--color-text-primary); /* Example using semantic variable (needs definition) */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 /* Définitions pour le thème sombre */
@@ -303,6 +327,94 @@ body {
 
   --color-status-success: var(--color-green-400);
   --color-status-error: var(--color-red-400);
+  --color-status-paused: var(--color-orange-400); // Lighter orange
+  --color-status-running: var(--color-blue-400); // Lighter blue
+  --color-status-draft: var(--color-neutral-400); // Lighter grey
+  --color-status-planned: var(--color-alternative-3-300); // Lighter light-blue
+
+  // Semantic Text Colors (Dark Theme)
+  --color-text-primary: var(--color-neutral-100); // Light grey
+  --color-text-secondary: var(--color-neutral-300); // Lighter grey
+  --color-text-placeholder: var(--color-neutral-500); // Mid grey (can stay same or lighten)
+  --color-text-disabled: var(--color-neutral-600); // Darker grey (can stay same or darken slightly)
+  --color-text-link: var(--color-primary-400); // Lighter blue
+  --color-text-link-hover: var(--color-primary-300); // Even lighter blue
+  --color-text-on-primary: var(--color-white); // Often stays white or near-white
+  --color-text-on-warning: var(--color-black); // Needs contrast on lighter orange
+  --color-text-on-error: var(--color-black); // Needs contrast on lighter red
+  --color-text-on-success: var(--color-black); // Needs contrast on lighter green
+
+
+  // Ajuster les couleurs alternatives
+  // Alternative 1 (Orange)
+  --color-alternative-1-50: var(--color-orange-900);
+  --color-alternative-1-100: var(--color-orange-800);
+  --color-alternative-1-200: var(--color-orange-700);
+  --color-alternative-1-300: var(--color-orange-600);
+  --color-alternative-1-400: var(--color-orange-500);
+  --color-alternative-1-500: var(--color-orange-400); // Lighter
+  --color-alternative-1-600: var(--color-orange-300);
+  --color-alternative-1-700: var(--color-orange-200);
+  --color-alternative-1-800: var(--color-orange-100);
+  --color-alternative-1-900: var(--color-orange-50);
+
+  // Alternative 2 (Brown)
+  --color-alternative-2-50: var(--color-brown-900);
+  --color-alternative-2-100: var(--color-brown-800);
+  --color-alternative-2-200: var(--color-brown-700);
+  --color-alternative-2-300: var(--color-brown-600);
+  --color-alternative-2-400: var(--color-brown-500);
+  --color-alternative-2-500: var(--color-brown-400); // Lighter
+  --color-alternative-2-600: var(--color-brown-300);
+  --color-alternative-2-700: var(--color-brown-200);
+  --color-alternative-2-800: var(--color-brown-100);
+  --color-alternative-2-900: var(--color-brown-50);
+
+  // Alternative 3 (Light Blue)
+  --color-alternative-3-50: var(--color-light-blue-900);
+  --color-alternative-3-100: var(--color-light-blue-800);
+  --color-alternative-3-200: var(--color-light-blue-700);
+  --color-alternative-3-300: var(--color-light-blue-600);
+  --color-alternative-3-400: var(--color-light-blue-500);
+  --color-alternative-3-500: var(--color-light-blue-400); // Lighter
+  --color-alternative-3-600: var(--color-light-blue-300);
+  --color-alternative-3-700: var(--color-light-blue-200);
+  --color-alternative-3-800: var(--color-light-blue-100);
+  --color-alternative-3-900: var(--color-light-blue-50);
+
+  // Alternative 4 (Purple)
+  --color-alternative-4-50: var(--color-purple-900);
+  --color-alternative-4-100: var(--color-purple-800);
+  --color-alternative-4-200: var(--color-purple-700);
+  --color-alternative-4-300: var(--color-purple-600);
+  --color-alternative-4-400: var(--color-purple-500);
+  --color-alternative-4-500: var(--color-purple-400); // Lighter
+  --color-alternative-4-600: var(--color-purple-300);
+  --color-alternative-4-700: var(--color-purple-200);
+  --color-alternative-4-800: var(--color-purple-100);
+  --color-alternative-4-900: var(--color-purple-50);
+
+  // Ajuster les couleurs Dataviz
+  --color-dataviz-1: var(--color-blue-400);
+  --color-dataviz-2: var(--color-red-400); // Red can often stay similar
+  --color-dataviz-3: var(--color-yellow-400); // Yellow often stays similar
+  --color-dataviz-4: var(--color-green-400); // Green often stays similar
+  --color-dataviz-5: var(--color-alternative-3-400); // Lighter light-blue
+  --color-dataviz-6: var(--color-purple-400); // Lighter purple
+
+  // Ajuster les couleurs Legacy Dataviz
+  --color-legacy-dataviz-1: var(--color-red-400);
+  --color-legacy-dataviz-2: var(--color-yellow-300);
+  --color-legacy-dataviz-3: var(--color-green-300);
+  --color-legacy-dataviz-4: var(--color-orange-300);
+  --color-legacy-dataviz-5: var(--color-red-500); // Slightly darker red might work
+  --color-legacy-dataviz-6: var(--color-blue-400);
+  --color-legacy-dataviz-7: var(--color-purple-400);
+  --color-legacy-dataviz-8: var(--color-green-400);
+  --color-legacy-dataviz-9: var(--color-alternative-3-300);
+  --color-legacy-dataviz-10: var(--color-blue-300);
+  --color-legacy-dataviz-11: var(--color-alternative-4-300);
+
 
   // Couleurs spécifiques aux composants
   --color-input-border: var(--color-neutral-600);
@@ -335,9 +447,11 @@ body {
   // ... adapter les autres ombres ...
 }
 
-/* Optionnel: Définir explicitement le thème light si ce n'est pas le défaut */
+/* Optional: Explicit light theme definition (already covered by :root) */
+/* :root.light-theme { */
+/* Note: If you need styles *only* for light theme, use :root:not(.dark-theme) */
 /*
-:root.light-theme {
+:root:not(.dark-theme) {
   // ... variables du thème light (celles définies initialement dans body) ...
 }
 */

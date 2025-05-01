@@ -343,6 +343,7 @@
   "users.created.success": "Utilisateur créé avec succès",
   "users.created.error": "Erreur lors de la création de l'utilisateur",
   "user.settings.update.level-error": "Erreur lors de la mise à jour du niveau d'accès",
+  "user.settings.update.preferences-error": "Erreur lors de la mise à jour des préférences.",
   "users.delete.title": "Supprimer l'utilisateur",
   "user.delete.success": "Utilisateur supprimé | Utilisateurs supprimés",
   "user.delete.error": "Impossible de supprimer l'utilisateur",

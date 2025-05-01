@@ -38,13 +38,14 @@
   import { ref, computed, onMounted, watchEffect, onUnmounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import i18n from '@/i18n';
+  import { useTheme } from '@/composables/useTheme'; // Import the new composable
   import { initializeDateLocale } from '@/libs/utils/Date';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import { useNotification } from './composables/notfication';
   import { storageService } from '@/libs/utils/StorageService';
   import ULoader from '@/modules/common/others/ULoader.vue';
-  import type { Theme } from '@/types/Theme';
+  // import type { Theme } from '@/types/Theme'; // Removed as theme logic is now in useTheme
 
   // Import des composants UI (gardés de l'original, ajustez si nécessaire)
   import MainHeader from '@/modules/shared/menu/main-header/MainHeader.vue';
@@ -66,6 +67,9 @@
     () => notificationStore.persistentNotificationsVisible
   );
 
+  // Initialize theme management using the composable
+  useTheme();
+
   const PUBLIC_ROUTES = [
     'login',
     'password-forgot',
@@ -73,67 +77,7 @@
     'send-email',
   ];
 
-  // --- Theme Logic ---
-  let systemThemeChangeHandler:
-    | ((this: MediaQueryList, ev: MediaQueryListEvent) => any)
-    | null = null;
-  let mediaQueryList: MediaQueryList | null = null;
-
-  function applyTheme(theme: Theme): void {
-    const root = document.documentElement;
-    let effectiveTheme: 'light' | 'dark';
-
-    if (theme === 'system') {
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-    } else {
-      effectiveTheme = theme;
-    }
-
-    console.log(
-      `Applying theme preference: ${theme}, Effective theme: ${effectiveTheme}`
-    );
-
-    root.classList.remove('light-theme', 'dark-theme');
-    if (effectiveTheme === 'dark') {
-      root.classList.add('dark-theme');
-    } else {
-      root.classList.add('light-theme');
-    }
-    updateSystemThemeListener(theme);
-  }
-
-  function updateSystemThemeListener(currentThemePref: Theme): void {
-    if (mediaQueryList && systemThemeChangeHandler) {
-      mediaQueryList.removeEventListener('change', systemThemeChangeHandler);
-      systemThemeChangeHandler = null;
-      mediaQueryList = null;
-    }
-
-    if (currentThemePref === 'system') {
-      mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-      systemThemeChangeHandler = () => {
-        console.log('System color scheme changed, reapplying theme...');
-        applyTheme('system');
-      };
-      mediaQueryList.addEventListener('change', systemThemeChangeHandler);
-    }
-  }
-
-  function initializeTheme(): void {
-    const preferredTheme = storageService.getItem('theme') || 'system';
-    console.log(`Initializing theme. Preferred: ${preferredTheme}`);
-    applyTheme(preferredTheme as Theme);
-  }
-
-  // Handler pour l'événement personnalisé
-  function handleApplyThemeEvent(event: Event) {
-    const customEvent = event as CustomEvent<Theme>;
-    if (customEvent.detail) {
-      applyTheme(customEvent.detail);
-    }
-  }
+  // Theme logic is now handled by useTheme() composable
 
   // --- Watchers ---
   watchEffect(() => {
@@ -193,22 +137,16 @@
 
     checkAdBlocker();
 
-    initializeTheme();
+    // Theme initialization and listeners are handled by useTheme()
 
     console.log(
       'App.vue onMounted: Initialization complete (Auth check deferred to router).'
     );
-
-    // Écouter les changements de thème demandés par d'autres composants
-    window.addEventListener('apply-theme', handleApplyThemeEvent);
   });
 
   // Nettoyer les écouteurs lors du démontage
   onUnmounted(() => {
-    if (mediaQueryList && systemThemeChangeHandler) {
-      mediaQueryList.removeEventListener('change', systemThemeChangeHandler);
-    }
-    window.removeEventListener('apply-theme', handleApplyThemeEvent);
+    // Theme listener cleanup is handled by useTheme()
   });
 </script>
 
