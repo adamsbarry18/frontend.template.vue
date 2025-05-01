@@ -139,32 +139,31 @@
 <style lang="scss" scoped>
   .password-forgot {
     :deep(.u-form-input) {
-      // Cibler le composant UFormInput
       margin-bottom: 24px;
-      min-width: 350px; // Garder une largeur minimale
-      width: 100%; // Prendre toute la largeur disponible
+      min-width: 350px;
+      width: 100%;
     }
     .instructions {
-      margin-bottom: 25px; // Espace sous les instructions
+      margin-bottom: 25px;
       color: var(--color-text-secondary);
       text-align: center;
-      font-size: var(--paragraph-02); // Taille de police légèrement plus grande
+      font-size: var(--paragraph-02);
     }
     .form-action {
       display: flex;
       align-items: center;
-      justify-content: center; // Centrer les boutons
-      margin-top: 25px; // Augmenter l'espace
-      gap: 15px; // Espace entre les boutons
+      justify-content: center;
+      margin-top: 25px;
+      gap: 15px;
     }
     .confirmation-message {
       text-align: center;
       margin-top: 20px;
       p {
-        margin-bottom: 30px; // Plus d'espace avant le bouton
+        margin-bottom: 30px;
         color: var(--color-text-primary);
-        font-size: var(--paragraph-01); // Taille de police standard
-        line-height: 1.5; // Améliorer la lisibilité
+        font-size: var(--paragraph-01);
+        line-height: 1.5;
       }
     }
   }

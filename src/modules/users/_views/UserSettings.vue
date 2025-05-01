@@ -280,9 +280,15 @@
         router.push({ name: 'users' });
       }
     } else if (props.mode === 'user-edit' && !currentUser.value) {
-      console.error('Cannot edit user settings: current user not available.');
-      $errorMsg(i18n.global.t('user.settings.load.error'));
-      router.push({ name: 'login' });
+      // Vérifier si l'utilisateur est toujours authentifié *avant* de montrer l'erreur et rediriger
+      if (usersStore.isAuthenticated) {
+        console.error('Cannot edit user settings: current user not available.');
+        $errorMsg(i18n.global.t('user.settings.load.error'));
+        router.push({ name: 'login' });
+      } else {
+        // L'utilisateur s'est déconnecté entre temps, ne rien faire ou juste logguer
+        console.warn('User logged out while UserSettings was loading.');
+      }
     }
     setBreadcrumb();
   }

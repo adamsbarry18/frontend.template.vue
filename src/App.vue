@@ -35,19 +35,15 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted, watchEffect, onUnmounted } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
+  import { ref, computed, onMounted } from 'vue'; // Supprimer watchEffect
+  // Supprimer useRouter et useRoute car ils ne sont plus utilisés ici
   import i18n from '@/i18n';
-  import { useTheme } from '@/composables/useTheme'; // Import the new composable
   import { initializeDateLocale } from '@/libs/utils/Date';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import { useNotification } from './composables/notfication';
   import { storageService } from '@/libs/utils/StorageService';
   import ULoader from '@/modules/common/others/ULoader.vue';
-  // import type { Theme } from '@/types/Theme'; // Removed as theme logic is now in useTheme
-
-  // Import des composants UI (gardés de l'original, ajustez si nécessaire)
   import MainHeader from '@/modules/shared/menu/main-header/MainHeader.vue';
   import MainNav from '@/modules/shared/menu/main-menu/MainNav.vue';
   import NotificationPanel from '@/modules/shared/notification/NotificationPanel.vue';
@@ -56,8 +52,8 @@
   const { $message } = useNotification();
   const usersStore = useUsersStore();
   const notificationStore = useNotificationStore();
-  const router = useRouter();
-  const route = useRoute();
+  // const router = useRouter(); // Supprimé car inutilisé
+  // const route = useRoute(); // Supprimé car inutilisé
 
   const adBlockerDiv = ref<HTMLDivElement | null>(null);
 
@@ -66,40 +62,37 @@
   const notificationVisible = computed(
     () => notificationStore.persistentNotificationsVisible
   );
+  // useTheme();
 
-  // Initialize theme management using the composable
-  useTheme();
-
-  const PUBLIC_ROUTES = [
-    'login',
-    'password-forgot',
-    'password-reset',
-    'send-email',
-  ];
-
-  // Theme logic is now handled by useTheme() composable
+  // const PUBLIC_ROUTES = [ // Supprimé car inutilisé
+  //   'login',
+  //   'password-forgot',
+  //   'password-reset',
+  //   'send-email',
+  // ];
 
   // --- Watchers ---
-  watchEffect(() => {
-    if (!authCheckCompleted.value) {
-      return;
-    }
-
-    const currentRouteName = typeof route.name === 'string' ? route.name : '';
-    const isPublicRoute = PUBLIC_ROUTES.includes(currentRouteName);
-
-    console.log(
-      `Auth Check Completed: ${authCheckCompleted.value}, Is Authenticated: ${isAuthenticated.value}, Current Route: ${route.path}, Is Public: ${isPublicRoute}`
-    );
-
-    if (!isAuthenticated.value && !isPublicRoute) {
-      console.log('Redirecting to login...');
-      router.push({ name: 'login', query: { redirect: route.fullPath } });
-    } else if (isAuthenticated.value && currentRouteName === 'login') {
-      console.log('Redirecting to dashboard...');
-      router.push({ name: 'dashboard' });
-    }
-  });
+  // watchEffect(() => {
+  //   // Cette logique est maintenant centralisée dans router.beforeEach (src/router/index.ts)
+  //   if (!authCheckCompleted.value) {
+  //     return;
+  //   }
+  //
+  //   const currentRouteName = typeof route.name === 'string' ? route.name : '';
+  //   const isPublicRoute = PUBLIC_ROUTES.includes(currentRouteName);
+  //
+  //   console.log(
+  //     `Auth Check Completed: ${authCheckCompleted.value}, Is Authenticated: ${isAuthenticated.value}, Current Route: ${route.path}, Is Public: ${isPublicRoute}`
+  //   );
+  //
+  //   if (!isAuthenticated.value && !isPublicRoute) {
+  //     console.log('Redirecting to login...');
+  //     router.push({ name: 'login', query: { redirect: route.fullPath } });
+  //   } else if (isAuthenticated.value && currentRouteName === 'login') {
+  //     console.log('Redirecting to dashboard...');
+  //     router.push({ name: 'dashboard' });
+  //   }
+  // });
 
   const checkAdBlocker = () => {
     setTimeout(() => {
@@ -125,7 +118,6 @@
     }, 2000);
   };
   onMounted(async () => {
-    console.log('App.vue onMounted: Initializing...');
     const storedLang = storageService.getLanguage();
     const defaultLang = 'fr';
     const langToUse: 'en' | 'fr' =
@@ -136,17 +128,6 @@
     console.log(`Language set to: ${langToUse}`);
 
     checkAdBlocker();
-
-    // Theme initialization and listeners are handled by useTheme()
-
-    console.log(
-      'App.vue onMounted: Initialization complete (Auth check deferred to router).'
-    );
-  });
-
-  // Nettoyer les écouteurs lors du démontage
-  onUnmounted(() => {
-    // Theme listener cleanup is handled by useTheme()
   });
 </script>
 

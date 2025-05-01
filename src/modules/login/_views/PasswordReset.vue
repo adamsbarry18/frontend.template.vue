@@ -169,15 +169,15 @@
 <style lang="scss" scoped>
   .password-reset {
     .form {
-      width: 100%; // Responsive
-      max-width: 450px; // Limite max
-      margin: 0 auto; // Centrer
+      width: 100%;
+      max-width: 450px;
+      margin: 0 auto;
       padding: 20px;
 
       .email-display {
         margin-bottom: 20px;
         padding: 10px 15px;
-        background-color: var(--color-neutral-200); // Fond léger
+        background-color: var(--color-neutral-200);
         border-radius: 4px;
         color: var(--color-text-secondary);
         text-align: center;
@@ -189,7 +189,7 @@
       }
 
       .form-action {
-        margin-top: 20px; // Espace ajusté
+        margin-top: 20px;
         text-align: center;
       }
     }

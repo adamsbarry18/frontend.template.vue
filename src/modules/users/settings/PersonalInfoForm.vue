@@ -435,23 +435,23 @@
 
       .preferences-layout {
         display: flex;
-        flex-direction: column; // Keep it simple for now
+        flex-direction: column;
 
         .form {
           flex-grow: 1;
 
           .preference-item {
-            margin-bottom: 15px; // Spacing between language and theme
+            margin-bottom: 15px;
 
             .el-form-item__label {
               color: var(--color-text-secondary);
               font-size: var(--paragraph-02);
               line-height: 20px;
               margin-bottom: 4px;
-              display: block; // Ensure label is above the radio buttons
+              display: block;
             }
             .u-radio {
-              margin-top: 0; // Reset default margin if needed
+              margin-top: 0;
             }
           }
         }

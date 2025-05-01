@@ -22,7 +22,7 @@ export enum SecurityLevel {
   USER = 3,
   INTEGRATOR = 4,
   ADMIN = 5,
-  NOBODY = 999, // Match backend definition
+  NOBODY = 999,
 }
 
 export default class UserModel {
@@ -44,13 +44,8 @@ export default class UserModel {
   permissionsExpireAt: Date | null;
   permissions: Record<string, any> | null;
   authorisationOverrides: string | null;
-
-  // Jetons d'authentification frontend uniquement
   token?: string;
 
-  /**
-   * Construct a UserModel from partial backend data (dates as string or Date)
-   */
   constructor(data?: Partial<UserModel>) {
     this.id = data?.id ?? 0;
     this.uid = data?.uid ?? null;
@@ -86,10 +81,6 @@ export default class UserModel {
   }
 
   /**
-   * Transforme un objet brut issu de l'API en instance de UserModel.
-   * Ici, on ne traite plus de partitions.
-   */
-  /**
    * Transform API object into UserModel instance (dates as string or Date)
    */
   static fromAPI(user: Partial<UserModel>): UserModel {
@@ -118,9 +109,6 @@ export default class UserModel {
     return [this.name, this.surname].filter(Boolean).join(' ').trim();
   }
 
-  /**
-   * Prépare l'objet pour l'envoi vers l'API, en supprimant certains champs.
-   */
   /**
    * Prepare object for API (convert dates to ISO string, remove frontend-only fields)
    */

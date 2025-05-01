@@ -137,7 +137,6 @@
     return null;
   }
 
-  // Soumission du formulaire
   async function onSubmit() {
     try {
       await usersStore.changePassword({

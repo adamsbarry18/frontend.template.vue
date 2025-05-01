@@ -1,6 +1,6 @@
 import i18n from '@/i18n';
 import { initializeDateLocale } from './Date';
-import { storageService } from './StorageService'; // Import storageService
+import { storageService } from './StorageService';
 
 interface TranslateProvider {
   use: (lang: any) => void;
@@ -20,8 +20,7 @@ export function updateActiveLanguage(
   lang: any,
   forceReload: boolean = false
 ): void {
-  storageService.setLanguage(lang); // Use storageService to set language
-  // Use .value to update the Ref correctly
+  storageService.setLanguage(lang);
   if (
     i18n.global.locale &&
     typeof i18n.global.locale === 'object' &&
@@ -29,7 +28,6 @@ export function updateActiveLanguage(
   ) {
     i18n.global.locale.value = lang;
   } else {
-    // Fallback or warning if locale is not a Ref as expected
     console.warn('i18n.global.locale is not a Ref, assigning directly.');
     i18n.global.locale = lang;
   }
