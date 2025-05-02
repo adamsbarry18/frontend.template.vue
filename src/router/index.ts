@@ -1,10 +1,10 @@
 import {
   createRouter,
-  createWebHistory,
   isNavigationFailure,
   NavigationFailureType,
   RouteRecordRaw,
   RouteLocationNormalized,
+  createWebHashHistory,
 } from 'vue-router';
 import i18n from '@/i18n';
 import loginRoutes from './login.routes';
@@ -53,10 +53,14 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     redirect: '/404',
   },
+  {
+    path: '/',
+    redirect: '/login',
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 

@@ -6,6 +6,7 @@ import { updateActiveLanguage } from '@/libs/utils/Language';
 import { ServerError } from '@/libs/utils/Errors';
 import { debounce } from '@/libs/utils/Debounce';
 import { storageService } from '@/libs/utils/StorageService';
+import { PendingInterceptor } from '@/libs/interceptors/PendingInterceptor';
 
 export const useUsersStore = defineStore('users', () => {
   // State
@@ -101,7 +102,6 @@ export const useUsersStore = defineStore('users', () => {
 
     const storedToken = storageService.getAuthToken();
     if (storedToken) {
-      apiStore.setAuthToken(storedToken);
       try {
         console.log('Initializing auth: Found token, fetching current user...');
         const response = await apiStore.api.get('/api/v1/users/me');
@@ -118,7 +118,6 @@ export const useUsersStore = defineStore('users', () => {
           error.message === 'BAD_CREDENTIALS'
         ) {
           storageService.removeAuthToken();
-          apiStore.clearAuthToken();
           _setCurrentUser(null);
         } else {
           console.error('Initialization failed due to non-auth error:', error);
@@ -144,47 +143,50 @@ export const useUsersStore = defineStore('users', () => {
     try {
       const response = await apiStore.api.post('/api/v1/auth/login', {
         data: { email, password },
+        skipAuthErrorInterceptor: true,
       });
 
       const tokenFromResponse =
         response.data?.token || response.data?.data?.token;
       if (tokenFromResponse) {
         storageService.setAuthToken(tokenFromResponse);
-        apiStore.setAuthToken(tokenFromResponse);
       } else {
         console.warn(
-          'Login successful, but no token received in response body. Assuming cookie-based session or stateless API.'
+          'Login successful, but no token received in response body.'
         );
       }
 
       await fetchCurrentUser();
       return true;
     } catch (error) {
+      console.error('[store login catch] Error during login process:', error);
       _handleAuthenticationError(error, 'login');
     }
   }
 
   async function logout(): Promise<void> {
-    if (isLoggingOut.value) return;
-
-    isLoggingOut.value = true;
-    console.warn('Logging out...');
+    const apiStore = useApiStore();
 
     try {
-      await apiStore.api.post('/api/v1/auth/logout', {
-        skipAuthErrorInterceptor: true,
-      });
+      if (!isLoggingOut.value) {
+        isLoggingOut.value = true;
+        console.warn('Logging out user...');
+        if (token.value) {
+          await apiStore.api.post('/api/v1/auth/logout', {
+            skipAuthErrorInterceptor: true,
+          });
+        }
+      }
     } catch (error) {
-      console.error('Logout API call failed (ignoring):', error);
+      console.error('logout error', error);
     } finally {
+      isLoggingOut.value = false;
       storageService.removeAuthToken();
-      apiStore.clearAuthToken();
-      _setCurrentUser(null);
+      PendingInterceptor.clearPendingCache();
+      currentUser.value = null;
       usersMap.value.clear();
       usersFetched.value = false;
-      isLoggingOut.value = false;
       authStatusChecked.value = false;
-      console.warn('Logged out.');
     }
   }
 
@@ -238,18 +240,27 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   async function fetchCurrentUser(): Promise<UserModel | null> {
+    console.log('[fetchCurrentUser] Start'); // Log start
     try {
+      console.log('[fetchCurrentUser] Calling API /users/me');
       const response = await apiStore.api.get('/api/v1/users/me');
+      console.log('[fetchCurrentUser] API call successful'); // Log success
       const user = UserModel.fromAPI(response.data.data);
       _setCurrentUser(user);
+      console.log('[fetchCurrentUser] User set, returning user.');
       return user;
     } catch (error) {
-      console.error('Failed to fetch current user:', error);
+      console.error(
+        '[fetchCurrentUser catch] Failed to fetch current user:',
+        error
+      ); // Log dans le catch
       storageService.removeAuthToken();
-      apiStore.clearAuthToken();
       _setCurrentUser(null);
+      console.log('[fetchCurrentUser catch] Throwing ServerError');
       throw new ServerError('users', 'fetchCurrentUser', error);
     }
+    // Ce point ne devrait pas être atteint normalement
+    // console.log('[fetchCurrentUser] End (unexpected)');
   }
 
   async function fetchUser(userId: number | string): Promise<UserModel | null> {

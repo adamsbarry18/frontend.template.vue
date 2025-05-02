@@ -21,9 +21,22 @@ const Cache = {
   del(key: string): void {
     this._items[key] = null;
   },
+  clear(): void {
+    this._items = {};
+    console.warn(
+      '[PendingInterceptor Cache] Cleared all pending request entries.'
+    );
+  },
 };
 
 export class PendingInterceptor extends BaseInterceptor {
+  /**
+   * Static method to clear the pending request cache.
+   * Should be called on logout or when a full state reset is needed.
+   */
+  public static clearPendingCache(): void {
+    Cache.clear();
+  }
   public override getType(): string {
     return 'PendingInterceptor';
   }
@@ -35,19 +48,15 @@ export class PendingInterceptor extends BaseInterceptor {
       ):
         | InternalAxiosRequestConfig<any>
         | Promise<InternalAxiosRequestConfig<any>> => {
-        // Ne traiter que les requêtes GET et si le cache est activé
         if (request.method === 'get' && cacheable) {
           const key = this.getCacheKey(request);
           const _pending = Cache.get(key) as PendingCallbacks | undefined;
 
           if (_pending) {
-            // Une requête identique est déjà en cours, on renvoie une promesse qui s'adaptera
             return new Promise((resolve, reject) => {
               _pending.add((err, data) => {
                 if (err) return reject(err);
-                // Affecte la donnée mise en cache à request.data
                 request.data = data;
-                // On définit l'adapter pour renvoyer directement la réponse en cache sans exécuter la requête
                 request.adapter = () =>
                   Promise.resolve({
                     data,
@@ -62,7 +71,6 @@ export class PendingInterceptor extends BaseInterceptor {
             });
           }
 
-          // Aucun cache n'existe encore pour cette clé, on crée une "file d'attente"
           Cache.set(key, {
             _fn: [] as Array<(err: any, data?: any) => void>,
             add(fn: (err: any, data?: any) => void) {
@@ -96,7 +104,6 @@ export class PendingInterceptor extends BaseInterceptor {
         if (cacheable) {
           const key = this.getCacheKey(response.config);
           if (response.config.method === 'get') {
-            // Pour les requêtes GET, on résout la file d'attente avec les données reçues
             const pending = Cache.get(key) as PendingCallbacks | null;
             if (pending) {
               pending.resolve(response.data);

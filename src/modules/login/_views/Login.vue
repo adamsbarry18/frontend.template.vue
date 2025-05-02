@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
-  import { useRouter, useRoute, type LocationQueryValue } from 'vue-router';
+  import { useRouter, useRoute } from 'vue-router';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
   import { UFormInput, UButton } from '@/modules/common';
@@ -57,12 +57,10 @@
   const usersStore = useUsersStore();
   const { $notification, $errorMsg } = useNotification();
 
-  // --- State ---
   const fullscreenLoading = ref(false);
   const email = ref('');
   const password = ref('');
 
-  // --- Validation ---
   type ValidatorFn = (value: string) => string | null;
 
   const emailValidator: ValidatorFn = (value) => {
@@ -82,102 +80,92 @@
     return null;
   };
 
-  // --- Computed ---
   const canSubmit = computed(() => {
     return !emailValidator(email.value) && !passwordValidator(password.value);
   });
 
-  // --- Methods ---
   async function onSubmit() {
     if (!canSubmit.value) return;
 
     fullscreenLoading.value = true;
     try {
-      console.log(`Attempting login for: ${email.value}`);
       await usersStore.login({
         email: email.value,
         password: password.value,
       });
-      console.log('Login successful');
 
-      const redirectPath = getRedirectPath(route.query.redirect);
-      console.log(`Redirecting to: ${redirectPath}`);
-      await router.push(redirectPath);
+      await getRedirect();
     } catch (error: any) {
-      console.error('Login failed:', error);
+      console.error('Login process failed:', error);
       password.value = '';
-      switch (error) {
-        case 'ERR_UNAUTHORIZED':
-        case 'BAD_CREDENTIALS':
-          $errorMsg(i18n.global.t('login.bad.credentials'));
-          break;
-        case 'ERR_PWD_EXPIRED':
-          $errorMsg(i18n.global.t('login.error.password-expired'));
-          router.push({
-            name: 'login-expired',
-            params: { email: email.value },
-          });
-          break;
-        case 'ERR_PWD_VALIDATING':
-          $errorMsg(i18n.global.t('login.error.validating.status'));
-          break;
-        case 'INTERNAL_ONLY':
-          $errorMsg(i18n.global.t('login.error.internal-only'));
-          break;
-        default:
-          $errorMsg(i18n.global.t('login.error.generic'));
-          console.error('Unknown login error details:', error);
+      const errorMap: Record<string, string> = {
+        ERR_UNAUTHORIZED: 'login.bad.credentials',
+        BAD_CREDENTIALS: 'login.bad.credentials',
+        ERR_PWD_EXPIRED: 'login.error.password-expired',
+        ERR_PWD_VALIDATING: 'login.error.validating.status',
+        INTERNAL_ONLY: 'login.error.internal-only',
+        ERR_NETWORK: 'login.error.network',
+      };
+
+      const errorKey = error in errorMap ? error : 'default';
+      $errorMsg(i18n.global.t(errorMap[errorKey] || 'login.error.generic'));
+
+      if (error === 'ERR_PWD_EXPIRED') {
+        await router.push({
+          name: 'login-expired',
+          params: { email: email.value },
+        });
       }
     } finally {
       fullscreenLoading.value = false;
     }
   }
 
-  /**
-   * Détermine le chemin de redirection après une connexion réussie.
-   * @param redirectQuery Le paramètre 'redirect' de l'URL.
-   * @returns Le chemin vers lequel rediriger (par défaut: dashboard).
-   */
-  function getRedirectPath(
-    redirectQuery: LocationQueryValue | LocationQueryValue[] | undefined
-  ): string {
-    const defaultRedirect = { name: 'dashboard' };
+  async function getRedirect() {
+    const redirectQuery = route.query?.redirect;
+    let targetPath: string | null = null;
 
-    if (!redirectQuery) {
-      return router.resolve(defaultRedirect).fullPath;
-    }
+    if (redirectQuery) {
+      const potentialPath = Array.isArray(redirectQuery)
+        ? redirectQuery[0]
+        : redirectQuery;
 
-    const redirectParam = Array.isArray(redirectQuery)
-      ? redirectQuery[0]
-      : redirectQuery;
+      if (potentialPath) {
+        try {
+          const decodedPath = decodeURIComponent(potentialPath);
 
-    if (redirectParam) {
-      try {
-        const decodedPath = decodeURIComponent(redirectParam);
-        if (decodedPath.startsWith('/') && !decodedPath.startsWith('//')) {
           const resolvedRoute = router.resolve(decodedPath);
-          if (resolvedRoute.matched.length > 0) {
-            console.log(`Valid redirect path found: ${decodedPath}`);
-            return decodedPath;
+
+          if (
+            resolvedRoute.matched.length > 0 &&
+            resolvedRoute.name !== '404'
+          ) {
+            targetPath = resolvedRoute.fullPath;
           } else {
             console.warn(
-              `Redirect path "${decodedPath}" does not match any known route. Falling back to default.`
+              `Tentative de redirection vers un chemin invalide ou inexistant : '${decodedPath}'. Redirection vers le tableau de bord.`
             );
           }
-        } else {
-          console.warn(
-            `Invalid or external redirect path "${decodedPath}" ignored. Falling back to default.`
+        } catch (error) {
+          console.error(
+            `Erreur lors du décodage ou de la résolution de l'URL de redirection '${potentialPath}':`,
+            error
           );
         }
-      } catch (e) {
-        console.error('Error decoding redirect parameter:', e);
       }
     }
 
-    return router.resolve(defaultRedirect).fullPath;
+    if (targetPath) {
+      await router.push(targetPath);
+    } else {
+      await redirectToDashboard();
+    }
   }
 
-  // --- Lifecycle Hooks ---
+  async function redirectToDashboard() {
+    await router.replace({ name: 'dashboard' });
+  }
+
   onMounted(() => {
     if (route.query.passwordUpdated === 'true') {
       $notification.notify({

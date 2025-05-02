@@ -95,24 +95,5 @@ class ApiClient {
 export const useApiStore = defineStore('api', {
   state: () => ({
     api: new ApiClient(),
-    authToken: null as string | null, // Ajout pour stocker le token
   }),
-  actions: {
-    /**
-     * Sets the authentication token in the store state.
-     * The SecurityInterceptor handles the Authorization header.
-     * @param token - The authentication token.
-     */
-    setAuthToken(token: string) {
-      this.authToken = token; // Met à jour seulement l'état du store
-    },
-
-    /**
-     * Clears the authentication token from the store state.
-     * The SecurityInterceptor handles the Authorization header.
-     */
-    clearAuthToken() {
-      this.authToken = null; // Met à jour seulement l'état du store
-    },
-  },
 });
