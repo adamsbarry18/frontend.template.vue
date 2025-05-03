@@ -1,5 +1,6 @@
 {
   "settings.settings.title": "Administration",
+"settings.users.title": "Utilisateurs",
   "settings.settings.preferences.title": "Preferences",
   "groups-nav.store.title": "Store",
   "groups-nav.store.travel.title": "Travel",
@@ -18,6 +19,7 @@
   "breadcrumb.admin.users": "Droits utilisateurs",
   "breadcrumb.admin.new-user": "Nouvel utilisateur",
   "breadcrumb.my-account": "Mon compte",
+"breadcrumb.dashboard": "Tableau de bord",
   "breadcrumb.default-placeholder": "Indiquez un nom...",
   "commons.code-editor.search.by-word": "Mot entier",
   "commons.code-editor.search.find": "Chercher",
@@ -354,5 +356,8 @@
   "users.created": "Créé",
   "users.filter.placeholder": "Rechercher...",
   "users.list.header.available": "{count} utilisateur | {count} utilisateurs",
-  "users.list.header.internal": "Interne"
+  "users.list.header.internal": "Interne",
+  "users.delete.modal.deleted": "Voulez-vous vraiment supprimer cet utilisateur ? | Voulez-vous vraiment supprimer ces {count} utilisateurs ?",
+  "notify.success": "Succès",
+  "users.fetch.error": "Erreur lors du chargement des utilisateurs"
 }

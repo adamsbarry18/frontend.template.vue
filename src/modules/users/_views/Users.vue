@@ -5,6 +5,7 @@
       :loading="loading"
       :data="usersToDisplay"
       :default-sort="{ prop: 'name', order: 'ascending' }"
+      :selectable="canWriteUser"
       :list-actions="listActions"
       :search-function="searchUser"
       entity-icon="icon-account"
@@ -153,38 +154,41 @@
   } from '@/modules/common';
   import { useNotification } from '@/composables/notfication';
   import { useUsersStore } from '@/stores/modules/users/user';
-  // import { usersList } from '../../../../_resources/stories/_data/users-list';
-  // import { useAuthorisationsStore } from '@/stores/modules/authorisations/authorisations';
+  import UserModel from '@/stores/modules/users/models/UserModel';
+  import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
   import i18n from '@/i18n';
-  // Supprimer l'import inutile de useApiStore
 
   const loading = ref(true);
   const usersStore = useUsersStore();
-
+  const authorisationsStore = useAuthorisationsStore();
   const { $errorMsg, $successMsg, $msgbox, $notification } = useNotification();
-
   const router = useRouter();
-  const usersToDisplay = computed(() => {
+
+  const usersToDisplay = computed<UserModel[]>(() => {
     return usersStore.getAllUsers || [];
   });
 
-  // Actions listées dans le header du UList
+  const canWriteUser = computed(() =>
+    authorisationsStore.isUserAllowed('user', 'write')
+  );
+
   const listActions = computed(() => [
     {
       label: i18n.global.t('commons.form.edit'),
       icon: 'icon-edit',
-      onClick: (user: any) => editUser(user),
+      disabled: !canWriteUser.value,
+      onClick: (user: UserModel) => editUser(user),
     },
     {
       label: i18n.global.t('commons.form.delete'),
       icon: 'icon-delete',
       multiTarget: true,
-      onClick: (users: any[]) => confirmDelete(users),
+      disabled: !canWriteUser.value,
+      onClick: (users: UserModel[]) => confirmDelete(users),
     },
   ]);
 
-  // Méthode de recherche dans la liste des utilisateurs
-  function searchUser(user: any, searchInput: string): boolean {
+  function searchUser(user: UserModel, searchInput: string): boolean {
     const lower = searchInput.toLowerCase();
     return (
       user.name?.toLowerCase().includes(lower) ||
@@ -193,27 +197,24 @@
     );
   }
 
-  // Méthodes d'action
-  function editUser(user: any) {
-    // Redirige vers la page d'édition de l'utilisateur
-    // Remplacer par la route et la logique réelles
-    router.push({ name: 'user-settings', params: { id: user.id } });
+  function editUser(user: UserModel) {
+    router.push({
+      name: 'user-settings-edit',
+      params: { id: user.id.toString() },
+    });
   }
 
   function newUser() {
-    // Redirige vers la page de création d'un nouvel utilisateur
-    // Remplacer par la route réelle
-    console.log('new user');
-    router.push(`/new-user`);
+    router.push({ name: 'user-settings-creation' });
   }
 
-  async function confirmDelete(users) {
+  async function confirmDelete(users: UserModel[]) {
     const msgboxNodes = [];
     msgboxNodes.push(
       h(
         'p',
         { class: 'msgbox-text' },
-        i18n.global.t('users.delete.modal.deleted', users.length > 1 ? 2 : 1)
+        i18n.global.t('users.delete.modal.deleted', users.length)
       )
     );
     msgboxNodes.push(
@@ -234,22 +235,21 @@
         cancelButtonText: i18n.global.t('commons.form.cancel'),
       });
 
-      const promises = users
-        .map
-        /*async (user) =>
-          await authorisationsStore.deleteAuthorisation({
-            userId: user.id,
-          })*/
-        ();
+      const promises = users.map(async (user) => {
+        await usersStore.deleteUser(user.id);
+      });
 
       await Promise.all(promises);
+
       $successMsg(i18n.global.t('user.delete.success', promises.length));
     } catch (err) {
-      if (!err || (err.toString() !== 'cancel' && err.toString() !== 'close')) {
-        $errorMsg(i18n.global.t('user.deleted.error'));
+      if (err && err !== 'cancel' && err !== 'close') {
+        console.error('Error deleting user(s):', err);
+        $errorMsg(i18n.global.t('user.delete.error'));
       }
     }
   }
+
   onMounted(async () => {
     if (
       router.currentRoute.value.params.newUser &&
@@ -261,9 +261,14 @@
         type: 'success',
       });
     }
-    // Assurer que les utilisateurs sont chargés
-    await usersStore.fetchUsers(); // Utiliser ensureUsers pour éviter les appels multiples si déjà fait
-    loading.value = false;
+    try {
+      await usersStore.ensureUsersFetched();
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+      $errorMsg(i18n.global.t('users.fetch.error'));
+    } finally {
+      loading.value = false;
+    }
   });
 </script>
 

@@ -1,5 +1,6 @@
 {
   "settings.settings.title": "Administration",
+"settings.users.title": "Users",
   "settings.settings.preferences.title": "Preferences",
   "groups-nav.store.title": "Store",
   "groups-nav.store.travel.title": "Travel",
@@ -16,6 +17,7 @@
   "breadcrumb.admin.users": "Accounts rights",
   "breadcrumb.admin.new-user": "New user",
   "breadcrumb.my-account": "My account",
+"breadcrumb.dashboard": "Dashboard",
   "breadcrumb.default-placeholder": "Enter a name...",
   "commons.autocomplete.no-result": "<No results>",
   "commons.before": "Before",
@@ -353,5 +355,8 @@
   "users.created": "Created",
   "users.filter.placeholder": "Search...",
   "users.list.header.available": "{count} account | {count} accounts",
-  "users.list.header.internal": "Internal"
+  "users.list.header.internal": "Internal",
+  "users.delete.modal.deleted": "Are you sure you want to delete this user? | Are you sure you want to delete these {count} users?",
+  "notify.success": "Success",
+  "users.fetch.error": "Error fetching users"
 }

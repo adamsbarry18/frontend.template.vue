@@ -139,7 +139,7 @@
 
   async function onSubmit() {
     try {
-      await usersStore.changePassword({
+      await usersStore.changeExpiredPassword({
         email: email.value,
         password: oldPassword.value,
         newPassword: newPassword.value,

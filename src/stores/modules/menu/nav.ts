@@ -130,23 +130,16 @@ export const useNavStore = defineStore('nav', () => {
     icon: 'settings',
     children: [
       {
-        name: 'preferences',
-        icon: 'vehicle', // TODO: Changer l'icône ?
-        state: 'preferences', // Assurez-vous que cette route existe
-        activesStates: ['preferences', 'other-preferences'],
-        // Pas d'autorisation spécifique, accessible à tous les connectés ?
-      },
-      {
         name: 'users',
         icon: 'users',
         state: 'users', // Route pour la liste des utilisateurs
         activesStates: [
-          'users',
-          'user-settings-edit',
-          'user-settings-creation',
-        ], // Adapter aux noms de routes réels
+          'users', // Liste des utilisateurs
+          'admin-user-settings-edit', // Édition d'un utilisateur par l'admin
+          'user-settings-creation', // Création d'un utilisateur par l'admin
+        ],
         authorisation: {
-          // feature: 'user', // Utiliser la feature définie dans l'API/backend
+          // feature: 'user',
           // action: 'read',
           level: SecurityLevel.ADMIN, // Niveau requis pour voir la section utilisateurs
         },

@@ -190,6 +190,22 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  async function changeExpiredPassword({ email, password, newPassword }) {
+    const apiStore = useApiStore();
+    try {
+      await apiStore.api.post('/api/v1/auth/password/expired', {
+        data: {
+          email,
+          password,
+          newPassword,
+        },
+        skipAuthErrorInterceptor: true,
+      });
+    } catch (error) {
+      _handleAuthenticationError(error, 'Expired password');
+    }
+  }
+
   async function resetPassword({ email }: { email: string }): Promise<void> {
     try {
       await apiStore.api.post('/api/v1/auth/password/reset', {
@@ -398,6 +414,19 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  async function resetPreferences({ user }) {
+    const apiStore = useApiStore();
+    try {
+      if (!user) throw 'No user provided';
+      await apiStore.api.delete(`/api/v1/users/${user.id}/preferences`, {
+        data: {},
+        skipAuthErrorInterceptor: true,
+      });
+    } catch (error) {
+      throw new ServerError('users', 'resetPreferences', error, {});
+    }
+  }
+
   async function setPreference({
     key,
     value,
@@ -455,6 +484,7 @@ export const useUsersStore = defineStore('users', () => {
     login,
     logout,
     resetPassword,
+    changeExpiredPassword,
     confirmResetPassword,
     updateUserPassword,
     passwordConfirm,
@@ -466,6 +496,7 @@ export const useUsersStore = defineStore('users', () => {
     updateUser,
     addUser,
     deleteUser,
+    resetPreferences,
     setPreference,
   };
 });
