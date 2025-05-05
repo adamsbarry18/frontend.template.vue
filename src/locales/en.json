@@ -335,6 +335,7 @@
   "user.settings.updated.error": "Unable to update the profile",
   "user.settings.load.error": "Failed to load user information",
   "user.settings.update.password-error": "Password update failed.",
+  "user.settings.update.password-success-logout": "Password updated successfully. You will be logged out.",
   "user.settings.updated.error-partial": "Update partially failed. Some information may not have been saved.",
   "user.settings.password-validator.minimum-length": "8 characters minimum",
   "user.settings.password-validator.lowercase": "1 lowercase letter",

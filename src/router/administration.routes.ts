@@ -12,7 +12,7 @@ const administrationRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/admin/users',
+    path: '/users',
     name: 'users',
     component: () => import('@/modules/users/_views/Users.vue'),
     meta: {
@@ -23,7 +23,7 @@ const administrationRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/admin/users/settings/:id(\\d+)',
+    path: '/users/settings/:id(\\d+)',
     name: 'admin-user-settings-edit',
     component: () => import('@/modules/users/_views/UserSettings.vue'),
     props: (route) => ({ mode: 'admin-edit', id: Number(route.params.id) }),
@@ -35,7 +35,7 @@ const administrationRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/admin/users/new',
+    path: '/users/new',
     name: 'user-settings-creation',
     component: () => import('@/modules/users/_views/UserSettings.vue'),
     props: { mode: 'creation' },

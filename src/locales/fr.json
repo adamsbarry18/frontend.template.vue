@@ -339,6 +339,7 @@
   "user.settings.updated.error": "Impossible de mettre à jour le profil",
   "user.settings.load.error": "Impossible de charger les informations de l'utilisateur",
   "user.settings.update.password-error": "La mise à jour du mot de passe a échoué.",
+  "user.settings.update.password-success-logout": "Mot de passe mis à jour avec succès. Vous allez être déconnecté.",
   "user.settings.updated.error-partial": "La mise à jour a partiellement échoué. Certaines informations n'ont peut-être pas été sauvegardées.",
   "users.created.text": "Utilisateur ajouté",
   "users.created.text.error": "Impossible de créer l'utilisateur",

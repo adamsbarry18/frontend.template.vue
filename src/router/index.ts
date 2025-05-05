@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
     path: '/404',
     name: '404',
     component: () => import('@/modules/not-found/_views/404.vue'),
-    meta: { guest: true }, // Marquer comme publique
+    meta: { guest: true },
   },
   ...loginRoutes,
   ...testRoutes,
@@ -146,9 +146,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const isAuthenticated = usersStore.isAuthenticated;
-  const requiresGuest = to.meta.guest === true; // Route publique si true
-
-  // Une route requiert l'authentification si elle n'est PAS marquée comme guest
+  const requiresGuest = to.meta.guest === true;
   const requiresAuth = !requiresGuest;
 
   if (requiresAuth && !isAuthenticated) {

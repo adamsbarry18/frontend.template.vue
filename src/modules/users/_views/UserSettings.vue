@@ -277,8 +277,8 @@
         }
       } else {
         const currentEmail = user.value?.email;
-        const initialLevel = SecurityLevel.USER; // Default level for new user
-        const initialInternal = UserModel.isEmailInternal(currentEmail || ''); // Default internal based on email
+        const initialLevel = SecurityLevel.USER;
+        const initialInternal = UserModel.isEmailInternal(currentEmail || '');
         const initialPermissions = null;
 
         user.value = new UserModel({
@@ -313,11 +313,11 @@
 
   async function loadUser() {
     const targetUserId = userIdFromRouteOrCurrent.value;
-    userAuthorizations.value = null; // Reset authorizations on load
+    userAuthorizations.value = null;
     originalAuthorizations.value = null;
     if (props.mode === 'creation') {
       const initialLevel = SecurityLevel.USER;
-      const initialInternal = false; // Default for creation form start
+      const initialInternal = false;
       const initialPermissions = null;
       user.value = new UserModel({
         level: initialLevel,
@@ -569,23 +569,41 @@
     delete originalUserCloneForInfoCheck.preferences;
 
     try {
-      if (!deepEqual(userCloneForInfoCheck, originalUserCloneForInfoCheck)) {
+      const infoChanged = !deepEqual(
+        userCloneForInfoCheck,
+        originalUserCloneForInfoCheck
+      );
+      if (infoChanged) {
         await usersStore.updateUser(user.value);
       }
       infoUpdateSuccess = true;
+
+      let wasCurrentUserPasswordUpdated = false;
       if (passwordChanged) {
         try {
-          await usersStore.updateUserPassword({
+          wasCurrentUserPasswordUpdated = await usersStore.updateUserPassword({
             user: user.value,
             password: password.value,
           });
-          passwordUpdateSuccess = true;
+
+          if (wasCurrentUserPasswordUpdated) {
+            $successMsg(
+              i18n.global.t('user.settings.update.password-success-logout')
+            );
+            passwordUpdateSuccess = true;
+
+            await usersStore.logout();
+            return true;
+          } else {
+            passwordUpdateSuccess = true;
+          }
         } catch (pwdError) {
           console.error('Password update failed:', pwdError);
           $errorMsg(i18n.global.t('user.settings.update.password-error'));
           passwordUpdateSuccess = false;
         }
       }
+
       if (authorizationChanged && userAuthorizations.value) {
         try {
           await authorizationStore.updateUserAuthorization(user.value.id, {
@@ -593,10 +611,12 @@
             internal: userAuthorizations.value.internal,
             permissions: userAuthorizations.value.permissions,
           });
-          originalAuthorizations.value = userAuthorizations.value;
-          user.value.level = userAuthorizations.value.level;
-          user.value.internal = userAuthorizations.value.internal;
-          user.value.permissions = userAuthorizations.value.permissions;
+          originalAuthorizations.value = { ...userAuthorizations.value };
+          if (user.value) {
+            user.value.level = userAuthorizations.value.level;
+            user.value.internal = userAuthorizations.value.internal;
+            user.value.permissions = userAuthorizations.value.permissions;
+          }
           authorizationUpdateSuccess = true;
         } catch (authError) {
           console.error('Authorization update failed:', authError);
@@ -604,6 +624,7 @@
           authorizationUpdateSuccess = false;
         }
       }
+
       const preferencePromises: Promise<void>[] = [];
       if (languageChanged) {
         preferencePromises.push(
@@ -637,14 +658,29 @@
         preferencesUpdateSuccess;
 
       if (overallSuccess) {
-        $successMsg(i18n.global.t('user.settings.updated.success'));
+        if (
+          infoChanged ||
+          (passwordChanged && !wasCurrentUserPasswordUpdated) ||
+          authorizationChanged ||
+          languageChanged ||
+          themeChanged
+        ) {
+          $successMsg(i18n.global.t('user.settings.updated.success'));
+        }
       } else {
-        $errorMsg(i18n.global.t('user.settings.updated.error-partial'));
+        if (
+          passwordUpdateSuccess &&
+          (infoUpdateSuccess ||
+            authorizationUpdateSuccess ||
+            preferencesUpdateSuccess)
+        ) {
+          $errorMsg(i18n.global.t('user.settings.updated.error-partial'));
+        }
       }
 
       return overallSuccess;
-    } catch (err) {
-      console.error('User general info update error:', err);
+    } catch (infoError) {
+      console.error('User general info update error:', infoError);
       $errorMsg(i18n.global.t('user.settings.updated.error'));
       return false;
     }

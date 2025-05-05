@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import router from '@/router';
 import UserModel, { SecurityLevel } from './models/UserModel';
 import { useApiStore } from '@/stores/modules/api';
 import { updateActiveLanguage } from '@/libs/utils/Language';
@@ -187,6 +188,7 @@ export const useUsersStore = defineStore('users', () => {
       usersMap.value.clear();
       usersFetched.value = false;
       authStatusChecked.value = false;
+      router.push({ name: 'login', replace: true });
     }
   }
 
@@ -240,7 +242,14 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function updateUserPassword({ user, password }) {
+  // Met à jour le mot de passe et retourne true si c'était celui de l'utilisateur courant.
+  async function updateUserPassword({
+    user,
+    password,
+  }: {
+    user: UserModel;
+    password: string;
+  }): Promise<boolean> {
     const apiStore = useApiStore();
     try {
       if (!user) throw 'No user provided';
@@ -250,8 +259,13 @@ export const useUsersStore = defineStore('users', () => {
         },
         skipAuthErrorInterceptor: true,
       });
+      // Retourne true si l'ID de l'utilisateur modifié correspond à l'ID de l'utilisateur connecté
+      return user.id === currentUserId.value;
     } catch (error) {
-      throw new ServerError('users', 'updateUserPassword', error, {});
+      // Propager l'erreur pour la gestion dans le composant
+      throw new ServerError('users', 'updateUserPassword', error, {
+        userId: user.id,
+      });
     }
   }
 
@@ -260,7 +274,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       console.log('[fetchCurrentUser] Calling API /users/me');
       const response = await apiStore.api.get('/api/v1/users/me');
-      console.log('[fetchCurrentUser] API call successful'); // Log success
+      console.log('[fetchCurrentUser] API call successful');
       const user = UserModel.fromAPI(response.data.data);
       _setCurrentUser(user);
       console.log('[fetchCurrentUser] User set, returning user.');
@@ -269,14 +283,12 @@ export const useUsersStore = defineStore('users', () => {
       console.error(
         '[fetchCurrentUser catch] Failed to fetch current user:',
         error
-      ); // Log dans le catch
+      );
       storageService.removeAuthToken();
       _setCurrentUser(null);
       console.log('[fetchCurrentUser catch] Throwing ServerError');
       throw new ServerError('users', 'fetchCurrentUser', error);
     }
-    // Ce point ne devrait pas être atteint normalement
-    // console.log('[fetchCurrentUser] End (unexpected)');
   }
 
   async function fetchUser(userId: number | string): Promise<UserModel | null> {
