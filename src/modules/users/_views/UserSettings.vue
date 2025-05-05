@@ -27,6 +27,20 @@
           @delete="onDeleteAccount"
         />
       </u-indexed-section>
+      <u-indexed-section
+        v-if="mode === 'admin-edit' || mode === 'creation'"
+        :menu-title="$t('user.settings.authorizations.title')"
+      >
+        <user-authorizations-form
+          v-if="userAuthorizations"
+          :authorizations="userAuthorizations"
+          :can-edit="
+            mode === 'admin-edit' ||
+            (mode === 'creation' && !foundUserInCreation)
+          "
+          @update:authorizations="onAuthorizationsUpdate"
+        />
+      </u-indexed-section>
       <template v-slot:menu-illustration>
         <img
           class="picture"
@@ -69,6 +83,7 @@
   import PersonalInfoForm from '../settings/PersonalInfoForm.vue';
   import AccountAdministrationCard from '../settings/AccountAdministrationCard.vue';
   import PasswordForm from '../settings/PasswordForm.vue';
+  import UserAuthorizationsForm from '../settings/UserAuthorizationsForm.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
   import i18n from '@/i18n';
@@ -98,11 +113,20 @@
   const user = ref<UserModel | null>(null);
   const originalUser = ref<UserModel | null>(null);
   const password = ref('');
-  const level = ref<number | null>(null);
   const isPersonalInfoValid = ref(true);
   const isPasswordFormValid = ref(true);
   const foundUserInCreation = ref<UserModel | null>(null);
   const isSaving = ref(false);
+  const userAuthorizations = ref<{
+    level: number;
+    internal: boolean;
+    permissions: Record<string, string[]> | null;
+  } | null>(null);
+  const originalAuthorizations = ref<{
+    level: number;
+    internal: boolean;
+    permissions: Record<string, string[]> | null;
+  } | null>(null);
 
   const userIdFromRouteOrCurrent = computed(() => {
     if (props.mode === 'creation') return null;
@@ -155,6 +179,14 @@
       }
     }
 
+    // Comparaison des autorisations (level, internal, permissions)
+    if (
+      props.mode === 'admin-edit' &&
+      !deepEqual(userAuthorizations.value, originalAuthorizations.value)
+    ) {
+      return true;
+    }
+
     const originalPrefs = originalUser.value.preferences ?? {};
     const currentPrefs = user.value.preferences ?? {};
     const originalLang = originalPrefs.language ?? null;
@@ -169,12 +201,6 @@
       return true;
     }
 
-    if (
-      props.mode === 'admin-edit' &&
-      level.value !== originalUser.value.level
-    ) {
-      return true;
-    }
     if (password.value !== '') {
       return true;
     }
@@ -186,13 +212,9 @@
 
     if (props.mode === 'creation') {
       if (!foundUserInCreation.value) {
-        return isFormValid.value && !!user.value?.email && !!password.value;
+        return isFormValid.value && !!password.value;
       } else {
-        return (
-          !!user.value?.id &&
-          level.value !== null &&
-          !usersStore.getUserById(user.value.id)
-        );
+        return !!user.value?.id && !usersStore.getUserById(user.value.id);
       }
     }
 
@@ -216,33 +238,104 @@
     isPasswordFormValid.value = isValid;
   }
 
-  function onUserFound(foundUser: UserModel | null) {
+  async function onUserFound(foundUser: UserModel | null) {
     if (props.mode === 'creation') {
       foundUserInCreation.value = foundUser;
       if (foundUser) {
         user.value = foundUser.clone();
-        level.value = foundUser.level ?? SecurityLevel.USER;
         isPersonalInfoValid.value = true;
         isPasswordFormValid.value = true;
+        try {
+          const authData = await authorizationStore.getUserAuthorisations(
+            foundUser.id
+          );
+          if (authData) {
+            userAuthorizations.value = {
+              level: authData.level ?? foundUser.level,
+              internal: authData.internal ?? foundUser.internal,
+              permissions: authData.permissions ?? null,
+            };
+          } else {
+            userAuthorizations.value = {
+              level: foundUser.level,
+              internal: foundUser.internal,
+              permissions: foundUser.permissions ?? null,
+            };
+          }
+          originalAuthorizations.value = userAuthorizations.value;
+        } catch (authError) {
+          console.error(
+            `Failed to fetch authorizations for found user ${foundUser.id}:`,
+            authError
+          );
+          userAuthorizations.value = {
+            level: foundUser.level,
+            internal: foundUser.internal,
+            permissions: foundUser.permissions ?? null,
+          };
+          originalAuthorizations.value = userAuthorizations.value;
+        }
       } else {
         const currentEmail = user.value?.email;
-        user.value = new UserModel({ email: currentEmail });
-        level.value = SecurityLevel.USER;
+        const initialLevel = SecurityLevel.USER; // Default level for new user
+        const initialInternal = UserModel.isEmailInternal(currentEmail || ''); // Default internal based on email
+        const initialPermissions = null;
+
+        user.value = new UserModel({
+          email: currentEmail,
+          level: initialLevel,
+          internal: initialInternal,
+          permissions: initialPermissions,
+        });
         isPersonalInfoValid.value = checkPersonalInfoValidity(user.value);
+
+        userAuthorizations.value = {
+          level: initialLevel,
+          internal: initialInternal,
+          permissions: initialPermissions,
+        };
+        originalAuthorizations.value = userAuthorizations.value;
       }
+    }
+  }
+
+  function onAuthorizationsUpdate(updatedAuths: {
+    level: number;
+    internal: boolean;
+    permissions: Record<string, string[]> | null;
+  }) {
+    userAuthorizations.value = updatedAuths;
+    if (user.value && props.mode === 'admin-edit') {
+      user.value.level = updatedAuths.level;
+      user.value.internal = updatedAuths.internal;
     }
   }
 
   async function loadUser() {
     const targetUserId = userIdFromRouteOrCurrent.value;
-
+    userAuthorizations.value = null; // Reset authorizations on load
+    originalAuthorizations.value = null;
     if (props.mode === 'creation') {
-      user.value = new UserModel();
+      const initialLevel = SecurityLevel.USER;
+      const initialInternal = false; // Default for creation form start
+      const initialPermissions = null;
+      user.value = new UserModel({
+        level: initialLevel,
+        internal: initialInternal,
+        permissions: initialPermissions,
+        preferences: { language: 'fr' },
+      });
       originalUser.value = null;
-      level.value = SecurityLevel.USER;
       isPersonalInfoValid.value = false;
       isPasswordFormValid.value = false;
       foundUserInCreation.value = null;
+
+      userAuthorizations.value = {
+        level: initialLevel,
+        internal: initialInternal,
+        permissions: initialPermissions,
+      };
+      originalAuthorizations.value = userAuthorizations.value;
     } else if (targetUserId) {
       let userFromStore = usersStore.getUserById(targetUserId);
       if (!userFromStore) {
@@ -258,8 +351,7 @@
 
       if (userFromStore) {
         user.value = userFromStore.clone();
-        originalUser.value = userFromStore.clone();
-        level.value = user.value.level;
+
         if (user.value.color === null) {
           user.value.color = usersStore.userColorFromId(user.value.id);
         }
@@ -272,8 +364,44 @@
             i18n.global.locale.value || 'fr'
           );
         }
+
+        originalUser.value = user.value.clone();
         isPersonalInfoValid.value = true;
         isPasswordFormValid.value = true;
+
+        if (props.mode === 'admin-edit') {
+          try {
+            const authData =
+              await authorizationStore.getUserAuthorisations(targetUserId);
+            if (authData) {
+              userAuthorizations.value = {
+                level: authData.level ?? user.value.level,
+                internal: user.value.internal,
+                permissions: authData.authorisation ?? null,
+              };
+              originalAuthorizations.value = userAuthorizations.value;
+            } else {
+              userAuthorizations.value = {
+                level: user.value.level,
+                internal: user.value.internal,
+                permissions: user.value.permissions ?? null,
+              };
+              originalAuthorizations.value = userAuthorizations.value;
+            }
+          } catch (authError) {
+            console.error(
+              `Failed to fetch authorizations for user ${targetUserId}:`,
+              authError
+            );
+            $errorMsg(i18n.global.t('user.settings.load.auth-error'));
+            userAuthorizations.value = {
+              level: user.value.level,
+              internal: user.value.internal,
+              permissions: user.value.permissions ?? null,
+            };
+            originalAuthorizations.value = userAuthorizations.value;
+          }
+        }
       } else {
         console.error(`User with ID ${targetUserId} not found.`);
         $errorMsg(i18n.global.t('user.settings.load.error'));
@@ -337,16 +465,35 @@
         if (updatedUserFromStore) {
           originalUser.value = updatedUserFromStore.clone();
           user.value = updatedUserFromStore.clone();
+          if (userAuthorizations.value) {
+            originalAuthorizations.value = userAuthorizations.value;
+          }
+          if (props.mode === 'admin-edit') {
+            try {
+              const freshAuthData =
+                await authorizationStore.getUserAuthorisations(newUserId);
+              if (freshAuthData) {
+                userAuthorizations.value = {
+                  level: freshAuthData.level ?? user.value.level,
+                  internal: user.value.internal,
+                  permissions: freshAuthData.authorisation ?? null,
+                };
+                originalAuthorizations.value = userAuthorizations.value;
+              }
+            } catch (refreshError) {
+              console.error(
+                'Failed to refresh authorizations after save:',
+                refreshError
+              );
+            }
+          }
         }
         password.value = '';
         isPasswordFormValid.value = true;
 
-        if (props.mode === 'creation') {
-          router.push({
-            name: 'user-settings-edit',
-            params: { id: newUserId.toString() },
-          });
-        } else {
+        if (props.mode === 'creation' || props.mode === 'admin-edit') {
+          router.push({ name: 'users' });
+        } else if (props.mode === 'user-edit') {
           await loadUser();
         }
       }
@@ -358,17 +505,13 @@
   }
 
   async function addExistingUser(): Promise<boolean> {
-    if (!user.value?.id || level.value === null) return false;
+    if (!user.value?.id || !userAuthorizations.value) return false;
 
     try {
-      // const existingAuth = await authorizationStore.getUserAuthorisations(user.value.id);
-      // if (existingAuth) {
-      //    $errorMsg(i18n.global.t('users.add-existing.error-already-exists'));
-      //    return false;
-      // }
-
       await authorizationStore.updateUserAuthorization(user.value.id, {
-        level: level.value,
+        level: userAuthorizations.value.level,
+        internal: userAuthorizations.value.internal,
+        permissions: userAuthorizations.value.permissions,
       });
 
       $successMsg(i18n.global.t('users.add-existing.success'));
@@ -382,12 +525,15 @@
   }
 
   async function createNewUser(): Promise<number | null> {
-    if (!user.value || level.value === null || !password.value) return null;
+    if (!user.value || !userAuthorizations.value || !password.value)
+      return null;
+
+    user.value.level = userAuthorizations.value.level;
+    user.value.internal = userAuthorizations.value.internal;
+    user.value.permissions = userAuthorizations.value.permissions;
 
     try {
-      user.value.level = level.value;
       const userDataToSend = { ...user.value, password: password.value };
-
       const newUser = await usersStore.addUser(userDataToSend as UserModel);
       $successMsg(i18n.global.t('users.created.success'));
       return newUser.id;
@@ -405,17 +551,16 @@
 
     let infoUpdateSuccess = false;
     let passwordUpdateSuccess = true;
-    let levelUpdateSuccess = true;
+    let authorizationUpdateSuccess = true;
     let preferencesUpdateSuccess = true;
 
     const originalPrefs = originalUser.value.preferences ?? {};
     const currentPrefs = user.value.preferences ?? {};
     const languageChanged = originalPrefs.language !== currentPrefs.language;
     const themeChanged = originalPrefs.theme !== currentPrefs.theme;
-    const levelChanged =
+    const authorizationChanged =
       props.mode === 'admin-edit' &&
-      level.value !== null &&
-      level.value !== originalUser.value.level;
+      !deepEqual(userAuthorizations.value, originalAuthorizations.value);
     const passwordChanged = !!password.value;
     const userCloneForInfoCheck = user.value.clone();
     const originalUserCloneForInfoCheck = originalUser.value.clone();
@@ -441,17 +586,22 @@
           passwordUpdateSuccess = false;
         }
       }
-      if (levelChanged) {
+      if (authorizationChanged && userAuthorizations.value) {
         try {
           await authorizationStore.updateUserAuthorization(user.value.id, {
-            level: level.value!,
+            level: userAuthorizations.value.level,
+            internal: userAuthorizations.value.internal,
+            permissions: userAuthorizations.value.permissions,
           });
-          user.value.level = level.value!;
-          levelUpdateSuccess = true;
-        } catch (levelError) {
-          console.error('Level update failed:', levelError);
-          $errorMsg(i18n.global.t('user.settings.update.level-error'));
-          levelUpdateSuccess = false;
+          originalAuthorizations.value = userAuthorizations.value;
+          user.value.level = userAuthorizations.value.level;
+          user.value.internal = userAuthorizations.value.internal;
+          user.value.permissions = userAuthorizations.value.permissions;
+          authorizationUpdateSuccess = true;
+        } catch (authError) {
+          console.error('Authorization update failed:', authError);
+          $errorMsg(i18n.global.t('user.settings.update.auth-error'));
+          authorizationUpdateSuccess = false;
         }
       }
       const preferencePromises: Promise<void>[] = [];
@@ -483,7 +633,7 @@
       const overallSuccess =
         infoUpdateSuccess &&
         passwordUpdateSuccess &&
-        levelUpdateSuccess &&
+        authorizationUpdateSuccess &&
         preferencesUpdateSuccess;
 
       if (overallSuccess) {

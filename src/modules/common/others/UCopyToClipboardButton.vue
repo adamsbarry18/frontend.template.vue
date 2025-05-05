@@ -53,14 +53,11 @@
         display: flex;
         align-items: center;
         border-radius: 4px;
-        padding: 8px;
         background-color: var(--color-background-white);
         border: 1px solid var(--color-neutral-800);
         p {
           font-size: var(--paragraph-03);
-        }
-        .copy-icon {
-          margin-right: 4px;
+          margin: 8px;
         }
         .timeout-bar {
           position: absolute;

@@ -71,7 +71,7 @@ export const ListHeader = () => ({
         <h3>Full Header (Search, Pagination, Entity & Sort)</h3>
         <base-list-header :list-service="listServiceFull">
           <template #header>
-            <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">
+            <div>
               Custom Header Content
             </div>
           </template>

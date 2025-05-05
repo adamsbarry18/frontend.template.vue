@@ -1,4 +1,5 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 export default {
   stories: ['../_resources/stories/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -24,7 +25,10 @@ export default {
       ...config,
       resolve: {
         alias: {
-          '@': path.resolve(__dirname, '../src'),
+          '@': path.resolve(
+            path.dirname(fileURLToPath(import.meta.url)),
+            '../src'
+          ),
         },
       },
     };

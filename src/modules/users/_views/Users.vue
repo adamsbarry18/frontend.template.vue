@@ -199,7 +199,7 @@
 
   function editUser(user: UserModel) {
     router.push({
-      name: 'user-settings-edit',
+      name: 'admin-user-settings-edit', // Correction du nom de la route
       params: { id: user.id.toString() },
     });
   }

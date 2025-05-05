@@ -17,7 +17,7 @@ function deleteCookie(name: string): void {
 async function login(userCredentials: any): Promise<void> {
   const usersStore = useUsersStore();
   // RAZ schemas - Assuming grantUser action exists in the users store
-  await usersStore.grantUser(userCredentials);
+  await usersStore.login(userCredentials);
 
   if (window.location.href.includes('/loading')) {
     // Redirect to dashboard without partitionId parameter

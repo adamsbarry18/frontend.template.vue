@@ -13,7 +13,13 @@
       <icon-base :icon="`icon-${item?.icon}`" :color="itemColor" size="24" />
       <transition name="slide-fade-horizontal">
         <span v-if="extendedNav" class="item-text">
-          {{ t(`${navType}.${item?.name}.title`) }}
+          {{
+            t(
+              navType === 'settings'
+                ? `${item?.name}.title`
+                : `${navType}.${item?.name}.title`
+            )
+          }}
         </span>
       </transition>
       <transition name="slide-fade-horizontal">
@@ -56,7 +62,11 @@
               {{
                 child.disabled
                   ? t('commons.coming-soon')
-                  : t(`${navType}.${item?.name}.${child.name}.title`)
+                  : t(
+                      navType === 'settings'
+                        ? `settings.${child.name}.title`
+                        : `${navType}.${item?.name}.${child.name}.title`
+                    )
               }}
             </span>
           </transition>

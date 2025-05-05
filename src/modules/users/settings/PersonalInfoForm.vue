@@ -8,7 +8,11 @@
         size="24"
       />
       <h3>
-        {{ $t('globals.account.title') }}
+        {{
+          mode === 'creation'
+            ? $t('breadcrumb.admin.new-user')
+            : $t('globals.account.title')
+        }}
       </h3>
     </div>
     <div class="user-infos">
@@ -85,8 +89,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Preferences Section -->
     <div class="preferences-section">
       <h4>{{ $t('user.settings.preferences.title') }}</h4>
       <div class="preferences-layout">
@@ -185,7 +187,6 @@
     if (props.mode === 'creation' && doesUserExist.value) {
       return true;
     }
-    // return props.mode === 'admin-edit';
     return false;
   });
 
@@ -332,19 +333,7 @@
     () => props.user,
     (newUser) => {
       if (newUser) {
-        const clonedUser = newUser.clone();
-        if (!clonedUser.preferences) {
-          clonedUser.preferences = {};
-        }
-        if (clonedUser.preferences.language == null) {
-          const defaultLang = i18n.global.locale.value || 'fr';
-          clonedUser.setPreference('language', defaultLang);
-        }
-        if (clonedUser.preferences.theme == null) {
-          const defaultTheme = 'system';
-          clonedUser.setPreference('theme', defaultTheme);
-        }
-        localUser.value = clonedUser;
+        localUser.value = newUser.clone();
       } else {
         localUser.value = null;
       }

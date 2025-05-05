@@ -1,7 +1,6 @@
 {
-  "settings.settings.title": "Administration",
-"settings.users.title": "Utilisateurs",
-  "settings.settings.preferences.title": "Preferences",
+  "settings.title": "Administration",
+  "settings.users.title": "Utilisateurs",
   "groups-nav.store.title": "Store",
   "groups-nav.store.travel.title": "Travel",
   "groups-nav.product.title": "Product",
@@ -19,7 +18,7 @@
   "breadcrumb.admin.users": "Droits utilisateurs",
   "breadcrumb.admin.new-user": "Nouvel utilisateur",
   "breadcrumb.my-account": "Mon compte",
-"breadcrumb.dashboard": "Tableau de bord",
+  "breadcrumb.dashboard": "Tableau de bord",
   "breadcrumb.default-placeholder": "Indiquez un nom...",
   "commons.code-editor.search.by-word": "Mot entier",
   "commons.code-editor.search.find": "Chercher",
@@ -234,6 +233,8 @@
   "dashboard.welcome.title-2": "votre espace !",
   "error.wrong-password": "Mot de passe erroné",
   "error.required-field": "Champ obligatoire",
+  "error.password-complexity": "Le mot de passe ne respecte pas les exigences de sécurité.",
+  "error.password-must-differ": "Le nouveau mot de passe doit être différent de l'ancien.",
   "globals.dashboard.title": "Dashboard",
   "globals.account.title": "Mon compte",
   "globals.user-account.title": "Compte utilisateur",
@@ -301,6 +302,8 @@
   "user.settings.password": "Mot de passe",
   "user.settings.notifications": "Notifications",
   "user.settings.administration": "Administration du compte",
+  "user.creation.personal-information": "Informations du nouvel utilisateur",
+  "user.creation.password": "Définition du mot de passe",
   "user.settings.delete-account": "Supprimer le compte",
   "user.settings.first-name": "Prénom",
   "user.settings.last-name": "Nom de famille",
@@ -359,5 +362,21 @@
   "users.list.header.internal": "Interne",
   "users.delete.modal.deleted": "Voulez-vous vraiment supprimer cet utilisateur ? | Voulez-vous vraiment supprimer ces {count} utilisateurs ?",
   "notify.success": "Succès",
-  "users.fetch.error": "Erreur lors du chargement des utilisateurs"
+  "users.fetch.error": "Erreur lors du chargement des utilisateurs",
+
+  "user.settings.authorizations.title": "Autorisations",
+  "user.settings.authorizations.level": "Niveau d'accès",
+  "user.settings.authorizations.internal": "Utilisateur interne",
+  "user.settings.authorizations.permissions": "Permissions spécifiques",
+  "user.settings.authorizations.select-permissions": "Sélectionner des permissions...",
+  "user.settings.load.auth-error": "Erreur lors du chargement des autorisations",
+  "user.settings.update.auth-error": "Erreur lors de la mise à jour des autorisations",
+
+  "security.level.external": "Externe",
+  "security.level.reader": "Lecteur",
+  "security.level.user": "Utilisateur",
+  "security.level.integrator": "Intégrateur",
+  "security.level.admin": "Administrateur",
+
+  "commons.loading": "Chargement..."
 }

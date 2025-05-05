@@ -7,7 +7,7 @@ import { computed, ref } from 'vue';
 import { ServerError } from '@/libs/utils/Errors';
 
 export const useAuthorisationsStore = defineStore('authorisations', () => {
-  const features = ref<any[] | null>(null);
+  const features = ref<Record<string, string[]> | null>(null); // Correction du type ici
   const levelsAuthorisations = ref<Record<string, any> | null>(null);
 
   // Accès à l'utilisateur courant
@@ -106,8 +106,10 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function getUserAuthorisations(userId: number) {
     try {
+      // Ajouter un timestamp pour forcer le non-usage du cache navigateur/serveur
+      const timestamp = Date.now();
       const response = await apiStore.api.get(
-        `/api/v1/authorization/users/${userId}`
+        `/api/v1/authorization/users/${userId}?_t=${timestamp}`
       );
       return response.data.data;
     } catch (error) {
@@ -120,7 +122,11 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
 
   async function updateUserAuthorization(
     userId: number,
-    payload: { level?: number; permissions?: Record<string, string[]> | null }
+    payload: {
+      level?: number;
+      internal?: boolean;
+      permissions?: Record<string, string[]> | null;
+    } // Ajout de internal? ici
   ) {
     if (!userId) throw new Error('Aucun userId fourni');
     try {
