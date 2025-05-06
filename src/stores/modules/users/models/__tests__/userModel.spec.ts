@@ -44,7 +44,7 @@ describe('UserModel', () => {
 
       // Dates are converted to Date objects
       expect(user.createdAt).toBeInstanceOf(Date);
-      expect(user.createdAt?.toISOString()).toBe(baseData.createdAt);
+      expect(user.createdAt?.toISOString()).toBe(baseData.createdAt.toISOString());
       expect(user.updatedAt).toBeInstanceOf(Date);
       expect(user.updatedAt?.toISOString()).toBe(baseData.updatedAt);
       expect(user.passwordUpdatedAt).toBeInstanceOf(Date);

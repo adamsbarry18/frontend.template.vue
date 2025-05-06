@@ -1,5 +1,5 @@
+import { describe, it, expect, vi, beforeEach, type Mock, type MockInstance } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
-import { type Mock, type MockInstance } from 'vitest';
 import { type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import { useUsersStore } from '../user';
 import { useApiStore } from '@/stores/modules/api';
