@@ -115,7 +115,7 @@
   const emit = defineEmits(['nav-click', 'update:extended']);
 
   const isNavExtended = ref(false);
-  const isPinned = ref(false); // Nouvel état pour le mode épinglé
+  const isPinned = ref(false);
   const areSectionsAnimating = ref(false);
   const sections = ref<InstanceType<typeof NavSection>[]>([]);
 
@@ -159,16 +159,12 @@
   }
 
   watchEffect(() => {
-    // Émet l'état étendu actuel, que ce soit par survol ou épinglage
     emit('update:extended', isNavExtended.value);
   });
-
-  // Ajout d'un watch pour s'assurer que isNavExtended est vrai si isPinned devient vrai
   watch(isPinned, (pinned) => {
     if (pinned) {
       isNavExtended.value = true;
     }
-    // Si on dépinglé (pinned is false), isNavExtended sera géré par onMouseLeave si la souris n'est plus dessus.
   });
 
   function onSectionClick(item: any) {

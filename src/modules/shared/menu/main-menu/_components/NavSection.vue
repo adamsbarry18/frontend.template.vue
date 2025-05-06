@@ -271,7 +271,7 @@
   .slide-fade-vertical-enter-active,
   .slide-fade-vertical-leave-active {
     transition: all 0.3s ease;
-    max-height: 500px; // Max possible height, must be over largest possible height
+    max-height: 500px;
   }
 
   .slide-fade-vertical-enter,

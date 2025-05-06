@@ -96,10 +96,8 @@
   function goToState(item: NavItem) {
     if (!item.state) return;
     const location = prepareState(item.state);
-    // Vérifie que location n'est pas null avant de tenter la navigation.
     if (location) {
       router.push(location).catch((err) => {
-        // Ajout d'une gestion d'erreur pour router.push, au cas où la navigation échouerait pour une autre raison.
         console.error(`Navigation failed for state [${item.state}]:`, err);
       });
     }
