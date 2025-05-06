@@ -459,5 +459,7 @@ export const useUsersStore = defineStore('users', () => {
     deleteUser,
     resetPreferences,
     setPreference,
+    // Exposed for testing purposes
+    usersMap,
   };
 });

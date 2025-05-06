@@ -14,7 +14,8 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "types": ["vite/client", "vitest/globals", "node"]
   },
   "vueCompilerOptions": {
     "target": 2.7

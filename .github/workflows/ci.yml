@@ -15,8 +15,9 @@ on:
         options:
           - staging
           - production
+          - test
       image_tag:
-        description: 'Tag de l''image Docker à déployer (ex: latest, dev-xxxxxxx, ou un SHA)'
+        description: "Tag de l'image Docker à déployer (ex: latest, dev-xxxxxxx, ou un SHA)"
         required: true
 
 env:
@@ -56,15 +57,15 @@ jobs:
       - name: Run unit tests
         # Remplacez 'npm run test:unit' par votre commande de test unitaire réelle si différente
         # Si vous n'avez pas de tests unitaires, vous pouvez supprimer cette étape ou la marquer comme 'continue-on-error: true'
-        run: echo "TODO: Add unit tests script if available, e.g., npm run test:unit"
+        run: npm run test
 
   build_and_push_image:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
     needs: lint_and_test # Ce job ne démarre que si lint_and_test réussit
     permissions:
-      contents: read      # Nécessaire pour checkout
-      packages: write     # Nécessaire pour pousser des images vers ghcr.io
+      contents: read # Nécessaire pour checkout
+      packages: write # Nécessaire pour pousser des images vers ghcr.io
 
     steps:
       - name: Checkout code
@@ -98,7 +99,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: | # Passer les arguments de build au Dockerfile
-            BUILD_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+            BUILD_ENV=${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'development') }}
             BUILD_ID=${{ github.sha }}
             APP_NAME=${{ fromJSON(steps.meta.outputs.json).image.name }} # Utilise le nom d'image de metadata
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} # Pour .npmrc pendant le build Docker (si .npmrc utilise ${GITHUB_TOKEN})
