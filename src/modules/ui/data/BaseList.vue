@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
-  import { UListPagination, BaseListHeader, IconBase, UTooltip } from '@/modules/ui';
+  import { UListPagination, BaseListHeader } from '@/modules/ui';
   import ListService from './services/listService';
 
   const props = defineProps<{
