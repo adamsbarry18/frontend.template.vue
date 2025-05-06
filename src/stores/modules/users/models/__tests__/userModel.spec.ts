@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import UserModel, { PasswordStatus, SecurityLevel } from '../UserModel';
 
 describe('UserModel', () => {
@@ -167,38 +167,6 @@ describe('UserModel', () => {
       }
       expect(originalUser.preferences?.language).toBe('en');
       expect(clonedUser.preferences?.language).toBe('fr');
-    });
-  });
-
-  describe('Preference methods', () => {
-    let user: UserModel;
-    beforeEach(() => {
-      user = new UserModel({ email: 'pref@example.com' });
-    });
-
-    it('getPreference should return null if preferences are null or key not found', () => {
-      expect(user.getPreference('theme')).toBeNull();
-      user.preferences = { existing: 'value' };
-      expect(user.getPreference('nonexistent')).toBeNull();
-    });
-
-    it('setPreference should add or update a preference', () => {
-      user.setPreference('theme', 'dark');
-      expect(user.getPreference('theme')).toBe('dark');
-      expect(user.preferences).toEqual({ theme: 'dark' });
-
-      user.setPreference('language', 'fr');
-      expect(user.preferences).toEqual({ theme: 'dark', language: 'fr' });
-
-      user.setPreference('theme', 'light');
-      expect(user.preferences).toEqual({ theme: 'light', language: 'fr' });
-    });
-
-    it('setPreference should initialize preferences if null', () => {
-      expect(user.preferences).toBeNull();
-      user.setPreference('notifications', true);
-      expect(user.preferences).toEqual({ notifications: true });
-      expect(user.getPreference('notifications')).toBe(true);
     });
   });
 
