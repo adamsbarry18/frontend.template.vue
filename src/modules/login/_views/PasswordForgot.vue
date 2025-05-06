@@ -1,22 +1,11 @@
 <template>
   <home class="password-forgot" v-loading="isLoading">
     <h1>
-      {{
-        !isFinished
-          ? $t('login.forgot-password.title')
-          : $t('login.forgot-password.email-sent-title')
-      }}
+      {{ !isFinished ? $t('login.forgot-password.title') : $t('login.forgot-password.email-sent-title') }}
     </h1>
 
-    <form
-      v-if="!isFinished"
-      @submit.prevent="onSubmit"
-      data-cy="forgot-password-form"
-    >
-      <p
-        class="instructions"
-        v-html="$t('login.forgot-password.instructions', { email: email })"
-      />
+    <form v-if="!isFinished" @submit.prevent="onSubmit" data-cy="forgot-password-form">
+      <p class="instructions" v-html="$t('login.forgot-password.instructions', { email: email })" />
       <u-form-input
         v-model="email"
         :label="$t('login.email.label')"
@@ -28,11 +17,7 @@
         :disabled="isLoading"
       />
       <div class="form-action">
-        <u-button
-          type="primary"
-          :disabled="!canSubmit || isLoading"
-          data-cy="forgot-password-submit-button"
-        >
+        <u-button type="primary" :disabled="!canSubmit || isLoading" data-cy="forgot-password-submit-button">
           {{ $t('login.forgot-password.submit-button') }}
         </u-button>
         <u-button
@@ -47,19 +32,9 @@
       </div>
     </form>
 
-    <div
-      v-else
-      class="confirmation-message"
-      data-cy="forgot-password-confirmation"
-    >
-      <p
-        v-html="$t('login.forgot-password.confirmation-text', { email: email })"
-      ></p>
-      <u-button
-        type="primary"
-        @click="goToLogin"
-        data-cy="forgot-password-back-to-login"
-      >
+    <div v-else class="confirmation-message" data-cy="forgot-password-confirmation">
+      <p v-html="$t('login.forgot-password.confirmation-text', { email: email })"></p>
+      <u-button type="primary" @click="goToLogin" data-cy="forgot-password-back-to-login">
         {{ $t('login.forgot-password.back-to-login') }}
       </u-button>
     </div>
@@ -116,13 +91,9 @@
       isFinished.value = true;
     } catch (error: any) {
       console.error('Password reset request failed:', error);
-      const errorCode =
-        error?.response?.data?.data?.code || error?.message || 'UNKNOWN_ERROR';
+      const errorCode = error?.response?.data?.data?.code || error?.message || 'UNKNOWN_ERROR';
       $errorMsg(
-        i18n.global.t(
-          `login.error.${errorCode}`,
-          i18n.global.t('login.forgot-password.error-generic')
-        )
+        i18n.global.t(`login.error.${errorCode}`, i18n.global.t('login.forgot-password.error-generic'))
       );
     } finally {
       isLoading.value = false;

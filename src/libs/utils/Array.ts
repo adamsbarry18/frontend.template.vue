@@ -10,8 +10,7 @@ const isDefined = (x: unknown): boolean => typeof x !== 'undefined';
  * @param array - Le tableau à inverser.
  * @returns Un nouveau tableau inversé.
  */
-export const reverse = <T>([first, ...rest]: T[]): T[] =>
-  isDefined(first) ? [...reverse(rest), first] : [];
+export const reverse = <T>([first, ...rest]: T[]): T[] => (isDefined(first) ? [...reverse(rest), first] : []);
 
 /**
  * Regroupe les éléments d'un tableau en fonction d'une propriété spécifiée.
@@ -19,10 +18,7 @@ export const reverse = <T>([first, ...rest]: T[]): T[] =>
  * @param prop - La propriété utilisée pour le regroupement.
  * @returns Un objet où les clés sont les valeurs de la propriété spécifiée et les valeurs sont des tableaux des éléments correspondants.
  */
-export const groupBy = <T extends Record<string, any>>(
-  array: T[],
-  prop: keyof T
-): Record<string, T[]> => {
+export const groupBy = <T extends Record<string, any>>(array: T[], prop: keyof T): Record<string, T[]> => {
   return array.reduce(
     (groups, item) => {
       const val = item[prop];

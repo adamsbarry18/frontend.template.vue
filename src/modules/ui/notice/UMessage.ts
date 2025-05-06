@@ -4,17 +4,13 @@ import { getCssVariable } from '@/libs/utils/Style';
 export default function uMessage(optionsParam: MessageOptions = {}) {
   const options: MessageOptions = { ...optionsParam };
 
-  options.customClass = options.customClass
-    ? `${options.customClass} u-message`
-    : 'u-message';
+  options.customClass = options.customClass ? `${options.customClass} u-message` : 'u-message';
   if (options.type) {
     options.customClass = `-${options.type} ${options.customClass}`;
   }
 
   const stonlyTopBannerHeight = parseInt(
-    getCssVariable('--stonly-banner-top-sticky-margin') ||
-      getCssVariable('--stonly-banner-top-margin') ||
-      '0'
+    getCssVariable('--stonly-banner-top-sticky-margin') || getCssVariable('--stonly-banner-top-margin') || '0'
   );
   options.offset = (options.offset ?? 20) + stonlyTopBannerHeight;
 

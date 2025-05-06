@@ -8,9 +8,11 @@ import { getCssVariable } from './Style';
  */
 export function hexToRgb(hex: string): [number, number, number] {
   const cleanHex = hex.replace('#', '');
-  const rgb = [0, 2, 4].map((start) =>
-    parseInt(cleanHex.slice(start, start + 2), 16)
-  ) as [number, number, number];
+  const rgb = [0, 2, 4].map((start) => parseInt(cleanHex.slice(start, start + 2), 16)) as [
+    number,
+    number,
+    number,
+  ];
   return rgb;
 }
 
@@ -24,8 +26,7 @@ export function getColorContrast(color?: string | null): 'light' | 'dark' {
     return 'light';
   }
   const colorRgb = hexToRgb(color);
-  const yiq =
-    (colorRgb[0] * 299 + colorRgb[1] * 587 + colorRgb[2] * 114) / 1000;
+  const yiq = (colorRgb[0] * 299 + colorRgb[1] * 587 + colorRgb[2] * 114) / 1000;
   return yiq >= 160 ? 'dark' : 'light';
 }
 

@@ -38,8 +38,7 @@ export const PasswordInput = () => ({
     const lengthCheck = (value) => (value.length >= 8 ? 15 : null);
     const numberCheck = (value) => (/[0-9]/.test(value) ? 15 : null);
     const uppercaseCheck = (value) => (/[A-Z]/.test(value) ? 15 : null);
-    const specialCharacterCheck = (value) =>
-      /[!@#$%^&*()_+\-=[]{};':"\\|,.<>\/?]+/.test(value) ? 15 : null;
+    const specialCharacterCheck = (value) => (/[!@#$%^&*()_+\-=[]{};':"\\|,.<>\/?]+/.test(value) ? 15 : null);
 
     return {
       input,

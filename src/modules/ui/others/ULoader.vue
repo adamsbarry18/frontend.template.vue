@@ -1,14 +1,6 @@
 <template>
-  <div
-    :style="{ height: size, width: size }"
-    class="u-loader"
-    :class="{ '-center': center }"
-  >
-    <svg
-      :style="{ height: size, width: size }"
-      viewBox="25 25 50 50"
-      class="circular-chart"
-    >
+  <div :style="{ height: size, width: size }" class="u-loader" :class="{ '-center': center }">
+    <svg :style="{ height: size, width: size }" viewBox="25 25 50 50" class="circular-chart">
       <circle
         class="circle-bg"
         cx="50"

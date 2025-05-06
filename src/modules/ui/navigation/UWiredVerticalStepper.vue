@@ -21,9 +21,7 @@
       </div>
       <span class="step-label">
         {{ step.label }}
-        <span v-if="step.sublabel" class="step-sublabel">{{
-          step.sublabel
-        }}</span>
+        <span v-if="step.sublabel" class="step-sublabel">{{ step.sublabel }}</span>
       </span>
     </div>
   </div>

@@ -102,24 +102,19 @@ export const TagListFilter = (args) => ({
 
     // Example 1: Default (no preselection)
     const selectedDefault = ref([]);
-    const handleChangedDefault = () =>
-      console.log('change - Default: ', selectedDefault.value);
+    const handleChangedDefault = () => console.log('change - Default: ', selectedDefault.value);
     const handleSelectDefault = (tag) => selectedDefault.value.push(tag);
     const handleUnselectDefault = (tag) => selectedDefault.value.push(tag);
 
     // Example 2: Preselected (preselect "store")
     const selectedPreselected = ref(['store']);
-    const handleChangedPreselected = () =>
-      console.log('change - Preselected: ', selectedPreselected.value);
-    const handleSelectPreselected = (tag) =>
-      selectedPreselected.value.push(tag);
-    const handleUnselectPreselected = (tag) =>
-      console.log('unselect - Preselected: ', tag);
+    const handleChangedPreselected = () => console.log('change - Preselected: ', selectedPreselected.value);
+    const handleSelectPreselected = (tag) => selectedPreselected.value.push(tag);
+    const handleUnselectPreselected = (tag) => console.log('unselect - Preselected: ', tag);
 
     // Example 3: Row layout
     const selectedRow = ref([]);
-    const handleChangedRow = () =>
-      console.log('change - Row: ', selectedRow.value);
+    const handleChangedRow = () => console.log('change - Row: ', selectedRow.value);
     const handleSelectRow = (tag) => selectedRow.value.push(tag);
     const handleUnselectRow = (tag) => console.log('unselect - Row: ', tag);
 

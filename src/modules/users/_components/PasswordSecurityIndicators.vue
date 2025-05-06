@@ -1,27 +1,15 @@
 <template>
   <div class="password-security-indicators">
-    <span
-      class="validator-indicator"
-      :class="{ '-valid': isIndicatorValid(indicators.isLength) }"
-    >
+    <span class="validator-indicator" :class="{ '-valid': isIndicatorValid(indicators.isLength) }">
       {{ $t('user.settings.password-validator.minimum-length') }}
     </span>
-    <span
-      class="validator-indicator"
-      :class="{ '-valid': isIndicatorValid(indicators.haveLowercase) }"
-    >
+    <span class="validator-indicator" :class="{ '-valid': isIndicatorValid(indicators.haveLowercase) }">
       {{ $t('user.settings.password-validator.lowercase') }}
     </span>
-    <span
-      class="validator-indicator"
-      :class="{ '-valid': isIndicatorValid(indicators.haveUppercase) }"
-    >
+    <span class="validator-indicator" :class="{ '-valid': isIndicatorValid(indicators.haveUppercase) }">
       {{ $t('user.settings.password-validator.uppercase') }}
     </span>
-    <span
-      class="validator-indicator"
-      :class="{ '-valid': isIndicatorValid(indicators.haveNumber) }"
-    >
+    <span class="validator-indicator" :class="{ '-valid': isIndicatorValid(indicators.haveNumber) }">
       {{ $t('user.settings.password-validator.number') }}
     </span>
     <span

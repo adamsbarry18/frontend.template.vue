@@ -2,11 +2,7 @@ export class BaseError extends Error {
   public code: string;
   public data: any;
 
-  constructor(
-    code: string = 'ERR_OTHER',
-    message: string = 'An error occurred...',
-    data: any = null
-  ) {
+  constructor(code: string = 'ERR_OTHER', message: string = 'An error occurred...', data: any = null) {
     super(message);
     this.code = code;
     this.data = data;
@@ -30,12 +26,7 @@ export class DependencyError extends BaseError {
 }
 
 export class ServerError extends BaseError {
-  constructor(
-    module: string,
-    apiCall: string,
-    err: unknown,
-    params: Record<string, any> = {}
-  ) {
+  constructor(module: string, apiCall: string, err: unknown, params: Record<string, any> = {}) {
     const data = {
       module,
       apiCall,

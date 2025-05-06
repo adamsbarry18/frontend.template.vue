@@ -106,16 +106,9 @@ export default class SearchService {
     if (contextToClean.q) ctx.q = contextToClean.q;
     if (Object.keys(contextToClean.filters || {}).length > 0) ctx.filters = {};
 
-    for (const [filterProp, filter] of Object.entries(
-      contextToClean.filters || {}
-    )) {
+    for (const [filterProp, filter] of Object.entries(contextToClean.filters || {})) {
       if (!filter.value) continue;
-      if (
-        filter.type === 'enum' &&
-        Array.isArray(filter.value) &&
-        filter.value.length < 1
-      )
-        continue;
+      if (filter.type === 'enum' && Array.isArray(filter.value) && filter.value.length < 1) continue;
 
       ctx.filters[filterProp] = filter;
     }
@@ -127,10 +120,7 @@ export default class SearchService {
    * @param target - context that will be merged over
    * @param source - context that will be merged into target
    */
-  static mergeContext(
-    target: SearchContext,
-    source: SearchContext
-  ): SearchContext {
+  static mergeContext(target: SearchContext, source: SearchContext): SearchContext {
     return this.cleanContext({
       q: source.q || target.q,
       filters: {

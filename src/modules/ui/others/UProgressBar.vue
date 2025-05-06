@@ -70,10 +70,7 @@
 
   // Calculate the increment bar offset
   const incrementBarOffset = computed(() => {
-    return Math.min(
-      Math.max(0, props.percent - props.incrementPercent),
-      100 - props.incrementPercent
-    );
+    return Math.min(Math.max(0, props.percent - props.incrementPercent), 100 - props.incrementPercent);
   });
 </script>
 

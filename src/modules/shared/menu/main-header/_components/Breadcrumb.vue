@@ -6,12 +6,7 @@
       :title="link.label"
       class="u-breadcrumb-item-wrapper"
     >
-      <icon-base
-        v-if="index > 0"
-        icon="icon-arrow"
-        color="var(--color-neutral-400)"
-        size="12"
-      />
+      <icon-base v-if="index > 0" icon="icon-arrow" color="var(--color-neutral-400)" size="12" />
 
       <router-link
         v-if="link.path && !(index === links.length - 1 && !editable)"
@@ -29,11 +24,7 @@
         <span v-if="!link.icon || link.showIconLabel">{{ link.label }}</span>
       </router-link>
 
-      <div
-        v-else
-        class="u-breadcrumb-item"
-        :class="{ '-last': index === links.length - 1 && !editable }"
-      >
+      <div v-else class="u-breadcrumb-item" :class="{ '-last': index === links.length - 1 && !editable }">
         <icon-base
           v-if="link.icon"
           :icon="link.icon"
@@ -46,10 +37,7 @@
       </div>
     </div>
 
-    <div
-      v-if="editable && links.length > 0"
-      class="u-breadcrumb-item-wrapper -editable"
-    >
+    <div v-if="editable && links.length > 0" class="u-breadcrumb-item-wrapper -editable">
       <icon-base icon="icon-arrow" color="var(--color-neutral-400)" size="12" />
       <el-input
         :model-value="value"
@@ -57,12 +45,7 @@
         class="breadcrumb-input"
         @update:model-value="onInput"
       />
-      <icon-base
-        icon="icon-edit"
-        class="breadcrumb-icon-edit"
-        color="var(--color-neutral-500)"
-        size="20"
-      />
+      <icon-base icon="icon-edit" class="breadcrumb-icon-edit" color="var(--color-neutral-500)" size="20" />
     </div>
   </div>
 </template>

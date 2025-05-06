@@ -13,9 +13,7 @@
           :size="20"
           :color="tag.color ? tag.color : 'var(--color-white)'"
         />
-        <span class="tag-name" :title="getTagLabel(tag)">{{
-          formatTagValue(tag)
-        }}</span>
+        <span class="tag-name" :title="getTagLabel(tag)">{{ formatTagValue(tag) }}</span>
       </el-tag>
       <template v-if="hasTooltip(tag)" #content>
         <slot name="tooltip" :tag="tag">
@@ -38,21 +36,10 @@
       </el-tag>
       <template #content>
         <ul>
-          <li
-            v-for="tag in invisibleTags"
-            :key="getTagKey(tag)"
-            class="collapsed-tag-item"
-          >
+          <li v-for="tag in invisibleTags" :key="getTagKey(tag)" class="collapsed-tag-item">
             <span>{{ formatTagValue(tag) }}</span>
-            <div
-              class="close-icon-wrapper -button-like"
-              @click="handleTagClose(tag)"
-            >
-              <icon-base
-                icon="icon-close"
-                color="var(--color-neutral-500)"
-                :size="12"
-              />
+            <div class="close-icon-wrapper -button-like" @click="handleTagClose(tag)">
+              <icon-base icon="icon-close" color="var(--color-neutral-500)" :size="12" />
             </div>
           </li>
         </ul>
@@ -73,10 +60,7 @@
           @paste="handlePaste"
         >
           <template #default="{ item }">
-            <u-tooltip
-              v-if="hasAutocompleteTooltip(item.value)"
-              placement="right"
-            >
+            <u-tooltip v-if="hasAutocompleteTooltip(item.value)" placement="right">
               <div class="autocomplete-tooltip-text">
                 {{ item.value }}
               </div>
@@ -132,25 +116,12 @@
           }}
         </template>
       </u-tooltip>
-      <button
-        v-else-if="!disabled"
-        class="button-new-tag -button-like"
-        @click.stop="showInput"
-      >
-        +
-      </button>
+      <button v-else-if="!disabled" class="button-new-tag -button-like" @click.stop="showInput">+</button>
     </template>
   </div>
 </template>
 <script lang="ts" setup>
-  import {
-    ref,
-    computed,
-    onMounted,
-    onBeforeUnmount,
-    nextTick,
-    getCurrentInstance,
-  } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount, nextTick, getCurrentInstance } from 'vue';
   import { ellipsis } from '@/libs/utils/String';
   import { UTooltip, USelectGroup, IconBase } from '@/modules/ui';
   import { ElTag, ElAutocomplete, ElInput } from 'element-plus';
@@ -193,18 +164,13 @@
     return props.values.slice(0, props.collapseLimit);
   });
   const invisibleTags = computed(() => {
-    if (
-      props.collapseLimit === 0 ||
-      props.values.length < props.collapseLimit
-    ) {
+    if (props.collapseLimit === 0 || props.values.length < props.collapseLimit) {
       return [];
     }
     return props.values.slice(props.collapseLimit);
   });
   const filteredEnumOptions = computed(() => {
-    return (props.enumOptions || []).filter(
-      (o) => !props.values.map((v) => v.value).includes(o.value)
-    );
+    return (props.enumOptions || []).filter((o) => !props.values.map((v) => v.value).includes(o.value));
   });
   const isFull = computed(() => {
     return props.values.length >= props.maxTotalValues;
@@ -269,11 +235,7 @@
       emit('add-tag-click');
     } else {
       inputVisible.value = true;
-      if (
-        props.type === '' ||
-        props.type === 'string' ||
-        props.type === 'number'
-      ) {
+      if (props.type === '' || props.type === 'string' || props.type === 'number') {
         nextTick(() => {
           saveTagInput.value?.focus();
         });
@@ -286,9 +248,7 @@
       emit('add-item', localInputValue);
       const tag: any = { value: localInputValue };
       if (props.type === 'enum') {
-        const option = props.enumOptions.find(
-          (o) => o.value === localInputValue
-        );
+        const option = props.enumOptions.find((o) => o.value === localInputValue);
         if (option?.icon) {
           tag.icon = option.icon;
         }
@@ -322,11 +282,7 @@
       return false;
     }
     // No duplicates
-    if (
-      props.values.find(
-        (v) => getTagKey(v) === getTagKey({ value: localInputValue })
-      )
-    ) {
+    if (props.values.find((v) => getTagKey(v) === getTagKey({ value: localInputValue }))) {
       return false;
     }
 
@@ -408,8 +364,7 @@
     if (inputVisible.value) {
       const tagInputEl = saveTagInput.value;
       const selectGroupEl = selectGroup.value?.$el;
-      const plusButton =
-        getCurrentInstance()?.proxy?.$el.querySelector('.button-new-tag');
+      const plusButton = getCurrentInstance()?.proxy?.$el.querySelector('.button-new-tag');
 
       if (
         tagInputEl &&

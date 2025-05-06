@@ -58,19 +58,11 @@ export default class UserModel {
     this.password = data?.password ?? null;
     this.color = data?.color ?? null;
     this.passwordStatus = data?.passwordStatus ?? PasswordStatus.ACTIVE;
-    this.createdAt = data?.createdAt
-      ? dayjs(data.createdAt).toDate()
-      : new Date();
-    this.updatedAt = data?.updatedAt
-      ? dayjs(data.updatedAt).toDate()
-      : new Date();
-    this.passwordUpdatedAt = data?.passwordUpdatedAt
-      ? dayjs(data.passwordUpdatedAt).toDate()
-      : null;
+    this.createdAt = data?.createdAt ? dayjs(data.createdAt).toDate() : new Date();
+    this.updatedAt = data?.updatedAt ? dayjs(data.updatedAt).toDate() : new Date();
+    this.passwordUpdatedAt = data?.passwordUpdatedAt ? dayjs(data.passwordUpdatedAt).toDate() : null;
     this.preferences = data?.preferences ?? null;
-    this.permissionsExpireAt = data?.permissionsExpireAt
-      ? dayjs(data.permissionsExpireAt).toDate()
-      : null;
+    this.permissionsExpireAt = data?.permissionsExpireAt ? dayjs(data.permissionsExpireAt).toDate() : null;
     this.permissions = data?.permissions ?? null;
     this.authorisationOverrides = data?.authorisationOverrides ?? null;
     this.token = data?.token;
@@ -89,12 +81,8 @@ export default class UserModel {
       name: user.name ?? null,
       createdAt: user.createdAt ? dayjs(user.createdAt).toDate() : new Date(),
       updatedAt: user.updatedAt ? dayjs(user.updatedAt).toDate() : new Date(),
-      passwordUpdatedAt: user.passwordUpdatedAt
-        ? dayjs(user.passwordUpdatedAt).toDate()
-        : null,
-      permissionsExpireAt: user.permissionsExpireAt
-        ? dayjs(user.permissionsExpireAt).toDate()
-        : null,
+      passwordUpdatedAt: user.passwordUpdatedAt ? dayjs(user.passwordUpdatedAt).toDate() : null,
+      permissionsExpireAt: user.permissionsExpireAt ? dayjs(user.permissionsExpireAt).toDate() : null,
       permissions: user.permissions ?? null,
       preferences: user.preferences ?? null,
     };
@@ -117,14 +105,7 @@ export default class UserModel {
     if (res.id === null) {
       delete res.id;
     }
-    const clearFields = [
-      'createdAt',
-      'updatedAt',
-      'passwordStatus',
-      'passwordUpdatedAt',
-      'token',
-      'level',
-    ];
+    const clearFields = ['createdAt', 'updatedAt', 'passwordStatus', 'passwordUpdatedAt', 'token', 'level'];
     for (const field of clearFields) {
       delete res[field];
     }
@@ -188,9 +169,7 @@ export default class UserModel {
   }
 
   static isEmailInternal(email: string) {
-    return INTERNAL_EMAIL_DOMAINS.some((domain) =>
-      email.endsWith(`@${domain}`)
-    );
+    return INTERNAL_EMAIL_DOMAINS.some((domain) => email.endsWith(`@${domain}`));
   }
 
   /**

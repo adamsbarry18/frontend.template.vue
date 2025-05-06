@@ -4,10 +4,7 @@
  * @param separator - Le séparateur utilisé pour diviser les clés.
  * @returns Un nouvel objet avec les clés divisées en sous-objets.
  */
-export function objectToSplitLabel(
-  obj: Record<string, any>,
-  separator: string
-): Record<string, any> {
+export function objectToSplitLabel(obj: Record<string, any>, separator: string): Record<string, any> {
   return Object.keys(obj).reduce(
     (acc, label) => {
       const name = label.split(separator);
@@ -74,15 +71,11 @@ export function wait(variable: string, expire?: number): Promise<any> {
     const checkVariable = () => {
       try {
         // eslint-disable-next-line no-eval
-        const value = variable
-          .split('.')
-          .reduce((acc, part) => acc?.[part], window);
+        const value = variable.split('.').reduce((acc, part) => acc?.[part], window);
         if (typeof value !== 'undefined') {
           resolve(value);
         } else if (expire && Date.now() - startTime > expire) {
-          reject(
-            new Error(`Variable "${variable}" non définie après ${expire} ms`)
-          );
+          reject(new Error(`Variable "${variable}" non définie après ${expire} ms`));
         } else {
           setTimeout(checkVariable, 250);
         }
@@ -115,11 +108,7 @@ export function isObject(value: any): value is Record<string, any> {
  * @param separator - Le séparateur utilisé dans le chemin (par défaut '.').
  * @returns La valeur de la propriété si elle existe, sinon `undefined`.
  */
-export function getWithPath(
-  object: Record<string, any>,
-  path: string,
-  separator: string = '.'
-): any {
+export function getWithPath(object: Record<string, any>, path: string, separator: string = '.'): any {
   return path.split(separator).reduce((acc, key) => acc?.[key], object);
 }
 
@@ -137,12 +126,7 @@ export function deepEqual(obj1: any, obj2: any): boolean {
   }
 
   // Gérer null, undefined ou types différents
-  if (
-    obj1 == null ||
-    obj2 == null ||
-    typeof obj1 !== 'object' ||
-    typeof obj2 !== 'object'
-  ) {
+  if (obj1 == null || obj2 == null || typeof obj1 !== 'object' || typeof obj2 !== 'object') {
     // Si l'un n'est pas un objet mais l'autre l'est, ou s'ils sont de types primitifs différents
     return obj1 === obj2; // Compare les primitifs directement
   }

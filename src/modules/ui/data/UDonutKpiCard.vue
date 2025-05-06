@@ -48,8 +48,7 @@
   const data = props.data;
   const colors = props.colors ?? [];
   const valueFormatter =
-    props.valueFormatter ??
-    ((value: number) => numberFormat(value, { condensed: true }));
+    props.valueFormatter ?? ((value: number) => numberFormat(value, { condensed: true }));
 
   function tooltipFormatter(params: any) {
     const valueLabel = valueFormatter(params.value);

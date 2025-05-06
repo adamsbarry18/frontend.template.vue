@@ -1,8 +1,6 @@
 <template>
   <div class="u-entity-tag-summary" :class="{ '-empty': tags.length === 0 }">
-    <span v-if="tags.length === 0 && !withName" class="no-tag">{{
-      $t('commons.entity-tag.none')
-    }}</span>
+    <span v-if="tags.length === 0 && !withName" class="no-tag">{{ $t('commons.entity-tag.none') }}</span>
     <div v-else-if="tags.length > 0" class="tag-list">
       <u-tooltip
         v-for="tag in visibleTags"
@@ -13,9 +11,7 @@
       >
         <div>
           <icon-base icon="icon-tag" :size="16" :color="tag.color" />
-          <span v-if="withName" class="tag-name -text-ellipsis">{{
-            tag.name
-          }}</span>
+          <span v-if="withName" class="tag-name -text-ellipsis">{{ tag.name }}</span>
         </div>
         <template #content>
           <div v-if="!withName" class="tag-row">
@@ -24,11 +20,7 @@
           </div>
         </template>
       </u-tooltip>
-      <u-tooltip
-        v-if="hiddenTags.length > 0"
-        class="more-tag"
-        tooltip-class="tag-list-tooltip"
-      >
+      <u-tooltip v-if="hiddenTags.length > 0" class="more-tag" tooltip-class="tag-list-tooltip">
         <div>+{{ hiddenTags.length }}</div>
         <template v-slot:content>
           <div>

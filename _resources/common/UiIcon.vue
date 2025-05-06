@@ -3,17 +3,8 @@
     <div v-for="category in categories" :key="category">
       <h3>{{ category }}</h3>
       <div class="box-content__wrapper">
-        <div
-          v-for="icon in icons[category]"
-          :key="icon"
-          class="box-content__item"
-        >
-          <icon-base
-            :icon="icon"
-            :rich="true"
-            color="var(--color-neutral-700)"
-            size="50"
-          />
+        <div v-for="icon in icons[category]" :key="icon" class="box-content__item">
+          <icon-base :icon="icon" :rich="true" color="var(--color-neutral-700)" size="50" />
           <div class="box-content__title">
             {{ icon }}
           </div>
@@ -68,16 +59,8 @@
 
   const initIcons = () => {
     const iconKeys = Object.keys(Icons)
-      .filter(
-        (key) =>
-          key !== 'IconBase' &&
-          (!props.prefix || key.indexOf(props.prefix) === 0)
-      )
-      .map((el) =>
-        el
-          .replace(/\.?([A-Z])/g, (x, y) => `-${y.toLowerCase()}`)
-          .replace(/^-/, '')
-      );
+      .filter((key) => key !== 'IconBase' && (!props.prefix || key.indexOf(props.prefix) === 0))
+      .map((el) => el.replace(/\.?([A-Z])/g, (x, y) => `-${y.toLowerCase()}`).replace(/^-/, ''));
 
     for (const icon of iconKeys) {
       const category = iconToCategory.value[icon];

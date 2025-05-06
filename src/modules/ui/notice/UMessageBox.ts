@@ -1,12 +1,6 @@
-import {
-  ElMessageBox,
-  ElMessageBoxOptions,
-  MessageBoxData,
-} from 'element-plus';
+import { ElMessageBox, ElMessageBoxOptions, MessageBoxData } from 'element-plus';
 
-async function uMessageBox(
-  optionsParam: ElMessageBoxOptions = {}
-): Promise<MessageBoxData> {
+async function uMessageBox(optionsParam: ElMessageBoxOptions = {}): Promise<MessageBoxData> {
   const options: ElMessageBoxOptions = { ...optionsParam };
 
   if (!options.customClass) {

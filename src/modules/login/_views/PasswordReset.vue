@@ -47,11 +47,7 @@
   import { ref, computed, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import {
-    passwordRules,
-    getPasswordIndicators,
-    isPasswordSecure,
-  } from '@/libs/utils/Security';
+  import { passwordRules, getPasswordIndicators, isPasswordSecure } from '@/libs/utils/Security';
   import { useNotification } from '@/composables/notfication';
   import Home from '../_components/Home.vue';
   import { UFormInput, UButton } from '@/modules/ui';
@@ -70,9 +66,7 @@
   const router = useRouter();
 
   // --- Computed ---
-  const passwordIndicators = computed(() =>
-    getPasswordIndicators(newPassword.value)
-  );
+  const passwordIndicators = computed(() => getPasswordIndicators(newPassword.value));
 
   const canSubmit = computed(() => {
     return (
@@ -86,18 +80,14 @@
   // --- Validation ---
   type ValidatorFn = (value: string) => string | null;
   const newPasswordValidator: ValidatorFn = (value) => {
-    if (!value || value.length === 0)
-      return i18n.global.t('login.password.required');
-    if (!isPasswordSecure(value))
-      return i18n.global.t('login.error.password-policy');
+    if (!value || value.length === 0) return i18n.global.t('login.password.required');
+    if (!isPasswordSecure(value)) return i18n.global.t('login.error.password-policy');
     return null;
   };
 
   const confirmPasswordValidator: ValidatorFn = (value) => {
-    if (!value || value.length === 0)
-      return i18n.global.t('login.password.required');
-    if (value !== newPassword.value)
-      return i18n.global.t('login.error.password-mismatch');
+    if (!value || value.length === 0) return i18n.global.t('login.password.required');
+    if (value !== newPassword.value) return i18n.global.t('login.error.password-mismatch');
     return null;
   };
 
@@ -107,9 +97,7 @@
 
     isLoading.value = true;
     try {
-      console.log(
-        `Attempting password reset confirmation with code: ${code.value}`
-      );
+      console.log(`Attempting password reset confirmation with code: ${code.value}`);
       await usersStore.confirmResetPassword({
         password: newPassword.value,
         code: code.value,
@@ -121,8 +109,7 @@
       newPassword.value = '';
       confirmPassword.value = '';
 
-      const errorCode =
-        error?.response?.data?.data?.code || error?.message || 'UNKNOWN_ERROR';
+      const errorCode = error?.response?.data?.data?.code || error?.message || 'UNKNOWN_ERROR';
       let errorKey = `login.error.${errorCode}`;
 
       if (errorCode === 'ERR_PWD_IDENTICAL') {
@@ -131,12 +118,7 @@
         errorKey = 'login.error.invalid-code-or-data';
       }
 
-      $errorMsg(
-        i18n.global.t(
-          errorKey,
-          i18n.global.t('login.reset-password.error-generic')
-        )
-      );
+      $errorMsg(i18n.global.t(errorKey, i18n.global.t('login.reset-password.error-generic')));
     } finally {
       isLoading.value = false;
     }

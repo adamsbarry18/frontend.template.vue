@@ -61,10 +61,7 @@ function getJsonItem<T>(key: string): T | null {
     try {
       return JSON.parse(item) as T;
     } catch (error) {
-      console.error(
-        `Error parsing JSON from LocalStorage for key "${key}":`,
-        error
-      );
+      console.error(`Error parsing JSON from LocalStorage for key "${key}":`, error);
       // Optionnel : supprimer l'élément invalide
       // removeItem(key);
       return null;
@@ -83,10 +80,7 @@ function setJsonItem<T>(key: string, value: T): void {
     const jsonValue = JSON.stringify(value);
     setItem(key, jsonValue);
   } catch (error) {
-    console.error(
-      `Error stringifying object for LocalStorage key "${key}":`,
-      error
-    );
+    console.error(`Error stringifying object for LocalStorage key "${key}":`, error);
   }
 }
 
@@ -105,8 +99,7 @@ export const storageService = {
 
   // List Column Visibility (JSON)
   getColumnVisibility: <T>(): T | null => getJsonItem<T>(COLUMN_VISIBILITY_KEY),
-  setColumnVisibility: <T>(visibility: T): void =>
-    setJsonItem(COLUMN_VISIBILITY_KEY, visibility),
+  setColumnVisibility: <T>(visibility: T): void => setJsonItem(COLUMN_VISIBILITY_KEY, visibility),
   removeColumnVisibility: (): void => removeItem(COLUMN_VISIBILITY_KEY),
 
   // List Sort Settings (JSON)

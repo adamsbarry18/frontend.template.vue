@@ -5,10 +5,7 @@ import { useUsersStore } from '@/stores/modules/users/user';
  * @param key
  * @param value
  */
-export async function setUserPreference(
-  key: string,
-  value: any
-): Promise<void> {
+export async function setUserPreference(key: string, value: any): Promise<void> {
   const usersStore = useUsersStore();
   // Utiliser la propriété computed 'isAuthenticated' du store réécrit
   const { isAuthenticated } = usersStore;

@@ -109,9 +109,7 @@ export function getPasswordIndicators(value: string): Record<string, boolean> {
  * @returns True si tous les validateurs renvoient true, sinon false.
  */
 export function isPasswordSecure(value: string): boolean {
-  return Object.values(getPasswordIndicators(value)).every(
-    (indicator) => indicator === true
-  );
+  return Object.values(getPasswordIndicators(value)).every((indicator) => indicator === true);
 }
 
 /**

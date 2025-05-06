@@ -6,9 +6,7 @@
   >
     <icon-base
       ref="bell"
-      :icon="
-        notifications.length > 0 ? 'icon-notif-active' : 'icon-notif-default'
-      "
+      :icon="notifications.length > 0 ? 'icon-notif-active' : 'icon-notif-default'"
       color="var(--color-neutral-700)"
       size="35"
       class="animate__animated"

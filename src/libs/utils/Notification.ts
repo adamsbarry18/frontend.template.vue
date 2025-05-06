@@ -30,12 +30,7 @@ interface NotifyParams extends ShortLivedParams {
 }
 
 export default class RootNotification {
-  static shortLivedNotify({
-    title,
-    message,
-    type = '',
-    duration = 4500,
-  }: ShortLivedParams): void {
+  static shortLivedNotify({ title, message, type = '', duration = 4500 }: ShortLivedParams): void {
     const stonlyTopBannerHeight = parseInt(
       getCssVariable('--stonly-banner-top-sticky-margin') ||
         getCssVariable('--stonly-banner-top-margin') ||
@@ -51,10 +46,7 @@ export default class RootNotification {
     } as any);
   }
 
-  static persistentNotify(
-    template: string,
-    options: PersistentOptions = {}
-  ): void {
+  static persistentNotify(template: string, options: PersistentOptions = {}): void {
     const notificationStore = useNotificationStore();
     notificationStore.addPersistentNotification({
       template,
@@ -84,20 +76,14 @@ export default class RootNotification {
     duration = 4500,
     options,
   }: NotifyParams): void {
-    if (
-      display === DISPLAY_TYPE.SHORT ||
-      display === DISPLAY_TYPE.PERSISTENT_SHORT
-    ) {
+    if (display === DISPLAY_TYPE.SHORT || display === DISPLAY_TYPE.PERSISTENT_SHORT) {
       if (!title) {
         throw new Error('short notify required title');
       }
       this.shortLivedNotify({ title, message, type, duration });
     }
 
-    if (
-      display === DISPLAY_TYPE.PERSISTENT ||
-      display === DISPLAY_TYPE.PERSISTENT_SHORT
-    ) {
+    if (display === DISPLAY_TYPE.PERSISTENT || display === DISPLAY_TYPE.PERSISTENT_SHORT) {
       if (!template) {
         this.persistentNotify(
           `<div>
@@ -112,20 +98,11 @@ export default class RootNotification {
     }
 
     if (!Object.values(DISPLAY_TYPE).includes(display)) {
-      throw new Error(
-        'display is not equal to: ' + Object.keys(DISPLAY_TYPE).toString()
-      );
+      throw new Error('display is not equal to: ' + Object.keys(DISPLAY_TYPE).toString());
     }
   }
 
-  static success({
-    title,
-    message,
-    template,
-    display,
-    duration = 4500,
-    options,
-  }: NotifyParams): void {
+  static success({ title, message, template, display, duration = 4500, options }: NotifyParams): void {
     this.notify({
       title,
       message,
@@ -137,14 +114,7 @@ export default class RootNotification {
     });
   }
 
-  static warning({
-    title,
-    message,
-    template,
-    display,
-    duration = 4500,
-    options,
-  }: NotifyParams): void {
+  static warning({ title, message, template, display, duration = 4500, options }: NotifyParams): void {
     this.notify({
       title,
       message,
@@ -156,14 +126,7 @@ export default class RootNotification {
     });
   }
 
-  static info({
-    title,
-    message,
-    template,
-    display,
-    duration = 4500,
-    options,
-  }: NotifyParams): void {
+  static info({ title, message, template, display, duration = 4500, options }: NotifyParams): void {
     this.notify({
       title,
       message,
@@ -175,14 +138,7 @@ export default class RootNotification {
     });
   }
 
-  static error({
-    title,
-    message,
-    template,
-    display,
-    duration = 4500,
-    options,
-  }: NotifyParams): void {
+  static error({ title, message, template, display, duration = 4500, options }: NotifyParams): void {
     this.notify({
       title,
       message,

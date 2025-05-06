@@ -39,16 +39,12 @@ function checkAuthorization(item: NavItem): boolean {
 
   // Conditions OR
   if (auth.anyOf) {
-    return auth.anyOf.some((condition) =>
-      checkAuthorization({ authorisation: condition } as NavItem)
-    );
+    return auth.anyOf.some((condition) => checkAuthorization({ authorisation: condition } as NavItem));
   }
 
   // Conditions AND
   if (auth.allOf) {
-    return auth.allOf.every((condition) =>
-      checkAuthorization({ authorisation: condition } as NavItem)
-    );
+    return auth.allOf.every((condition) => checkAuthorization({ authorisation: condition } as NavItem));
   }
 
   if (auth.onlyInternal && !isUserInternal) {
@@ -119,11 +115,7 @@ export const useNavStore = defineStore('nav', () => {
         name: 'users',
         icon: 'users',
         state: 'users',
-        activesStates: [
-          'users',
-          'admin-user-settings-edit',
-          'user-settings-creation',
-        ],
+        activesStates: ['users', 'admin-user-settings-edit', 'user-settings-creation'],
         authorisation: {
           // feature: 'user',
           // action: 'read',
@@ -161,22 +153,16 @@ export const useNavStore = defineStore('nav', () => {
       .filter((group) => checkAuthorization(group))
       .map((group) => ({
         ...group,
-        children: (group.children ?? []).filter((item) =>
-          checkAuthorization(item)
-        ),
+        children: (group.children ?? []).filter((item) => checkAuthorization(item)),
       }))
       .filter((group) => group.children && group.children.length > 0);
   });
 
   // Filtre les paramètres selon les autorisations
   const availableSettings = computed<NavItem[]>(() => {
-    const filteredChildren = (settings.value.children ?? []).filter((item) =>
-      checkAuthorization(item)
-    );
+    const filteredChildren = (settings.value.children ?? []).filter((item) => checkAuthorization(item));
 
-    return filteredChildren.length > 0
-      ? [{ ...settings.value, children: filteredChildren }]
-      : [];
+    return filteredChildren.length > 0 ? [{ ...settings.value, children: filteredChildren }] : [];
   });
 
   // Filtre les éléments globaux selon les autorisations
@@ -190,17 +176,14 @@ export const useNavStore = defineStore('nav', () => {
     const allChildren = availableGroupsNav.value.flatMap((g) =>
       (g.children || []).map((child) => ({ ...child, group: g }))
     );
-    return allChildren.find((child) => child.activesStates?.includes(name))
-      ?.group;
+    return allChildren.find((child) => child.activesStates?.includes(name))?.group;
   });
 
   // Trouve l'item de menu "settings" si l'item courant est un de ses enfants
   const currentSettingsInfo = computed<NavItem | undefined>(() => {
     const name = currentItem.value;
     const settingsChildren = availableSettings.value[0]?.children ?? [];
-    const found = settingsChildren.some((child) =>
-      child.activesStates?.includes(name)
-    );
+    const found = settingsChildren.some((child) => child.activesStates?.includes(name));
     return found ? availableSettings.value[0] : undefined;
   });
 

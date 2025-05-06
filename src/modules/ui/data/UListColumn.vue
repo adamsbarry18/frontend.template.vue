@@ -85,24 +85,17 @@
   });
 
   // Propriété calculée pour la fonction de tri
-  const sortMethodFunction = computed<((a: any, b: any) => number) | undefined>(
-    () => {
-      if (hasCustomSort.value) {
-        return undefined;
-      }
-      return props.sortMethod
-        ? (props.sortMethod as (a: any, b: any) => number)
-        : defaultSortMethod;
+  const sortMethodFunction = computed<((a: any, b: any) => number) | undefined>(() => {
+    if (hasCustomSort.value) {
+      return undefined;
     }
-  );
+    return props.sortMethod ? (props.sortMethod as (a: any, b: any) => number) : defaultSortMethod;
+  });
 
   const defaultSortMethod = (a: any, b: any): number => {
     if (!props.sortProp) return 0;
 
-    if (
-      !a.hasOwnProperty(props.sortProp) &&
-      !b.hasOwnProperty(props.sortProp)
-    ) {
+    if (!a.hasOwnProperty(props.sortProp) && !b.hasOwnProperty(props.sortProp)) {
       return 0;
     }
     if (!a.hasOwnProperty(props.sortProp)) {
@@ -111,15 +104,8 @@
     if (!b.hasOwnProperty(props.sortProp)) {
       return 1;
     }
-    if (
-      typeof a[props.sortProp] === 'string' &&
-      typeof b[props.sortProp] === 'string'
-    ) {
-      return a[props.sortProp].localeCompare(
-        b[props.sortProp],
-        i18n.global.locale,
-        { numeric: true }
-      );
+    if (typeof a[props.sortProp] === 'string' && typeof b[props.sortProp] === 'string') {
+      return a[props.sortProp].localeCompare(b[props.sortProp], i18n.global.locale, { numeric: true });
     }
     if (a[props.sortProp] === b[props.sortProp]) {
       return 0;

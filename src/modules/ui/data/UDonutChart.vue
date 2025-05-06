@@ -52,8 +52,7 @@
     layout: {
       type: String,
       default: 'auto',
-      validator: (value: string) =>
-        ['auto', 'vertical', 'horizontal'].includes(value),
+      validator: (value: string) => ['auto', 'vertical', 'horizontal'].includes(value),
     },
     valueFormatter: {
       type: Function,
@@ -95,9 +94,7 @@
   // Computed properties
   const sum = computed(() => {
     return props.data
-      .filter(
-        (item: any) => !legendSelected.value || legendSelected.value[item.name]
-      )
+      .filter((item: any) => !legendSelected.value || legendSelected.value[item.name])
       .reduce((acc: any, item: any) => acc + item.value, 0);
   });
 
@@ -116,10 +113,7 @@
   });
 
   const titleTopOffset = computed<number>(() => {
-    return (
-      verticalPosition.value -
-      (props.centerSubtext && props.centerSubtext.includes('\n') ? 5 : 2)
-    );
+    return verticalPosition.value - (props.centerSubtext && props.centerSubtext.includes('\n') ? 5 : 2);
   });
 
   const options = computed<any>(() => {
@@ -130,20 +124,15 @@
       },
       color: props.colors,
       title: {
-        text: props.withSum
-          ? props.valueFormatter!(sum.value)
-          : props.centerText,
+        text: props.withSum ? props.valueFormatter!(sum.value) : props.centerText,
         subtext: props.centerSubtext,
         top: `${titleTopOffset.value}%`,
         left: horizontalPosition.value,
         textAlign: 'middle',
         textVerticalAlign: 'middle',
-        itemGap:
-          props.centerSubtext && props.centerSubtext.includes('\n') ? 5 : -2,
+        itemGap: props.centerSubtext && props.centerSubtext.includes('\n') ? 5 : -2,
         textStyle: {
-          fontSize: props.withSum
-            ? getCssVariable('--heading-01')
-            : props.centerTextFontSize,
+          fontSize: props.withSum ? getCssVariable('--heading-01') : props.centerTextFontSize,
           fontWeight: 700,
         },
         subtextStyle: {

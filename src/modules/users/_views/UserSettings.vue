@@ -2,12 +2,7 @@
   <div class="user-settings">
     <u-sections-with-menu v-if="user">
       <u-indexed-section :menu-title="$t('user.settings.personal-information')">
-        <personal-info-form
-          :user="user"
-          :mode="mode"
-          @update:user="onUserUpdate"
-          @user-found="onUserFound"
-        />
+        <personal-info-form :user="user" :mode="mode" @update:user="onUserUpdate" @user-found="onUserFound" />
       </u-indexed-section>
       <u-indexed-section :menu-title="$t('user.settings.password')">
         <password-form
@@ -17,15 +12,8 @@
           @validity-change="onPasswordValidityChange"
         />
       </u-indexed-section>
-      <u-indexed-section
-        v-if="mode === 'admin-edit'"
-        :menu-title="$t('user.settings.administration')"
-      >
-        <account-administration-card
-          :user="user"
-          :mode="mode"
-          @delete="onDeleteAccount"
-        />
+      <u-indexed-section v-if="mode === 'admin-edit'" :menu-title="$t('user.settings.administration')">
+        <account-administration-card :user="user" :mode="mode" @delete="onDeleteAccount" />
       </u-indexed-section>
       <u-indexed-section
         v-if="mode === 'admin-edit' || mode === 'creation'"
@@ -34,19 +22,12 @@
         <user-authorizations-form
           v-if="userAuthorizations"
           :authorizations="userAuthorizations"
-          :can-edit="
-            mode === 'admin-edit' ||
-            (mode === 'creation' && !foundUserInCreation)
-          "
+          :can-edit="mode === 'admin-edit' || (mode === 'creation' && !foundUserInCreation)"
           @update:authorizations="onAuthorizationsUpdate"
         />
       </u-indexed-section>
       <template v-slot:menu-illustration>
-        <img
-          class="picture"
-          src="@/assets/images/svg/user-settings.svg"
-          alt="user-settings"
-        />
+        <img class="picture" src="@/assets/images/svg/user-settings.svg" alt="user-settings" />
       </template>
     </u-sections-with-menu>
     <u-action-button-bar v-else class="loading-placeholder">
@@ -92,8 +73,7 @@
     mode: {
       type: String,
       required: true,
-      validator: (value: string) =>
-        ['creation', 'admin-edit', 'user-edit'].includes(value),
+      validator: (value: string) => ['creation', 'admin-edit', 'user-edit'].includes(value),
     },
   });
 
@@ -134,9 +114,7 @@
     return null;
   });
 
-  const checkPersonalInfoValidity = (
-    userToCheck: UserModel | null
-  ): boolean => {
+  const checkPersonalInfoValidity = (userToCheck: UserModel | null): boolean => {
     if (!userToCheck) return false;
     return (
       !!userToCheck.email?.trim() &&
@@ -155,19 +133,11 @@
   const isDirty = computed(() => {
     if (!user.value || !originalUser.value) {
       const dirtyInCreation =
-        !!user.value?.email ||
-        !!user.value?.name ||
-        !!user.value?.surname ||
-        !!password.value;
+        !!user.value?.email || !!user.value?.name || !!user.value?.surname || !!password.value;
       return dirtyInCreation;
     }
 
-    const fieldsToCompare: (keyof UserModel)[] = [
-      'email',
-      'name',
-      'surname',
-      'color',
-    ];
+    const fieldsToCompare: (keyof UserModel)[] = ['email', 'name', 'surname', 'color'];
     for (const field of fieldsToCompare) {
       if (user.value[field] !== originalUser.value[field]) {
         return true;
@@ -175,10 +145,7 @@
     }
 
     // Comparaison des autorisations (level, internal, permissions)
-    if (
-      props.mode === 'admin-edit' &&
-      !deepEqual(userAuthorizations.value, originalAuthorizations.value)
-    ) {
+    if (props.mode === 'admin-edit' && !deepEqual(userAuthorizations.value, originalAuthorizations.value)) {
       return true;
     }
 
@@ -241,9 +208,7 @@
         isPersonalInfoValid.value = true;
         isPasswordFormValid.value = true;
         try {
-          const authData = await authorizationStore.getUserAuthorisations(
-            foundUser.id
-          );
+          const authData = await authorizationStore.getUserAuthorisations(foundUser.id);
           if (authData) {
             userAuthorizations.value = {
               level: authData.level ?? foundUser.level,
@@ -259,10 +224,7 @@
           }
           originalAuthorizations.value = userAuthorizations.value;
         } catch (authError) {
-          console.error(
-            `Failed to fetch authorizations for found user ${foundUser.id}:`,
-            authError
-          );
+          console.error(`Failed to fetch authorizations for found user ${foundUser.id}:`, authError);
           userAuthorizations.value = {
             level: foundUser.level,
             internal: foundUser.internal,
@@ -354,10 +316,7 @@
           user.value.preferences = {};
         }
         if (!user.value.preferences.language) {
-          user.value.setPreference(
-            'language',
-            i18n.global.locale.value || 'fr'
-          );
+          user.value.setPreference('language', i18n.global.locale.value || 'fr');
         }
 
         originalUser.value = user.value.clone();
@@ -366,8 +325,7 @@
 
         if (props.mode === 'admin-edit') {
           try {
-            const authData =
-              await authorizationStore.getUserAuthorisations(targetUserId);
+            const authData = await authorizationStore.getUserAuthorisations(targetUserId);
             if (authData) {
               userAuthorizations.value = {
                 level: authData.level ?? user.value.level,
@@ -384,10 +342,7 @@
               originalAuthorizations.value = userAuthorizations.value;
             }
           } catch (authError) {
-            console.error(
-              `Failed to fetch authorizations for user ${targetUserId}:`,
-              authError
-            );
+            console.error(`Failed to fetch authorizations for user ${targetUserId}:`, authError);
             $errorMsg(i18n.global.t('user.settings.load.auth-error'));
             userAuthorizations.value = {
               level: user.value.level,
@@ -415,8 +370,7 @@
     if (!user.value && props.mode !== 'creation') return;
 
     let links = [];
-    const userName =
-      user.value?.fullName || i18n.global.t('breadcrumb.admin.new-user');
+    const userName = user.value?.fullName || i18n.global.t('breadcrumb.admin.new-user');
 
     if (props.mode === 'admin-edit') {
       links = [
@@ -465,8 +419,7 @@
           }
           if (props.mode === 'admin-edit') {
             try {
-              const freshAuthData =
-                await authorizationStore.getUserAuthorisations(newUserId);
+              const freshAuthData = await authorizationStore.getUserAuthorisations(newUserId);
               if (freshAuthData) {
                 userAuthorizations.value = {
                   level: freshAuthData.level ?? user.value.level,
@@ -476,10 +429,7 @@
                 originalAuthorizations.value = userAuthorizations.value;
               }
             } catch (refreshError) {
-              console.error(
-                'Failed to refresh authorizations after save:',
-                refreshError
-              );
+              console.error('Failed to refresh authorizations after save:', refreshError);
             }
           }
         }
@@ -520,8 +470,7 @@
   }
 
   async function createNewUser(): Promise<number | null> {
-    if (!user.value || !userAuthorizations.value || !password.value)
-      return null;
+    if (!user.value || !userAuthorizations.value || !password.value) return null;
 
     user.value.level = userAuthorizations.value.level;
     user.value.internal = userAuthorizations.value.internal;
@@ -534,8 +483,7 @@
       return newUser.id;
     } catch (err: any) {
       console.error('Error creating new user:', err);
-      const apiErrorMessage =
-        err.message || i18n.global.t('users.created.error');
+      const apiErrorMessage = err.message || i18n.global.t('users.created.error');
       $errorMsg(apiErrorMessage);
       return null;
     }
@@ -554,8 +502,7 @@
     const languageChanged = originalPrefs.language !== currentPrefs.language;
     const themeChanged = originalPrefs.theme !== currentPrefs.theme;
     const authorizationChanged =
-      props.mode === 'admin-edit' &&
-      !deepEqual(userAuthorizations.value, originalAuthorizations.value);
+      props.mode === 'admin-edit' && !deepEqual(userAuthorizations.value, originalAuthorizations.value);
     const passwordChanged = !!password.value;
     const userCloneForInfoCheck = user.value.clone();
     const originalUserCloneForInfoCheck = originalUser.value.clone();
@@ -564,10 +511,7 @@
     delete originalUserCloneForInfoCheck.preferences;
 
     try {
-      const infoChanged = !deepEqual(
-        userCloneForInfoCheck,
-        originalUserCloneForInfoCheck
-      );
+      const infoChanged = !deepEqual(userCloneForInfoCheck, originalUserCloneForInfoCheck);
       if (infoChanged) {
         await usersStore.updateUser(user.value);
       }
@@ -582,9 +526,7 @@
           });
 
           if (wasCurrentUserPasswordUpdated) {
-            $successMsg(
-              i18n.global.t('user.settings.update.password-success-logout')
-            );
+            $successMsg(i18n.global.t('user.settings.update.password-success-logout'));
             passwordUpdateSuccess = true;
 
             await usersStore.logout();
@@ -630,9 +572,7 @@
         );
       }
       if (themeChanged) {
-        preferencePromises.push(
-          usersStore.setPreference({ key: 'theme', value: currentPrefs.theme })
-        );
+        preferencePromises.push(usersStore.setPreference({ key: 'theme', value: currentPrefs.theme }));
       }
 
       if (preferencePromises.length > 0) {
@@ -647,10 +587,7 @@
       }
 
       const overallSuccess =
-        infoUpdateSuccess &&
-        passwordUpdateSuccess &&
-        authorizationUpdateSuccess &&
-        preferencesUpdateSuccess;
+        infoUpdateSuccess && passwordUpdateSuccess && authorizationUpdateSuccess && preferencesUpdateSuccess;
 
       if (overallSuccess) {
         if (
@@ -665,9 +602,7 @@
       } else {
         if (
           passwordUpdateSuccess &&
-          (infoUpdateSuccess ||
-            authorizationUpdateSuccess ||
-            preferencesUpdateSuccess)
+          (infoUpdateSuccess || authorizationUpdateSuccess || preferencesUpdateSuccess)
         ) {
           $errorMsg(i18n.global.t('user.settings.updated.error-partial'));
         }

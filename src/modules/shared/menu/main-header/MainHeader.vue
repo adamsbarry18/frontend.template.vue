@@ -42,9 +42,7 @@
   function setDocumentTitle() {
     if (breadcrumbLinks.value) {
       const values = [...breadcrumbLinks.value].reverse().map((l) => l.label);
-      document.title = [...values, i18n.global.t('application.name')].join(
-        ' - '
-      );
+      document.title = [...values, i18n.global.t('application.name')].join(' - ');
     }
   }
 

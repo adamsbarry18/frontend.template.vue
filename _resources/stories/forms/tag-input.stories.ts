@@ -79,10 +79,7 @@ export const TagInput = () => ({
     ]);
 
     // Exemple en mode désactivé
-    const disabledTags = ref([
-      { value: 'Disabled Tag 1' },
-      { value: 'Disabled Tag 2' },
-    ]);
+    const disabledTags = ref([{ value: 'Disabled Tag 1' }, { value: 'Disabled Tag 2' }]);
 
     // Exemple avec tooltip personnalisé via slot
     const customTooltipTags = ref([{ value: 'Custom Tooltip Tag' }]);
@@ -103,9 +100,7 @@ export const TagInput = () => ({
     const onQuerySearch = ({ queryString, cb }) => {
       // Simule une recherche asynchrone dans enumOptions
       const results = enumOptions.value
-        .filter((option) =>
-          option.label.toLowerCase().includes(queryString.toLowerCase())
-        )
+        .filter((option) => option.label.toLowerCase().includes(queryString.toLowerCase()))
         .map((option) => ({ value: option.value, label: option.label }));
       cb(results);
     };

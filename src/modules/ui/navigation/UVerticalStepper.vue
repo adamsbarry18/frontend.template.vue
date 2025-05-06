@@ -10,9 +10,7 @@
       <div class="step-container">
         <span class="step-label">
           {{ step.label }}
-          <span v-if="step.sublabel" class="step-sublabel">{{
-            step.sublabel
-          }}</span>
+          <span v-if="step.sublabel" class="step-sublabel">{{ step.sublabel }}</span>
         </span>
 
         <u-tooltip :key="step.status" placement="right">
@@ -88,11 +86,7 @@
             isValid = false;
           }
 
-          isValid =
-            isValid &&
-            ['EMPTY', 'ERROR', 'SUCCESS', 'TODO', 'WARNING'].includes(
-              status as string
-            );
+          isValid = isValid && ['EMPTY', 'ERROR', 'SUCCESS', 'TODO', 'WARNING'].includes(status as string);
         });
 
         return isValid;
@@ -114,9 +108,7 @@
   }>();
 
   const activeSubStepComputed = computed(() => {
-    const activeStep = props.steps.find(
-      (step) => step.id === props.activeStepId
-    );
+    const activeStep = props.steps.find((step) => step.id === props.activeStepId);
     if (!activeStep || !activeStep.substeps) {
       return null;
     }

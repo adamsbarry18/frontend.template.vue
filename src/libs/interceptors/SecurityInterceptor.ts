@@ -1,8 +1,4 @@
-import axios, {
-  AxiosResponse,
-  AxiosError,
-  InternalAxiosRequestConfig,
-} from 'axios';
+import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import router from '@/router';
 import i18n from '@/i18n';
 import { BaseInterceptor } from './BaseInterceptor';
@@ -19,9 +15,7 @@ export class SecurityInterceptor extends BaseInterceptor {
   /** Configure l'intercepteur de requête */
   requestInterceptor() {
     return {
-      request: (
-        config: InternalAxiosRequestConfig
-      ): InternalAxiosRequestConfig => {
+      request: (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
         config = this.setRequestHeaders(config);
         config = this.setVersion(config);
         return config;
@@ -44,10 +38,7 @@ export class SecurityInterceptor extends BaseInterceptor {
         const usersStore = useUsersStore();
 
         if (!originalRequest || !errorResponse) {
-          console.error(
-            'Interceptor error without originalRequest or errorResponse',
-            error
-          );
+          console.error('Interceptor error without originalRequest or errorResponse', error);
           throw error;
         }
 
@@ -75,26 +66,19 @@ export class SecurityInterceptor extends BaseInterceptor {
                 this.attachResponseInterceptor();
                 const usersStore = useUsersStore();
                 if (usersStore.isAuthenticated) {
-                  console.warn(
-                    'Relogin failed, but user is currently authenticated. Skipping force logout.'
-                  );
+                  console.warn('Relogin failed, but user is currently authenticated. Skipping force logout.');
                   throw error;
                 } else {
-                  console.warn(
-                    'Relogin failed and user is not authenticated. Forcing logout.'
-                  );
+                  console.warn('Relogin failed and user is not authenticated. Forcing logout.');
                   await this.forceLogout();
 
                   const query: { redirect?: string } = {};
                   const currentRoute = router.currentRoute.value;
-                  const skipRedirect =
-                    currentRoute?.meta?.authenticated === false;
+                  const skipRedirect = currentRoute?.meta?.authenticated === false;
 
                   if (!skipRedirect) {
                     query.redirect = currentRoute.fullPath;
-                    console.log(
-                      `Redirecting to login with redirect query: ${query.redirect}`
-                    );
+                    console.log(`Redirecting to login with redirect query: ${query.redirect}`);
                   } else {
                     console.info(
                       `Skipping redirect for unauthenticated route: ${String(currentRoute?.name)}`
@@ -105,15 +89,10 @@ export class SecurityInterceptor extends BaseInterceptor {
                 }
               }
             } else {
-              console.warn(
-                'Relogin already attempted for this request. Forcing logout.'
-              );
+              console.warn('Relogin already attempted for this request. Forcing logout.');
               await this.forceLogout();
               router.push({ name: 'login' }).catch((navError) => {
-                console.error(
-                  'Failed to redirect to login after repeated 401:',
-                  navError
-                );
+                console.error('Failed to redirect to login after repeated 401:', navError);
               });
               throw error;
             }
@@ -124,9 +103,7 @@ export class SecurityInterceptor extends BaseInterceptor {
             const errorData = errorResponse.data as any;
 
             if (errorData?.data?.code === 'ERR_PWD_EXPIRED') {
-              console.warn(
-                'Password expired (ERR_PWD_EXPIRED). Forcing logout and redirecting...'
-              );
+              console.warn('Password expired (ERR_PWD_EXPIRED). Forcing logout and redirecting...');
               const userEmail = usersStore.email;
               await this.forceLogout();
               router
@@ -135,19 +112,13 @@ export class SecurityInterceptor extends BaseInterceptor {
                   params: { email: userEmail ?? '' },
                 })
                 .catch((navError) => {
-                  console.error(
-                    'Failed to redirect to login-expired:',
-                    navError
-                  );
+                  console.error('Failed to redirect to login-expired:', navError);
                 });
             } else {
               console.warn('Generic 403 error. Displaying notification.');
               RootNotification.error({
                 title: i18n.global.t('notification.errorTitle', 'Error'),
-                message: i18n.global.t(
-                  'error.actionNotAllowed',
-                  'Action not allowed'
-                ),
+                message: i18n.global.t('error.actionNotAllowed', 'Action not allowed'),
               });
             }
             throw error;
@@ -172,9 +143,7 @@ export class SecurityInterceptor extends BaseInterceptor {
   }
 
   /** Configure les en-têtes de la requête */
-  setRequestHeaders(
-    config: InternalAxiosRequestConfig
-  ): InternalAxiosRequestConfig {
+  setRequestHeaders(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
     const usersStore = useUsersStore();
     const language = usersStore.language;
 

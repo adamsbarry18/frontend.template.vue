@@ -7,15 +7,8 @@
       <u-category-funnel :categories="categories" :colors="colors" />
     </div>
     <div>
-      <u-button @click="showDialog"
-        >Open Dialog with Outside Close Icon</u-button
-      >
-      <u-dialog
-        :visible="visible"
-        closable
-        close-icon-outside
-        @close="closeDialog"
-      >
+      <u-button @click="showDialog">Open Dialog with Outside Close Icon</u-button>
+      <u-dialog :visible="visible" closable close-icon-outside @close="closeDialog">
         <template #title>
           <h2>Dialog Title</h2>
         </template>

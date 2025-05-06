@@ -9,8 +9,7 @@ import '../src/assets/style/main.scss';
 import plugins from '@/plugins';
 
 const app = createApp({});
-app.config.globalProperties.$t = (key: string, ...args: any[]) =>
-  i18n.global.t(key, args);
+app.config.globalProperties.$t = (key: string, ...args: any[]) => i18n.global.t(key, args);
 
 // Installation globale de i18n
 setup((app) => {

@@ -34,15 +34,7 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    ref,
-    computed,
-    watch,
-    onMounted,
-    onUpdated,
-    nextTick,
-    PropType,
-  } from 'vue';
+  import { ref, computed, watch, onMounted, onUpdated, nextTick, PropType } from 'vue';
   import { ElCascader, type CascaderValue } from 'element-plus';
   import i18n from '@/i18n';
 
@@ -103,9 +95,7 @@
   });
 
   const inputCascader = computed((): HTMLInputElement | null => {
-    return elCascaderRef.value?.$el.querySelector(
-      '.el-input__inner'
-    ) as HTMLInputElement;
+    return elCascaderRef.value?.$el.querySelector('.el-input__inner') as HTMLInputElement;
   });
 
   watch(
@@ -135,10 +125,7 @@
   });
 
   const handleChange = () => {
-    emit(
-      'change',
-      (value.value as any[])?.length ? [...(value.value as any[])] : null
-    );
+    emit('change', (value.value as any[])?.length ? [...(value.value as any[])] : null);
     hasChanged.value = true;
   };
 
@@ -164,9 +151,7 @@
     if (props.labelFormatter && (value.value as any[])?.length) {
       nextTick(() => {
         if (elCascaderRef.value?.$el && inputCascader.value) {
-          inputCascader.value.value = props.labelFormatter([
-            ...(value.value as any[]),
-          ]);
+          inputCascader.value.value = props.labelFormatter([...(value.value as any[])]);
         }
       });
     }

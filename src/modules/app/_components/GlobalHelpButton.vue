@@ -40,10 +40,7 @@
       label: 'documentation',
       icon: 'icon-info',
       onClick: () => {
-        const tab = window.open(
-          `${import.meta.env.VITE_DOCUMENTATION_URL}/${i18n.global.locale}`,
-          '_blank'
-        );
+        const tab = window.open(`${import.meta.env.VITE_DOCUMENTATION_URL}/${i18n.global.locale}`, '_blank');
         tab.focus();
       },
     },

@@ -5,16 +5,8 @@
       <li v-if="$slots.title" class="cmenu-title">
         <slot name="title" />
       </li>
-      <li
-        v-for="(item, index) in props.list"
-        :key="item.label"
-        :style="liStyle"
-      >
-        <div
-          class="item-wrapper"
-          :class="firstLeft ? 'cm-left' : ''"
-          @click.stop="callback(item, $event)"
-        >
+      <li v-for="(item, index) in props.list" :key="item.label" :style="liStyle">
+        <div class="item-wrapper" :class="firstLeft ? 'cm-left' : ''" @click.stop="callback(item, $event)">
           <u-pulser v-if="item.hasPulser" />
           <icon-base
             v-if="item.icon"
@@ -29,11 +21,7 @@
             class="arrow-icon-item-wrapper"
             ariu-hidden="true"
           >
-            <icon-base
-              icon="icon-arrow"
-              size="14"
-              color="var(--color-neutral-700)"
-            />
+            <icon-base icon="icon-arrow" size="14" color="var(--color-neutral-700)" />
           </div>
         </div>
         <!-- Second level -->
@@ -42,11 +30,7 @@
           class="cm-ul cm-ul-2"
           :style="secondBorderCheck(index)"
         >
-          <li
-            v-for="child in item.children"
-            :key="child.label"
-            :style="liStyle"
-          >
+          <li v-for="child in item.children" :key="child.label" :style="liStyle">
             <div
               class="item-wrapper"
               :class="secondLeft ? 'cm-left' : ''"
@@ -98,8 +82,7 @@
     const bodyHeight = document.body.offsetHeight;
     const margin = 32;
 
-    const totalHeight =
-      axis.value.y + props.offset.y + props.itemHeight * props.list.length;
+    const totalHeight = axis.value.y + props.offset.y + props.itemHeight * props.list.length;
 
     if (axis.value.x + props.offset.x + props.itemWidth + margin >= bodyWidth) {
       res.right = `${Math.max(0, bodyWidth - (axis.value.x - props.offset.x))}px`;
@@ -139,9 +122,7 @@
   function secondBorderCheck(i: number) {
     const bodyWidth = document.body.offsetWidth;
     const bodyHeight = document.body.offsetHeight;
-    const childCount = props.list[i].children
-      ? props.list[i].children!.length
-      : 0;
+    const childCount = props.list[i].children ? props.list[i].children!.length : 0;
     const cy = axis.value.y + (i + childCount) * props.itemHeight;
     return {
       left: axis.value.x + props.itemWidth * 2 >= bodyWidth ? '-100%' : '100%',

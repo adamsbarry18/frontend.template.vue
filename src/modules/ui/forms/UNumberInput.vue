@@ -39,41 +39,24 @@
         @blur="unfocusInput"
         @keypress.enter="unfocusInput"
       />
-      <span
-        v-else
-        class="input-value"
-        :class="[hasLabel ? '-with-label' : '', alignClass]"
-      >
+      <span v-else class="input-value" :class="[hasLabel ? '-with-label' : '', alignClass]">
         {{ input !== null ? props.formatter(input) : '-' }}
       </span>
       <span v-if="props.label">{{ props.label }}</span>
     </div>
     <span
-      v-if="
-        !props.disabled &&
-        props.resetable &&
-        props.resetValue !== null &&
-        input !== props.resetValue
-      "
+      v-if="!props.disabled && props.resetable && props.resetValue !== null && input !== props.resetValue"
       class="select-reset-btn"
       style="display: block"
       @click="onReset"
     >
       <u-tooltip placement="top">
-        <icon-base
-          icon="icon-reset"
-          :size="20"
-          color="var(--color-neutral-800)"
-        />
+        <icon-base icon="icon-reset" :size="20" color="var(--color-neutral-800)" />
         <template #content>
           <p>
             {{ $t('commons.form.input.reset') }}
             <strong>
-              {{
-                props.formatter
-                  ? props.formatter(props.resetValue)
-                  : props.resetValue
-              }}
+              {{ props.formatter ? props.formatter(props.resetValue) : props.resetValue }}
               <span v-if="props.label">{{ props.label }}</span>
             </strong>
           </p>
@@ -186,16 +169,12 @@
   };
 
   const onInput = () => {
-    setValue(
-      customInputValue.value !== '' ? Number(customInputValue.value) : null
-    );
+    setValue(customInputValue.value !== '' ? Number(customInputValue.value) : null);
   };
 
   const unfocusInput = () => {
     inputFocused.value = false;
-    setValue(
-      customInputValue.value !== '' ? Number(customInputValue.value) : null
-    );
+    setValue(customInputValue.value !== '' ? Number(customInputValue.value) : null);
   };
 
   const setValue = (value: number | null) => {

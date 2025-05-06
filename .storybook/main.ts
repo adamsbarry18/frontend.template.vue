@@ -25,10 +25,7 @@ export default {
       ...config,
       resolve: {
         alias: {
-          '@': path.resolve(
-            path.dirname(fileURLToPath(import.meta.url)),
-            '../src'
-          ),
+          '@': path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src'),
         },
       },
     };

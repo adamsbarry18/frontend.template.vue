@@ -1,10 +1,5 @@
 <template>
-  <u-popper
-    v-model:visible="show"
-    placement="bottom-start"
-    :width="230"
-    trigger="click"
-  >
+  <u-popper v-model:visible="show" placement="bottom-start" :width="230" trigger="click">
     <div class="u-list-column-settings">
       <div class="column-list -custom-scrollbar">
         <u-tooltip
@@ -24,18 +19,11 @@
             </el-checkbox>
           </div>
           <template #content>
-            <span v-if="isLocked(column.key)">{{
-              $t('commons.column-settings.column-locked')
-            }}</span>
+            <span v-if="isLocked(column.key)">{{ $t('commons.column-settings.column-locked') }}</span>
           </template>
         </u-tooltip>
       </div>
-      <u-button
-        type="primary"
-        :disabled="!hasUnsavedChanges()"
-        class="-button-like"
-        @click="submit"
-      >
+      <u-button type="primary" :disabled="!hasUnsavedChanges()" class="-button-like" @click="submit">
         {{ $t('commons.form.save') }}
       </u-button>
       <u-button class="reset -button-like" @click="reset">
@@ -49,11 +37,7 @@
   import { ref, reactive, PropType } from 'vue';
   import { UButton, UTooltip, UPopper } from '@/modules/ui';
   import { ElCheckbox } from 'element-plus';
-  import {
-    isColumnVisible,
-    hasSavedVisibility,
-    LIST_COLUMN_VISIBILITY,
-  } from '@/libs/utils/List';
+  import { isColumnVisible, hasSavedVisibility, LIST_COLUMN_VISIBILITY } from '@/libs/utils/List';
   import { inject } from 'vue';
 
   const props = defineProps({
@@ -78,8 +62,7 @@
       } else if (hasSavedVisibility(columnId)) {
         values[column.key] = isColumnVisible(columnId);
       } else {
-        const isVisible =
-          props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+        const isVisible = props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
         values[column.key] = isVisible;
       }
     }
@@ -112,8 +95,7 @@
   const reset = () => {
     for (const column of props.columns) {
       if (!isLocked(column.key)) {
-        values[column.key] =
-          props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+        values[column.key] = props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
       }
     }
   };

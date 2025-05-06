@@ -19,10 +19,7 @@ class ApiClient {
    * @param params - Options and configuration for the request
    * @returns A promise that resolves with the Axios response
    */
-  async get(
-    url: string,
-    params: ApiRequestParams = { skipVersion: false }
-  ): Promise<AxiosResponse> {
+  async get(url: string, params: ApiRequestParams = { skipVersion: false }): Promise<AxiosResponse> {
     return await apiClient({ method: 'GET', url, ...params });
   }
 
@@ -32,10 +29,7 @@ class ApiClient {
    * @param params - Options and configuration for the request
    * @returns A promise that resolves with the Axios response
    */
-  async post(
-    url: string,
-    params: ApiRequestParams = { skipVersion: false }
-  ): Promise<AxiosResponse> {
+  async post(url: string, params: ApiRequestParams = { skipVersion: false }): Promise<AxiosResponse> {
     return await apiClient({ method: 'POST', url, ...params });
   }
 
@@ -45,10 +39,7 @@ class ApiClient {
    * @param params - Options and configuration for the request
    * @returns A promise that resolves with the Axios response
    */
-  async delete(
-    url: string,
-    params: ApiRequestParams = { skipVersion: false }
-  ): Promise<AxiosResponse> {
+  async delete(url: string, params: ApiRequestParams = { skipVersion: false }): Promise<AxiosResponse> {
     return await apiClient({ method: 'DELETE', url, ...params });
   }
 
@@ -58,10 +49,7 @@ class ApiClient {
    * @param params - Options and configuration for the request
    * @returns A promise that resolves with the Axios response
    */
-  async put(
-    url: string,
-    params: ApiRequestParams = { skipVersion: false }
-  ): Promise<AxiosResponse> {
+  async put(url: string, params: ApiRequestParams = { skipVersion: false }): Promise<AxiosResponse> {
     return await apiClient({ method: 'PUT', url, ...params });
   }
 
@@ -71,10 +59,7 @@ class ApiClient {
    * @param params - Options and configuration for the request
    * @returns A promise that resolves with the Axios response
    */
-  async patch(
-    url: string,
-    params: ApiRequestParams = { skipVersion: false }
-  ): Promise<AxiosResponse> {
+  async patch(url: string, params: ApiRequestParams = { skipVersion: false }): Promise<AxiosResponse> {
     return await apiClient({ method: 'PATCH', url, ...params });
   }
 }

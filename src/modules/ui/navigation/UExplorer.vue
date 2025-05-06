@@ -43,12 +43,7 @@
             @click="onItemClick(item)"
             @dblclick="onItemBrowse(item)"
           >
-            <icon-base
-              :icon="item.icon"
-              class="item-icon"
-              color="var(--color-neutral-700)"
-              :size="20"
-            />
+            <icon-base :icon="item.icon" class="item-icon" color="var(--color-neutral-700)" :size="20" />
             <span class="item-label">{{ item.label }}</span>
             <icon-base
               v-if="!item.disabled"

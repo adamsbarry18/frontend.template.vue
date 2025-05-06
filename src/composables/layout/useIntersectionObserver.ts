@@ -1,10 +1,7 @@
 // useIntersectionObserver.ts
 import { ref, onMounted, onBeforeUnmount, Ref } from 'vue';
 
-export function useIntersectionObserver(
-  target: Ref<Element | null>,
-  options?: IntersectionObserverInit
-) {
+export function useIntersectionObserver(target: Ref<Element | null>, options?: IntersectionObserverInit) {
   const intersectionRatio = ref(0);
   let observer: IntersectionObserver | null = null;
 

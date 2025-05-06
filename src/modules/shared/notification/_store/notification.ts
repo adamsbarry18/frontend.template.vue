@@ -20,13 +20,9 @@ export const useNotificationStore = defineStore('notification', () => {
 
   const getAll = computed(() => persistentNotifications.value);
 
-  const getAllErrorNotifications = computed(() =>
-    getAll.value.filter((notif) => notif.isError)
-  );
+  const getAllErrorNotifications = computed(() => getAll.value.filter((notif) => notif.isError));
 
-  const getPersistentNotificationsVisible = computed(
-    () => persistentNotificationsVisible.value
-  );
+  const getPersistentNotificationsVisible = computed(() => persistentNotificationsVisible.value);
 
   // Actions
   function addPersistentNotification({
@@ -47,14 +43,11 @@ export const useNotificationStore = defineStore('notification', () => {
   }
 
   function removeItem({ id }): void {
-    persistentNotifications.value = persistentNotifications.value.filter(
-      (item) => item.id !== id
-    );
+    persistentNotifications.value = persistentNotifications.value.filter((item) => item.id !== id);
   }
 
   function togglePersistentNotificationsVisible(): void {
-    persistentNotificationsVisible.value =
-      !persistentNotificationsVisible.value;
+    persistentNotificationsVisible.value = !persistentNotificationsVisible.value;
   }
 
   function setPersistentNotificationsVisible(isVisible: boolean): void {

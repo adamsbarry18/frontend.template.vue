@@ -4,9 +4,7 @@ import * as icons from '@/modules/ui/icons';
 
 function registerGlobalComponents(app: App) {
   Object.keys(icons).forEach((key) => {
-    const snakeCaseName = key
-      .replace(/\.?([A-Z])/g, (x, y) => `-${y.toLowerCase()}`)
-      .replace(/^-/, '');
+    const snakeCaseName = key.replace(/\.?([A-Z])/g, (x, y) => `-${y.toLowerCase()}`).replace(/^-/, '');
     app.component(snakeCaseName, icons[key]);
   });
 }

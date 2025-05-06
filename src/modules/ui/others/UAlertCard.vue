@@ -1,12 +1,6 @@
 <template>
   <div class="u-alert-card" :class="['-' + type]">
-    <icon-base
-      class="icon"
-      :color="classColor[type]"
-      :height="32"
-      :icon="typeIcon[type]"
-      :width="32"
-    />
+    <icon-base class="icon" :color="classColor[type]" :height="32" :icon="typeIcon[type]" :width="32" />
     <div class="alert-content-wrapper">
       <div class="alert-heading">
         <slot name="title" />

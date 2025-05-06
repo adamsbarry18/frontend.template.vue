@@ -30,11 +30,7 @@ export function orderBy<T>(
     | ((value: T, index: number, array: T[]) => any)
     | Array<string | ((value: T, index: number, array: T[]) => any)>
 ): T[] {
-  if (
-    !sortKey &&
-    !sortMethod &&
-    (!sortByParam || (Array.isArray(sortByParam) && sortByParam.length === 0))
-  ) {
+  if (!sortKey && !sortMethod && (!sortByParam || (Array.isArray(sortByParam) && sortByParam.length === 0))) {
     return array;
   }
 
@@ -50,9 +46,7 @@ export function orderBy<T>(
     ? null
     : function (value: T, index: number): any[] {
         if (sortByParam) {
-          let sortByArr: Array<
-            string | ((value: T, index: number, array: T[]) => any)
-          >;
+          let sortByArr: Array<string | ((value: T, index: number, array: T[]) => any)>;
           if (!Array.isArray(sortByParam)) {
             sortByArr = [sortByParam];
           } else {
@@ -67,18 +61,11 @@ export function orderBy<T>(
         }
         let currentValue: any = value;
         if (sortKey !== '$key') {
-          if (
-            isObject(value) &&
-            '$value' in (value as Record<string, unknown>)
-          ) {
+          if (isObject(value) && '$value' in (value as Record<string, unknown>)) {
             currentValue = (value as any).$value;
           }
         }
-        return [
-          isObject(currentValue)
-            ? getValueByPath(currentValue, sortKey as string)
-            : currentValue,
-        ];
+        return [isObject(currentValue) ? getValueByPath(currentValue, sortKey as string) : currentValue];
       };
 
   type Wrapper = {

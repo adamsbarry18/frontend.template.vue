@@ -3,10 +3,7 @@
     <div v-if="$slots.left" class="left-printer">
       <slot name="left" />
     </div>
-    <div
-      class="center-panel"
-      :class="{ '-has-left': !!$slots.left, '-has-right': !!$slots.right }"
-    >
+    <div class="center-panel" :class="{ '-has-left': !!$slots.left, '-has-right': !!$slots.right }">
       <slot />
     </div>
     <div v-if="$slots.right" class="right-printer">

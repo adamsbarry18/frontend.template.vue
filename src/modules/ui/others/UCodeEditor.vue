@@ -1,9 +1,5 @@
 <template>
-  <div
-    ref="editorContainerRef"
-    class="u-code-editor"
-    :class="{ '-dark': darkMode }"
-  />
+  <div ref="editorContainerRef" class="u-code-editor" :class="{ '-dark': darkMode }" />
 </template>
 
 <script setup lang="ts">
@@ -26,23 +22,14 @@
     bracketMatching,
     foldGutter,
   } from '@codemirror/language';
-  import {
-    defaultKeymap,
-    history,
-    historyKeymap,
-    indentWithTab,
-  } from '@codemirror/commands';
+  import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
   import {
     autocompletion,
     completionKeymap,
     closeBrackets,
     closeBracketsKeymap,
   } from '@codemirror/autocomplete';
-  import {
-    searchKeymap,
-    highlightSelectionMatches,
-    search,
-  } from '@codemirror/search';
+  import { searchKeymap, highlightSelectionMatches, search } from '@codemirror/search';
   import { html } from '@codemirror/lang-html';
   import { oneDark } from '@codemirror/theme-one-dark';
   import { linter, lintGutter } from '@codemirror/lint';
@@ -109,9 +96,7 @@
     throw new Error(`Cannot load ${props.lang} extension`);
   });
 
-  const placeholderExt = computed(() =>
-    placeholderExtension(props.placeholder)
-  );
+  const placeholderExt = computed(() => placeholderExtension(props.placeholder));
 
   const disabledExt = computed(() => EditorState.readOnly.of(props.disabled));
 

@@ -4,11 +4,7 @@ export interface FilterConfig {
   function?: (row: any, filterValue: any, config: FilterConfig) => boolean;
 }
 
-export type FilterFunction = (
-  row: any,
-  filterValue: any,
-  config: FilterConfig
-) => boolean;
+export type FilterFunction = (row: any, filterValue: any, config: FilterConfig) => boolean;
 
 export function applyFiltersToList<T>(
   rows: T[],
@@ -29,11 +25,7 @@ const filterFunctions: Record<string, FilterFunction> = {
   daterange: filterDaterange,
 };
 
-function applyFilter(
-  row: any,
-  filterValue: any,
-  config: FilterConfig
-): boolean {
+function applyFilter(row: any, filterValue: any, config: FilterConfig): boolean {
   if (filterValue === null) {
     return true;
   }
@@ -46,31 +38,17 @@ function applyFilter(
   return false;
 }
 
-export function filterEnum(
-  row: any,
-  filterValue: any,
-  config: FilterConfig
-): boolean {
+export function filterEnum(row: any, filterValue: any, config: FilterConfig): boolean {
   const value = getPropValue(row, config.property);
-  return Array.isArray(filterValue) && filterValue.length > 0
-    ? filterValue.includes(value)
-    : true;
+  return Array.isArray(filterValue) && filterValue.length > 0 ? filterValue.includes(value) : true;
 }
 
-export function filterBool(
-  row: any,
-  filterValue: any,
-  config: FilterConfig
-): boolean {
+export function filterBool(row: any, filterValue: any, config: FilterConfig): boolean {
   const value = getPropValue(row, config.property);
   return filterValue === value;
 }
 
-export function filterNumberrange(
-  row: any,
-  filterValue: any,
-  config: FilterConfig
-): boolean {
+export function filterNumberrange(row: any, filterValue: any, config: FilterConfig): boolean {
   const value = getPropValue(row, config.property);
   if (!Array.isArray(filterValue) || filterValue.length !== 2) {
     return true;
@@ -85,11 +63,7 @@ export function filterNumberrange(
   return true;
 }
 
-export function filterDaterange(
-  row: any,
-  filterValue: any,
-  config: FilterConfig
-): boolean {
+export function filterDaterange(row: any, filterValue: any, config: FilterConfig): boolean {
   const value = getPropValue(row, config.property);
   const dateValue = new Date(value);
   const startDate = new Date(filterValue[0]);

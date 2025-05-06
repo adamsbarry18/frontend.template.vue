@@ -18,12 +18,7 @@
       </div>
       <div v-if="showHeaderRight" class="header-right">
         <div v-if="entity" class="numbers-size">
-          <icon-base
-            :icon="entity.entityIcon"
-            :size="26"
-            color="white"
-            class="count-icon"
-          />
+          <icon-base :icon="entity.entityIcon" :size="26" color="white" class="count-icon" />
           <p>
             {{
               $t(entity.entityLabelKey, {
@@ -41,11 +36,7 @@
         />
       </div>
     </div>
-    <transition
-      v-if="searchService && paginationService"
-      name="filter-fade"
-      :duration="350"
-    >
+    <transition v-if="searchService && paginationService" name="filter-fade" :duration="350">
       <u-filter
         v-show="filterPanelActive"
         v-model="searchService.filters"
@@ -61,12 +52,7 @@
 
 <script setup lang="ts">
   import { computed, onMounted } from 'vue';
-  import {
-    BaseListSearchBar,
-    UFilter,
-    USelectGroup,
-    IconBase,
-  } from '@/modules/ui';
+  import { BaseListSearchBar, UFilter, USelectGroup, IconBase } from '@/modules/ui';
   import ListService from './services/listService';
 
   const props = withDefaults(

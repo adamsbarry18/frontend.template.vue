@@ -2,11 +2,7 @@
   <div class="password-form">
     <div class="header">
       <h4>{{ $t('user.settings.password') }}</h4>
-      <span
-        v-if="mode !== 'creation'"
-        class="edit-btn"
-        @click="toggleInputDisplay"
-      >
+      <span v-if="mode !== 'creation'" class="edit-btn" @click="toggleInputDisplay">
         <p v-if="!showInputs">{{ $t('user.settings.edit-password') }}</p>
         <icon-base
           v-else-if="showInputs && !localOldPassword && !localNewPassword"
@@ -25,9 +21,7 @@
         <span v-else-if="mode === 'creation' && user?.id" class="info">
           {{ $t('user.settings.password-no-action') }}
         </span>
-        <span v-else-if="mode !== 'creation'" class="info">{{
-          $t('user.settings.update-info')
-        }}</span>
+        <span v-else-if="mode !== 'creation'" class="info">{{ $t('user.settings.update-info') }}</span>
 
         <u-password-input
           v-if="mode === 'user-edit'"
@@ -44,11 +38,7 @@
           v-if="!(mode === 'creation' && user?.id)"
           v-model="localNewPassword"
           :error="newPasswordValidationError"
-          :label="
-            mode === 'creation'
-              ? $t('user.settings.password')
-              : $t('user.settings.new-password')
-          "
+          :label="mode === 'creation' ? $t('user.settings.password') : $t('user.settings.new-password')"
           :rules="passwordRules"
           autocomplete="new-password"
           progress
@@ -68,11 +58,7 @@
   import { ref, computed, watch, reactive } from 'vue';
   import { UPasswordInput, IconBase } from '@/modules/ui';
   import PasswordSecurityIndicators from '../_components/PasswordSecurityIndicators.vue';
-  import {
-    passwordRules,
-    getPasswordIndicators,
-    isPasswordSecure,
-  } from '@/libs/utils/Security';
+  import { passwordRules, getPasswordIndicators, isPasswordSecure } from '@/libs/utils/Security';
   import i18n from '@/i18n';
   import UserModel from '@/stores/modules/users/models/UserModel';
 
@@ -84,8 +70,7 @@
     mode: {
       type: String,
       required: true,
-      validator: (value: string) =>
-        ['creation', 'admin-edit', 'user-edit'].includes(value),
+      validator: (value: string) => ['creation', 'admin-edit', 'user-edit'].includes(value),
     },
   });
 
@@ -118,39 +103,25 @@
     emit('validity-change', isFormSectionValid.value);
   }
 
-  const isOldPasswordRequired = computed(
-    () => props.mode === 'user-edit' && showInputs.value
-  );
+  const isOldPasswordRequired = computed(() => props.mode === 'user-edit' && showInputs.value);
 
   const oldPasswordValidationError = computed(() => {
-    if (!isOldPasswordRequired.value || !fieldsTouched.oldPassword)
-      return false;
-    if (!localOldPassword.value.trim())
-      return i18n.global.t('error.required-field');
+    if (!isOldPasswordRequired.value || !fieldsTouched.oldPassword) return false;
+    if (!localOldPassword.value.trim()) return i18n.global.t('error.required-field');
     return false;
   });
 
   const isNewPasswordRequired = computed(() => {
     if (props.mode === 'creation' && !props.user?.id) return true;
-    if (
-      ['admin-edit', 'user-edit'].includes(props.mode) &&
-      showInputs.value &&
-      localNewPassword.value
-    )
+    if (['admin-edit', 'user-edit'].includes(props.mode) && showInputs.value && localNewPassword.value)
       return true;
-    if (
-      props.mode === 'user-edit' &&
-      showInputs.value &&
-      localOldPassword.value
-    )
-      return true;
+    if (props.mode === 'user-edit' && showInputs.value && localOldPassword.value) return true;
 
     return false;
   });
 
   const newPasswordValidationError = computed(() => {
-    if (!isNewPasswordRequired.value || !fieldsTouched.newPassword)
-      return false;
+    if (!isNewPasswordRequired.value || !fieldsTouched.newPassword) return false;
 
     const newPass = localNewPassword.value;
 
@@ -160,11 +131,7 @@
       return i18n.global.t('error.password-complexity');
     }
 
-    if (
-      props.mode === 'user-edit' &&
-      localOldPassword.value &&
-      newPass === localOldPassword.value
-    ) {
+    if (props.mode === 'user-edit' && localOldPassword.value && newPass === localOldPassword.value) {
       return i18n.global.t('error.password-must-differ');
     }
 
@@ -180,10 +147,8 @@
       return true;
     }
 
-    const hasOldPasswordError =
-      isOldPasswordRequired.value && !!oldPasswordValidationError.value;
-    const hasNewPasswordError =
-      isNewPasswordRequired.value && !!newPasswordValidationError.value;
+    const hasOldPasswordError = isOldPasswordRequired.value && !!oldPasswordValidationError.value;
+    const hasNewPasswordError = isNewPasswordRequired.value && !!newPasswordValidationError.value;
 
     return !hasOldPasswordError && !hasNewPasswordError;
   });
@@ -205,11 +170,7 @@
   function handlePasswordChange() {
     if (isFormSectionValid.value && localNewPassword.value) {
       emit('update:password', localNewPassword.value);
-    } else if (
-      !localNewPassword.value &&
-      !localOldPassword.value &&
-      props.mode !== 'creation'
-    ) {
+    } else if (!localNewPassword.value && !localOldPassword.value && props.mode !== 'creation') {
       emit('update:password', '');
     }
     emit('validity-change', isFormSectionValid.value);

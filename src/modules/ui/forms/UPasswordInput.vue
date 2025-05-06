@@ -28,9 +28,7 @@
         <icon-base
           class="icon-view"
           :icon="isVisible ? 'icon-view' : 'icon-hide'"
-          :color="
-            isVisible ? 'var(--color-neutral-800)' : 'var(--color-neutral-300)'
-          "
+          :color="isVisible ? 'var(--color-neutral-800)' : 'var(--color-neutral-300)'"
           size="20"
         />
       </div>
@@ -97,9 +95,7 @@
   const localValue = ref(props.modelValue);
   const percentage = ref(0);
   const hasError = computed(() => !!props.error);
-  const errorMessage = computed(() =>
-    typeof props.error === 'string' ? props.error : ''
-  );
+  const errorMessage = computed(() => (typeof props.error === 'string' ? props.error : ''));
   const showProgress = computed(() => !props.disabled && props.progress);
 
   const progressColors = ref([

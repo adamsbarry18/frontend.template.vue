@@ -5,10 +5,7 @@
     <div class="kpi-figure" :class="{ '-alone': !previousValue }">
       <div class="kpi-value-wrapper">
         <span class="kpi">{{ formattedValue }}</span>
-        <span
-          class="kpi-detail"
-          :class="{ [`-${kpiDetailSize}`]: !!kpiDetailSize }"
-        >
+        <span class="kpi-detail" :class="{ [`-${kpiDetailSize}`]: !!kpiDetailSize }">
           {{ kpiDetail }}
         </span>
       </div>
@@ -17,12 +14,8 @@
         <div class="kpi-delta">
           <template v-if="withNumberQualification">
             <div>
-              <span class="kpi-primary" :style="{ color: deltaColor }">{{
-                deltaPercent
-              }}</span>
-              <span class="kpi-raw" :style="{ color: deltaColor }"
-                >({{ formattedDelta }})</span
-              >
+              <span class="kpi-primary" :style="{ color: deltaColor }">{{ deltaPercent }}</span>
+              <span class="kpi-raw" :style="{ color: deltaColor }">({{ formattedDelta }})</span>
             </div>
           </template>
           <template v-else>
@@ -36,11 +29,7 @@
         </div>
       </template>
     </div>
-    <u-info
-      v-if="hasInfoSlot"
-      class="kpi-help"
-      icon-color="var(--color-neutral-500)"
-    >
+    <u-info v-if="hasInfoSlot" class="kpi-help" icon-color="var(--color-neutral-500)">
       <slot name="info" />
     </u-info>
   </div>
@@ -92,9 +81,7 @@
 
   // Couleur de la variation selon la valeur delta
   const deltaColor = computed(() => {
-    if (
-      checkIsReducedNumberZero(delta.value, deltaFormatOptions.maxPrecision)
-    ) {
+    if (checkIsReducedNumberZero(delta.value, deltaFormatOptions.maxPrecision)) {
       return deltaColorFunction(0);
     }
     return deltaColorFunction(delta.value);

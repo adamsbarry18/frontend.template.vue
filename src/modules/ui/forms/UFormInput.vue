@@ -105,14 +105,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import {
-    IconBase,
-    UDatePicker,
-    USelectGroup,
-    URadio,
-    UNumberInput,
-    UPasswordInput,
-  } from '@/modules/ui';
+  import { IconBase, UDatePicker, USelectGroup, URadio, UNumberInput, UPasswordInput } from '@/modules/ui';
 
   const props = defineProps({
     modelValue: {
@@ -149,15 +142,7 @@
       type: String,
       default: 'string',
       validator: (v: string) =>
-        [
-          'string',
-          'textarea',
-          'number',
-          'date',
-          'enum',
-          'radio',
-          'password',
-        ].includes(v),
+        ['string', 'textarea', 'number', 'date', 'enum', 'radio', 'password'].includes(v),
     },
     radioOptions: { type: Array as PropType<any[]>, default: () => [] },
     enumOptions: { type: Array as PropType<any[]>, default: () => [] },
@@ -186,9 +171,7 @@
     return null;
   });
 
-  const withError = computed(
-    () => !!errorMessage.value && (errorMessage.value as string).length > 0
-  );
+  const withError = computed(() => !!errorMessage.value && (errorMessage.value as string).length > 0);
 
   watch(
     () => props.modelValue,
@@ -204,9 +187,7 @@
 
   onMounted(() => {
     if (props.type === 'date') {
-      input.value = props.modelValue
-        ? new Date((props.modelValue as Date).getTime())
-        : null;
+      input.value = props.modelValue ? new Date((props.modelValue as Date).getTime()) : null;
     } else if (props.type === 'number') {
       input.value = props.modelValue !== undefined ? props.modelValue : null;
     } else {

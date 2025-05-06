@@ -3,13 +3,9 @@ import { storageService } from '@/libs/utils/StorageService';
 import type { Theme } from '@/types/Theme';
 import { useUsersStore } from '@/stores/modules/users/user';
 
-const internalCurrentThemePref = ref<Theme>(
-  (storageService.getItem('theme') as Theme) || 'system'
-);
+const internalCurrentThemePref = ref<Theme>((storageService.getItem('theme') as Theme) || 'system');
 
-let systemThemeChangeHandler:
-  | ((this: MediaQueryList, ev: MediaQueryListEvent) => any)
-  | null = null;
+let systemThemeChangeHandler: ((this: MediaQueryList, ev: MediaQueryListEvent) => any) | null = null;
 let mediaQueryList: MediaQueryList | null = null;
 
 function applyThemeToDOM(theme: Theme): void {
@@ -17,9 +13,7 @@ function applyThemeToDOM(theme: Theme): void {
   let effectiveTheme: 'light' | 'dark';
 
   if (theme === 'system') {
-    effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+    effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   } else {
     effectiveTheme = theme;
   }

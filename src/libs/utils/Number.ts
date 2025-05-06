@@ -51,10 +51,7 @@ export function setPrecision(value: number, precision: number = 0): number {
  * @param maxPrecision The maximum decimal precision to consider.
  * @returns True if the number is effectively zero, false otherwise.
  */
-export function checkIsReducedNumberZero(
-  value: number | string,
-  maxPrecision: number
-): boolean {
+export function checkIsReducedNumberZero(value: number | string, maxPrecision: number): boolean {
   const number = typeof value === 'string' ? parseFloat(value) : value;
   return parseFloat(number.toFixed(maxPrecision)) === 0;
 }
@@ -92,10 +89,7 @@ interface NumberFormatOptions {
  * @param options Formatting options.
  * @returns Formatted number string.
  */
-export const numberFormat = (
-  value: number,
-  options: NumberFormatOptions = {}
-): string => {
+export const numberFormat = (value: number, options: NumberFormatOptions = {}): string => {
   if ((!value && value !== 0) || isNaN(value)) {
     return '-';
   }
@@ -107,14 +101,9 @@ export const numberFormat = (
   const currentLocale: string = i18n.global.locale.value;
   const i18nOptions: Intl.NumberFormatOptions = {};
 
-  const { currency, precision, maxPrecision, condensed, unit, signNumber } =
-    options;
+  const { currency, precision, maxPrecision, condensed, unit, signNumber } = options;
 
-  if (
-    currency &&
-    precision === undefined &&
-    (!condensed || (condensed && value < 1000))
-  ) {
+  if (currency && precision === undefined && (!condensed || (condensed && value < 1000))) {
     i18nOptions.minimumFractionDigits = 2;
     i18nOptions.maximumFractionDigits = 2;
   }

@@ -16,28 +16,18 @@
         <u-shortcut-subscriber @shortcut-trigger="handleArrowClick" />
         <div class="clear-all-button -button-like" @click="onClearAll">
           <span class="notification-success">
-            <icon-base
-              icon="icon-delete"
-              :size="20"
-              color="var(--color-neutral-800)"
-            />
+            <icon-base icon="icon-delete" :size="20" color="var(--color-neutral-800)" />
             Supprimer toutes les notifications
           </span>
         </div>
-        <div
-          v-for="group in notificationsGroups"
-          :key="group.dateLabel"
-          class="notification-group"
-        >
+        <div v-for="group in notificationsGroups" :key="group.dateLabel" class="notification-group">
           <p>{{ group.dateLabel }}</p>
           <transition-group name="component-fade">
             <u-dismissable
               v-for="notification in group.notifications.slice().reverse()"
               :key="notification.id"
               class="notification"
-              :icon="
-                notification.icon ? notification.icon : 'icon-notif-active'
-              "
+              :icon="notification.icon ? notification.icon : 'icon-notif-active'"
               :type="notification.isError ? 'error' : 'default'"
               @close="onClose(notification.id)"
             >
@@ -60,11 +50,7 @@
   import { reactBus, STATE } from '@/plugins/reactBus';
   import { compile } from 'vue/dist/vue.esm-bundler.js';
   import dayjs from 'dayjs';
-  import {
-    IconBase,
-    UDismissable,
-    UShortcutSubscriber,
-  } from '@/modules/ui';
+  import { IconBase, UDismissable, UShortcutSubscriber } from '@/modules/ui';
   import i18n from '@/i18n';
   import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
   import { useNotification } from '@/composables/notfication';
@@ -77,17 +63,13 @@
 
   // Reactive state
   const notifications = ref(notificationStore.getAll);
-  const isNotificationPanelVisible = ref(
-    notificationStore.getPersistentNotificationsVisible
-  );
+  const isNotificationPanelVisible = ref(notificationStore.getPersistentNotificationsVisible);
 
   // Computed properties
   const notificationsGroups = computed(() => {
     const res = [];
     for (const notification of notifications.value) {
-      const date = notification.created_time
-        ? new Date(notification.created_time)
-        : new Date(0);
+      const date = notification.created_time ? new Date(notification.created_time) : new Date(0);
       let dateLabel = i18n.global.d(date, 'dayMonthYear');
       if (dayjs(date).isSame(dayjs(), 'day')) {
         dateLabel = i18n.global.t('target.date.today');
@@ -154,8 +136,7 @@
       $notification.error({
         title: 'Titre Notification test',
         message: 'Description',
-        template:
-          '<notification-connection :notification-id="notificationId"/>',
+        template: '<notification-connection :notification-id="notificationId"/>',
         display: 'persistent_short',
         options: {
           icon: 'icon-connect',

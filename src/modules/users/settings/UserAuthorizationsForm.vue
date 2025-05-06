@@ -1,12 +1,7 @@
 <template>
   <div class="user-authorizations-form">
     <div class="global-card-title">
-      <icon-base
-        class="icon"
-        icon="icon-settings"
-        :color="'var(--color-neutral-800)'"
-        size="24"
-      />
+      <icon-base class="icon" icon="icon-settings" :color="'var(--color-neutral-800)'" size="24" />
       <h3>{{ $t('user.settings.authorizations.title') }}</h3>
     </div>
     <div v-if="localAuthorizations" class="form-layout">
@@ -143,10 +138,7 @@
     field: K,
     value: UserAuthorizationData[K]
   ) {
-    if (
-      localAuthorizations.value &&
-      localAuthorizations.value[field] !== value
-    ) {
+    if (localAuthorizations.value && localAuthorizations.value[field] !== value) {
       const updatedAuths = { ...localAuthorizations.value, [field]: value };
       localAuthorizations.value = updatedAuths;
       emit('update:authorizations', updatedAuths);

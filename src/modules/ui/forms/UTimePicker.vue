@@ -43,9 +43,7 @@
   const emit = defineEmits(['update:modelValue', 'change']);
   const input = ref(props.modelValue);
 
-  const popperClass = computed(() =>
-    ['u-time-picker-popper', 'no-close-trigger'].join(' ')
-  );
+  const popperClass = computed(() => ['u-time-picker-popper', 'no-close-trigger'].join(' '));
 
   watch(
     () => props.modelValue,

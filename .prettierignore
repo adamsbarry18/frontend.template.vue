@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+storybook-static
+public/angularjs
+public/ext
+public/images
+.storybook/build.html

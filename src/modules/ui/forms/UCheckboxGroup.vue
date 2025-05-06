@@ -22,23 +22,11 @@
       <span class="option-label -text-ellipsis" :title="option.label">
         {{ option.label }}
       </span>
-      <div
-        v-if="option.contextualMenu"
-        class="contextual-menu"
-        @click.stop="openContextualMenu(option)"
-      >
-        <icon-base
-          icon="icon-contextual-menu"
-          :size="24"
-          color="var(--color-neutral-800)"
-        />
+      <div v-if="option.contextualMenu" class="contextual-menu" @click.stop="openContextualMenu(option)">
+        <icon-base icon="icon-contextual-menu" :size="24" color="var(--color-neutral-800)" />
       </div>
     </div>
-    <u-contextualMenu
-      ref="contextualMenu"
-      :list="contextualMenuOptions"
-      @close="onContextualMenuClosed"
-    />
+    <u-contextualMenu ref="contextualMenu" :list="contextualMenuOptions" @close="onContextualMenuClosed" />
   </div>
 </template>
 
@@ -93,10 +81,7 @@
   const contextualMenu = ref<InstanceType<typeof UContextualMenu>>();
   function openContextualMenu(option: any) {
     contextualMenuOption.value = option;
-    if (
-      contextualMenu.value &&
-      typeof contextualMenu.value.showMenu === 'function'
-    ) {
+    if (contextualMenu.value && typeof contextualMenu.value.showMenu === 'function') {
       contextualMenu.value.showMenu({ x: 100, y: 90 });
     }
   }

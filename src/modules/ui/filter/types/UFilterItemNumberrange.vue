@@ -6,10 +6,7 @@
         {{ $t('commons.form.reset-defaults') }}
       </span>
     </p>
-    <div
-      v-if="internalInput && internalInput.length === 2"
-      class="input-wrapper"
-    >
+    <div v-if="internalInput && internalInput.length === 2" class="input-wrapper">
       <u-number-input
         v-model="internalInput[0]"
         :min="min"

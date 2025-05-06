@@ -1,9 +1,5 @@
 <template>
-  <el-tab-pane
-    :name="index.toString()"
-    :disabled="disabled"
-    :closable="closable"
-  >
+  <el-tab-pane :name="index.toString()" :disabled="disabled" :closable="closable">
     <template #label>
       <span
         :class="{
@@ -12,13 +8,7 @@
           'tab-disabled': disabled,
         }"
       >
-        <icon-base
-          v-if="icon"
-          class="tab-icon"
-          size="24"
-          :icon="icon"
-          :color="iconColor"
-        />
+        <icon-base v-if="icon" class="tab-icon" size="24" :icon="icon" :color="iconColor" />
         <span>{{ label }}</span>
       </span>
     </template>

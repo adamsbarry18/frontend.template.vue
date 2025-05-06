@@ -1,19 +1,9 @@
 <template>
-  <u-tooltip
-    ref="tooltipRef"
-    :placement="placement"
-    :tooltip-class="popperClass"
-  >
+  <u-tooltip ref="tooltipRef" :placement="placement" :tooltip-class="popperClass">
     <template #content>
       <slot />
     </template>
-    <icon-base
-      class="u-info"
-      icon="icon-info"
-      :color="iconColor"
-      :width="width"
-      :height="height"
-    />
+    <icon-base class="u-info" icon="icon-info" :color="iconColor" :width="width" :height="height" />
   </u-tooltip>
 </template>
 

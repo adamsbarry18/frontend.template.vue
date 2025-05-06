@@ -45,13 +45,9 @@
   });
 
   // Calcul en 0-based : nombre de seuils dépassés
-  const thresholdIndex = computed(
-    () => props.thresholds.filter((t) => props.modelValue >= t).length
-  );
+  const thresholdIndex = computed(() => props.thresholds.filter((t) => props.modelValue >= t).length);
   // Pour l'affichage CSS, on utilise un index 1-based (au moins 1)
-  const thresholdClass = computed(
-    () => `-threshold-${thresholdIndex.value + 1}`
-  );
+  const thresholdClass = computed(() => `-threshold-${thresholdIndex.value + 1}`);
   // Le label est choisi selon l'index 0-based fourni
   const label = computed(() => props.thresholdLabels[thresholdIndex.value]);
 </script>

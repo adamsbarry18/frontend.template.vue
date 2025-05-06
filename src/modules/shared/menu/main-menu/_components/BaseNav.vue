@@ -1,10 +1,6 @@
 <template>
   <div class="base-nav" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-    <div
-      class="extend-arrow"
-      :class="{ '-extended': isNavExtended }"
-      @click="onExtendNavClick"
-    >
+    <div class="extend-arrow" :class="{ '-extended': isNavExtended }" @click="onExtendNavClick">
       <icon-base
         class="arrow-icon"
         :class="{ '-extended': isNavExtended }"
@@ -124,12 +120,8 @@
   const sections = ref<InstanceType<typeof NavSection>[]>([]);
 
   const universes = computed(() => props.config.univers || []);
-  const mainGroupsNav = computed(() =>
-    universes.value.filter((group) => group.isPrimary)
-  );
-  const secondaryGroups = computed(() =>
-    universes.value.filter((group) => !group.isPrimary)
-  );
+  const mainGroupsNav = computed(() => universes.value.filter((group) => group.isPrimary));
+  const secondaryGroups = computed(() => universes.value.filter((group) => !group.isPrimary));
   const settings = computed(() => props.config.settings || []);
   const globals = computed(() => props.config.globals || []);
 
@@ -250,13 +242,7 @@
 
       &.-extended {
         // Cette classe est toujours liée à isNavExtended (survol ou épinglé)
-        right: calc(
-          (
-              var(--extended-nav-width) - var(--base-nav-width) +
-                var(--extend-arrow-width)
-            ) *
-            -1
-        );
+        right: calc((var(--extended-nav-width) - var(--base-nav-width) + var(--extend-arrow-width)) * -1);
       }
 
       .arrow-icon {

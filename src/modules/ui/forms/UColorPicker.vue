@@ -1,10 +1,6 @@
 <template>
   <div class="u-color-picker" :class="`-${colorBrightness}`">
-    <el-color-picker
-      v-model="selectedColor"
-      :disabled="disabled"
-      @change="handleChange"
-    />
+    <el-color-picker v-model="selectedColor" :disabled="disabled" @change="handleChange" />
   </div>
 </template>
 

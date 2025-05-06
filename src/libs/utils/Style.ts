@@ -4,7 +4,5 @@
  * @returns La valeur de la variable CSS sous forme de chaîne de caractères.
  */
 export function getCssVariable(variable: string): string {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(variable)
-    .trim();
+  return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
 }

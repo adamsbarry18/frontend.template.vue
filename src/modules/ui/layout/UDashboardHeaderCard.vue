@@ -4,9 +4,7 @@
       <icon-base :icon="icon" :size="24" color="var(--color-neutral-800)" />
       <h3>{{ title }}</h3>
       <span class="last-computation-info">
-        <p v-if="lastProcessTime">
-          {{ $t('commons.last-process') }} {{ $d(lastProcessTime, 'middle') }}
-        </p>
+        <p v-if="lastProcessTime">{{ $t('commons.last-process') }} {{ $d(lastProcessTime, 'middle') }}</p>
       </span>
       <slot name="dimension" />
     </div>

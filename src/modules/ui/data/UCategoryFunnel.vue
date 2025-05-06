@@ -1,14 +1,7 @@
 <template>
   <div class="u-category-funnel">
-    <div
-      class="categories-wrapper"
-      :style="{ gridTemplateColumns: `repeat(${categories.length}, 1fr)` }"
-    >
-      <div
-        v-for="category in categories"
-        :key="category.title"
-        class="category-label"
-      >
+    <div class="categories-wrapper" :style="{ gridTemplateColumns: `repeat(${categories.length}, 1fr)` }">
+      <div v-for="category in categories" :key="category.title" class="category-label">
         <p class="category-title">{{ category.title }}</p>
         <p class="category-value">
           {{ numberFormat(category.value, { condensed: true }) }}
@@ -16,12 +9,7 @@
         <p class="category-subtitle">{{ category.subtitle }}</p>
       </div>
     </div>
-    <v-chart
-      ref="chart"
-      class="funnel-chart"
-      :option="graphOptions"
-      autoresize
-    />
+    <v-chart ref="chart" class="funnel-chart" :option="graphOptions" autoresize />
   </div>
 </template>
 
@@ -49,8 +37,7 @@
   const graphOptions = computed(() => ({
     tooltip: {
       trigger: 'item',
-      valueFormatter: (value: number) =>
-        numberFormat(value, { condensed: true }),
+      valueFormatter: (value: number) => numberFormat(value, { condensed: true }),
     },
     color: colors.value,
     legend: { show: false },

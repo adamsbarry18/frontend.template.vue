@@ -13,13 +13,7 @@
     :title="collapsable ? '' : title"
     @click.stop="handleClick"
   >
-    <icon-base
-      v-if="icon"
-      :icon="icon"
-      class="button-icon"
-      :color="computedIconColor"
-      :size="iconSize"
-    />
+    <icon-base v-if="icon" :icon="icon" class="button-icon" :color="computedIconColor" :size="iconSize" />
     <slot />
     <div v-if="collapsable" class="label-btn">
       <span class="label-txt">{{ label || title }}</span>

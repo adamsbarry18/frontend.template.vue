@@ -56,9 +56,7 @@
         if (item.state) {
           goToState(item);
         } else {
-          console.warn(
-            `Menu item "${item.name}" clicked but has no state defined.`
-          );
+          console.warn(`Menu item "${item.name}" clicked but has no state defined.`);
         }
     }
   }
@@ -77,9 +75,7 @@
     }
   }
 
-  function prepareState(
-    stateName: string
-  ): { name: string; query: Record<string, any> } | null {
+  function prepareState(stateName: string): { name: string; query: Record<string, any> } | null {
     const route = router.options.routes.find((r) => r.name === stateName);
     const query: Record<string, any> = {};
 

@@ -6,10 +6,7 @@
     :automatic-dropdown="automaticDropdown"
     :filterable="filterable"
     :multiple="multiple"
-    :class="[
-      'u-select-group',
-      { '-icon-prefix': iconPrefix !== null, '-disabled': disabled },
-    ]"
+    :class="['u-select-group', { '-icon-prefix': iconPrefix !== null, '-disabled': disabled }]"
     :popper-class="popperClass"
     :clearable="clearable"
     @change="handleChange"
@@ -18,12 +15,7 @@
     ref="selectRef"
   >
     <template v-if="iconPrefix" #prefix>
-      <icon-base
-        :icon="iconPrefix"
-        class="prefix-icon"
-        color="var(--color-neutral-800)"
-        :size="20"
-      />
+      <icon-base :icon="iconPrefix" class="prefix-icon" color="var(--color-neutral-800)" :size="20" />
     </template>
 
     <template v-if="groupBy === ''">
@@ -94,15 +86,7 @@
 </template>
 
 <script setup lang="ts">
-  import {
-    ref,
-    computed,
-    watch,
-    onMounted,
-    onBeforeUnmount,
-    nextTick,
-    type PropType,
-  } from 'vue';
+  import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, type PropType } from 'vue';
   import { groupBy as _groupBy } from '@/libs/utils/Array';
   import { isObject } from '@/libs/utils/Object';
   import { ElSelect, ElOption, ElOptionGroup } from 'element-plus';
@@ -164,12 +148,7 @@
   });
 
   // Emits
-  const emit = defineEmits([
-    'update:modelValue',
-    'change',
-    'blur',
-    'visible-change',
-  ]);
+  const emit = defineEmits(['update:modelValue', 'change', 'blur', 'visible-change']);
 
   // Refs
   const localValue = ref(props.modelValue);
@@ -233,16 +212,8 @@
           select.inputHovering = true;
           const selectInputEl = select.$el.querySelector('input');
           if (selectInputEl) {
-            selectInputEl.addEventListener(
-              'mouseenter',
-              stopEventPropagation,
-              true
-            );
-            selectInputEl.addEventListener(
-              'mouseleave',
-              stopEventPropagation,
-              true
-            );
+            selectInputEl.addEventListener('mouseenter', stopEventPropagation, true);
+            selectInputEl.addEventListener('mouseleave', stopEventPropagation, true);
           }
         }
       });
@@ -255,16 +226,8 @@
       if (select) {
         const selectInputEl = select.$el.querySelector('input');
         if (selectInputEl) {
-          selectInputEl.removeEventListener(
-            'mouseenter',
-            stopEventPropagation,
-            true
-          );
-          selectInputEl.removeEventListener(
-            'mouseleave',
-            stopEventPropagation,
-            true
-          );
+          selectInputEl.removeEventListener('mouseenter', stopEventPropagation, true);
+          selectInputEl.removeEventListener('mouseleave', stopEventPropagation, true);
         }
       }
     }

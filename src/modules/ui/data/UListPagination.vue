@@ -8,9 +8,7 @@
     @current-change="onCurrentChange"
   >
     <span v-if="props.total > 0" class="custom-total">
-      {{
-        $t('commons.list.results', { minResult, maxResult, total: props.total })
-      }}
+      {{ $t('commons.list.results', { minResult, maxResult, total: props.total }) }}
     </span>
     <span v-else class="custom-total">
       {{ $t('commons.list.results.empty') }}
@@ -43,9 +41,7 @@
 
   // Propriétés calculées
   const minResult = computed(() => (currentPage.value - 1) * props.size + 1);
-  const maxResult = computed(() =>
-    Math.min(currentPage.value * props.size, props.total)
-  );
+  const maxResult = computed(() => Math.min(currentPage.value * props.size, props.total));
 
   // Gestion des changements de page
   const onCurrentChange = (page: number) => {

@@ -36,9 +36,7 @@
     if (props.trendType === 'neutral') {
       return 'var(--color-neutral-800)';
     }
-    return props.trendType === 'increase'
-      ? 'var(--color-green-500)'
-      : 'var(--color-red-500)';
+    return props.trendType === 'increase' ? 'var(--color-green-500)' : 'var(--color-red-500)';
   });
 </script>
 
@@ -61,8 +59,7 @@
               icon="icon-arrow-back"
               :color="trendColor"
               :style="{
-                transform:
-                  trendType === 'increase' ? 'rotate(90deg)' : 'rotate(-90deg)',
+                transform: trendType === 'increase' ? 'rotate(90deg)' : 'rotate(-90deg)',
               }"
               :size="20"
             />
@@ -74,20 +71,12 @@
                 <p>{{ tooltipContent }}</p>
               </template>
             </u-tooltip>
-            <span
-              v-else
-              class="percentage-increase"
-              :style="{ color: trendColor }"
-            >
+            <span v-else class="percentage-increase" :style="{ color: trendColor }">
               {{ trendValue }}
             </span>
           </div>
           <span class="label-increase">{{ trendLabel }}</span>
-          <u-info
-            v-if="hasInfoSlot"
-            class="info-increase"
-            icon-color="var(--color-neutral-500)"
-          >
+          <u-info v-if="hasInfoSlot" class="info-increase" icon-color="var(--color-neutral-500)">
             <slot name="info" />
           </u-info>
         </div>

@@ -1,10 +1,5 @@
 <template>
-  <el-tooltip
-    effect="light"
-    :placement="validatedPlacement"
-    :open-delay="50"
-    class="u-tooltip-wrapper"
-  >
+  <el-tooltip effect="light" :placement="validatedPlacement" :open-delay="50" class="u-tooltip-wrapper">
     <slot />
     <template #content>
       <div class="tooltip-content">

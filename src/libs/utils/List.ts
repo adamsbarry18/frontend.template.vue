@@ -6,8 +6,7 @@ export const LIST_COLUMN_VISIBILITY = {
   INVISIBLE: 'invisible',
 };
 
-type VisibilityValue =
-  (typeof LIST_COLUMN_VISIBILITY)[keyof typeof LIST_COLUMN_VISIBILITY];
+type VisibilityValue = (typeof LIST_COLUMN_VISIBILITY)[keyof typeof LIST_COLUMN_VISIBILITY];
 
 interface SetVisibilityParams {
   column: string;
@@ -16,8 +15,7 @@ interface SetVisibilityParams {
 
 export function setVisibility({ column, value }: SetVisibilityParams): void {
   // Utiliser storageService pour récupérer et définir la visibilité
-  const columnVisibility =
-    storageService.getColumnVisibility<Record<string, VisibilityValue>>() ?? {};
+  const columnVisibility = storageService.getColumnVisibility<Record<string, VisibilityValue>>() ?? {};
   columnVisibility[column] = value;
   storageService.setColumnVisibility(columnVisibility);
 }
@@ -34,8 +32,7 @@ interface SetSortParams {
 
 export function setSort({ list, value }: SetSortParams): void {
   // Utiliser storageService pour récupérer et définir le tri
-  const listSort =
-    storageService.getListSort<Record<string, SortValue>>() ?? {};
+  const listSort = storageService.getListSort<Record<string, SortValue>>() ?? {};
   listSort[list] = value;
   storageService.setListSort(listSort);
 }
@@ -48,8 +45,7 @@ export function getListSort(listKey: string): SortValue {
 
 export function isColumnVisible(columnKey: string): boolean {
   // Utiliser storageService pour vérifier la visibilité
-  const columnVisibility =
-    storageService.getColumnVisibility<Record<string, VisibilityValue>>();
+  const columnVisibility = storageService.getColumnVisibility<Record<string, VisibilityValue>>();
   // Vérifier si la clé existe et si la valeur n'est pas 'invisible' (ou une autre logique si nécessaire)
   // Ici, on vérifie simplement si la clé existe dans l'objet récupéré.
   return !!columnVisibility?.[columnKey];
@@ -57,8 +53,7 @@ export function isColumnVisible(columnKey: string): boolean {
 
 export function hasSavedVisibility(columnKey: string): boolean {
   // Utiliser storageService pour vérifier si une visibilité est sauvegardée
-  const columnVisibility =
-    storageService.getColumnVisibility<Record<string, VisibilityValue>>();
+  const columnVisibility = storageService.getColumnVisibility<Record<string, VisibilityValue>>();
   return !!columnVisibility && columnVisibility.hasOwnProperty(columnKey);
 }
 

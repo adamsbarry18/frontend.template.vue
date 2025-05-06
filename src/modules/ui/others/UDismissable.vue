@@ -1,25 +1,14 @@
 <template>
   <transition>
-    <div
-      v-show="visible"
-      class="u-dismissable"
-      :class="{ '-error': type === 'error' }"
-    >
-      <span
-        v-if="closeable"
-        class="u-dismissable-close material-icons icon-clear"
-        @click.stop="onClose"
-        >{{ label }}</span
-      >
+    <div v-show="visible" class="u-dismissable" :class="{ '-error': type === 'error' }">
+      <span v-if="closeable" class="u-dismissable-close material-icons icon-clear" @click.stop="onClose">{{
+        label
+      }}</span>
       <div class="icon-wrapper">
         <icon-base
           :icon="icon"
           :size="22"
-          :color="
-            type === 'error'
-              ? 'var(--color-status-error)'
-              : 'var(--color-neutral-700)'
-          "
+          :color="type === 'error' ? 'var(--color-status-error)' : 'var(--color-neutral-700)'"
         />
       </div>
       <slot />

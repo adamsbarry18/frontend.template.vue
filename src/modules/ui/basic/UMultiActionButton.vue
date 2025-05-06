@@ -1,34 +1,15 @@
 <template>
   <div class="u-multi-action-button">
     <u-button type="secondary" :disabled="disabled" @click="displayMenu">
-      <icon-base
-        class="multi-icon"
-        icon="icon-contextual-menu"
-        :size="40"
-        color="var(--color-neutral-800)"
-      />
+      <icon-base class="multi-icon" icon="icon-contextual-menu" :size="40" color="var(--color-neutral-800)" />
     </u-button>
-    <u-popper
-      v-model:visible="active"
-      placement="top"
-      :width="230"
-      trigger="click"
-    >
+    <u-popper v-model:visible="active" placement="top" :width="230" trigger="click">
       <template #default>
         <div class="u-multi-action-popper">
           <div x-arrow />
           <u-tooltip v-for="item in items" :key="item.label" placement="right">
-            <div
-              class="action-item"
-              :class="{ '-disabled': item.disabled }"
-              @click="onClick(item)"
-            >
-              <icon-base
-                v-if="item.icon"
-                :icon="item.icon"
-                :size="24"
-                color="var(--color-neutral-500)"
-              />
+            <div class="action-item" :class="{ '-disabled': item.disabled }" @click="onClick(item)">
+              <icon-base v-if="item.icon" :icon="item.icon" :size="24" color="var(--color-neutral-500)" />
               <span>{{ item.label }}</span>
             </div>
             <template #content v-if="item.tooltip">

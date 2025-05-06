@@ -1,11 +1,6 @@
 <template>
   <div class="u-help-button">
-    <u-popper
-      :title="title"
-      :placement="placement"
-      :width="width"
-      :trigger="trigger"
-    >
+    <u-popper :title="title" :placement="placement" :width="width" :trigger="trigger">
       <template #reference>
         <div class="help-trigger">
           <span v-if="hasLabel" class="u-help-label">
@@ -14,9 +9,7 @@
           <icon-base
             v-if="withIcon"
             class="-button-like"
-            :color="
-              active ? 'var(--color-primary-500)' : 'var(--color-neutral-700)'
-            "
+            :color="active ? 'var(--color-primary-500)' : 'var(--color-neutral-700)'"
             :icon="active ? 'icon-help-on' : 'icon-help-off'"
             :size="size"
           />

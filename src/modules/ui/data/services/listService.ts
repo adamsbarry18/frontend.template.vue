@@ -12,9 +12,7 @@ export interface ListServiceSettings {
   entity?: EntityService | null;
   urlFilters?: UrlFiltersService | null;
   sort?: SortService | null;
-  retrieveDataPromise?:
-    | ((context: any) => Promise<{ itemsTotal: number; data: any[] }>)
-    | null;
+  retrieveDataPromise?: ((context: any) => Promise<{ itemsTotal: number; data: any[] }>) | null;
   showCounts?: boolean;
   autoload?: boolean;
 }
@@ -43,9 +41,7 @@ export default class ListService {
   private _entity: EntityService | null;
   private _urlFilters: UrlFiltersService | null;
   private _sort: SortService | null;
-  private _retrieveDataPromise:
-    | ((context: any) => Promise<DataResponse>)
-    | null;
+  private _retrieveDataPromise: ((context: any) => Promise<DataResponse>) | null;
   private _showCounts: boolean;
   private _itemsTotal: number;
   private _autoload: boolean;
@@ -57,10 +53,7 @@ export default class ListService {
    * @param settings - configuration of the list service
    */
   constructor(settings: ListServiceSettings = listDefaults) {
-    const mSettings: ListServiceSettings = Object.assign(
-      deepCopy(listDefaults),
-      settings
-    );
+    const mSettings: ListServiceSettings = Object.assign(deepCopy(listDefaults), settings);
 
     this._data = mSettings.data || [];
     this._search = mSettings.search || null;

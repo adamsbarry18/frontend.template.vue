@@ -23,9 +23,7 @@ const Cache = {
   },
   clear(): void {
     this._items = {};
-    console.warn(
-      '[PendingInterceptor Cache] Cleared all pending request entries.'
-    );
+    console.warn('[PendingInterceptor Cache] Cleared all pending request entries.');
   },
 };
 
@@ -45,9 +43,7 @@ export class PendingInterceptor extends BaseInterceptor {
     const interceptor = {
       request: (
         request: InternalAxiosRequestConfig<any>
-      ):
-        | InternalAxiosRequestConfig<any>
-        | Promise<InternalAxiosRequestConfig<any>> => {
+      ): InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>> => {
         if (request.method === 'get' && cacheable) {
           const key = this.getCacheKey(request);
           const _pending = Cache.get(key) as PendingCallbacks | undefined;
@@ -77,9 +73,7 @@ export class PendingInterceptor extends BaseInterceptor {
               this._fn.push(fn);
             },
             resolve(data: any) {
-              this._fn.forEach((fn) =>
-                fn(null, JSON.parse(JSON.stringify(data)))
-              );
+              this._fn.forEach((fn) => fn(null, JSON.parse(JSON.stringify(data))));
             },
             reject(err: any) {
               this._fn.forEach((fn) => fn(err));
@@ -91,9 +85,7 @@ export class PendingInterceptor extends BaseInterceptor {
       error: (error: any): Promise<never> => Promise.reject(error),
     };
     return interceptor as {
-      request: (
-        config: InternalAxiosRequestConfig<any>
-      ) => InternalAxiosRequestConfig<any>;
+      request: (config: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any>;
       error: (error: any) => Promise<never>;
     };
   }
@@ -129,10 +121,7 @@ export class PendingInterceptor extends BaseInterceptor {
     };
   }
 
-  public getCacheKey(
-    config: InternalAxiosRequestConfig<any>,
-    onlyRoot: boolean = false
-  ): string {
+  public getCacheKey(config: InternalAxiosRequestConfig<any>, onlyRoot: boolean = false): string {
     let key = config.url || '';
     if (config.params && !onlyRoot) {
       key += `?${JSON.stringify(config.params)}`;

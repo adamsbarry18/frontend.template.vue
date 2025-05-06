@@ -1,4 +1,4 @@
-import install from './plugins/install';
-export * from './modules/commons';
+import install from './plugins/global';
+export * from './modules/ui';
 
 export { install };

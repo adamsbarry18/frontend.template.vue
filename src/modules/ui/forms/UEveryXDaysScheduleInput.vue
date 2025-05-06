@@ -1,17 +1,9 @@
 <template>
   <div class="u-every-x-days-schedule-input">
     <span class="schedule-text -first">{{ $t('commons.schedule.every') }}</span>
-    <u-number-input
-      v-model="dayValue"
-      :min="1"
-      :step="1"
-      :disabled="disabled"
-      @change="handleChange"
-    />
+    <u-number-input v-model="dayValue" :min="1" :step="1" :disabled="disabled" @change="handleChange" />
     <b class="schedule-text">{{ $t('commons.schedule.days', dayValue) }}</b>
-    <u-info v-if="timezone">{{
-      $t('commons.schedule.timezone', { timezone })
-    }}</u-info>
+    <u-info v-if="timezone">{{ $t('commons.schedule.timezone', { timezone }) }}</u-info>
   </div>
 </template>
 
@@ -50,9 +42,7 @@
 
   // Valeur formatée pour l'input
   const formattedValue = computed(() => {
-    const cron = input.value
-      ? input.value.split(' ')
-      : '00 00 00 * * ?'.split(' ');
+    const cron = input.value ? input.value.split(' ') : '00 00 00 * * ?'.split(' ');
     cron[3] = `*/${dayValue.value}`;
     return cron.join(' ');
   });

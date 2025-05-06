@@ -54,11 +54,7 @@
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
   import { isValidEmail } from '@/libs/utils/String';
-  import {
-    passwordRules,
-    getPasswordIndicators,
-    isPasswordSecure,
-  } from '@/libs/utils/Security';
+  import { passwordRules, getPasswordIndicators, isPasswordSecure } from '@/libs/utils/Security';
   import Home from '@/modules/login/_components/Home.vue';
   import { UFormInput, UButton } from '@/modules/ui';
   import PasswordSecurityIndicators from '@/modules/users/_components/PasswordSecurityIndicators.vue';
@@ -77,9 +73,7 @@
   const confirmPassword = ref('');
 
   // Propriétés calculées
-  const passwordIndicators = computed(() =>
-    getPasswordIndicators(newPassword.value)
-  );
+  const passwordIndicators = computed(() => getPasswordIndicators(newPassword.value));
   const canSubmit = computed(() => {
     return (
       !emailValidator(email.value) &&

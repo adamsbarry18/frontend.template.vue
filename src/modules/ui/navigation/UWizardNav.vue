@@ -16,12 +16,7 @@
     <template v-if="activeStep < stepsCount">
       <u-tooltip v-if="withNextButton" placement="top">
         <div class="next-button-wrapper">
-          <u-button
-            class="next-button"
-            type="primary"
-            :disabled="nextButtonDisabled"
-            @click="onNext"
-          >
+          <u-button class="next-button" type="primary" :disabled="nextButtonDisabled" @click="onNext">
             {{ nextButtonLabel || $t('commons.form.next') }}
           </u-button>
         </div>

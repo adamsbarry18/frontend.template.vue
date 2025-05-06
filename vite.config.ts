@@ -16,10 +16,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(
-        path.dirname(fileURLToPath(import.meta.url)),
-        'src/index.ts'
-      ),
+      entry: path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'src/index.ts'),
       name: 'frontend.template.vue3',
     },
     rollupOptions: {

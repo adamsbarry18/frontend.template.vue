@@ -5,12 +5,8 @@
     class="u-date-picker"
     :class="datepickerClass"
     :placeholder="placeholder || $t('commons.date-picker.default-placeholder')"
-    :start-placeholder="
-      startPlaceholder || $t('commons.date-picker.default-start-placeholder')
-    "
-    :end-placeholder="
-      endPlaceholder || $t('commons.date-picker.default-end-placeholder')
-    "
+    :start-placeholder="startPlaceholder || $t('commons.date-picker.default-start-placeholder')"
+    :end-placeholder="endPlaceholder || $t('commons.date-picker.default-end-placeholder')"
     :format="format || defaultFormat"
     :disabled="disabled"
     :type="type"
@@ -30,10 +26,7 @@
   import { ElDatePicker } from 'element-plus';
   import dayjs from 'dayjs';
   import i18n from '@/i18n';
-  import {
-    getDateFormatByLang,
-    getDateTimeFormatByLang,
-  } from '@/libs/utils/Date';
+  import { getDateFormatByLang, getDateTimeFormatByLang } from '@/libs/utils/Date';
 
   interface DatePickerShortcut {
     text: string;
@@ -103,9 +96,7 @@
       : getDateFormatByLang(i18n.global.locale.value)
   );
 
-  const firstDayOfWeek = computed(() =>
-    i18n.global.locale.value === 'fr' ? 1 : 7
-  );
+  const firstDayOfWeek = computed(() => (i18n.global.locale.value === 'fr' ? 1 : 7));
 
   const popperClass = computed(() => {
     const classes = ['u-date-picker-popper', 'no-close-trigger'];
@@ -119,23 +110,15 @@
   };
 
   // Génère les raccourcis pour les plages de dates (daterange ou datetimerange)
-  const generateRangeShortcuts = (
-    shortcuts: Record<string, { range: number; modifier?: number }>
-  ) => {
+  const generateRangeShortcuts = (shortcuts: Record<string, { range: number; modifier?: number }>) => {
     return Object.keys(shortcuts).map((key) => {
       const { range, modifier } = shortcuts[key];
-      const computedModifier =
-        modifier !== undefined ? modifier : shortcutModifier.value;
+      const computedModifier = modifier !== undefined ? modifier : shortcutModifier.value;
       return {
-        text: i18n.global.t(
-          `commons.date-picker.shortcut.${props.shortcuts}.${key}`
-        ),
+        text: i18n.global.t(`commons.date-picker.shortcut.${props.shortcuts}.${key}`),
         onClick: (picker: any) => {
           const date = dayjs();
-          const targetDate = dayjs().add(
-            computedModifier * range,
-            'millisecond'
-          );
+          const targetDate = dayjs().add(computedModifier * range, 'millisecond');
 
           // For ranges, ensure we're using dayjs objects
           if (computedModifier < 0) {
@@ -180,9 +163,7 @@
     const shortcutLabel = props.shortcuts;
 
     return Object.keys(shortcuts).map((key) => ({
-      text: i18n.global.t(
-        `commons.date-picker.shortcut.${shortcutLabel}.${key}`
-      ),
+      text: i18n.global.t(`commons.date-picker.shortcut.${shortcutLabel}.${key}`),
       onClick: (picker: any) => {
         const date = dayjs().add(modifier * shortcuts[key], 'millisecond');
         picker.emit('pick', date);
@@ -263,22 +244,11 @@
       return new Date((value as Date).getTime());
     }
 
-    if (
-      props.type === 'daterange' &&
-      Array.isArray(value) &&
-      value.length === 2
-    ) {
-      return [
-        dayjs(value[0]).startOf('day').toDate(),
-        dayjs(value[1]).endOf('day').toDate(),
-      ];
+    if (props.type === 'daterange' && Array.isArray(value) && value.length === 2) {
+      return [dayjs(value[0]).startOf('day').toDate(), dayjs(value[1]).endOf('day').toDate()];
     }
 
-    if (
-      props.type === 'datetimerange' &&
-      Array.isArray(value) &&
-      value.length === 2
-    ) {
+    if (props.type === 'datetimerange' && Array.isArray(value) && value.length === 2) {
       return [new Date(value[0].getTime()), new Date(value[1].getTime())];
     }
 

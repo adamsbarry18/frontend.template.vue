@@ -26,14 +26,7 @@
 
 <script setup lang="ts">
   /* global NodeJS */
-  import {
-    ref,
-    reactive,
-    computed,
-    onMounted,
-    onUnmounted,
-    useSlots,
-  } from 'vue';
+  import { ref, reactive, computed, onMounted, onUnmounted, useSlots } from 'vue';
 
   // Références et états réactifs
   const sectionsDiv = ref<HTMLElement | null>(null);
@@ -47,9 +40,7 @@
   const slots = useSlots();
 
   // Propriétés calculées
-  const menuItems = computed(() =>
-    sectionComponents.value.map((section) => getMenuTitle(section))
-  );
+  const menuItems = computed(() => sectionComponents.value.map((section) => getMenuTitle(section)));
 
   // Fonctions utilitaires
   function fetchSections() {
@@ -82,15 +73,9 @@
 
     const itemIndex = menuItems.value.indexOf(item);
     const previousItem = itemIndex > 0 ? menuItems.value[itemIndex - 1] : null;
-    const nextItem =
-      itemIndex + 1 < menuItems.value.length
-        ? menuItems.value[itemIndex + 1]
-        : null;
+    const nextItem = itemIndex + 1 < menuItems.value.length ? menuItems.value[itemIndex + 1] : null;
 
-    if (
-      intersectionRatio[item] === 1 &&
-      (nextItem === null || intersectionRatio[nextItem] < 1)
-    ) {
+    if (intersectionRatio[item] === 1 && (nextItem === null || intersectionRatio[nextItem] < 1)) {
       return true;
     }
 
@@ -102,9 +87,7 @@
   }
 
   function scrollTo(item: string) {
-    const section = sectionComponents.value.find(
-      (s) => getMenuTitle(s) === item
-    );
+    const section = sectionComponents.value.find((s) => getMenuTitle(s) === item);
     if (section) {
       section.$el.scrollIntoView({ behavior: 'smooth' });
       clickedSection.value = getMenuTitle(section);
@@ -120,19 +103,14 @@
     const target = event.target as HTMLElement;
     if (target.scrollTop === 0) {
       clickedSection.value =
-        sectionComponents.value.length > 0
-          ? getMenuTitle(sectionComponents.value[0])
-          : null;
+        sectionComponents.value.length > 0 ? getMenuTitle(sectionComponents.value[0]) : null;
     } else if (!scrollHandlerDisabled.value) {
       clickedSection.value = null;
     }
   }
 
   function onMenuScroll(event: WheelEvent) {
-    const value =
-      event.deltaY > 0
-        ? Math.max(event.deltaY, 50)
-        : Math.min(event.deltaY, -50);
+    const value = event.deltaY > 0 ? Math.max(event.deltaY, 50) : Math.min(event.deltaY, -50);
     if (sectionsDiv.value) {
       sectionsDiv.value.scrollTop += value * 2;
     }
@@ -154,14 +132,11 @@
     });
 
     clickedSection.value =
-      sectionComponents.value.length > 0
-        ? getMenuTitle(sectionComponents.value[0])
-        : null;
+      sectionComponents.value.length > 0 ? getMenuTitle(sectionComponents.value[0]) : null;
   });
 
   // Nettoyage des écouteurs
-  const eventListeners: { section: any; handler: (value: number) => void }[] =
-    [];
+  const eventListeners: { section: any; handler: (value: number) => void }[] = [];
 
   onUnmounted(() => {
     eventListeners.forEach(({ section, handler }) => {

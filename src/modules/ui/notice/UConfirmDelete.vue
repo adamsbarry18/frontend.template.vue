@@ -9,12 +9,7 @@
       </p>
       <ul>
         <li v-for="item in errorList" :key="item.label">
-          <icon-base
-            v-if="icon"
-            :size="24"
-            :icon="icon"
-            color="var(--color-neutral-500)"
-          />
+          <icon-base v-if="icon" :size="24" :icon="icon" color="var(--color-neutral-500)" />
           <span class="item-label">{{ item.label }}</span>
           <u-info v-if="item.reason">
             <span> {{ item.reason }}</span>
@@ -31,12 +26,7 @@
       </p>
       <ul>
         <li v-for="item in list" :key="item">
-          <icon-base
-            v-if="icon"
-            :size="24"
-            :icon="icon"
-            color="var(--color-neutral-500)"
-          />
+          <icon-base v-if="icon" :size="24" :icon="icon" color="var(--color-neutral-500)" />
           <span class="item-label">{{ item }}</span>
         </li>
       </ul>
@@ -75,9 +65,7 @@
     title: i18n.global.t('commons.confirm.delete'),
     showCancelButton: true,
     confirmButtonText:
-      props.list.length === 0
-        ? i18n.global.t('commons.form.ok')
-        : i18n.global.t('commons.form.delete'),
+      props.list.length === 0 ? i18n.global.t('commons.form.ok') : i18n.global.t('commons.form.delete'),
     confirmButtonClass: props.list.length === 0 ? '' : '-warning',
     cancelButtonText: i18n.global.t('commons.form.cancel'),
   }));

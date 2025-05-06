@@ -232,15 +232,13 @@ export const SelectGroup = () => ({
         value: 'long1',
       },
       {
-        label:
-          'Another very long option text to check word wrapping and overall layout',
+        label: 'Another very long option text to check word wrapping and overall layout',
         value: 'long2',
       },
     ];
 
     const toggleIcon = () => {
-      dynamicIcon.value =
-        dynamicIcon.value === 'icon-add' ? 'icon-search' : 'icon-add';
+      dynamicIcon.value = dynamicIcon.value === 'icon-add' ? 'icon-search' : 'icon-add';
     };
 
     return {

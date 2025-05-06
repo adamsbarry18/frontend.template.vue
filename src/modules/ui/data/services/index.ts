@@ -5,11 +5,4 @@ import SearchService from './searchService';
 import UrlFiltersService from './urlFiterService';
 import SortService from './sortService';
 
-export {
-  ListService,
-  EntityService,
-  PaginationService,
-  SearchService,
-  UrlFiltersService,
-  SortService,
-};
+export { ListService, EntityService, PaginationService, SearchService, UrlFiltersService, SortService };

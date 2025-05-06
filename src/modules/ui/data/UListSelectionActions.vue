@@ -1,32 +1,21 @@
 <template>
   <div class="u-list-selection-actions">
-    <div
-      class="select-checkbox"
-      :class="checkboxState"
-      @click="onCheckBoxClick"
-    />
+    <div class="select-checkbox" :class="checkboxState" @click="onCheckBoxClick" />
     <div class="actions-wrapper">
       <u-tooltip
         v-for="(action, index) in availableActions"
         :key="action.label"
         class="list-action -button-like"
         :class="{
-          '-before-separator':
-            !action.separator && availableActions[index + 1]?.separator,
+          '-before-separator': !action.separator && availableActions[index + 1]?.separator,
           '-after-separator':
-            action.separator &&
-            availableActions[index - 1] &&
-            !availableActions[index - 1].separator,
+            action.separator && availableActions[index - 1] && !availableActions[index - 1].separator,
         }"
         placement="top"
         @click="onActionClick(action, $event)"
       >
         <div>
-          <icon-base
-            :icon="action.icon"
-            :size="28"
-            color="var(--color-neutral-800)"
-          />
+          <icon-base :icon="action.icon" :size="28" color="var(--color-neutral-800)" />
         </div>
         <template #content>
           {{ action.label }}
@@ -109,20 +98,16 @@
   const checkboxState = computed(() => {
     if (props.selection.length === 0) return '-empty';
     if (props.selection.length === props.data.length) return '-full';
-    return props.selection.length === props.paginatedData.length
-      ? '-full'
-      : '-partial';
+    return props.selection.length === props.paginatedData.length ? '-full' : '-partial';
   });
 
   const availableActions = computed(() => {
     return props.actions.filter((action) => {
       if (!action.multiTarget) {
         if (props.selection.length !== 1) return false;
-        if (action.filterFunc && !action.filterFunc(props.selection[0]))
-          return false;
+        if (action.filterFunc && !action.filterFunc(props.selection[0])) return false;
       } else if (action.multiTarget && action.filterFunc) {
-        if (!props.selection.every((item) => action.filterFunc!(item)))
-          return false;
+        if (!props.selection.every((item) => action.filterFunc!(item))) return false;
       }
       return true;
     });
@@ -138,9 +123,7 @@
   }
 
   function onActionClick(action: Action, event: MouseEvent) {
-    const viewportOffset = (
-      event.target as HTMLElement
-    ).getBoundingClientRect();
+    const viewportOffset = (event.target as HTMLElement).getBoundingClientRect();
     const adjustedEvent = {
       ...event,
       clientX: viewportOffset.left + viewportOffset.width / 2,

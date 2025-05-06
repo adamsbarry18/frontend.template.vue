@@ -1,34 +1,18 @@
 <template>
-  <div
-    ref="buttonRef"
-    class="u-filter-item"
-    :class="{ '-unset': !isSet, '-active': active }"
-  >
+  <div ref="buttonRef" class="u-filter-item" :class="{ '-unset': !isSet, '-active': active }">
     <div class="filter-label" @click="displayPopper">
       <b>{{ config.label }}:&nbsp;</b>
       <span>{{ formattedValue }}</span>
     </div>
     <div class="expand-button" @click="displayPopper">
-      <icon-base
-        icon="icon-arrow"
-        :size="14"
-        color="var(--color-neutral-700)"
-      />
+      <icon-base icon="icon-arrow" :size="14" color="var(--color-neutral-700)" />
     </div>
     <div class="close-button -button-like" @click.stop="onRemove">
       <icon-base icon="icon-close" :size="9" color="var(--color-neutral-700)" />
     </div>
     <u-popper v-model:visible="visible" placement="bottom-start">
-      <div
-        class="u-filter-item-popper"
-        :class="config.type ? '-' + config.type : '-unknown'"
-      >
-        <component
-          :is="componentsMap[config.type]"
-          v-model="input"
-          :config="config"
-          @change="handleChange"
-        />
+      <div class="u-filter-item-popper" :class="config.type ? '-' + config.type : '-unknown'">
+        <component :is="componentsMap[config.type]" v-model="input" :config="config" @change="handleChange" />
       </div>
     </u-popper>
   </div>
@@ -59,9 +43,7 @@
   }
 
   function formatEnum(value: any, config: ConfigType): string {
-    const option = config.options?.find(
-      (opt: { value: any; label: string }) => opt.value === value
-    );
+    const option = config.options?.find((opt: { value: any; label: string }) => opt.value === value);
     return option ? option.label : String(value);
   }
 
@@ -74,14 +56,8 @@
 
   function formatDateRange(value: any): string {
     if (Array.isArray(value) && value.length === 2) {
-      const start =
-        value[0] instanceof Date
-          ? value[0].toLocaleDateString()
-          : String(value[0]);
-      const end =
-        value[1] instanceof Date
-          ? value[1].toLocaleDateString()
-          : String(value[1]);
+      const start = value[0] instanceof Date ? value[0].toLocaleDateString() : String(value[0]);
+      const end = value[1] instanceof Date ? value[1].toLocaleDateString() : String(value[1]);
       return `${start} - ${end}`;
     }
     return String(value);
@@ -191,15 +167,13 @@
         background-color: var(--color-neutral-100);
       }
       .close-button {
-        border-color: transparent transparent transparent
-          var(--color-neutral-700);
+        border-color: transparent transparent transparent var(--color-neutral-700);
       }
     }
     &.-active {
       outline: 3px solid var(--color-input-outline-focus);
       .close-button {
-        border-color: transparent transparent transparent
-          var(--color-neutral-700);
+        border-color: transparent transparent transparent var(--color-neutral-700);
       }
     }
     .filter-label {

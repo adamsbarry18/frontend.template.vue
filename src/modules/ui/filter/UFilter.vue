@@ -8,16 +8,8 @@
         :placeholder="$t('commons.searchbar.default-list')"
         @change="onSearchChanged"
       />
-      <span
-        v-if="hasActiveFilter"
-        class="clear-button -button-like"
-        @click="clearAll"
-      >
-        <icon-base
-          icon="icon-delete"
-          :size="20"
-          color="var(--color-neutral-800)"
-        />
+      <span v-if="hasActiveFilter" class="clear-button -button-like" @click="clearAll">
+        <icon-base icon="icon-delete" :size="20" color="var(--color-neutral-800)" />
         <p>{{ $t('commons.filter.filter-list.clear') }}</p>
       </span>
     </div>
@@ -53,18 +45,9 @@
           @click="displayAddFilterPopper"
         />
         <!-- Popper d'ajout de filtre intégré -->
-        <u-popper
-          v-model:visible="addFilterVisible"
-          placement="bottom-start"
-          :width="225"
-        >
+        <u-popper v-model:visible="addFilterVisible" placement="bottom-start" :width="225">
           <div class="u-add-filter-popper u-popper">
-            <div
-              v-for="key in availableFilterKeys"
-              :key="key"
-              class="filter-button"
-              @click="addFilter(key)"
-            >
+            <div v-for="key in availableFilterKeys" :key="key" class="filter-button" @click="addFilter(key)">
               {{ config[key].label }}
             </div>
           </div>
@@ -72,24 +55,14 @@
       </div>
     </div>
     <div class="collapse-button -button-like" @click="collapse">
-      <icon-base
-        icon="icon-arrow"
-        :size="14"
-        color="var(--color-neutral-700)"
-      />
+      <icon-base icon="icon-arrow" :size="14" color="var(--color-neutral-700)" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
-  import {
-    USearchBar,
-    UButton,
-    UFilterItem,
-    IconBase,
-    UPopper,
-  } from '@/modules/ui';
+  import { USearchBar, UButton, UFilterItem, IconBase, UPopper } from '@/modules/ui';
   const props = defineProps({
     modelValue: {
       type: Object,
@@ -147,20 +120,13 @@
     return res;
   });
 
-  const availableFilterKeys = computed(() =>
-    Object.keys(availableFiltersConfig.value)
-  );
+  const availableFilterKeys = computed(() => Object.keys(availableFiltersConfig.value));
 
   const hasActiveFilter = computed(() => {
-    return (
-      (input.value && Object.keys(input.value).length > 0) ||
-      searchBuffer.value !== ''
-    );
+    return (input.value && Object.keys(input.value).length > 0) || searchBuffer.value !== '';
   });
 
-  const canAddFilter = computed(
-    () => Object.keys(availableFiltersConfig.value).length > 0
-  );
+  const canAddFilter = computed(() => Object.keys(availableFiltersConfig.value).length > 0);
 
   function handleChange() {
     emit('input', input.value);

@@ -109,9 +109,7 @@
   const isFocused = ref(false);
   const attrs = useAttrs();
 
-  const showClearButton = computed(
-    () => props.clear && props.modelValue?.length
-  );
+  const showClearButton = computed(() => props.clear && props.modelValue?.length);
 
   const inputAttrs = computed(() => ({
     ...attrs,

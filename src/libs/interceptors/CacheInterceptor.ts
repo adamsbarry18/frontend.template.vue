@@ -32,9 +32,7 @@ export class CacheInterceptor extends BaseInterceptor {
 
   public override requestInterceptor() {
     return {
-      request: (
-        request: CacheableAxiosRequestConfig
-      ): CacheableAxiosRequestConfig => {
+      request: (request: CacheableAxiosRequestConfig): CacheableAxiosRequestConfig => {
         const isCacheable = request.cache !== false;
         // Ne cache que les requêtes GET
         if (request.method === 'get' && cacheable && isCacheable) {
@@ -85,10 +83,7 @@ export class CacheInterceptor extends BaseInterceptor {
     };
   }
 
-  public getCacheKey(
-    config: CacheableAxiosRequestConfig,
-    onlyRoot: boolean = false
-  ): string {
+  public getCacheKey(config: CacheableAxiosRequestConfig, onlyRoot: boolean = false): string {
     let key = config.url || '';
     if (config.params && !onlyRoot) {
       key += `?${JSON.stringify(config.params)}`;

@@ -1,8 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  type RouteLocationRaw,
-} from 'vue-router';
+import { createRouter, createWebHistory, type RouteLocationRaw } from 'vue-router';
 import { action } from '@storybook/addon-actions';
 import { defineComponent } from 'vue';
 

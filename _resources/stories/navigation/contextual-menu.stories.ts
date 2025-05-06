@@ -131,10 +131,7 @@ export const ContextualMenu = () => ({
     };
 
     const openShortcutMenu = () => {
-      if (
-        shortcutMenu.value &&
-        typeof shortcutMenu.value.showMenu === 'function'
-      ) {
+      if (shortcutMenu.value && typeof shortcutMenu.value.showMenu === 'function') {
         shortcutMenu.value.showMenu({ x: 500, y: 200 });
       }
     };

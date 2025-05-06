@@ -1,18 +1,9 @@
 <template>
   <div class="personal-info-form">
     <div class="global-card-title">
-      <icon-base
-        class="icon"
-        icon="icon-users"
-        :color="'var(--color-neutral-800)'"
-        size="24"
-      />
+      <icon-base class="icon" icon="icon-users" :color="'var(--color-neutral-800)'" size="24" />
       <h3>
-        {{
-          mode === 'creation'
-            ? $t('breadcrumb.admin.new-user')
-            : $t('globals.account.title')
-        }}
+        {{ mode === 'creation' ? $t('breadcrumb.admin.new-user') : $t('globals.account.title') }}
       </h3>
     </div>
     <div class="user-infos">
@@ -57,11 +48,7 @@
                   {{ $t('user.settings.info.user-exists') }}
                 </p>
               </u-alert-card>
-              <u-alert-card
-                v-else-if="isUserInternal"
-                key="user-internal"
-                type="info"
-              >
+              <u-alert-card v-else-if="isUserInternal" key="user-internal" type="info">
                 <p>
                   <span v-html="$t('user.settings.info.user-internal')" />
                 </p>
@@ -94,9 +81,7 @@
       <div class="preferences-layout">
         <div class="form">
           <div class="preference-item">
-            <label class="el-form-item__label">{{
-              $t('user.settings.preferences.language')
-            }}</label>
+            <label class="el-form-item__label">{{ $t('user.settings.preferences.language') }}</label>
             <u-radio
               :model-value="localUser?.preferences?.language"
               :options="languageOptions"
@@ -117,14 +102,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, reactive } from 'vue';
-  import {
-    IconBase,
-    UColorInitials,
-    UFormInput,
-    UColorPicker,
-    URadio,
-    UAlertCard,
-  } from '@/modules/ui';
+  import { IconBase, UColorInitials, UFormInput, UColorPicker, URadio, UAlertCard } from '@/modules/ui';
   import ThemeSelector from './ThemeSelector.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { debounce } from '@/libs/utils/Debounce';
@@ -140,8 +118,7 @@
     mode: {
       type: String,
       required: true,
-      validator: (value: string) =>
-        ['creation', 'admin-edit', 'user-edit'].includes(value),
+      validator: (value: string) => ['creation', 'admin-edit', 'user-edit'].includes(value),
     },
   });
 
@@ -162,9 +139,7 @@
   // --- Computed Properties ---
 
   const userInitial = computed(() => {
-    return localUser.value?.name
-      ? localUser.value.name.substring(0, 1).toUpperCase()
-      : '-';
+    return localUser.value?.name ? localUser.value.name.substring(0, 1).toUpperCase() : '-';
   });
 
   const languageOptions = computed(() => [
@@ -178,9 +153,7 @@
   });
 
   const isUserInternal = computed(() => {
-    return localUser.value?.email
-      ? UserModel.isEmailInternal(localUser.value.email)
-      : false;
+    return localUser.value?.email ? UserModel.isEmailInternal(localUser.value.email) : false;
   });
 
   const isFieldDisabled = computed(() => {
@@ -206,15 +179,13 @@
 
   const nameValidationError = computed(() => {
     if (!fieldsTouched.name) return false;
-    if (!localUser.value?.name?.trim())
-      return i18n.global.t('error.required-field');
+    if (!localUser.value?.name?.trim()) return i18n.global.t('error.required-field');
     return false;
   });
 
   const surnameValidationError = computed(() => {
     if (!fieldsTouched.surname) return false;
-    if (!localUser.value?.surname?.trim())
-      return i18n.global.t('error.required-field');
+    if (!localUser.value?.surname?.trim()) return i18n.global.t('error.required-field');
     return false;
   });
 
@@ -224,10 +195,7 @@
     fieldsTouched[fieldName] = true;
   }
 
-  function updateField<K extends keyof UserModel>(
-    field: K,
-    value: UserModel[K]
-  ) {
+  function updateField<K extends keyof UserModel>(field: K, value: UserModel[K]) {
     if (localUser.value && localUser.value[field] !== value) {
       const updatedUser = localUser.value.clone();
       updatedUser[field] = value;
@@ -310,10 +278,7 @@
       if (validateEmail(email)) {
         searchDebounce.value(email);
       } else {
-        if (
-          searchDebounce.value &&
-          typeof (searchDebounce.value as any).cancel === 'function'
-        ) {
+        if (searchDebounce.value && typeof (searchDebounce.value as any).cancel === 'function') {
           (searchDebounce.value as any).cancel();
         }
         isSearchingUser.value = false;

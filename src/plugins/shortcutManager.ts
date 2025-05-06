@@ -12,9 +12,7 @@ const shortcutDisabledRoutes = ['login', 'forgot-password', 'reset-password'];
  * Gère l'événement `keyup` et vérifie les raccourcis.
  */
 function onKeyUp(event: KeyboardEvent): void {
-  if (
-    shortcutDisabledRoutes.some((route) => window.location.hash.includes(route))
-  ) {
+  if (shortcutDisabledRoutes.some((route) => window.location.hash.includes(route))) {
     return;
   }
 
@@ -23,8 +21,7 @@ function onKeyUp(event: KeyboardEvent): void {
     .some(
       (el) =>
         el instanceof HTMLElement &&
-        (el.nodeName.toLowerCase() === 'input' ||
-          el.classList.contains('label-name'))
+        (el.nodeName.toLowerCase() === 'input' || el.classList.contains('label-name'))
     );
 
   if (!isUserOnInput) {
@@ -60,10 +57,7 @@ function konamiCheck(key: string): void {
     'ArrowRight',
   ];
 
-  if (
-    lastKeys.length === konamiSequence.length &&
-    lastKeys.join(',') === konamiSequence.join(',')
-  ) {
+  if (lastKeys.length === konamiSequence.length && lastKeys.join(',') === konamiSequence.join(',')) {
     document.body.classList.toggle('konami-code');
   }
 }
@@ -71,10 +65,7 @@ function konamiCheck(key: string): void {
 /**
  * Enregistre une fonction de rappel pour un raccourci donné.
  */
-export function registerToShortcutQueue(
-  callFunc: ShortcutFunction,
-  shortcut: string = 'esc'
-): void {
+export function registerToShortcutQueue(callFunc: ShortcutFunction, shortcut: string = 'esc'): void {
   if (!queues[shortcut]) queues[shortcut] = [];
   queues[shortcut].unshift(callFunc);
 }
@@ -92,10 +83,7 @@ export function callShortcutFunc(shortcut: string = 'esc'): void {
 /**
  * Supprime une fonction spécifique de la file d'attente d'un raccourci.
  */
-export function removeFromShortcutQueue(
-  callFunc: ShortcutFunction,
-  shortcut: string = 'esc'
-): void {
+export function removeFromShortcutQueue(callFunc: ShortcutFunction, shortcut: string = 'esc'): void {
   if (queues[shortcut]) {
     const index = queues[shortcut].indexOf(callFunc);
     if (index !== -1) {

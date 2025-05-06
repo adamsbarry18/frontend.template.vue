@@ -9,31 +9,23 @@
   >
     <div class="u-uploader-body">
       <template v-if="isUploadInProgress">
-        <b class="primary-emphasis">{{
-          $t('commons.uploader.upload-in-progress')
-        }}</b>
+        <b class="primary-emphasis">{{ $t('commons.uploader.upload-in-progress') }}</b>
       </template>
       <template v-else>
         <div v-if="input !== null" class="file-preview">
           <icon-base icon="icon-list" :size="32" />
           <p class="file-name">{{ input.name }}</p>
-          <b class="delete-file -button-like" @click.stop="onDelete">{{
-            $t('commons.form.delete')
-          }}</b>
+          <b class="delete-file -button-like" @click.stop="onDelete">{{ $t('commons.form.delete') }}</b>
           <p class="file-specs">
             {{ $t('commons.uploader.file-size', { size: formattedFileSize }) }}
           </p>
         </div>
         <template v-else>
           <p class="uploader-prompt">
-            <b class="primary-emphasis">{{
-              $t('commons.uploader.prompt.click')
-            }}</b>
+            <b class="primary-emphasis">{{ $t('commons.uploader.prompt.click') }}</b>
           </p>
           <p v-if="accept" class="file-specs">
-            {{
-              $t('commons.uploader.accepted-files', { types: formattedAccept })
-            }}
+            {{ $t('commons.uploader.accepted-files', { types: formattedAccept }) }}
           </p>
           <p v-if="maxFileSize" class="file-specs">
             {{
@@ -80,12 +72,8 @@
     { immediate: true }
   );
 
-  const formattedFileSize = computed(() =>
-    input.value ? formatFileSize(input.value.size) : '0'
-  );
-  const formattedMaxFileSize = computed(() =>
-    formatFileSize(props.maxFileSize)
-  );
+  const formattedFileSize = computed(() => (input.value ? formatFileSize(input.value.size) : '0'));
+  const formattedMaxFileSize = computed(() => formatFileSize(props.maxFileSize));
   const formattedAccept = computed(() => props.accept.replaceAll(',', ', '));
 
   const emit = defineEmits(['update:modelValue', 'change']);

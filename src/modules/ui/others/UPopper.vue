@@ -1,10 +1,5 @@
 <template>
-  <el-popover
-    :title="title"
-    :placement="placement"
-    :width="width"
-    :trigger="trigger"
-  >
+  <el-popover :title="title" :placement="placement" :width="width" :trigger="trigger">
     <template #reference>
       <slot name="reference">
         <span></span>

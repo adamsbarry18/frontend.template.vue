@@ -4,10 +4,7 @@
 
 <script setup lang="ts">
   import { ref, onMounted, onBeforeUnmount } from 'vue';
-  import {
-    registerToShortcutQueue,
-    removeFromShortcutQueue,
-  } from '@/plugins/shortcutManager';
+  import { registerToShortcutQueue, removeFromShortcutQueue } from '@/plugins/shortcutManager';
 
   // Définition des props
   const props = defineProps<{

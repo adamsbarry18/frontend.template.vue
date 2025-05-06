@@ -9,12 +9,7 @@
       :disabled="disabled"
       @change="handleChange"
     >
-      <el-option
-        v-for="item in dayOptions"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+      <el-option v-for="item in dayOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
     <b class="schedule-text">{{ $t('commons.schedule.at') }}</b>
     <el-time-select
@@ -24,9 +19,7 @@
       :disabled="disabled"
       @change="handleChange"
     />
-    <u-info v-if="timezone">{{
-      $t('commons.schedule.timezone', { timezone })
-    }}</u-info>
+    <u-info v-if="timezone">{{ $t('commons.schedule.timezone', { timezone }) }}</u-info>
   </div>
 </template>
 <script setup lang="ts">
@@ -98,18 +91,11 @@
     const sortedDays = [...dayValue.value]
       .sort((a, b) => {
         const order = dayOptions.value.map((o) => o.value);
-        return (
-          order.indexOf(a as (typeof order)[0]) -
-          order.indexOf(b as (typeof order)[0])
-        );
+        return order.indexOf(a as (typeof order)[0]) - order.indexOf(b as (typeof order)[0]);
       })
       .join(',');
-    const formattedHour = timeValue.value
-      ? timeValue.value.split(':')[0]
-      : '00';
-    const formattedMinute = timeValue.value
-      ? timeValue.value.split(':')[1]
-      : '00';
+    const formattedHour = timeValue.value ? timeValue.value.split(':')[0] : '00';
+    const formattedMinute = timeValue.value ? timeValue.value.split(':')[1] : '00';
     return `00 ${formattedMinute} ${formattedHour} * * ${sortedDays}`;
   });
 

@@ -1,9 +1,6 @@
 <template>
   <div class="u-list-wrapper base-list">
-    <base-list-header
-      :list-service="listService"
-      @filter-change="onFilterChange"
-    >
+    <base-list-header :list-service="listService" @filter-change="onFilterChange">
       <template #header>
         <slot name="header" />
       </template>
@@ -16,17 +13,9 @@
         </div>
       </slot>
       <div v-if="items.length === 0 && !loading" class="empty-state">
-        <img
-          class="empty-image"
-          src="@/assets/images/svg/list_empty.svg"
-          alt=""
-        />
+        <img class="empty-image" src="@/assets/images/svg/list_empty.svg" alt="" />
         <slot name="empty-label">
-          <span>{{
-            isFiltered
-              ? $t('commons.list.results.empty')
-              : $t('commons.list.empty')
-          }}</span>
+          <span>{{ isFiltered ? $t('commons.list.results.empty') : $t('commons.list.empty') }}</span>
         </slot>
       </div>
     </div>
@@ -46,12 +35,7 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
-  import {
-    UListPagination,
-    BaseListHeader,
-    IconBase,
-    UTooltip,
-  } from '@/modules/ui';
+  import { UListPagination, BaseListHeader, IconBase, UTooltip } from '@/modules/ui';
   import ListService from './services/listService';
 
   const props = defineProps<{
@@ -93,8 +77,7 @@
     if (props.listService) {
       items.value = await props.listService.onFilterChange();
       if (paginationRef.value) {
-        paginationRef.value.currentPage =
-          props.listService.pagination?.pageNumber || 1;
+        paginationRef.value.currentPage = props.listService.pagination?.pageNumber || 1;
       }
     }
   }

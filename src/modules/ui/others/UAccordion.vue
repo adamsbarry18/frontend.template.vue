@@ -1,10 +1,5 @@
 <template>
-  <el-collapse
-    v-model="activePanel"
-    accordion
-    class="u-accordion"
-    @change="onChange"
-  >
+  <el-collapse v-model="activePanel" accordion class="u-accordion" @change="onChange">
     <slot />
   </el-collapse>
 </template>

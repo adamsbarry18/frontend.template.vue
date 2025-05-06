@@ -30,10 +30,7 @@
           {{ $t('login.submit') }}
         </u-button>
         <div class="forgot-password">
-          <router-link
-            :to="{ name: 'password.forgot' }"
-            data-cy="forgot-password-link"
-          >
+          <router-link :to="{ name: 'password.forgot' }" data-cy="forgot-password-link">
             {{ $t('login.password.lost') }}
           </router-link>
         </div>
@@ -126,9 +123,7 @@
     let targetPath: string | null = null;
 
     if (redirectQuery) {
-      const potentialPath = Array.isArray(redirectQuery)
-        ? redirectQuery[0]
-        : redirectQuery;
+      const potentialPath = Array.isArray(redirectQuery) ? redirectQuery[0] : redirectQuery;
 
       if (potentialPath) {
         try {
@@ -136,10 +131,7 @@
 
           const resolvedRoute = router.resolve(decodedPath);
 
-          if (
-            resolvedRoute.matched.length > 0 &&
-            resolvedRoute.name !== '404'
-          ) {
+          if (resolvedRoute.matched.length > 0 && resolvedRoute.name !== '404') {
             targetPath = resolvedRoute.fullPath;
           }
         } catch (error) {

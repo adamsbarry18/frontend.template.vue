@@ -40,9 +40,7 @@
   watch(
     () => props.modelValue,
     (newValue) => {
-      const filteredValue = newValue.filter((v) =>
-        props.config.options.map((o) => o.value).includes(v)
-      );
+      const filteredValue = newValue.filter((v) => props.config.options.map((o) => o.value).includes(v));
       internalValue.value = props.config.singleValue
         ? filteredValue.length > 0
           ? filteredValue[0]
@@ -53,14 +51,8 @@
   );
 
   const handleChange = () => {
-    emit(
-      'update:value',
-      props.config.singleValue ? internalValue.value : internalValue.value
-    );
-    emit(
-      'change',
-      props.config.singleValue ? internalValue.value : internalValue.value
-    );
+    emit('update:value', props.config.singleValue ? internalValue.value : internalValue.value);
+    emit('change', props.config.singleValue ? internalValue.value : internalValue.value);
   };
 
   const getFormattedValue = (value, config) => {
@@ -68,9 +60,7 @@
       return i18n.global.t('commons.filter-no-value');
     }
     const opt = config.options.find((opt) => opt.value === value[0]);
-    const optLabel = opt
-      ? opt.label
-      : i18n.global.t('commons.filter-invalid-value');
+    const optLabel = opt ? opt.label : i18n.global.t('commons.filter-invalid-value');
     if (value.length === 1) {
       return optLabel;
     }

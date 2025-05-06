@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="u-list-wrapper"
-    :class="{ '-show-table-header': showTableHeader }"
-  >
+  <div class="u-list-wrapper" :class="{ '-show-table-header': showTableHeader }">
     <div
       v-if="showHeader"
       class="header-wrapper"
@@ -26,16 +23,8 @@
                     count: selection.length,
                   })
             }}
-            <u-info
-              v-if="selection.length > 0"
-              placement="bottom"
-              tooltip-class="selection-summary"
-            >
-              <div
-                v-for="(item, index) in selection"
-                :key="index"
-                class="selection-summary-item"
-              >
+            <u-info v-if="selection.length > 0" placement="bottom" tooltip-class="selection-summary">
+              <div v-for="(item, index) in selection" :key="index" class="selection-summary-item">
                 <slot name="selection" :row="item" />
                 <u-button
                   class="delete-selection-button"
@@ -62,11 +51,7 @@
           >
             <template #suffix v-if="hasAvailableFilters">
               <button class="filter-icon" @click="filterPanelActive = true">
-                <icon-base
-                  icon="icon-filter"
-                  :size="22"
-                  color="var(--color-white)"
-                />
+                <icon-base icon="icon-filter" :size="22" color="var(--color-white)" />
                 <p>{{ $t('commons.list.filters') }}</p>
                 <u-filter-resume
                   v-if="filterCount > 0"
@@ -87,12 +72,7 @@
             @change="updateTableSort"
           />
           <div v-if="showHeaderRight" class="numbers-size">
-            <icon-base
-              :icon="entityIcon"
-              :size="26"
-              color="white"
-              class="count-icon"
-            />
+            <icon-base :icon="entityIcon" :size="26" color="white" class="count-icon" />
             <p>
               {{
                 $te(entityLabelKey)
@@ -118,10 +98,7 @@
       </transition>
     </div>
     <div class="u-list-container">
-      <u-contextual-menu
-        ref="contextualMenu"
-        :list="scopedContextualMenuItems"
-      />
+      <u-contextual-menu ref="contextualMenu" :list="scopedContextualMenuItems" />
       <u-list-selection-actions
         v-if="selection.length > 0 && selectable && showTableHeader"
         :selection="selection"
@@ -142,11 +119,7 @@
           ref="settingsButton"
           icon="icon-settings"
           class="column-settings-button -button-like"
-          :color="
-            isSettingsPopperActive
-              ? 'var(--color-neutral-800)'
-              : 'var(--color-neutral-700)'
-          "
+          :color="isSettingsPopperActive ? 'var(--color-neutral-800)' : 'var(--color-neutral-700)'"
           :size="24"
           @click="onSettingsClick"
         />
@@ -185,11 +158,7 @@
         <template #empty>
           <div v-if="loading || !isMounted" />
           <slot v-else-if="filterCount === 0 && searchBarInput" name="empty">
-            <img
-              class="empty_image"
-              src="@/assets/images/svg/list_empty.svg"
-              alt=""
-            />
+            <img class="empty_image" src="@/assets/images/svg/list_empty.svg" alt="" />
             <p>{{ $t('commons.list.empty') }}</p>
           </slot>
           <div v-else>
@@ -216,11 +185,7 @@
         <el-table-column v-if="isTree" width="45" />
         <slot />
         <el-table-column
-          v-if="
-            hasConfigurableColumns &&
-            showTableHeader &&
-            editableColumns.length > 0
-          "
+          v-if="hasConfigurableColumns && showTableHeader && editableColumns.length > 0"
           width="55"
         >
           <template #header>
@@ -259,16 +224,7 @@
   import { applyFiltersToList } from '@/libs/utils/Filter';
   import { debounce } from '@/libs/utils/Debounce';
   import { orderBy } from '@/libs/utils/Sort';
-  import {
-    ref,
-    computed,
-    onMounted,
-    onBeforeUnmount,
-    useSlots,
-    PropType,
-    nextTick,
-    provide,
-  } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount, useSlots, PropType, nextTick, provide } from 'vue';
 
   import {
     UContextualMenu,
@@ -337,15 +293,10 @@
       type: Array<{ label: string; prop: string; order: string }>,
       default: () => [],
       validator: (options: { label: string; prop: string; order: string }[]) =>
-        options.every(
-          (o) =>
-            o.label && o.prop && ['ascending', 'descending'].includes(o.order)
-        ),
+        options.every((o) => o.label && o.prop && ['ascending', 'descending'].includes(o.order)),
     },
     load: {
-      type: Function as PropType<
-        (row: any, treeNode: TreeNode, resolve: (data: any[]) => void) => void
-      >,
+      type: Function as PropType<(row: any, treeNode: TreeNode, resolve: (data: any[]) => void) => void>,
     },
     loading: { type: Boolean, default: false },
     extraFilterConfig: { type: Object, default: () => ({}) },
@@ -383,9 +334,7 @@
 
   const table = ref<InstanceType<typeof ElTable> | null>(null);
   const contextualMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
-  const columnSettingsPopper = ref<InstanceType<
-    typeof UListColumnSettings
-  > | null>(null);
+  const columnSettingsPopper = ref<InstanceType<typeof UListColumnSettings> | null>(null);
   const settingsButton = ref<InstanceType<typeof IconBase> | null>(null);
   const contextualMenuTarget = ref<any>(null);
   const editableColumns = ref<any[]>([]);
@@ -426,11 +375,7 @@
     } else {
       sort = props.defaultSort;
     }
-    if (
-      sort &&
-      sort.prop &&
-      (sort.order === 'ascending' || sort.order === 'descending')
-    ) {
+    if (sort && sort.prop && (sort.order === 'ascending' || sort.order === 'descending')) {
       return sort;
     }
     return undefined;
@@ -457,10 +402,7 @@
         sort.order,
         columnSortedComponent.value.sortMethod,
         columnSortedComponent.value.sortBy
-      ).slice(
-        (currentPage.value - 1) * props.pageSize,
-        currentPage.value * props.pageSize
-      );
+      ).slice((currentPage.value - 1) * props.pageSize, currentPage.value * props.pageSize);
     }
     return filteredData.value.slice(
       (currentPage.value - 1) * props.pageSize,
@@ -468,9 +410,7 @@
     );
   });
 
-  const displayedData = computed(() =>
-    props.showPagination ? paginatedData.value : filteredData.value
-  );
+  const displayedData = computed(() => (props.showPagination ? paginatedData.value : filteredData.value));
 
   const currentTotal = computed(() => props.total || filteredData.value.length);
 
@@ -483,24 +423,19 @@
     return filteredData.value.length;
   });
 
-  const hasAvailableFilters = computed(
-    () => Object.keys(filterConfig.value).length > 0
-  );
+  const hasAvailableFilters = computed(() => Object.keys(filterConfig.value).length > 0);
 
   const scopedContextualMenuItems = computed(() =>
     props.listActions
       .filter(
         (i: any) =>
           !i.hasOwnProperty('filterFunc') ||
-          (contextualMenuTarget.value &&
-            (i as any).filterFunc(contextualMenuTarget.value))
+          (contextualMenuTarget.value && (i as any).filterFunc(contextualMenuTarget.value))
       )
       .map((i: any) => getScopedContextualMenuItem(i))
   );
 
-  const showHeaderRight = computed(
-    () => props.showCounts && !props.showPagination
-  );
+  const showHeaderRight = computed(() => props.showCounts && !props.showPagination);
 
   const slots = useSlots();
 
@@ -522,9 +457,7 @@
   // Lifecycle hooks
   onMounted(() => {
     parseTableColumns();
-    const tableWrapper = table.value?.$refs.bodyWrapper as
-      | HTMLDivElement
-      | undefined;
+    const tableWrapper = table.value?.$refs.bodyWrapper as HTMLDivElement | undefined;
     tableWrapper?.addEventListener('mouseleave', onMouseLeaveList);
     editableColumns.value = generateEditableColumnList();
     filterConfig.value = generateFilterConfig();
@@ -532,8 +465,7 @@
     searchBarInput.value = parseSearchInputFromUrl();
     emit('filter-change', filter.value);
     const sort = currentSort.value || savedDefaultSort.value;
-    if (sort && sort.prop && sort.order)
-      updateTableSort({ prop: sort.prop, order: sort.order });
+    if (sort && sort.prop && sort.order) updateTableSort({ prop: sort.prop, order: sort.order });
     setTimeout(() => {
       isMounted.value = true;
       setDefaultPage(parsePageFromUrl() || 1);
@@ -542,9 +474,7 @@
   });
 
   onBeforeUnmount(() => {
-    const tableWrapper = table.value?.$refs.bodyWrapper as
-      | HTMLDivElement
-      | undefined;
+    const tableWrapper = table.value?.$refs.bodyWrapper as HTMLDivElement | undefined;
     tableWrapper?.removeEventListener('mouseleave', onMouseLeaveList);
   });
 
@@ -558,16 +488,12 @@
   }
 
   function checkScrolledToBottom() {
-    const tableWrapperEl = table.value?.$el.querySelector(
-      'div.el-table__body-wrapper'
-    ) as HTMLDivElement | undefined;
+    const tableWrapperEl = table.value?.$el.querySelector('div.el-table__body-wrapper') as
+      | HTMLDivElement
+      | undefined;
     const BOTTOM_OFFSET = 150;
-    const heightTableWrapper =
-      tableWrapperEl.scrollHeight - tableWrapperEl.offsetHeight;
-    if (
-      tableWrapperEl &&
-      tableWrapperEl.scrollTop + BOTTOM_OFFSET > heightTableWrapper
-    ) {
+    const heightTableWrapper = tableWrapperEl.scrollHeight - tableWrapperEl.offsetHeight;
+    if (tableWrapperEl && tableWrapperEl.scrollTop + BOTTOM_OFFSET > heightTableWrapper) {
       emit('scrolled-to-bottom');
     }
   }
@@ -607,9 +533,7 @@
     const relatedTarget = event.relatedTarget;
     if (
       !relatedTarget?.classList.contains('u-list-row-buttons') &&
-      !['button', 'svg', 'path', 'td'].includes(
-        relatedTarget?.nodeName?.toLowerCase()
-      )
+      !['button', 'svg', 'path', 'td'].includes(relatedTarget?.nodeName?.toLowerCase())
     ) {
       rowButtonsVisible.value = false;
       if (oldRowNodeHover.value) {
@@ -622,15 +546,10 @@
     currentRowHover.value = row;
     oldRowNodeHover.value = rowElement;
     oldRowNodeHover.value.classList.add('color-hover');
-    const posTab = (
-      table.value?.$refs.bodyWrapper as HTMLDivElement
-    ).getBoundingClientRect();
+    const posTab = (table.value?.$refs.bodyWrapper as HTMLDivElement).getBoundingClientRect();
     hoverElementPosition.value = oldRowNodeHover.value.getBoundingClientRect();
-    const isRowInTable =
-      Math.trunc(hoverElementPosition.value.top) >= Math.trunc(posTab.top);
-    const isRowWithinTable =
-      Math.trunc(hoverElementPosition.value.bottom) <=
-      Math.trunc(posTab.bottom);
+    const isRowInTable = Math.trunc(hoverElementPosition.value.top) >= Math.trunc(posTab.top);
+    const isRowWithinTable = Math.trunc(hoverElementPosition.value.bottom) <= Math.trunc(posTab.bottom);
 
     rowButtonsVisible.value = isRowInTable && isRowWithinTable;
   }
@@ -645,10 +564,7 @@
           ? item.onClick([contextualMenuTarget.value], rightClickEvent.value)
           : item.onClick(contextualMenuTarget.value, rightClickEvent.value);
     }
-    if (item.children)
-      res.children = item.children.map((child: any) =>
-        getScopedContextualMenuItem(child)
-      );
+    if (item.children) res.children = item.children.map((child: any) => getScopedContextualMenuItem(child));
     return res;
   }
 
@@ -659,20 +575,14 @@
 
   function onRowClick(row, column, event) {
     let rowNode = event.target;
-    while (rowNode && !rowNode.classList.contains('u-list-row'))
-      rowNode = rowNode.parentNode;
+    while (rowNode && !rowNode.classList.contains('u-list-row')) rowNode = rowNode.parentNode;
     if (rowNode) showRowButtons(row, rowNode);
     if (canToggleRowSelection(row)) toggleRowSelection(row);
     emit('row-click', row);
   }
 
   function onRowRightClick(row: any, col: any, event: MouseEvent) {
-    if (
-      (event.target as HTMLElement).matches(
-        '.u-list-row-buttons, .u-list-row-buttons *'
-      )
-    )
-      return;
+    if ((event.target as HTMLElement).matches('.u-list-row-buttons, .u-list-row-buttons *')) return;
     if (scopedContextualMenuItems.value.length > 0) {
       if (canToggleRowSelection(row)) {
         clearSelection();
@@ -700,10 +610,7 @@
   }
 
   function canToggleRowSelection(row: any) {
-    return (
-      props.selectable &&
-      (!props.selectableFilter || props.selectableFilter(row, 0))
-    );
+    return props.selectable && (!props.selectableFilter || props.selectableFilter(row, 0));
   }
 
   function toggleRowSelection(row: any, selected?: boolean) {
@@ -735,9 +642,7 @@
     currentSort.value = { prop, order };
     emit('sort-change', event);
     setDefaultPage(1);
-    columnSortedComponent.value = slots
-      .default?.()
-      .find((c) => c.props?.columnKey === prop);
+    columnSortedComponent.value = slots.default?.().find((c) => c.props?.columnKey === prop);
     onChange();
   }
 
@@ -782,8 +687,7 @@
             query.page = currentPage.value.toString();
             shouldChangeRoute = true;
           }
-          if (shouldChangeRoute && router)
-            await router.replace({ query }).catch(() => {});
+          if (shouldChangeRoute && router) await router.replace({ query }).catch(() => {});
         }
         const filters: Record<string, any> = {};
         for (const key of Object.keys(filter.value)) {
@@ -873,20 +777,12 @@
   }
 
   function parseDateFilterValue(content: any[]) {
-    if (
-      !content ||
-      content.length !== 2 ||
-      (content[0] === null && content[1] === null)
-    )
-      return [null, null];
+    if (!content || content.length !== 2 || (content[0] === null && content[1] === null)) return [null, null];
     const res = [
       content[0] === null ? null : new Date(content[0]),
       content[1] === null ? null : new Date(content[1]),
     ];
-    if (
-      (res[0] && isNaN(res[0].getTime())) ||
-      (res[1] && isNaN(res[1].getTime()))
-    )
+    if ((res[0] && isNaN(res[0].getTime())) || (res[1] && isNaN(res[1].getTime())))
       throw new Error('Invalid date');
     return res;
   }
@@ -942,11 +838,7 @@
     if (slots.default) {
       const filterableColumns = slots.default().filter((c) => {
         const propsData = c.props;
-        return (
-          propsData?.filterable !== false &&
-          propsData?.columnKey &&
-          propsData?.filterType
-        );
+        return propsData?.filterable !== false && propsData?.columnKey && propsData?.filterType;
       });
       for (const column of filterableColumns) {
         const propsData = column.props!;
@@ -955,10 +847,8 @@
           property: propsData.filterProperty,
           label: propsData.filterLabel || i18n.global.t(propsData.columnKey),
         };
-        if (propsData.filterFunction)
-          res[propsData.columnKey].function = propsData.filterFunction;
-        if (propsData.filterConfig)
-          Object.assign(res[propsData.columnKey], propsData.filterConfig);
+        if (propsData.filterFunction) res[propsData.columnKey].function = propsData.filterFunction;
+        if (propsData.filterConfig) Object.assign(res[propsData.columnKey], propsData.filterConfig);
       }
     }
     return res;
@@ -966,11 +856,7 @@
 
   function generateEditableColumnList() {
     const defaultSlot = slots.default ? slots.default() : [];
-    if (
-      props.hasConfigurableColumns &&
-      props.showTableHeader &&
-      defaultSlot.length > 0
-    ) {
+    if (props.hasConfigurableColumns && props.showTableHeader && defaultSlot.length > 0) {
       const columns = defaultSlot
         .filter((c) => c.props && (c.props['column-key'] || c.props.columnKey))
         .map((c) => initializeEditableColumn(c));
@@ -980,19 +866,16 @@
   }
 
   function initializeEditableColumn(columnComponent: any) {
-    const key =
-      columnComponent.props['column-key'] || columnComponent.props.columnKey;
+    const key = columnComponent.props['column-key'] || columnComponent.props.columnKey;
     defaultVisibility.value[key] =
-      columnComponent.props['column-default-visibility'] ||
-      LIST_COLUMN_VISIBILITY.VISIBLE;
+      columnComponent.props['column-default-visibility'] || LIST_COLUMN_VISIBILITY.VISIBLE;
     let visibility: boolean | null = null;
     if (props.listKey) {
       const fullKey = `${props.listKey}@${key}`;
       if (hasSavedVisibility(fullKey)) {
         visibility = isColumnVisible(fullKey);
       } else {
-        visibility =
-          defaultVisibility.value[key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
+        visibility = defaultVisibility.value[key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
       }
       columnVisibility.value[fullKey] = visibility;
     }
@@ -1021,11 +904,7 @@
     }
   }
 
-  .u-list-wrapper
-    .u-list-container
-    .u-list.el-table--enable-row-hover.-cursor-pointer
-    .el-table__body
-    tr {
+  .u-list-wrapper .u-list-container .u-list.el-table--enable-row-hover.-cursor-pointer .el-table__body tr {
     cursor: pointer;
   }
 

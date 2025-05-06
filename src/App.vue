@@ -6,10 +6,7 @@
     <template v-else>
       <main-header v-if="isAuthenticated" />
       <div class="app-wrapper" :class="{ login: !isAuthenticated }">
-        <main-nav
-          v-if="isAuthenticated"
-          @update:nav-extended="onMainNavExtendedUpdate"
-        />
+        <main-nav v-if="isAuthenticated" @update:nav-extended="onMainNavExtendedUpdate" />
         <div
           class="main-content"
           :class="{
@@ -66,9 +63,7 @@
 
   const authCheckCompleted = computed(() => usersStore.authStatusChecked);
   const isAuthenticated = computed(() => usersStore.isAuthenticated);
-  const notificationVisible = computed(
-    () => notificationStore.persistentNotificationsVisible
-  );
+  const notificationVisible = computed(() => notificationStore.persistentNotificationsVisible);
   // useTheme();
 
   function onMainNavExtendedUpdate(isExtended: boolean) {
@@ -101,8 +96,7 @@
   onMounted(async () => {
     const storedLang = storageService.getLanguage();
     const defaultLang = 'fr';
-    const langToUse: 'en' | 'fr' =
-      storedLang === 'en' || storedLang === 'fr' ? storedLang : defaultLang;
+    const langToUse: 'en' | 'fr' = storedLang === 'en' || storedLang === 'fr' ? storedLang : defaultLang;
 
     initializeDateLocale(langToUse);
     i18n.global.locale.value = langToUse;
@@ -193,10 +187,7 @@
     #app {
       --header-height: 60px;
       --stonly-banner-height: calc(
-        var(
-            --stonly-banner-top-sticky-margin,
-            var(--stonly-banner-top-margin, 0px)
-          ) +
+        var(--stonly-banner-top-sticky-margin, var(--stonly-banner-top-margin, 0px)) +
           var(--stonly-banner-bottom-margin, 0px)
       );
       display: flex;

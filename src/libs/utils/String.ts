@@ -45,10 +45,7 @@ export const generateUID = (nbParam: number = 10): string => {
 };
 
 // Function to add ellipsis to multiline text
-export const multilineEllipsis = (
-  value: string,
-  maxLength: number = 7
-): string => {
+export const multilineEllipsis = (value: string, maxLength: number = 7): string => {
   return value
     .split(' ')
     .map((v) => (v.length > maxLength ? `${v.substring(0, maxLength)}…` : v))
@@ -57,9 +54,7 @@ export const multilineEllipsis = (
 
 // Function to add ellipsis to single line text
 export const ellipsis = (value: string, maxLength: number = 30): string => {
-  return value.length > maxLength
-    ? `${value.substring(0, maxLength - 3)}…`
-    : value;
+  return value.length > maxLength ? `${value.substring(0, maxLength - 3)}…` : value;
 };
 
 // Function to format a number range
@@ -67,11 +62,7 @@ export const formatNumberRange = (
   value: [number | null, number | null],
   config: { unit?: string } = {}
 ): string => {
-  if (
-    !value ||
-    value.length !== 2 ||
-    (!Number.isFinite(value[0]) && !Number.isFinite(value[1]))
-  ) {
+  if (!value || value.length !== 2 || (!Number.isFinite(value[0]) && !Number.isFinite(value[1]))) {
     return '-';
   }
   if (!Number.isFinite(value[0])) {
@@ -85,11 +76,7 @@ export const formatNumberRange = (
 
 // Function to format a date range
 export const formatDateRange = (value: [Date | null, Date | null]): string => {
-  if (
-    !value ||
-    value.length !== 2 ||
-    (value[0] === null && value[1] === null)
-  ) {
+  if (!value || value.length !== 2 || (value[0] === null && value[1] === null)) {
     return '-';
   }
   if (value[1] === null) {
@@ -110,8 +97,7 @@ export const formatEnum = (
     value.length > 0
       ? value.map(
           (x) =>
-            config.options.find((y) => y.value === x)?.label ||
-            i18n.global.t('commons.filter-invalid-value')
+            config.options.find((y) => y.value === x)?.label || i18n.global.t('commons.filter-invalid-value')
         )
       : ['-'];
   return themeArray.join(', ');
@@ -125,13 +111,8 @@ const typeFormater = {
 };
 
 // Function to format value to string based on type
-export const formatToString = (
-  value: unknown,
-  config: { type: string; [key: string]: unknown }
-): string => {
-  return typeFormater.hasOwnProperty(config.type)
-    ? typeFormater[config.type](value, config)
-    : `${value}`;
+export const formatToString = (value: unknown, config: { type: string; [key: string]: unknown }): string => {
+  return typeFormater.hasOwnProperty(config.type) ? typeFormater[config.type](value, config) : `${value}`;
 };
 
 // Function to capitalize the first letter of a string

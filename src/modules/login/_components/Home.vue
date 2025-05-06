@@ -5,10 +5,7 @@
         <template v-slot:header>
           <div class="header">
             <div class="logo-wrapper">
-              <img
-                class="header-logo"
-                src="@/assets/images/logo_mabarry_title.jpg"
-              />
+              <img class="header-logo" src="@/assets/images/logo_mabarry_title.jpg" />
             </div>
           </div>
         </template>

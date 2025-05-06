@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="u-wrapper"
-    :class="{ '-with-actions': $slots.actions, '-with-left': $slots.left }"
-  >
+  <div class="u-wrapper" :class="{ '-with-actions': $slots.actions, '-with-left': $slots.left }">
     <u-loader v-if="loading" center size="150px" />
     <template v-else>
       <div v-if="$slots.left" class="u-left-panel">
@@ -14,10 +11,7 @@
       </div>
       <div class="u-main-panel">
         <slot />
-        <u-action-button-bar
-          v-if="$slots.actions && showButtons"
-          :placement="actionsPlacement"
-        >
+        <u-action-button-bar v-if="$slots.actions && showButtons" :placement="actionsPlacement">
           <slot name="actions" />
         </u-action-button-bar>
       </div>

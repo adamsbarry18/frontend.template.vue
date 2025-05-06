@@ -17,17 +17,8 @@
         @click.stop="onClickWarningWrapper"
         data-cy="dashboard-warnings"
       >
-        <icon-base
-          icon="icon-error"
-          class="error-icon"
-          color="var(--color-status-error)"
-          :size="24"
-        />
-        <span
-          v-html="
-            $t('dashboard.error-count', { count: errorNotifications.length })
-          "
-        />
+        <icon-base icon="icon-error" class="error-icon" color="var(--color-status-error)" :size="24" />
+        <span v-html="$t('dashboard.error-count', { count: errorNotifications.length })" />
       </div>
       <div v-else class="no-warnings-placeholder" />
       <!-- Autres éléments du dashboard -->
@@ -46,9 +37,7 @@
     return usersStore.currentUser?.surname ?? usersStore.currentUser?.name;
   });
 
-  const errorNotifications = computed(
-    () => notificationStore.getAllErrorNotifications
-  );
+  const errorNotifications = computed(() => notificationStore.getAllErrorNotifications);
 
   // --- Methods ---
   const onClickWarningWrapper = () => {

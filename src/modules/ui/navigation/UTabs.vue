@@ -47,12 +47,7 @@
     },
   });
 
-  const emit = defineEmits([
-    'update:modelValue',
-    'tab-click',
-    'tab-remove',
-    'edit',
-  ]);
+  const emit = defineEmits(['update:modelValue', 'tab-click', 'tab-remove', 'edit']);
 
   // Use a computed property for v-model compatibility
   const activeTab = computed({
@@ -69,10 +64,7 @@
     emit('tab-remove', name);
   };
 
-  const handleEdit = (
-    targetName: TabPaneName | undefined,
-    action: 'remove' | 'add'
-  ) => {
+  const handleEdit = (targetName: TabPaneName | undefined, action: 'remove' | 'add') => {
     emit('edit', targetName, action);
   };
 </script>

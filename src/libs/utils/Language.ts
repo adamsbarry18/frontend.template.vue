@@ -16,16 +16,9 @@ declare global {
   }
 }
 
-export function updateActiveLanguage(
-  lang: any,
-  forceReload: boolean = false
-): void {
+export function updateActiveLanguage(lang: any, forceReload: boolean = false): void {
   storageService.setLanguage(lang);
-  if (
-    i18n.global.locale &&
-    typeof i18n.global.locale === 'object' &&
-    'value' in i18n.global.locale
-  ) {
+  if (i18n.global.locale && typeof i18n.global.locale === 'object' && 'value' in i18n.global.locale) {
     i18n.global.locale.value = lang;
   } else {
     console.warn('i18n.global.locale is not a Ref, assigning directly.');

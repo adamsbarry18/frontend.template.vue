@@ -19,9 +19,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   const internalLevel = computed(() => currentUser.value?.internalLevel ?? 1);
   const internal = computed(() => currentUser.value?.internal ?? false);
   const permissionsExpireAt = computed(() =>
-    currentUser.value?.permissionsExpireAt
-      ? dayjs(currentUser.value.permissionsExpireAt)
-      : null
+    currentUser.value?.permissionsExpireAt ? dayjs(currentUser.value.permissionsExpireAt) : null
   );
   const hasExpired = computed(() => {
     if (!permissionsExpireAt.value) return false;
@@ -91,9 +89,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function getLevel(level: number) {
     try {
-      const response = await apiStore.api.get(
-        `/api/v1/authorization/levels/${level}`
-      );
+      const response = await apiStore.api.get(`/api/v1/authorization/levels/${level}`);
       return response.data.data;
     } catch (error) {
       if (error.response?.status === 403) return null;
@@ -108,9 +104,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
     try {
       // Ajouter un timestamp pour forcer le non-usage du cache navigateur/serveur
       const timestamp = Date.now();
-      const response = await apiStore.api.get(
-        `/api/v1/authorization/users/${userId}?_t=${timestamp}`
-      );
+      const response = await apiStore.api.get(`/api/v1/authorization/users/${userId}?_t=${timestamp}`);
       return response.data.data;
     } catch (error) {
       if ([403, 404].includes(error.response?.status)) return null;
@@ -135,12 +129,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
       });
     } catch (error) {
       if (error.response?.status === 403) return null;
-      throw new ServerError(
-        'authorisations',
-        'updateUserAuthorization',
-        error,
-        { userId, payload }
-      );
+      throw new ServerError('authorisations', 'updateUserAuthorization', error, { userId, payload });
     }
   }
 
@@ -154,12 +143,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
       await apiStore.api.delete(`/api/v1/authorization/users/${userId}`);
     } catch (error) {
       if (error.response?.status === 403) return null;
-      throw new ServerError(
-        'authorisations',
-        'deleteUserAuthorizations',
-        error,
-        { userId }
-      );
+      throw new ServerError('authorisations', 'deleteUserAuthorizations', error, { userId });
     }
   }
 
@@ -168,18 +152,11 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
    */
   async function createTemporaryAuthorisationForUser(userId: number) {
     try {
-      const response = await apiStore.api.post(
-        `/api/v1/authorization/users/${userId}/temporary`
-      );
+      const response = await apiStore.api.post(`/api/v1/authorization/users/${userId}/temporary`);
       return response.data.data;
     } catch (error) {
       if (error.response?.status === 403) return null;
-      throw new ServerError(
-        'authorisations',
-        'createTemporaryAuthorisationForUser',
-        error,
-        { userId }
-      );
+      throw new ServerError('authorisations', 'createTemporaryAuthorisationForUser', error, { userId });
     }
   }
 

@@ -2,9 +2,7 @@
   <div class="u-filter-item-daterange">
     <p class="prompt">
       <span>{{ $t('commons.filter.date-range.prompt') }}</span>
-      <span class="defaults-button" @click="onReset">{{
-        $t('commons.form.reset-defaults')
-      }}</span>
+      <span class="defaults-button" @click="onReset">{{ $t('commons.form.reset-defaults') }}</span>
     </p>
     <div class="daterange-wrapper">
       <div class="date-input">
@@ -12,9 +10,7 @@
         <u-date-picker
           v-model="internalValue[0]"
           type="date"
-          :shortcuts="
-            config.hasOwnProperty('shortcuts') ? config.shortcuts : ''
-          "
+          :shortcuts="config.hasOwnProperty('shortcuts') ? config.shortcuts : ''"
           @change="handleChange(0)"
         />
       </div>
@@ -24,9 +20,7 @@
         <u-date-picker
           v-model="internalValue[1]"
           type="date"
-          :shortcuts="
-            config.hasOwnProperty('shortcuts') ? config.shortcuts : ''
-          "
+          :shortcuts="config.hasOwnProperty('shortcuts') ? config.shortcuts : ''"
           @change="handleChange(1)"
         />
       </div>
@@ -58,15 +52,11 @@
   const internalValue = ref(props.modelValue);
 
   const defaultStartValue = computed(() => {
-    return props.config.hasOwnProperty('defaultStart')
-      ? props.config.defaultStart
-      : null;
+    return props.config.hasOwnProperty('defaultStart') ? props.config.defaultStart : null;
   });
 
   const defaultEndValue = computed(() => {
-    return props.config.hasOwnProperty('defaultEnd')
-      ? props.config.defaultEnd
-      : null;
+    return props.config.hasOwnProperty('defaultEnd') ? props.config.defaultEnd : null;
   });
 
   watch(
@@ -96,14 +86,10 @@
       }
 
       if (internalValue.value[0] !== null) {
-        internalValue.value[0] = dayjs(internalValue.value[0])
-          .startOf('day')
-          .toDate();
+        internalValue.value[0] = dayjs(internalValue.value[0]).startOf('day').toDate();
       }
       if (internalValue.value[1] !== null) {
-        internalValue.value[1] = dayjs(internalValue.value[1])
-          .endOf('day')
-          .toDate();
+        internalValue.value[1] = dayjs(internalValue.value[1]).endOf('day').toDate();
       }
     }
   };

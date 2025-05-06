@@ -1,8 +1,4 @@
-import {
-  AxiosInstance,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-} from 'axios'; // Importer AxiosInstance
+import { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'; // Importer AxiosInstance
 
 interface InterceptorOptions {
   router: any;
@@ -32,9 +28,7 @@ export class BaseInterceptor {
 
   public requestInterceptor() {
     return {
-      request: (
-        config: InternalAxiosRequestConfig<any>
-      ): InternalAxiosRequestConfig<any> => config,
+      request: (config: InternalAxiosRequestConfig<any>): InternalAxiosRequestConfig<any> => config,
       error: (error: any) => Promise.reject(error),
     };
   }
@@ -49,19 +43,13 @@ export class BaseInterceptor {
   public attachRequestInterceptor(): void {
     const { request, error } = this.requestInterceptor();
     // Utiliser l'instance Axios stockée
-    this._requestInterceptor = this.axiosInstance.interceptors.request.use(
-      request,
-      error
-    );
+    this._requestInterceptor = this.axiosInstance.interceptors.request.use(request, error);
   }
 
   public attachResponseInterceptor(): void {
     const { response, error } = this.responseInterceptor();
     // Utiliser l'instance Axios stockée
-    this._responseInterceptor = this.axiosInstance.interceptors.response.use(
-      response,
-      error
-    );
+    this._responseInterceptor = this.axiosInstance.interceptors.response.use(response, error);
   }
 
   public detachRequestInterceptor(): void {
@@ -83,9 +71,7 @@ export class BaseInterceptor {
   public register(): void {
     this.attachRequestInterceptor();
     this.attachResponseInterceptor();
-    (this.constructor as typeof BaseInterceptor).registeredInterceptors.push(
-      this
-    );
+    (this.constructor as typeof BaseInterceptor).registeredInterceptors.push(this);
   }
 
   public getRegisteredInterceptors(): BaseInterceptor[] {

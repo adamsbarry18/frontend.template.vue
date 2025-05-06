@@ -25,28 +25,14 @@
         color="var(--split-button-text-color)"
       />
     </button>
-    <u-popper
-      v-model:visible="popperActive"
-      placement="bottom-start"
-      :width="230"
-      trigger="click"
-    >
+    <u-popper v-model:visible="popperActive" placement="bottom-start" :width="230" trigger="click">
       <template #default>
         <div class="u-multi-action-popper">
           <div x-arrow />
           <u-tooltip v-for="item in items" :key="item.label" placement="right">
             <template #default>
-              <div
-                class="action-item"
-                :class="{ '-disabled': item.disabled }"
-                @click="onItemClick(item)"
-              >
-                <icon-base
-                  v-if="item.icon"
-                  :icon="item.icon"
-                  :size="24"
-                  color="var(--color-neutral-500)"
-                />
+              <div class="action-item" :class="{ '-disabled': item.disabled }" @click="onItemClick(item)">
+                <icon-base v-if="item.icon" :icon="item.icon" :size="24" color="var(--color-neutral-500)" />
                 <span>{{ item.label }}</span>
               </div>
             </template>

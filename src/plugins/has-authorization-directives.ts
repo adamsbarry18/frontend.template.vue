@@ -9,9 +9,7 @@ export default {
         const [feature, action] = (binding.value as string)?.split('.') ?? [];
 
         if (!feature || !action) {
-          console.warn(
-            'v-has-authorisation directive requires a value like "feature.action"'
-          );
+          console.warn('v-has-authorisation directive requires a value like "feature.action"');
           el.style.display = 'none';
           return;
         }
@@ -25,9 +23,7 @@ export default {
         const [feature, action] = (binding.value as string)?.split('.') ?? [];
 
         if (!feature || !action) {
-          console.warn(
-            'v-has-authorisation directive requires a value like "feature.action"'
-          );
+          console.warn('v-has-authorisation directive requires a value like "feature.action"');
           el.style.display = 'none';
           return;
         }

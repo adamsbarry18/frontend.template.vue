@@ -37,9 +37,7 @@ export const TagSummary = () => ({
     const noTags = ref([]);
 
     // Un seul tag
-    const singleTag = ref([
-      { id: 1, name: 'Tag One', color: 'var(--color-blue-600)' },
-    ]);
+    const singleTag = ref([{ id: 1, name: 'Tag One', color: 'var(--color-blue-600)' }]);
 
     // Plusieurs tags (visibleTags = premier tag, hiddenTags = tags supplémentaires)
     const multipleTags = ref([

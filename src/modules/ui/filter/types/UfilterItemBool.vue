@@ -3,12 +3,7 @@
     <p class="prompt">
       {{ config.prompt }}
     </p>
-    <u-radio
-      v-model="internalValue"
-      border
-      :options="enumOptions"
-      @change="handleChange"
-    />
+    <u-radio v-model="internalValue" border :options="enumOptions" @change="handleChange" />
   </div>
 </template>
 
@@ -46,10 +41,7 @@
 
   onMounted(() => {
     internalValue.value = props.modelValue;
-    if (
-      props.config.hasOwnProperty('default') &&
-      internalValue.value === null
-    ) {
+    if (props.config.hasOwnProperty('default') && internalValue.value === null) {
       internalValue.value = props.config.default;
       handleChange();
     }

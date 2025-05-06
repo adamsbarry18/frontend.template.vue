@@ -1,8 +1,5 @@
 <template>
-  <u-tooltip
-    class="u-icon-count"
-    :style="{ width: `${size}px`, height: `${size}px` }"
-  >
+  <u-tooltip class="u-icon-count" :style="{ width: `${size}px`, height: `${size}px` }">
     <div>
       <icon-base :icon="icon" :size="size" :color="color" />
       <span

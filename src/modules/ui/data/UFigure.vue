@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="u-figure"
-    :class="[!!icon ? '-icon' : '', size ? '-' + size : '']"
-  >
+  <div class="u-figure" :class="[!!icon ? '-icon' : '', size ? '-' + size : '']">
     <div class="u-figure-row">
       <icon-base
         v-if="icon"

@@ -14,21 +14,12 @@
         >
           <span>{{ tag.label }}</span>
           <div class="u-tag-list-unselect">
-            <icon-base
-              icon="icon-close"
-              :size="9"
-              color="var(--color-neutral-800)"
-            />
+            <icon-base icon="icon-close" :size="9" color="var(--color-neutral-800)" />
           </div>
         </u-tag>
       </div>
 
-      <div
-        v-else
-        :key="'unselected-' + index"
-        class="u-tag-list-item"
-        @click="onTagFilterSelect(tag)"
-      >
+      <div v-else :key="'unselected-' + index" class="u-tag-list-item" @click="onTagFilterSelect(tag)">
         <icon-base :icon="tag.icon || 'icon-tag'" :size="24" />
         <span>{{ tag.label }}</span>
       </div>

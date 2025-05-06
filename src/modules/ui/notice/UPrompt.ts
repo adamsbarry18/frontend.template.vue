@@ -1,10 +1,6 @@
 import { ElMessageBox, ElMessageBoxOptions } from 'element-plus';
 
-export default function uPrompt(
-  text: string,
-  title: string = '',
-  optionsParam: ElMessageBoxOptions = {}
-) {
+export default function uPrompt(text: string, title: string = '', optionsParam: ElMessageBoxOptions = {}) {
   const options: ElMessageBoxOptions = { ...optionsParam };
   options.customClass = 'u-msg-box';
 

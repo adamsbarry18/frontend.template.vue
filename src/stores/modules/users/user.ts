@@ -21,19 +21,13 @@ export const useUsersStore = defineStore('users', () => {
 
   const isAuthenticated = computed(() => !!currentUser.value);
   const currentUserId = computed(() => currentUser.value?.id ?? null);
-  const level = computed(
-    () => currentUser.value?.level ?? SecurityLevel.EXTERNAL
-  );
+  const level = computed(() => currentUser.value?.level ?? SecurityLevel.EXTERNAL);
   const email = computed(() => currentUser.value?.email ?? null);
   const token = computed(() => storageService.getAuthToken());
   const internal = computed(() => currentUser.value?.internal ?? false);
-  const language = computed(
-    () => currentUser.value?.preferences?.language?.toLowerCase?.() ?? 'en'
-  );
+  const language = computed(() => currentUser.value?.preferences?.language?.toLowerCase?.() ?? 'en');
   const getInitial = computed(() =>
-    currentUser.value?.name
-      ? currentUser.value.name.substring(0, 1).toUpperCase()
-      : '-'
+    currentUser.value?.name ? currentUser.value.name.substring(0, 1).toUpperCase() : '-'
   );
 
   const getAllUsers = computed(() => Array.from(usersMap.value.values()));
@@ -46,17 +40,9 @@ export const useUsersStore = defineStore('users', () => {
 
   const userColorFromId = (userId: number): string => {
     const user = getUserById(userId);
-    const DEFAULT_COLORS = [
-      '#fc842c',
-      '#b43893',
-      '#c98963',
-      '#4e8cd4',
-      '#18bc91',
-      '#cf454a',
-    ];
+    const DEFAULT_COLORS = ['#fc842c', '#b43893', '#c98963', '#4e8cd4', '#18bc91', '#cf454a'];
     if (!user || !user.color) {
-      const numericId =
-        typeof userId === 'string' ? parseInt(userId, 10) || 0 : userId;
+      const numericId = typeof userId === 'string' ? parseInt(userId, 10) || 0 : userId;
       return DEFAULT_COLORS[numericId % DEFAULT_COLORS.length];
     }
     return user.color;
@@ -72,8 +58,7 @@ export const useUsersStore = defineStore('users', () => {
   function _handleAuthenticationError(error: any, context: string): never {
     console.error(`Authentication error in ${context}:`, error);
     const responseData = error.response?.data;
-    const apiErrorMessage =
-      responseData?.message || responseData?.data?.message;
+    const apiErrorMessage = responseData?.message || responseData?.data?.message;
     const apiErrorCode = responseData?.code || responseData?.data?.code;
 
     if (error.response?.status === 401) {
@@ -110,14 +95,8 @@ export const useUsersStore = defineStore('users', () => {
         _setCurrentUser(user);
         console.log('Initializing auth: User fetched successfully.');
       } catch (error: any) {
-        console.error(
-          'Initializing auth: Failed to fetch user with stored token.',
-          error
-        );
-        if (
-          error.response?.status === 401 ||
-          error.message === 'BAD_CREDENTIALS'
-        ) {
+        console.error('Initializing auth: Failed to fetch user with stored token.', error);
+        if (error.response?.status === 401 || error.message === 'BAD_CREDENTIALS') {
           storageService.removeAuthToken();
           _setCurrentUser(null);
         } else {
@@ -131,13 +110,7 @@ export const useUsersStore = defineStore('users', () => {
     authStatusChecked.value = true;
   }
 
-  async function login({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }): Promise<boolean> {
+  async function login({ email, password }: { email: string; password: string }): Promise<boolean> {
     if (!email || !password) {
       throw new Error('Email and password are required');
     }
@@ -147,14 +120,11 @@ export const useUsersStore = defineStore('users', () => {
         skipAuthErrorInterceptor: true,
       });
 
-      const tokenFromResponse =
-        response.data?.token || response.data?.data?.token;
+      const tokenFromResponse = response.data?.token || response.data?.data?.token;
       if (tokenFromResponse) {
         storageService.setAuthToken(tokenFromResponse);
       } else {
-        console.warn(
-          'Login successful, but no token received in response body.'
-        );
+        console.warn('Login successful, but no token received in response body.');
       }
 
       await fetchCurrentUser();
@@ -218,13 +188,7 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function confirmResetPassword({
-    password,
-    code,
-  }: {
-    password: string;
-    code: string;
-  }): Promise<void> {
+  async function confirmResetPassword({ password, code }: { password: string; code: string }): Promise<void> {
     try {
       await apiStore.api.post(`/api/v1/auth/password/reset/${code}/confirm`, {
         data: { password },
@@ -280,10 +244,7 @@ export const useUsersStore = defineStore('users', () => {
       console.log('[fetchCurrentUser] User set, returning user.');
       return user;
     } catch (error) {
-      console.error(
-        '[fetchCurrentUser catch] Failed to fetch current user:',
-        error
-      );
+      console.error('[fetchCurrentUser catch] Failed to fetch current user:', error);
       storageService.removeAuthToken();
       _setCurrentUser(null);
       console.log('[fetchCurrentUser catch] Throwing ServerError');
@@ -309,9 +270,7 @@ export const useUsersStore = defineStore('users', () => {
   async function fetchUsers(): Promise<void> {
     try {
       const response = await apiStore.api.get('/api/v1/users');
-      const fetchedUsers = response.data.data.map((u: any) =>
-        UserModel.fromAPI(u)
-      );
+      const fetchedUsers = response.data.data.map((u: any) => UserModel.fromAPI(u));
       fetchedUsers.forEach(_updateUserInMap);
       usersFetched.value = true;
     } catch (error) {
@@ -326,9 +285,7 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function searchUser(
-    identifier: string | number
-  ): Promise<UserModel | null> {
+  async function searchUser(identifier: string | number): Promise<UserModel | null> {
     try {
       if (typeof identifier === 'number' || !isNaN(Number(identifier))) {
         const cachedUser = usersMap.value.get(identifier);
@@ -400,9 +357,7 @@ export const useUsersStore = defineStore('users', () => {
       return newUser;
     } catch (error: any) {
       if (error.response?.data?.message) {
-        throw new Error(
-          `Erreur lors de l'ajout : ${error.response.data.message}`
-        );
+        throw new Error(`Erreur lors de l'ajout : ${error.response.data.message}`);
       }
       throw new ServerError('users', 'addUser', error, {
         email: userData.email,
@@ -439,13 +394,7 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function setPreference({
-    key,
-    value,
-  }: {
-    key: string;
-    value: any;
-  }): Promise<void> {
+  async function setPreference({ key, value }: { key: string; value: any }): Promise<void> {
     if (!currentUser.value) {
       console.warn('Cannot set preference: no user logged in.');
       return;

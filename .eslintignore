@@ -1,0 +1,14 @@
+!.storybook
+
+node_modules
+/dist
+
+# Test results
+.nyc_output/
+coverage
+junit.xml
+
+
+# Storybook
+.cache
+storybook-static

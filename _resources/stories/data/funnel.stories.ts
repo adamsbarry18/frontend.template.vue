@@ -57,9 +57,7 @@ export const Funnel = () => ({
       [1, 20000, 'Clients reconnus'],
       [2, 8000, 'Clients reconnus'],
     ];
-    const categoryLabels = ['Visites Web', 'Intentions', 'Transactions'].map(
-      (label) => ({ label })
-    );
+    const categoryLabels = ['Visites Web', 'Intentions', 'Transactions'].map((label) => ({ label }));
     // Cas par défaut : trois catégories simples avec données d'exemple
     const defaultCategories = [
       { label: 'Category A', subtitle: 'A' },

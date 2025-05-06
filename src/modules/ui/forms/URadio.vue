@@ -53,8 +53,7 @@
     direction: {
       type: String,
       default: 'row',
-      validator: (value: string) =>
-        ['row', 'column', 'column-reverse', 'row-reverse'].includes(value),
+      validator: (value: string) => ['row', 'column', 'column-reverse', 'row-reverse'].includes(value),
     },
     button: {
       type: Boolean,
@@ -78,8 +77,7 @@
   );
 
   onMounted(() => {
-    input.value =
-      props.modelValue || props.modelValue === false ? props.modelValue : null;
+    input.value = props.modelValue || props.modelValue === false ? props.modelValue : null;
   });
 
   function handleChange() {

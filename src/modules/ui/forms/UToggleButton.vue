@@ -13,18 +13,10 @@
         :icon="option.icon"
         :size="22"
         :rich="true"
-        :color="
-          modelValue === option.value
-            ? 'var(--color-white)'
-            : 'var(--color-neutral-700)'
-        "
+        :color="modelValue === option.value ? 'var(--color-white)' : 'var(--color-neutral-700)'"
       />
       <span v-if="option.label">{{ option.label }}</span>
-      <span
-        v-if="option.number !== undefined"
-        class="badge"
-        :class="{ '-positive': option.number > 0 }"
-      >
+      <span v-if="option.number !== undefined" class="badge" :class="{ '-positive': option.number > 0 }">
         {{ option.number }}
       </span>
     </button>

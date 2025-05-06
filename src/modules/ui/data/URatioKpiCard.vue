@@ -27,18 +27,10 @@
         }})
       </span>
     </div>
-    <u-progress-bar
-      :display-percent="false"
-      :percent="percent"
-      :color="colorProgressBar"
-    />
+    <u-progress-bar :display-percent="false" :percent="percent" :color="colorProgressBar" />
     <div class="kpi-legend-footer">
-      <span class="kpi-legend">{{
-        numberFormat(numerator, { maxPrecision: 1, condensed: true })
-      }}</span>
-      <span class="kpi-legend">{{
-        numberFormat(denominator, { maxPrecision: 1, condensed: true })
-      }}</span>
+      <span class="kpi-legend">{{ numberFormat(numerator, { maxPrecision: 1, condensed: true }) }}</span>
+      <span class="kpi-legend">{{ numberFormat(denominator, { maxPrecision: 1, condensed: true }) }}</span>
     </div>
   </div>
 </template>

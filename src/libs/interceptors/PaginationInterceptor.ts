@@ -4,14 +4,7 @@ import { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 
 const DEFAULT_PAGE_SIZE = 50;
 
-export type FilterType =
-  | 'contains'
-  | 'bool'
-  | 'in'
-  | 'enum'
-  | 'numberrange'
-  | 'daterange'
-  | string;
+export type FilterType = 'contains' | 'bool' | 'in' | 'enum' | 'numberrange' | 'daterange' | string;
 
 export interface Filter {
   type: FilterType;
@@ -36,10 +29,7 @@ export interface PaginationConfig extends InternalAxiosRequestConfig {
  * @param field Nom du champ
  * @returns Chaîne de filtre ou tableau de chaînes pour 'numberrange' ou 'daterange'
  */
-function getFilterString(
-  filter: Filter,
-  field: string
-): string | Array<string | null> | null {
+function getFilterString(filter: Filter, field: string): string | Array<string | null> | null {
   switch (filter.type) {
     case 'contains':
       return `${field}:${String(filter.value).replaceAll(':', '\\:')}:contains`;
@@ -47,9 +37,7 @@ function getFilterString(
       return `${field}:${filter.value}:eq`;
     case 'in':
     case 'enum':
-      return Array.isArray(filter.value)
-        ? `${field}:${filter.value.join('|')}:in`
-        : null;
+      return Array.isArray(filter.value) ? `${field}:${filter.value.join('|')}:in` : null;
     case 'numberrange':
       return Array.isArray(filter.value)
         ? filter.value.map((v, index) => {
@@ -66,10 +54,7 @@ function getFilterString(
             if (v === null || typeof v === 'undefined') {
               return null;
             }
-            const datestring = dayjs(v)
-              .toDate()
-              .toISOString()
-              .replaceAll(':', '\\:');
+            const datestring = dayjs(v).toDate().toISOString().replaceAll(':', '\\:');
             const operator = index === 0 ? 'gte' : 'lte';
             return `${field}:${datestring}:${operator}`;
           })
@@ -84,10 +69,7 @@ function getFilterString(
  * @param query Configuration de la requête
  * @param ctx Contexte de pagination
  */
-export function paginateQuery(
-  query: Record<string, any> = {},
-  ctx: PaginationContext = {}
-): void {
+export function paginateQuery(query: Record<string, any> = {}, ctx: PaginationContext = {}): void {
   query.params = query.params || {};
   if (ctx.page || ctx.size) {
     query.params.page = ctx.page || 1;
@@ -115,8 +97,7 @@ export class PaginationInterceptor extends BaseInterceptor {
 
   public override requestInterceptor() {
     return {
-      request: (config: PaginationConfig): PaginationConfig =>
-        this.setPagination(config),
+      request: (config: PaginationConfig): PaginationConfig => this.setPagination(config),
       error: (error: any) => Promise.reject(error),
     };
   }

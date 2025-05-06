@@ -1,8 +1,6 @@
 <template>
   <div class="theme-selector">
-    <label class="el-form-item__label">{{
-      $t('user.settings.preferences.theme')
-    }}</label>
+    <label class="el-form-item__label">{{ $t('user.settings.preferences.theme') }}</label>
     <u-radio
       :model-value="modelValue"
       :options="themeOptions"

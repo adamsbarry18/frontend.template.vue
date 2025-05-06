@@ -4,11 +4,7 @@
     class="u-donut-gauge"
     :class="{ '-indeterminate': indeterminate }"
   >
-    <svg
-      :style="{ height: size, width: size }"
-      viewBox="0 0 42 42"
-      class="circular-chart"
-    >
+    <svg :style="{ height: size, width: size }" viewBox="0 0 42 42" class="circular-chart">
       <path
         :style="circleBgStyle"
         class="circle-bg"

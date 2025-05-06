@@ -184,9 +184,7 @@
         &:not(.-disabled) > .label-btn {
           border: 1px solid var(--color-neutral-300);
           background-color: var(--color-white);
-          color: var(
-            --color-neutral-500
-          ); /* ✅ Correction: var(--color-neutral-500) - 2 hyphens */
+          color: var(--color-neutral-500); /* ✅ Correction: var(--color-neutral-500) - 2 hyphens */
         }
         &:hover {
           background-color: var(--color-neutral-100);

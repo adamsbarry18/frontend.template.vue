@@ -17,18 +17,12 @@
           :style="{ flexBasis: roundCategorySize + '%' }"
         >
           <h4>{{ category.label }}</h4>
-          <span class="category-total">{{
-            numberFormat(getCategoryTotal(index), { condensed: true })
-          }}</span>
+          <span class="category-total">{{ numberFormat(getCategoryTotal(index), { condensed: true }) }}</span>
           <p v-if="category.subtitle" class="category-subtitle">
             {{ category.subtitle }}
           </p>
           <!-- Slot personnalisé pour le résumé d'une catégorie -->
-          <slot
-            :name="`category-summary-${index}`"
-            :index="index"
-            :percentage="getLossPercentage(index)"
-          >
+          <slot :name="`category-summary-${index}`" :index="index" :percentage="getLossPercentage(index)">
             <span v-if="index !== 0" class="category-summary">
               {{
                 $t('commons.funnel.category-summary', {
@@ -37,8 +31,7 @@
                     unit: '%',
                     precision: 1,
                   }),
-                  total:
-                    index > 0 ? categories[index - 1].label?.toLowerCase() : '',
+                  total: index > 0 ? categories[index - 1].label?.toLowerCase() : '',
                 })
               }}
             </span>
@@ -67,15 +60,8 @@
 
       <!-- Légende affichée en bas -->
       <div class="legend-footer">
-        <div
-          v-for="(dimension, index) in dimensions"
-          :key="dimension"
-          class="dimension-legend"
-        >
-          <div
-            class="legend-marker"
-            :style="{ backgroundColor: getColorString(colorPalette[index]) }"
-          ></div>
+        <div v-for="(dimension, index) in dimensions" :key="dimension" class="dimension-legend">
+          <div class="legend-marker" :style="{ backgroundColor: getColorString(colorPalette[index]) }"></div>
           <span>{{ dimension }}</span>
         </div>
       </div>
@@ -194,9 +180,7 @@
         },
       ],
     };
-    return props.customOptions
-      ? { ...baseOptions, ...props.customOptions }
-      : baseOptions;
+    return props.customOptions ? { ...baseOptions, ...props.customOptions } : baseOptions;
   });
 
   // Fonction de formatage du tooltip
@@ -204,17 +188,11 @@
     const idx = mouseX.value;
     let res = [`<b>${props.categories[idx]?.label || ''} : </b>`];
     for (const dimension of dimensions.value) {
-      const row = props.data.find(
-        (row) => row[0] === idx && row[2] === dimension
-      );
+      const row = props.data.find((row) => row[0] === idx && row[2] === dimension);
       if (row) {
-        const color = getColorString(
-          colorPalette.value[dimensions.value.indexOf(dimension)]
-        );
+        const color = getColorString(colorPalette.value[dimensions.value.indexOf(dimension)]);
         const marker = `<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${color};"></span>`;
-        res.push(
-          `${marker}${dimension}: <b>${numberFormat(row[1], { condensed: true })}</b>`
-        );
+        res.push(`${marker}${dimension}: <b>${numberFormat(row[1], { condensed: true })}</b>`);
       }
     }
     return res.join('<br />');
@@ -231,9 +209,7 @@
 
   // Calcul du total pour une catégorie donnée (index)
   function getCategoryTotal(index: number): number {
-    return props.data
-      .filter((row) => row[0] === index)
-      .reduce((acc, row) => acc + row[1], 0);
+    return props.data.filter((row) => row[0] === index).reduce((acc, row) => acc + row[1], 0);
   }
 
   // Calcul du pourcentage de perte par rapport à la catégorie précédente

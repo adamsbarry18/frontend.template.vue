@@ -30,9 +30,7 @@ try {
   const userCredentialsCookie = getCookie(CREDS_KEY);
   if (userCredentialsCookie && userCredentialsCookie !== '') {
     try {
-      const userCredentials = JSON.parse(
-        decodeURIComponent(userCredentialsCookie)
-      );
+      const userCredentials = JSON.parse(decodeURIComponent(userCredentialsCookie));
       deleteCookie(CREDS_KEY);
       login(userCredentials);
     } catch (parseError) {

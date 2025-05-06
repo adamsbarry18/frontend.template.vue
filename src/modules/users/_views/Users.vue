@@ -146,12 +146,7 @@
 <script setup lang="ts">
   import { ref, computed, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import {
-    UContentWrapper,
-    UButton,
-    UListColumn,
-    UList,
-  } from '@/modules/ui';
+  import { UContentWrapper, UButton, UListColumn, UList } from '@/modules/ui';
   import { useNotification } from '@/composables/notfication';
   import { useUsersStore } from '@/stores/modules/users/user';
   import UserModel from '@/stores/modules/users/models/UserModel';
@@ -168,9 +163,7 @@
     return usersStore.getAllUsers || [];
   });
 
-  const canWriteUser = computed(() =>
-    authorisationsStore.isUserAllowed('user', 'write')
-  );
+  const canWriteUser = computed(() => authorisationsStore.isUserAllowed('user', 'write'));
 
   const listActions = computed(() => [
     {
@@ -211,11 +204,7 @@
   async function confirmDelete(users: UserModel[]) {
     const msgboxNodes = [];
     msgboxNodes.push(
-      h(
-        'p',
-        { class: 'msgbox-text' },
-        i18n.global.t('users.delete.modal.deleted', users.length)
-      )
+      h('p', { class: 'msgbox-text' }, i18n.global.t('users.delete.modal.deleted', users.length))
     );
     msgboxNodes.push(
       h(
@@ -251,10 +240,7 @@
   }
 
   onMounted(async () => {
-    if (
-      router.currentRoute.value.params.newUser &&
-      router.currentRoute.value.params.newUser === 'success'
-    ) {
+    if (router.currentRoute.value.params.newUser && router.currentRoute.value.params.newUser === 'success') {
       $notification.notify({
         title: i18n.global.t('notify.success'),
         message: i18n.global.t('users.created.text'),

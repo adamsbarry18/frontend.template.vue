@@ -1,25 +1,13 @@
 <template>
   <div class="u-switch" :class="{ '-active': modelValue }">
-    <span
-      v-if="displayBothLabels"
-      class="false-label"
-      :class="{ '-active': !modelValue }"
-    >
+    <span v-if="displayBothLabels" class="false-label" :class="{ '-active': !modelValue }">
       {{ falseLabel }}
     </span>
-    <el-switch
-      v-model="modelValue"
-      :disabled="disabled"
-      @change="handleChange"
-    />
+    <el-switch v-model="modelValue" :disabled="disabled" @change="handleChange" />
     <span v-if="!displayBothLabels" class="input-label">
       {{ modelValue ? trueLabel : falseLabel }}
     </span>
-    <span
-      v-if="displayBothLabels"
-      class="true-label"
-      :class="{ '-active': modelValue }"
-    >
+    <span v-if="displayBothLabels" class="true-label" :class="{ '-active': modelValue }">
       {{ trueLabel }}
     </span>
     <u-info v-if="$slots.info" :placement="infoPlacement">

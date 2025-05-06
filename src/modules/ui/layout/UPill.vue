@@ -1,14 +1,6 @@
 <template>
-  <div
-    class="u-pill"
-    :title="title"
-    :class="{ '-disabled': disabled, '-closable': isClosable }"
-  >
-    <div
-      class="pill-content"
-      :class="{ '-button-like': clickable }"
-      @click="onClick"
-    >
+  <div class="u-pill" :title="title" :class="{ '-disabled': disabled, '-closable': isClosable }">
+    <div class="pill-content" :class="{ '-button-like': clickable }" @click="onClick">
       <icon-base v-if="icon" :icon="icon" :size="24" :color="iconColor" />
       <span class="-text-ellipsis">
         <slot />

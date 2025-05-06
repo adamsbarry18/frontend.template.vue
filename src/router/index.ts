@@ -140,9 +140,7 @@ router.beforeEach(async (to, from, next) => {
     console.log(`Redirecting to login. Target: ${to.fullPath}`);
     next({ name: 'login', query: { redirect: to.fullPath }, replace: true });
   } else if (requiresGuest && isAuthenticated) {
-    console.log(
-      'Redirecting authenticated user to dashboard from guest route.'
-    );
+    console.log('Redirecting authenticated user to dashboard from guest route.');
     next({ name: 'dashboard', replace: true });
   } else if (requiresAuth && isAuthenticated && to.meta.authorisation) {
     const authMeta = to.meta.authorisation;
@@ -157,15 +155,9 @@ router.beforeEach(async (to, from, next) => {
         isAuthorized = authorisationsStore.level >= authMeta.level;
       }
       if (isAuthorized && authMeta.feature && authMeta.action) {
-        isAuthorized = authorisationsStore.isUserAllowed(
-          authMeta.feature,
-          authMeta.action
-        );
+        isAuthorized = authorisationsStore.isUserAllowed(authMeta.feature, authMeta.action);
       } else if (!authMeta.level && authMeta.feature && authMeta.action) {
-        isAuthorized = authorisationsStore.isUserAllowed(
-          authMeta.feature,
-          authMeta.action
-        );
+        isAuthorized = authorisationsStore.isUserAllowed(authMeta.feature, authMeta.action);
       }
     }
 

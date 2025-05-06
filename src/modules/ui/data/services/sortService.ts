@@ -78,10 +78,7 @@ export default class SortService {
     };
   }
 
-  static mergeContext(
-    target: SortContext | null,
-    source: SortContext | null
-  ): SortContext {
+  static mergeContext(target: SortContext | null, source: SortContext | null): SortContext {
     return {
       sort: {
         prop: source?.sort?.prop || target?.sort?.prop || null,

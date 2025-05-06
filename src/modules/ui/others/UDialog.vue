@@ -71,11 +71,7 @@
         <slot name="footer" />
       </div>
     </div>
-    <div
-      v-if="closable && closeIconOutside"
-      class="u-dialog-close-outside"
-      @click="closeDialog"
-    >
+    <div v-if="closable && closeIconOutside" class="u-dialog-close-outside" @click="closeDialog">
       <icon-base color="var(--color-neutral-700)" icon="icon-cross" size="24" />
     </div>
   </el-dialog>
@@ -169,10 +165,7 @@
 
   const onDialogClick = (event: MouseEvent) => {
     if (props.closable && props.closeOnClickOutside) {
-      if (
-        event.target instanceof Element &&
-        event.target.classList.contains('el-dialog__wrapper')
-      ) {
+      if (event.target instanceof Element && event.target.classList.contains('el-dialog__wrapper')) {
         closeDialog();
       }
     }

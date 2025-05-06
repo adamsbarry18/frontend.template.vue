@@ -71,15 +71,9 @@
 
   // Valeur formatée pour l'input
   const formattedValue = computed(() => {
-    const cron = input.value
-      ? input.value.split(' ')
-      : '00 00 00 * * ?'.split(' ');
-    const formattedHour = timeValue.value
-      ? timeValue.value.split(':')[0]
-      : '00';
-    const formattedMinute = timeValue.value
-      ? timeValue.value.split(':')[1]
-      : '00';
+    const cron = input.value ? input.value.split(' ') : '00 00 00 * * ?'.split(' ');
+    const formattedHour = timeValue.value ? timeValue.value.split(':')[0] : '00';
+    const formattedMinute = timeValue.value ? timeValue.value.split(':')[1] : '00';
     cron[1] = formattedMinute;
     cron[2] = formattedHour;
     return cron.join(' ');

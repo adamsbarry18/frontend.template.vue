@@ -66,10 +66,7 @@ export type TimeScale = keyof typeof TIME_SCALE;
  * @param timeScale Time scale to aggregate by (DAY, WEEK, MONTH).
  * @returns Formatted date string in 'YYYY-MM-DD' format.
  */
-export const getAggregatedDate = (
-  date: string | Date,
-  timeScale: TimeScale
-): string => {
+export const getAggregatedDate = (date: string | Date, timeScale: TimeScale): string => {
   const dayjsDate = dayjs(date);
   switch (timeScale) {
     case 'WEEK':
@@ -166,10 +163,7 @@ export const getDateTimeFormatByLang = (lang: string): string => {
  * @param secondDate Second Date object.
  * @returns True if the dates are on the same day, false otherwise.
  */
-export function datesAreOnSameDay(
-  firstDate: Date | null,
-  secondDate: Date | null
-): boolean {
+export function datesAreOnSameDay(firstDate: Date | null, secondDate: Date | null): boolean {
   if (!firstDate || !secondDate) {
     return false;
   }
@@ -232,16 +226,14 @@ export const initializeDateLocale = (lang: string): void => {
  * @param date Date to validate.
  * @returns True if the date is a valid Date object and not NaN, false otherwise.
  */
-export const isDateValid = (date): boolean =>
-  date instanceof Date && !isNaN(date.getTime());
+export const isDateValid = (date): boolean => date instanceof Date && !isNaN(date.getTime());
 
 /**
  * Checks if a date is in the future compared to the current time.
  * @param date Date to check.
  * @returns True if the date is in the future, false otherwise.
  */
-export const isDateInTheFuture = (date: Date): boolean =>
-  dayjs(date).isAfter(dayjs());
+export const isDateInTheFuture = (date: Date): boolean => dayjs(date).isAfter(dayjs());
 
 /**
  * Rounds a Date object to the nearest interval in minutes.

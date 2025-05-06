@@ -17,8 +17,7 @@ export const MessageBox = () => ({
         await $msgbox({
           type: 'warning',
           title: 'Title msbox',
-          message:
-            "Message box ouverte avec succès en utilisant l'alias msgbox",
+          message: "Message box ouverte avec succès en utilisant l'alias msgbox",
           cancelButtonText: 'Cancel',
           confirmButtonText: 'OK',
           showCancelButton: true,

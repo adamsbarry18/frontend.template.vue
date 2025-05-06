@@ -59,10 +59,7 @@ export default class PaginationService {
     };
   }
 
-  static mergeContext(
-    target: PaginationContext,
-    source: PaginationContext
-  ): PaginationContext {
+  static mergeContext(target: PaginationContext, source: PaginationContext): PaginationContext {
     return {
       page: source.page || target.page,
       size: source.size || target.size,

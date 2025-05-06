@@ -33,15 +33,8 @@
         @blur="unfocusCustomInput"
         @keypress.enter="unfocusCustomInput"
       />
-      <span v-if="!customInputFocused">{{
-        isCustomModelValue ? input : lastCustomModelValue
-      }}</span>
-      <icon-base
-        v-if="!customInputFocused"
-        icon="icon-edit"
-        color="var(--color-neutral-700)"
-        size="16"
-      />
+      <span v-if="!customInputFocused">{{ isCustomModelValue ? input : lastCustomModelValue }}</span>
+      <icon-base v-if="!customInputFocused" icon="icon-edit" color="var(--color-neutral-700)" size="16" />
     </div>
   </div>
 </template>
@@ -83,9 +76,7 @@
   const customInputFocused = ref(false);
   const inputRef = ref<HTMLInputElement | null>(null);
 
-  const isCustomModelValue = computed(
-    () => !props.options.includes(input.value)
-  );
+  const isCustomModelValue = computed(() => !props.options.includes(input.value));
 
   watch(
     () => props.modelValue,
@@ -111,16 +102,11 @@
 
   const unfocusCustomInput = () => {
     customInputFocused.value = false;
-    input.value = Math.min(
-      Math.max(input.value, props.min || 0),
-      props.max || 100
-    );
+    input.value = Math.min(Math.max(input.value, props.min || 0), props.max || 100);
     lastCustomModelValue.value = input.value;
     if (isNaN(input.value)) {
       input.value = props.min || 0;
-      lastCustomModelValue.value = props.options.includes(input.value)
-        ? '…'
-        : input.value;
+      lastCustomModelValue.value = props.options.includes(input.value) ? '…' : input.value;
     }
     handleChange();
   };

@@ -1,10 +1,5 @@
 <template>
-  <u-tooltip
-    v-if="currentUser"
-    class="user-info"
-    tooltip-class="user-info-tooltip"
-    placement="bottom-start"
-  >
+  <u-tooltip v-if="currentUser" class="user-info" tooltip-class="user-info-tooltip" placement="bottom-start">
     <u-color-initials
       :initial="userInitial"
       :color="userColor"
@@ -30,24 +25,12 @@
           </div>
         </div>
         <div class="user-action">
-          <div
-            class="-button-like"
-            datu-nav="user.view-account"
-            @click="goToMyAccountScreen"
-          >
-            <icon-base
-              icon="icon-account"
-              size="16"
-              color="var(--color-neutral-800)"
-            />
+          <div class="-button-like" datu-nav="user.view-account" @click="goToMyAccountScreen">
+            <icon-base icon="icon-account" size="16" color="var(--color-neutral-800)" />
             <span>{{ $t('globals.account.title') }}</span>
           </div>
           <div class="-button-like" @click="goToLogout">
-            <icon-base
-              icon="icon-logout"
-              size="16"
-              color="var(--color-neutral-800)"
-            />
+            <icon-base icon="icon-logout" size="16" color="var(--color-neutral-800)" />
             <span>{{ $t('globals.logout.title') }}</span>
           </div>
         </div>
@@ -70,17 +53,11 @@
   const router = useRouter();
 
   // Obtenir des références réactives depuis le store users
-  const {
-    currentUser,
-    getInitial: userInitial,
-    email: userEmail,
-  } = storeToRefs(usersStore);
+  const { currentUser, getInitial: userInitial, email: userEmail } = storeToRefs(usersStore);
 
   // Propriétés calculées basées sur currentUser du store
   const userName = computed(() => currentUser.value?.fullName ?? ''); // Utiliser fullName pour nom complet
-  const userColor = computed(() =>
-    usersStore.userColorFromId(currentUser.value?.id ?? 0)
-  ); // Obtenir la couleur
+  const userColor = computed(() => usersStore.userColorFromId(currentUser.value?.id ?? 0)); // Obtenir la couleur
 
   // Méthodes de navigation
   const goToLogout = async () => {
@@ -100,9 +77,7 @@
         // Le composant UserSettings récupère l'ID du currentUser depuis le store en mode 'user-edit'.
       });
     } else {
-      console.error(
-        'Cannot navigate to account screen: current user ID is missing.'
-      );
+      console.error('Cannot navigate to account screen: current user ID is missing.');
       // Optionnel: rediriger vers login si l'ID manque pour une raison quelconque
       // goToLogout();
     }

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="nav-section"
-    :class="{ '-opened': isSectionOpened, '-extended': extendedNav }"
-  >
+  <div class="nav-section" :class="{ '-opened': isSectionOpened, '-extended': extendedNav }">
     <component
       :is="item?.isRoot ? 'a' : 'div'"
       class="item-entry"
@@ -13,13 +10,7 @@
       <icon-base :icon="`icon-${item?.icon}`" :color="itemColor" size="24" />
       <transition name="slide-fade-horizontal">
         <span v-if="extendedNav" class="item-text">
-          {{
-            t(
-              navType === 'settings'
-                ? `${item?.name}.title`
-                : `${navType}.${item?.name}.title`
-            )
-          }}
+          {{ t(navType === 'settings' ? `${item?.name}.title` : `${navType}.${item?.name}.title`) }}
         </span>
       </transition>
       <transition name="slide-fade-horizontal">
@@ -52,11 +43,7 @@
           :href="generateLink(child)"
           @click.prevent="onChildClick(child)"
         >
-          <icon-base
-            :icon="`icon-${child.icon}`"
-            :color="getSubItemColor(child)"
-            size="20"
-          />
+          <icon-base :icon="`icon-${child.icon}`" :color="getSubItemColor(child)" size="20" />
           <transition name="slide-fade-horizontal">
             <span v-if="extendedNav" class="sub-item-text">
               {{
@@ -86,8 +73,7 @@
     navType: {
       type: String,
       required: true,
-      validator: (value: string) =>
-        ['globals', 'groups-nav', 'settings'].includes(value),
+      validator: (value: string) => ['globals', 'groups-nav', 'settings'].includes(value),
     },
     extendedNav: {
       type: Boolean,
@@ -132,17 +118,12 @@
   );
 
   function isSubItemActive(child: NavItem): boolean {
-    return (
-      props.item?.name === props.currentSection &&
-      child?.name === props.currentItem
-    );
+    return props.item?.name === props.currentSection && child?.name === props.currentItem;
   }
 
   function getSubItemColor(child: NavItem): string {
     if (child?.disabled) return 'var(--color-neutral-300)';
-    return isSubItemActive(child)
-      ? 'var(--color-primary-600)'
-      : 'var(--color-neutral-800)';
+    return isSubItemActive(child) ? 'var(--color-primary-600)' : 'var(--color-neutral-800)';
   }
 
   function handleClick() {
