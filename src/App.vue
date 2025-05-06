@@ -35,8 +35,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'; // Supprimer watchEffect
-  // Supprimer useRouter et useRoute car ils ne sont plus utilisés ici
+  import { ref, computed, onMounted } from 'vue';
   import i18n from '@/i18n';
   import { initializeDateLocale } from '@/libs/utils/Date';
   import { useUsersStore } from '@/stores/modules/users/user';
@@ -52,8 +51,6 @@
   const { $message } = useNotification();
   const usersStore = useUsersStore();
   const notificationStore = useNotificationStore();
-  // const router = useRouter(); // Supprimé car inutilisé
-  // const route = useRoute(); // Supprimé car inutilisé
 
   const adBlockerDiv = ref<HTMLDivElement | null>(null);
 
@@ -63,36 +60,6 @@
     () => notificationStore.persistentNotificationsVisible
   );
   // useTheme();
-
-  // const PUBLIC_ROUTES = [ // Supprimé car inutilisé
-  //   'login',
-  //   'password-forgot',
-  //   'password-reset',
-  //   'send-email',
-  // ];
-
-  // --- Watchers ---
-  // watchEffect(() => {
-  //   // Cette logique est maintenant centralisée dans router.beforeEach (src/router/index.ts)
-  //   if (!authCheckCompleted.value) {
-  //     return;
-  //   }
-  //
-  //   const currentRouteName = typeof route.name === 'string' ? route.name : '';
-  //   const isPublicRoute = PUBLIC_ROUTES.includes(currentRouteName);
-  //
-  //   console.log(
-  //     `Auth Check Completed: ${authCheckCompleted.value}, Is Authenticated: ${isAuthenticated.value}, Current Route: ${route.path}, Is Public: ${isPublicRoute}`
-  //   );
-  //
-  //   if (!isAuthenticated.value && !isPublicRoute) {
-  //     console.log('Redirecting to login...');
-  //     router.push({ name: 'login', query: { redirect: route.fullPath } });
-  //   } else if (isAuthenticated.value && currentRouteName === 'login') {
-  //     console.log('Redirecting to dashboard...');
-  //     router.push({ name: 'dashboard' });
-  //   }
-  // });
 
   const checkAdBlocker = () => {
     setTimeout(() => {

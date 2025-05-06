@@ -13,7 +13,10 @@
       @submit.prevent="onSubmit"
       data-cy="forgot-password-form"
     >
-      <p class="instructions">{{ $t('login.forgot-password.instructions') }}</p>
+      <p
+        class="instructions"
+        v-html="$t('login.forgot-password.instructions', { email: email })"
+      />
       <u-form-input
         v-model="email"
         :label="$t('login.email.label')"
@@ -26,6 +29,13 @@
       />
       <div class="form-action">
         <u-button
+          type="primary"
+          :disabled="!canSubmit || isLoading"
+          data-cy="forgot-password-submit-button"
+        >
+          {{ $t('login.forgot-password.submit-button') }}
+        </u-button>
+        <u-button
           type="tertiary"
           size="small"
           @click="goBack"
@@ -33,14 +43,6 @@
           data-cy="forgot-password-back-button"
         >
           {{ $t('commons.form.back') }}
-        </u-button>
-        <u-button
-          native-type="submit"
-          type="primary"
-          :disabled="!canSubmit || isLoading"
-          data-cy="forgot-password-submit-button"
-        >
-          {{ $t('login.forgot-password.submit-button') }}
         </u-button>
       </div>
     </form>
@@ -50,15 +52,15 @@
       class="confirmation-message"
       data-cy="forgot-password-confirmation"
     >
-      <p>
-        {{ $t('login.forgot-password.confirmation-text', { email: email }) }}
-      </p>
+      <p
+        v-html="$t('login.forgot-password.confirmation-text', { email: email })"
+      ></p>
       <u-button
         type="primary"
         @click="goToLogin"
         data-cy="forgot-password-back-to-login"
       >
-        {{ $t('login.forgotPassword.backToLogin') }}
+        {{ $t('login.forgot-password.back-to-login') }}
       </u-button>
     </div>
   </home>

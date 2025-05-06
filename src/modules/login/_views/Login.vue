@@ -6,7 +6,7 @@
         input-name="username"
         autocomplete="email"
         :label="$t('login.email.label')"
-        placeholder="email@example.com"
+        :placeholder="$t('login.email.placeholder')"
         :validator="emailValidator"
         data-cy="login-email-input"
       />
@@ -112,7 +112,7 @@
 
       if (error === 'ERR_PWD_EXPIRED') {
         await router.push({
-          name: 'login-expired',
+          name: 'login.expired',
           params: { email: email.value },
         });
       }
@@ -141,16 +141,9 @@
             resolvedRoute.name !== '404'
           ) {
             targetPath = resolvedRoute.fullPath;
-          } else {
-            console.warn(
-              `Tentative de redirection vers un chemin invalide ou inexistant : '${decodedPath}'. Redirection vers le tableau de bord.`
-            );
           }
         } catch (error) {
-          console.error(
-            `Erreur lors du décodage ou de la résolution de l'URL de redirection '${potentialPath}':`,
-            error
-          );
+          console.error(`Erreur de redirection '${potentialPath}':`, error);
         }
       }
     }

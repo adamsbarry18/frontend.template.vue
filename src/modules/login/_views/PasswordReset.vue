@@ -1,18 +1,10 @@
 <template>
   <home class="password-reset" v-loading="isLoading">
     <h1>
-      {{ $t('login.resetPassword.title') }}
+      {{ $t('login.reset-password.title') }}
     </h1>
 
     <form class="form" @submit.prevent="onSubmit" data-cy="reset-password-form">
-      <div
-        class="email-display"
-        v-if="email"
-        data-cy="reset-password-email-display"
-      >
-        {{ $t('login.reset-password.resetting-for', { email: email }) }}
-      </div>
-
       <u-form-input
         v-model="newPassword"
         type="password"
@@ -67,7 +59,6 @@
   import i18n from '@/i18n';
 
   // --- State ---
-  const email = ref('');
   const newPassword = ref('');
   const confirmPassword = ref('');
   const code = ref('');
@@ -153,13 +144,10 @@
 
   // --- Lifecycle Hooks ---
   onMounted(() => {
-    if (route.params.email && typeof route.params.email === 'string') {
-      email.value = route.params.email;
-    }
-    if (route.params.token && typeof route.params.token === 'string') {
-      code.value = route.params.token;
+    if (route.query.code && typeof route.query.code === 'string') {
+      code.value = route.query.code;
     } else {
-      console.error('Reset token missing from route parameters.');
+      console.error('Reset code missing from route query parameters.');
       $errorMsg(i18n.global.t('login.reset-password.error-missing-token'));
       router.push({ name: 'login' });
     }

@@ -110,11 +110,11 @@ router.beforeEach(async (to, from, next) => {
   }
   navStore.setCurrentItem(to.name as string);
 
-  if (to.query.confirm_pwd) {
+  // Traitement spécifique pour la confirmation de changement de mot de passe
+  // L'URL générée par le backend est maintenant /#/confirm-password?code=CODE
+  if (to.path === '/confirm-password' && to.query.code) {
     try {
-      await usersStore.passwordConfirm({
-        code: to.query.confirm_pwd as string,
-      });
+      await usersStore.passwordConfirm({ code: to.query.code as string });
       UMessage({
         type: 'success',
         message: i18n.global.t('login.password_confirmed'),
@@ -128,19 +128,6 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
-  if (to.query.reset_pwd) {
-    next({
-      name: 'password.reset',
-      params: {
-        email: to.query.email as string,
-        token: to.query.reset_pwd as string,
-      },
-      replace: true,
-      query: {},
-    });
-    return;
-  }
-
   if (!usersStore.authStatusChecked) {
     await usersStore.initializeAuth();
   }
@@ -150,17 +137,14 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = !requiresGuest;
 
   if (requiresAuth && !isAuthenticated) {
-    // Si authentification requise mais utilisateur non connecté -> login
     console.log(`Redirecting to login. Target: ${to.fullPath}`);
     next({ name: 'login', query: { redirect: to.fullPath }, replace: true });
   } else if (requiresGuest && isAuthenticated) {
-    // Si route publique mais utilisateur connecté -> dashboard
     console.log(
       'Redirecting authenticated user to dashboard from guest route.'
     );
     next({ name: 'dashboard', replace: true });
   } else if (requiresAuth && isAuthenticated && to.meta.authorisation) {
-    // Si authentification requise, utilisateur connecté ET règles d'autorisation spécifiques
     const authMeta = to.meta.authorisation;
     let isAuthorized = false;
 
