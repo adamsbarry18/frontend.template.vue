@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { UColorPicker } from '@/modules/common';
+import { UColorPicker } from '@/modules/ui';
 
 export default {
   title: 'Forms/ColorPicker',

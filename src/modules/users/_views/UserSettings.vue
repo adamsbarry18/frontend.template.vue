@@ -74,12 +74,7 @@
 <script setup lang="ts">
   import { ref, computed, watch, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import {
-    UButton,
-    UActionButtonBar,
-    UIndexedSection,
-    USectionsWithMenu,
-  } from '@/modules/common';
+  import { UButton, UActionButtonBar, UIndexedSection, USectionsWithMenu } from '@/modules/ui';
   import PersonalInfoForm from '../settings/PersonalInfoForm.vue';
   import AccountAdministrationCard from '../settings/AccountAdministrationCard.vue';
   import PasswordForm from '../settings/PasswordForm.vue';

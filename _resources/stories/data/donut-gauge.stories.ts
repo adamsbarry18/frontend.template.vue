@@ -1,4 +1,4 @@
-import { UDonutGauge } from '@/modules/common';
+import { UDonutGauge } from '@/modules/ui';
 
 export default {
   title: 'data/DonutGauge',

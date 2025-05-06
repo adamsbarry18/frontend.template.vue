@@ -1,6 +1,6 @@
 import { App } from 'vue';
 import { ElLoading, ElInfiniteScroll } from 'element-plus';
-import * as icons from '@/modules/common/icons';
+import * as icons from '@/modules/ui/icons';
 
 function registerGlobalComponents(app: App) {
   Object.keys(icons).forEach((key) => {

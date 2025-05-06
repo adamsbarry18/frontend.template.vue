@@ -1,4 +1,4 @@
-import { UFunnel } from '@/modules/common';
+import { UFunnel } from '@/modules/ui';
 
 export default {
   title: 'data/Funnels',

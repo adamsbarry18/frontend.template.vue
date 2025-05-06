@@ -1,4 +1,4 @@
-import { UDateDisplay } from '@/modules/common';
+import { UDateDisplay } from '@/modules/ui';
 
 export default {
   title: 'data/DateDisplay',

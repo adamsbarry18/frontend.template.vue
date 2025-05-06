@@ -1,4 +1,4 @@
-import { UButton, UWizardNav } from '@/modules/common';
+import { UButton, UWizardNav } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

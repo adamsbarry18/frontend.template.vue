@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { UDashboardHeaderCard } from '@/modules/common';
+import { UDashboardHeaderCard } from '@/modules/ui';
 
 export default {
   title: 'layout/UDashboardHeaderCard',

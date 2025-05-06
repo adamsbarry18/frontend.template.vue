@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { UMultiActionButton } from '@/modules/common';
+import { UMultiActionButton } from '@/modules/ui';
 
 export default {
   title: 'Basic/MultiActionButton',

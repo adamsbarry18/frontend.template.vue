@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, reactive } from 'vue';
-  import { UPasswordInput, IconBase } from '@/modules/common';
+  import { UPasswordInput, IconBase } from '@/modules/ui';
   import PasswordSecurityIndicators from '../_components/PasswordSecurityIndicators.vue';
   import {
     passwordRules,

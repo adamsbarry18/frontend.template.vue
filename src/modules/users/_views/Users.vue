@@ -151,7 +151,7 @@
     UButton,
     UListColumn,
     UList,
-  } from '@/modules/common';
+  } from '@/modules/ui';
   import { useNotification } from '@/composables/notfication';
   import { useUsersStore } from '@/stores/modules/users/user';
   import UserModel from '@/stores/modules/users/models/UserModel';

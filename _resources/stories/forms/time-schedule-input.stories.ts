@@ -1,4 +1,4 @@
-import { UTimeScheduleInput } from '@/modules/common';
+import { UTimeScheduleInput } from '@/modules/ui';
 
 export default {
   title: 'forms/TimeScheduleInput',

@@ -1,4 +1,4 @@
-import { UAlertCard } from '@/modules/common';
+import { UAlertCard } from '@/modules/ui';
 
 export default {
   title: 'Others/AlertCard',

@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { URadio } from '@/modules/common';
+  import { URadio } from '@/modules/ui';
   import i18n from '@/i18n';
 
   defineProps({

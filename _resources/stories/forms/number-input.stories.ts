@@ -1,4 +1,4 @@
-import { UNumberInput } from '@/modules/common';
+import { UNumberInput } from '@/modules/ui';
 
 export default {
   title: 'Forms/NumberInput',

@@ -1,4 +1,4 @@
-import { UTooltip } from '@/modules/common';
+import { UTooltip } from '@/modules/ui';
 
 export default {
   title: 'Others/Tooltip',

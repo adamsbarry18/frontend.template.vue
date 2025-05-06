@@ -1,4 +1,4 @@
-import { UPrinterLayout } from '@/modules/common';
+import { UPrinterLayout } from '@/modules/ui';
 
 export default {
   title: 'Layout/UPrinterLayout',

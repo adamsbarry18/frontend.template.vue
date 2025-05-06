@@ -64,7 +64,7 @@
     IconBase,
     UDismissable,
     UShortcutSubscriber,
-  } from '@/modules/common';
+  } from '@/modules/ui';
   import i18n from '@/i18n';
   import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
   import { useNotification } from '@/composables/notfication';

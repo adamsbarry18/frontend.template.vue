@@ -1,4 +1,4 @@
-import { UNumberEnumInput } from '@/modules/common';
+import { UNumberEnumInput } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

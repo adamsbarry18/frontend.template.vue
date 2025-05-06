@@ -1,4 +1,4 @@
-import { USwitch } from '@/modules/common';
+import { USwitch } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

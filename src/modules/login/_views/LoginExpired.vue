@@ -60,7 +60,7 @@
     isPasswordSecure,
   } from '@/libs/utils/Security';
   import Home from '@/modules/login/_components/Home.vue';
-  import { UFormInput, UButton } from '@/modules/common';
+  import { UFormInput, UButton } from '@/modules/ui';
   import PasswordSecurityIndicators from '@/modules/users/_components/PasswordSecurityIndicators.vue';
   import i18n from '@/i18n';
 

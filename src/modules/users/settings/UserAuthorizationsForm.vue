@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import { IconBase, USelectGroup, URadio } from '@/modules/common';
+  import { IconBase, USelectGroup, URadio } from '@/modules/ui';
   import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
   import { SecurityLevel } from '@/stores/modules/users/models/UserModel';
   import i18n from '@/i18n';

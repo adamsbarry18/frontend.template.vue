@@ -241,6 +241,7 @@
   "globals.account.title": "My account",
   "globals.user-account.title": "User account",
   "globals.logout.title": "Logout",
+  "global-help.support": "Request assistance",
   "login.bad.credentials": "Bad credentials",
   "login.change.expired.pwd.title": "Change your expired password",
   "login.confirm.new.password": "Confirm your new password",

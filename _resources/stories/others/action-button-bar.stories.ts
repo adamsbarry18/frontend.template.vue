@@ -1,5 +1,5 @@
-import { UActionButtonBar } from '@/modules/common';
-import { UButton } from '@/modules/common/basic';
+import { UActionButtonBar } from '@/modules/ui';
+import { UButton } from '@/modules/ui/basic';
 
 export default {
   title: 'others/ActionButtonBar',

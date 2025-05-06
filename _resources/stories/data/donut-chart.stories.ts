@@ -1,4 +1,4 @@
-import { UDonutChart } from '@/modules/common';
+import { UDonutChart } from '@/modules/ui';
 
 export default {
   title: 'data/DonutChart',

@@ -39,7 +39,7 @@
   import { computed } from 'vue';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { IconBase } from '@/modules/common';
+  import { IconBase } from '@/modules/ui';
   const notificationStore = useNotificationStore();
   const usersStore = useUsersStore();
   const userName = computed(() => {

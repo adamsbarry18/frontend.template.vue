@@ -1,4 +1,4 @@
-import { UButton, UListColumn, UList } from '@/modules/common';
+import { UButton, UListColumn, UList } from '@/modules/ui';
 import { listActions, listData } from '../_data/list';
 import { action } from '@storybook/addon-actions';
 

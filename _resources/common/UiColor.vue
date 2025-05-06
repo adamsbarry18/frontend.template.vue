@@ -1187,8 +1187,8 @@
   </div>
 </template>
 <script setup lang="ts">
-  import UTabs from '@/modules/common/navigation/UTabs.vue';
-  import UTabPane from '@/modules/common/navigation/UTabPane.vue';
+  import UTabs from '@/modules/ui/navigation/UTabs.vue';
+  import UTabPane from '@/modules/ui/navigation/UTabPane.vue';
 
   import { ref } from 'vue';
 

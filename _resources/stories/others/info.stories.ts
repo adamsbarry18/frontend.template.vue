@@ -1,4 +1,4 @@
-import { UInfo } from '@/modules/common';
+import { UInfo } from '@/modules/ui';
 export default {
   title: 'Others/Info',
 };

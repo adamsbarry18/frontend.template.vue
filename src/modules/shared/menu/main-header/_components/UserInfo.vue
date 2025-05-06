@@ -63,7 +63,7 @@
   import { useRouter } from 'vue-router';
   import { storeToRefs } from 'pinia';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { UTooltip, UColorInitials, IconBase } from '@/modules/common';
+  import { UTooltip, UColorInitials, IconBase } from '@/modules/ui';
 
   // Accès au store et au router
   const usersStore = useUsersStore();

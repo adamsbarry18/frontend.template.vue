@@ -1,4 +1,4 @@
-import { USplitButton } from '@/modules/common';
+import { USplitButton } from '@/modules/ui';
 
 export default {
   title: 'basic/SplitButton',

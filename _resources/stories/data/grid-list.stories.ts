@@ -1,10 +1,8 @@
-import {
-  ListService,
-  PaginationService,
-  SearchService,
-  SortService,
-} from '@/modules/common';
-import { UGridList } from '@/modules/common';
+import ListService from '@/modules/ui/data/services/listService';
+import PaginationService from '@/modules/ui/data/services/PaginationService';
+import SearchService from '@/modules/ui/data/services/searchService';
+import SortService from '@/modules/ui/data/services/sortService';
+import { UGridList } from '@/modules/ui';
 import { reactive } from 'vue';
 
 export default {

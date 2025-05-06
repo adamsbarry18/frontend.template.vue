@@ -1,4 +1,4 @@
-import { UEveryXDaysScheduleInput } from '@/modules/common';
+import { UEveryXDaysScheduleInput } from '@/modules/ui';
 export default {
   title: 'forms/EveryXDaysScheduleInput',
   component: UEveryXDaysScheduleInput,

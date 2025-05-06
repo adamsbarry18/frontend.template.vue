@@ -1,4 +1,4 @@
-import { UCatalogueCard, UButton } from '@/modules/common';
+import { UCatalogueCard, UButton } from '@/modules/ui';
 
 export default {
   title: 'Layout/CatalogueCard',

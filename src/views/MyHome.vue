@@ -30,9 +30,9 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import UCategoryFunnel from '@/modules/common/data/UCategoryFunnel.vue';
-  import UDialog from '@/modules/common/others/UDialog.vue';
+  import UButton from '@/modules/ui/basic/UButton.vue';
+  import UCategoryFunnel from '@/modules/ui/data/UCategoryFunnel.vue';
+  import UDialog from '@/modules/ui/others/UDialog.vue';
 
   const visible = ref(false);
   const showDialog = () => {

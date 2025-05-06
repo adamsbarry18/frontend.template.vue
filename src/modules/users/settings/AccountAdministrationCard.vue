@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-  import { UButton } from '@/modules/common';
+  import { UButton } from '@/modules/ui';
   import UserModel from '@/stores/modules/users/models/UserModel';
 
   defineProps({

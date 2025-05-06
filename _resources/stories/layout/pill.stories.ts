@@ -1,4 +1,4 @@
-import { UPill } from '@/modules/common';
+import { UPill } from '@/modules/ui';
 
 export default {
   title: 'Layout/Pill',

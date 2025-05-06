@@ -1,4 +1,4 @@
-import { UButton, UContextualMenu } from '@/modules/common';
+import { UButton, UContextualMenu } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

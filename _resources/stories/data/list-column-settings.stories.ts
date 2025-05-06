@@ -1,4 +1,4 @@
-import { UListColumnSettings, UButton, IconBase } from '@/modules/common';
+import { UListColumnSettings, UButton, IconBase } from '@/modules/ui';
 import { ref } from 'vue';
 export default {
   title: 'Data/ListColumnSettings',

@@ -1,4 +1,4 @@
-import { UButton } from '@/modules/common';
+import { UButton } from '@/modules/ui';
 import { useNotification } from '@/composables/notfication';
 
 const { $msgbox } = useNotification();

@@ -89,7 +89,7 @@
   import { ref, computed, watch, onMounted, PropType, watchEffect } from 'vue';
   import NavSection from './NavSection.vue';
   import { NavItem } from '@/stores/modules/menu/nav';
-  import { IconBase } from '@/modules/common';
+  import { IconBase } from '@/modules/ui';
 
   interface Config {
     univers?: any[];

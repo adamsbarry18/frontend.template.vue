@@ -47,7 +47,7 @@
   import { useRouter, useRoute } from 'vue-router';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
-  import { UFormInput, UButton } from '@/modules/common';
+  import { UFormInput, UButton } from '@/modules/ui';
   import Home from '../_components/Home.vue';
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-  import { UButton } from '@/modules/common';
+  import { UButton } from '@/modules/ui';
 
   defineProps({
     notificationId: {

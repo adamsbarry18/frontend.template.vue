@@ -1,4 +1,4 @@
-import { UPasswordInput } from '@/modules/common';
+import { UPasswordInput } from '@/modules/ui';
 import { ref, computed } from 'vue';
 
 export default {

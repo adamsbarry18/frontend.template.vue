@@ -1,4 +1,4 @@
-import { UBar } from '@/modules/common';
+import { UBar } from '@/modules/ui';
 
 export default {
   title: 'data/Bar',

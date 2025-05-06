@@ -51,7 +51,7 @@
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import { useNotification } from './composables/notfication';
   import { storageService } from '@/libs/utils/StorageService';
-  import ULoader from '@/modules/common/others/ULoader.vue';
+  import ULoader from '@/modules/ui/others/ULoader.vue';
   import MainHeader from '@/modules/shared/menu/main-header/MainHeader.vue';
   import MainNav from '@/modules/shared/menu/main-menu/MainNav.vue';
   import NotificationPanel from '@/modules/shared/notification/NotificationPanel.vue';

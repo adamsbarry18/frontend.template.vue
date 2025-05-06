@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { UToggleButton } from '@/modules/common';
+import { UToggleButton } from '@/modules/ui';
 
 export default {
   title: 'Forms/AToggleButton',

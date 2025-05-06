@@ -1,4 +1,4 @@
-import { UButton, UWiredVerticalStepper } from '@/modules/common';
+import { UButton, UWiredVerticalStepper } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

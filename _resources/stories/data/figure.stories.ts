@@ -1,4 +1,4 @@
-import { UFigure } from '@/modules/common';
+import { UFigure } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

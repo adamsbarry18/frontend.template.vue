@@ -1,4 +1,4 @@
-import { UEntityTagSummary } from '@/modules/common';
+import { UEntityTagSummary } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

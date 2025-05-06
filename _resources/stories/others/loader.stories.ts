@@ -1,4 +1,4 @@
-import { ULoader } from '@/modules/common';
+import { ULoader } from '@/modules/ui';
 
 export default {
   title: 'Others/Loader',

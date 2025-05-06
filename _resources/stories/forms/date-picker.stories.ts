@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { UDatePicker } from '@/modules/common';
+import { UDatePicker } from '@/modules/ui';
 
 export default {
   title: 'Forms/DatePicker',

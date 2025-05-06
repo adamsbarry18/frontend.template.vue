@@ -10,24 +10,18 @@
 </template>
 <script setup lang="ts">
   import { ref, computed } from 'vue';
-  import UContextualMenu from '@/modules/common/navigation/UContextualMenu.vue';
-  import { useUsersStore } from '@/stores/modules/users/user';
+  import UContextualMenu from '@/modules/ui/navigation/UContextualMenu.vue';
   import { useRouter } from 'vue-router';
+  import i18n from '@/i18n';
 
   const emits = defineEmits(['open-contextual']);
   const router = useRouter();
-  const usersStore = useUsersStore();
   const contextualMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
 
-  const isConnected = computed(() => usersStore.isConnected);
-  const isLoggingOut = computed(() => usersStore.isLoggingOut);
-
   const hasOffset = computed(() => {
-    return [
-      'activate.create-campaigns',
-      'activate.campaigns-action',
-      'activate.campaigns-wizard',
-    ].includes(router.currentRoute.value.name as string);
+    return ['product.create', 'custumer.create', 'command.create'].includes(
+      router.currentRoute.value.name as string
+    );
   });
 
   const isBig = computed(() => {
@@ -46,7 +40,11 @@
       label: 'documentation',
       icon: 'icon-info',
       onClick: () => {
-        console.log('documentation');
+        const tab = window.open(
+          `${import.meta.env.VITE_DOCUMENTATION_URL}/${i18n.global.locale}`,
+          '_blank'
+        );
+        tab.focus();
       },
     },
   ]);

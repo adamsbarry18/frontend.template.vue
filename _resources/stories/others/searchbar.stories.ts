@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue';
-import { USearchBar } from '@/modules/common';
-import { UButton } from '@/modules/common/basic';
+import { USearchBar } from '@/modules/ui';
+import { UButton } from '@/modules/ui/basic';
 
 export default {
   title: 'Others/SearchBar',

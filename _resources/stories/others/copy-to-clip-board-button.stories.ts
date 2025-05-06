@@ -1,4 +1,4 @@
-import { UCopyToClipboardButton } from '@/modules/common';
+import { UCopyToClipboardButton } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

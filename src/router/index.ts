@@ -14,7 +14,7 @@ import { useUsersStore } from '@/stores/modules/users/user';
 import { useNavStore } from '@/stores/modules/menu/nav';
 import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
-import { UMessage } from '@/modules/common';
+import { UMessage } from '@/modules/ui';
 
 declare module 'vue-router' {
   interface RouteMeta {

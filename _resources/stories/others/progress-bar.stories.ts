@@ -1,4 +1,4 @@
-import { UProgressBar } from '@/modules/common';
+import { UProgressBar } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

@@ -1,4 +1,4 @@
-import { UTagListFilter } from '@/modules/common';
+import { UTagListFilter } from '@/modules/ui';
 import { ref } from 'vue';
 
 const items = [

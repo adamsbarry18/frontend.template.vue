@@ -1,4 +1,4 @@
-import { UDataKpiCard } from '@/modules/common';
+import { UDataKpiCard } from '@/modules/ui';
 
 export default {
   title: 'data/DataKpiCard',

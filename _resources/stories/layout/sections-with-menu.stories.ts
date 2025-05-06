@@ -1,4 +1,4 @@
-import { USectionsWithMenu, UButton, UIndexedSection } from '@/modules/common';
+import { USectionsWithMenu, UButton, UIndexedSection } from '@/modules/ui';
 
 export default {
   title: 'Layout/SectionsWithMenu',

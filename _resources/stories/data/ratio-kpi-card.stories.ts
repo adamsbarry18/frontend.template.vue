@@ -1,4 +1,4 @@
-import { URatioKpiCard } from '@/modules/common';
+import { URatioKpiCard } from '@/modules/ui';
 
 export default {
   title: 'data/RatioKpiCard',

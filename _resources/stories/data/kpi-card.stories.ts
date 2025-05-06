@@ -1,4 +1,4 @@
-import { UKpiCard } from '@/modules/common';
+import { UKpiCard } from '@/modules/ui';
 
 export default {
   title: 'data/KpiCard', // Catégorie dans Storybook

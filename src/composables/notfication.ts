@@ -1,7 +1,7 @@
-import uConfirm from '@/modules/common/notice/UConfirm';
-import uMessage from '@/modules/common/notice/UMessage';
-import uMessageBox from '@/modules/common/notice/UMessageBox';
-import uPrompt from '@/modules/common/notice/UPrompt';
+import uConfirm from '@/modules/ui/notice/UConfirm';
+import uMessage from '@/modules/ui/notice/UMessage';
+import uMessageBox from '@/modules/ui/notice/UMessageBox';
+import uPrompt from '@/modules/ui/notice/UPrompt';
 import RootNotification from '@/libs/utils/Notification';
 
 export function useNotification() {

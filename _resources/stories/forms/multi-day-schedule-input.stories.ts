@@ -1,4 +1,4 @@
-import { UMultiDayScheduleInput } from '@/modules/common';
+import { UMultiDayScheduleInput } from '@/modules/ui';
 
 export default {
   title: 'forms/MultiDayScheduleInput',

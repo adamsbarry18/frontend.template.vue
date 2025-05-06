@@ -70,7 +70,7 @@
   import { ref, computed } from 'vue';
   import { useRouter } from 'vue-router';
   import Home from '@/modules/login/_components/Home.vue';
-  import { UFormInput, UButton } from '@/modules/common';
+  import { UFormInput, UButton } from '@/modules/ui';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
   import { isValidEmail } from '@/libs/utils/String';

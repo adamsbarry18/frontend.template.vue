@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { ElTable } from 'element-plus';
-import { UListColumn } from '@/modules/common';
+import { UListColumn } from '@/modules/ui';
 import { listData } from '../_data/list';
 
 export default {

@@ -124,7 +124,7 @@
     UColorPicker,
     URadio,
     UAlertCard,
-  } from '@/modules/common';
+  } from '@/modules/ui';
   import ThemeSelector from './ThemeSelector.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { debounce } from '@/libs/utils/Debounce';

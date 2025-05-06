@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
   import { useRouter } from 'vue-router';
-  import UButton from '@/modules/common/basic/UButton.vue';
-  import UContentWrapper from '@/modules/common/layout/UContentWrapper.vue';
+  import UButton from '@/modules/ui/basic/UButton.vue';
+  import UContentWrapper from '@/modules/ui/layout/UContentWrapper.vue';
 
   const router = useRouter();
   function redirect() {

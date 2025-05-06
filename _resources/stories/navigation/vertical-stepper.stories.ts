@@ -1,4 +1,4 @@
-import { UVerticalStepper } from '@/modules/common';
+import { UVerticalStepper } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

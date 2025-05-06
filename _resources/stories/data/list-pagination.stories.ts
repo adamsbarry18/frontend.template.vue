@@ -1,4 +1,4 @@
-import { UListPagination } from '@/modules/common';
+import { UListPagination } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

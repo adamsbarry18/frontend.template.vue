@@ -1,4 +1,4 @@
-import { UConfidenceIndicator } from '@/modules/common';
+import { UConfidenceIndicator } from '@/modules/ui';
 
 export default {
   title: 'data/ConfidenceIndicator',

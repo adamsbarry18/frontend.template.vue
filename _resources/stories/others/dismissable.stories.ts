@@ -1,4 +1,4 @@
-import { UDismissable } from '@/modules/common';
+import { UDismissable } from '@/modules/ui';
 
 export default {
   title: 'Others/Dismissable',

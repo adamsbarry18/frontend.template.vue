@@ -1,4 +1,4 @@
-import { UContentWrapper, UButton } from '@/modules/common';
+import { UContentWrapper, UButton } from '@/modules/ui';
 
 export default {
   title: 'layout/ContentWrapper',

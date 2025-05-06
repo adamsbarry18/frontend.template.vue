@@ -1,4 +1,4 @@
-import { UDonutKpiCard } from '@/modules/common';
+import { UDonutKpiCard } from '@/modules/ui';
 
 export default {
   title: 'data/DonutKpiCard',

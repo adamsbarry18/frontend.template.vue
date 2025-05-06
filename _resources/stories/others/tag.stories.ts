@@ -1,4 +1,4 @@
-import { UTag } from '@/modules/common';
+import { UTag } from '@/modules/ui';
 
 export default {
   title: 'Others/Tag',

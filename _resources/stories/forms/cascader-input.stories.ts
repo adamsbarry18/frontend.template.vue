@@ -1,4 +1,4 @@
-import { UCascaderInput } from '@/modules/common';
+import { UCascaderInput } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {

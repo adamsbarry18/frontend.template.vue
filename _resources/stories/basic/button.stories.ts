@@ -1,4 +1,4 @@
-import { UButton } from '@/modules/common';
+import { UButton } from '@/modules/ui';
 
 export default {
   title: 'Basic/Button',
