@@ -147,7 +147,8 @@ const numberFormatsI18n = {
   },
 };
 
-const localLanguage = window.localStorage.getItem('language');
+const localLanguage =
+  typeof window !== 'undefined' && window.localStorage ? window.localStorage.getItem('language') : null;
 
 const i18n = createI18n({
   legacy: false,
