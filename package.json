@@ -5,15 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vite --mode test",
     "prod": "vite --mode production",
     "build": "vue-tsc -b && vite build",
     "build:test": "vue-tsc -b && vite build --mode test",
     "build:prod": "vue-tsc -b && vite build --mode production",
+    "test:unit": "vitest run",
+    "test:watch": "vitest watch",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build --quiet",
-    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore --cache",
     "format": "prettier --write .",
     "prepare": "husky"
   },

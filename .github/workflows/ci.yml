@@ -57,7 +57,7 @@ jobs:
       - name: Run unit tests
         # Remplacez 'npm run test:unit' par votre commande de test unitaire réelle si différente
         # Si vous n'avez pas de tests unitaires, vous pouvez supprimer cette étape ou la marquer comme 'continue-on-error: true'
-        run: npm run test
+        run: npm run test:unit
 
   build_and_push_image:
     name: Build and Push Docker Image
