@@ -30,7 +30,7 @@
         />
       </div>
       <div v-else class="no-warnings-placeholder" />
-      <!-- Autres éléments de la colonne droite -->
+      <!-- Autres éléments du dashboard -->
     </div>
   </div>
 </template>
@@ -43,7 +43,7 @@
   const notificationStore = useNotificationStore();
   const usersStore = useUsersStore();
   const userName = computed(() => {
-    return usersStore.currentUser?.name ?? '';
+    return usersStore.currentUser?.surname ?? usersStore.currentUser?.name;
   });
 
   const errorNotifications = computed(
