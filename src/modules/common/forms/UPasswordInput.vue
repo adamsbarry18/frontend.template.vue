@@ -36,7 +36,7 @@
       </div>
     </div>
     <el-progress
-      v-if="!showProgress"
+      v-if="showProgress"
       class="password-progress"
       :show-text="false"
       :color="progressColors"

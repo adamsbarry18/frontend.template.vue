@@ -6,8 +6,17 @@
     <template v-else>
       <main-header v-if="isAuthenticated" />
       <div class="app-wrapper" :class="{ login: !isAuthenticated }">
-        <main-nav v-if="isAuthenticated" />
-        <div class="main-content" :class="{ login: !isAuthenticated }">
+        <main-nav
+          v-if="isAuthenticated"
+          @update:nav-extended="onMainNavExtendedUpdate"
+        />
+        <div
+          class="main-content"
+          :class="{
+            login: !isAuthenticated,
+            '-nav-extended': isMainNavExtended,
+          }"
+        >
           <router-view v-slot="{ Component }">
             <transition name="fade" mode="out-in">
               <component :is="Component" />
@@ -53,6 +62,7 @@
   const notificationStore = useNotificationStore();
 
   const adBlockerDiv = ref<HTMLDivElement | null>(null);
+  const isMainNavExtended = ref(false);
 
   const authCheckCompleted = computed(() => usersStore.authStatusChecked);
   const isAuthenticated = computed(() => usersStore.isAuthenticated);
@@ -60,6 +70,10 @@
     () => notificationStore.persistentNotificationsVisible
   );
   // useTheme();
+
+  function onMainNavExtendedUpdate(isExtended: boolean) {
+    isMainNavExtended.value = isExtended;
+  }
 
   const checkAdBlocker = () => {
     setTimeout(() => {
@@ -203,6 +217,11 @@
           background-color: var(--color-neutral-100);
           overflow-y: auto;
           position: relative;
+          transition: margin-left 0.2s ease-in-out;
+
+          &.-nav-extended {
+            margin-left: calc(290px - 64px);
+          }
         }
       }
     }

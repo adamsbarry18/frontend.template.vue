@@ -6,12 +6,13 @@
       :current-item="currentItem"
       :generate-link="generateLink"
       @nav-click="onMenuClick"
+      @update:extended="onBaseNavExtendedUpdate"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { storeToRefs } from 'pinia';
   import BaseNav from './_components/BaseNav.vue';
@@ -21,6 +22,9 @@
   const router = useRouter();
   const usersStore = useUsersStore();
   const navStore = useNavStore();
+  const emit = defineEmits(['update:nav-extended']);
+
+  const isNavExtendedOverall = ref(false);
   const {
     availableGroupsNav,
     availableSettings,
@@ -37,6 +41,11 @@
     settings: availableSettings.value,
     globals: availableGlobals.value.filter((g) => g.isRoot),
   }));
+
+  function onBaseNavExtendedUpdate(isExtended: boolean) {
+    isNavExtendedOverall.value = isExtended;
+    emit('update:nav-extended', isExtended);
+  }
 
   function onMenuClick(item: NavItem) {
     switch (item.state) {
@@ -56,7 +65,11 @@
   function generateLink(item: NavItem): string {
     if (item.disabled || !item.state) return '';
     try {
-      const resolved = router.resolve(prepareState(item.state));
+      const location = prepareState(item.state);
+      if (!location) {
+        return '';
+      }
+      const resolved = router.resolve(location);
       return resolved.href;
     } catch (e) {
       console.error(`Could not resolve route for state: ${item.state}`, e);
@@ -64,7 +77,9 @@
     }
   }
 
-  function prepareState(stateName: string) {
+  function prepareState(
+    stateName: string
+  ): { name: string; query: Record<string, any> } | null {
     const route = router.options.routes.find((r) => r.name === stateName);
     const query: Record<string, any> = {};
 
@@ -74,23 +89,26 @@
 
     if (!route) {
       console.warn(
-        `State [${stateName}] not found in router configuration. Cannot navigate.`
+        `State [${stateName}] not found in router configuration. Cannot generate link or navigate.`
       );
-      // Retourner un objet vide ou la route actuelle pour éviter une erreur complète ?
-      // Ou lancer une erreur ? Pour l'instant, on retourne un objet vide.
-      return {};
+      return null;
     }
-    return { name: route.name, query };
+    const routeName = route.name as string;
+    return { name: routeName, query };
   }
+
   function goToState(item: NavItem) {
     if (!item.state) return;
     const location = prepareState(item.state);
-    if (location && location.name) {
-      router.push(location);
+    // Vérifie que location n'est pas null avant de tenter la navigation.
+    if (location) {
+      router.push(location).catch((err) => {
+        // Ajout d'une gestion d'erreur pour router.push, au cas où la navigation échouerait pour une autre raison.
+        console.error(`Navigation failed for state [${item.state}]:`, err);
+      });
     }
   }
 
-  // Gère la déconnexion
   async function goToLogout() {
     try {
       await usersStore.logout();
@@ -107,5 +125,7 @@
     width: var(--base-nav-width, 64px);
     user-select: none;
     flex-shrink: 0;
+    position: relative;
+    z-index: 100;
   }
 </style>

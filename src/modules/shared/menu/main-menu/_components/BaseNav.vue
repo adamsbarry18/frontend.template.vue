@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted, PropType } from 'vue';
+  import { ref, computed, watch, onMounted, PropType, watchEffect } from 'vue';
   import NavSection from './NavSection.vue';
   import { NavItem } from '@/stores/modules/menu/nav';
   import { IconBase } from '@/modules/common';
@@ -116,9 +116,10 @@
     },
   });
 
-  const emit = defineEmits(['nav-click']);
+  const emit = defineEmits(['nav-click', 'update:extended']);
 
   const isNavExtended = ref(false);
+  const isPinned = ref(false); // Nouvel état pour le mode épinglé
   const areSectionsAnimating = ref(false);
   const sections = ref<InstanceType<typeof NavSection>[]>([]);
 
@@ -143,16 +144,40 @@
   }
 
   function onExtendNavClick() {
-    isNavExtended.value = !isNavExtended.value;
+    isPinned.value = !isPinned.value;
+    if (isPinned.value) {
+      isNavExtended.value = true;
+    } else {
+      // Si on dépinglé, on pourrait vouloir le fermer s'il n'est pas survolé,
+      // mais pour l'instant, on le laisse ouvert et le survol gérera.
+      // Alternativement, on pourrait le fermer ici : isNavExtended.value = false;
+    }
   }
 
   function onMouseEnter() {
-    isNavExtended.value = true;
+    if (!isPinned.value) {
+      isNavExtended.value = true;
+    }
   }
 
   function onMouseLeave() {
-    isNavExtended.value = false;
+    if (!isPinned.value) {
+      isNavExtended.value = false;
+    }
   }
+
+  watchEffect(() => {
+    // Émet l'état étendu actuel, que ce soit par survol ou épinglage
+    emit('update:extended', isNavExtended.value);
+  });
+
+  // Ajout d'un watch pour s'assurer que isNavExtended est vrai si isPinned devient vrai
+  watch(isPinned, (pinned) => {
+    if (pinned) {
+      isNavExtended.value = true;
+    }
+    // Si on dépinglé (pinned is false), isNavExtended sera géré par onMouseLeave si la souris n'est plus dessus.
+  });
 
   function onSectionClick(item: any) {
     sections.value.forEach((sect) => {
@@ -166,7 +191,9 @@
   function onMenuClick(item: any) {
     if (!item?.disabled) {
       emit('nav-click', item);
-      isNavExtended.value = false;
+      if (!isPinned.value) {
+        isNavExtended.value = false;
+      }
     }
   }
 
@@ -209,7 +236,7 @@
       top: 22px;
       right: calc(var(--extend-arrow-width) * -1);
       position: absolute;
-      z-index: 999;
+      z-index: 1001; // Au-dessus du sections-wrapper
       display: flex;
       align-items: center;
       height: 44px;
@@ -222,6 +249,7 @@
       cursor: pointer;
 
       &.-extended {
+        // Cette classe est toujours liée à isNavExtended (survol ou épinglé)
         right: calc(
           (
               var(--extended-nav-width) - var(--base-nav-width) +
@@ -233,10 +261,10 @@
 
       .arrow-icon {
         margin-left: 2px;
-
-        &.-extended {
-          transform: rotate(180deg);
-        }
+        transition: transform 0.2s ease-in-out;
+        // La classe -extended sur le parent .extend-arrow (pilotée par isNavExtended) gère la rotation
+        // Si on voulait une indication visuelle spécifique pour l'état épinglé sur l'icône elle-même :
+        // &.pinned-state-icon { transform: rotate(0deg) !important; } // par exemple
       }
     }
 
