@@ -1,87 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="75" failures="0" errors="0" time="0.2191376">
-    <testsuite name="src/modules/auth/__tests__/authorization.spec.ts" timestamp="2025-05-07T15:53:29.550Z" hostname="DESKTOP-RDK5HMQ" tests="33" failures="0" errors="0" skipped="0" time="0.0933714">
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; initial state &gt; should have a null initial state for features and levelsAuthorisations" time="0.0192564">
+<testsuites name="vitest tests" tests="75" failures="0" errors="0" time="0.1460069">
+    <testsuite name="src/modules/auth/__tests__/authorization.spec.ts" timestamp="2025-05-07T16:01:00.590Z" hostname="DESKTOP-RDK5HMQ" tests="33" failures="0" errors="0" skipped="0" time="0.0505727">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; initial state &gt; should have a null initial state for features and levelsAuthorisations" time="0.0063253">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; user context getters &gt; should return default values when no user is logged in" time="0.0053426">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; user context getters &gt; should return default values when no user is logged in" time="0.001755">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; user context getters &gt; should reflect currentUser properties" time="0.006724">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; user context getters &gt; should reflect currentUser properties" time="0.0011182">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasExpired &gt; should be false if permissionsExpireAt is null" time="0.0019409">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasExpired &gt; should be false if permissionsExpireAt is null" time="0.0006966">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasExpired &gt; should be false if permissionsExpireAt is in the future" time="0.0021381">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasExpired &gt; should be false if permissionsExpireAt is in the future" time="0.0009277">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasExpired &gt; should be true if permissionsExpireAt is in the past" time="0.0024254">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasExpired &gt; should be true if permissionsExpireAt is in the past" time="0.0009587">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; role getters &gt; isUser should be true for USER level and above" time="0.003511">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; role getters &gt; isUser should be true for USER level and above" time="0.0010031">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; role getters &gt; isIntegrator should be true for INTEGRATOR level and above" time="0.0018868">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; role getters &gt; isIntegrator should be true for INTEGRATOR level and above" time="0.0008417">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; role getters &gt; isAdmin should be true for ADMIN level" time="0.0031925">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; role getters &gt; isAdmin should be true for ADMIN level" time="0.0009751">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return true for admin for any feature/action" time="0.0016894">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return true for admin for any feature/action" time="0.0006894">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if no user is logged in" time="0.0007288">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if no user is logged in" time="0.0004433">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if user has no permissions object" time="0.0008035">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if user has no permissions object" time="0.000486">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if user does not have the feature permission" time="0.0005117">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if user does not have the feature permission" time="0.000371">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if user has the feature but not the action" time="0.0007227">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return false if user has the feature but not the action" time="0.000492">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return true if user has the feature and action" time="0.0005235">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should return true if user has the feature and action" time="0.0003728">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should still check permissions even if hasExpired is true (permissions check is independent of expiry for this getter)" time="0.0004721">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; getters &gt; hasCurrentUserAuthorisation (and isUserAllowed) &gt; should still check permissions even if hasExpired is true (permissions check is independent of expiry for this getter)" time="0.0002971">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchAllFeatures &gt; should fetch and set all features" time="0.0079766">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchAllFeatures &gt; should fetch and set all features" time="0.0047227">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchAllFeatures &gt; should return null on 403 error" time="0.0015564">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchAllFeatures &gt; should return null on 403 error" time="0.0013681">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchAllFeatures &gt; should throw ServerError on other errors" time="0.0032385">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchAllFeatures &gt; should throw ServerError on other errors" time="0.0036654">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchLevels &gt; should fetch and set levels authorisations" time="0.0024833">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchLevels &gt; should fetch and set levels authorisations" time="0.0018686">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchLevels &gt; should return null on 403 error" time="0.0021577">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; fetchLevels &gt; should return null on 403 error" time="0.0009079">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getLevel &gt; should fetch authorisations for a specific level" time="0.0014834">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getLevel &gt; should fetch authorisations for a specific level" time="0.000798">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getLevel &gt; should return null on 403 error" time="0.0007143">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getLevel &gt; should return null on 403 error" time="0.0004695">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getUserAuthorisations &gt; should fetch authorisations for a specific user" time="0.003529">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getUserAuthorisations &gt; should fetch authorisations for a specific user" time="0.0022565">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getUserAuthorisations &gt; should return null on 403 or 404 error" time="0.0009958">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; getUserAuthorisations &gt; should return null on 403 or 404 error" time="0.0011531">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; updateUserAuthorization &gt; should call API to update user authorization" time="0.001555">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; updateUserAuthorization &gt; should call API to update user authorization" time="0.0012964">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; updateUserAuthorization &gt; should throw error if no userId is provided" time="0.0020963">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; updateUserAuthorization &gt; should throw error if no userId is provided" time="0.0025898">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; updateUserAuthorization &gt; should return null on 403 error" time="0.0006911">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; updateUserAuthorization &gt; should return null on 403 error" time="0.0015534">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; deleteUserAuthorizations &gt; should call API to delete user specific authorizations" time="0.0007858">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; deleteUserAuthorizations &gt; should call API to delete user specific authorizations" time="0.001962">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; deleteUserAuthorizations &gt; should throw error if no userId is provided" time="0.0007728">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; deleteUserAuthorizations &gt; should throw error if no userId is provided" time="0.0019124">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; deleteUserAuthorizations &gt; should return null on 403 error" time="0.0006876">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; deleteUserAuthorizations &gt; should return null on 403 error" time="0.000899">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; createTemporaryAuthorisationForUser &gt; should call API to create temporary authorisation" time="0.0011338">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; createTemporaryAuthorisationForUser &gt; should call API to create temporary authorisation" time="0.0011231">
         </testcase>
-        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; createTemporaryAuthorisationForUser &gt; should return null on 403 error" time="0.0006231">
+        <testcase classname="src/modules/auth/__tests__/authorization.spec.ts" name="stores/modules/auth/authorisations &gt; actions &gt; createTemporaryAuthorisationForUser &gt; should return null on 403 error" time="0.0006607">
         </testcase>
     </testsuite>
-    <testsuite name="src/stores/modules/users/__tests__/user.spec.ts" timestamp="2025-05-07T15:53:29.590Z" hostname="DESKTOP-RDK5HMQ" tests="22" failures="0" errors="0" skipped="0" time="0.0649663">
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; state &gt; should have correct initial state" time="0.0058198">
+    <testsuite name="src/stores/modules/users/__tests__/user.spec.ts" timestamp="2025-05-07T16:01:00.638Z" hostname="DESKTOP-RDK5HMQ" tests="22" failures="0" errors="0" skipped="0" time="0.0626841">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; state &gt; should have correct initial state" time="0.0065615">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; isAuthenticated" time="0.0012794">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; isAuthenticated" time="0.0013794">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; currentUserId" time="0.0008153">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; currentUserId" time="0.0008487">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; level" time="0.000768">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; level" time="0.0008753">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; language" time="0.0008205">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; language" time="0.0008264">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; getAllUsers" time="0.0026611">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; getters &gt; getAllUsers" time="0.0028335">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; initializeAuth &gt; should fetch user if token exists and set as currentUser" time="0.0066967">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; initializeAuth &gt; should fetch user if token exists and set as currentUser" time="0.0056818">
             <system-out>
 Initializing auth: Found token, fetching current user...
 
@@ -89,7 +89,7 @@ Initializing auth: User fetched successfully.
 
             </system-out>
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; initializeAuth &gt; should handle API 401 error and remove token" time="0.0055111">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; initializeAuth &gt; should handle API 401 error and remove token" time="0.0041329">
             <system-out>
 Initializing auth: Found token, fetching current user...
 
@@ -99,7 +99,7 @@ Initializing auth: Failed to fetch user with stored token. { response: { status:
 
             </system-err>
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; login &gt; should login successfully, store token, and call fetchCurrentUser which succeeds" time="0.0054403">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; login &gt; should login successfully, store token, and call fetchCurrentUser which succeeds" time="0.0045335">
             <system-out>
 [fetchCurrentUser] Start
 [fetchCurrentUser] Calling API /users/me
@@ -109,7 +109,7 @@ Initializing auth: Failed to fetch user with stored token. { response: { status:
 
             </system-out>
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; logout &gt; should call logout API and reset state" time="0.0113286">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; logout &gt; should call logout API and reset state" time="0.0125852">
             <system-out>
 Initializing auth: Found token, fetching current user...
 
@@ -126,7 +126,7 @@ Initializing auth: Failed to fetch user with stored token. {
 
             </system-err>
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; fetchCurrentUser &gt; should fetch and set the current user" time="0.0018536">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; fetchCurrentUser &gt; should fetch and set the current user" time="0.0019738">
             <system-out>
 [fetchCurrentUser] Start
 [fetchCurrentUser] Calling API /users/me
@@ -136,73 +136,73 @@ Initializing auth: Failed to fetch user with stored token. {
 
             </system-out>
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; fetchUser &gt; should fetch a specific user" time="0.0013528">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; fetchUser &gt; should fetch a specific user" time="0.0013863">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; fetchUsers &gt; should fetch all users and store them" time="0.001017">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; fetchUsers &gt; should fetch all users and store them" time="0.0011011">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; ensureUsersFetched &gt; should call fetchUsers if usersFetched is false" time="0.0007345">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; ensureUsersFetched &gt; should call fetchUsers if usersFetched is false" time="0.0007252">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; ensureUsersFetched &gt; should not call fetchUsers if usersFetched is true" time="0.0005292">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; ensureUsersFetched &gt; should not call fetchUsers if usersFetched is true" time="0.0005505">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; searchUser &gt; should fetch user by ID" time="0.0008856">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; searchUser &gt; should fetch user by ID" time="0.0009413">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; searchUser &gt; should fetch user by email" time="0.0018083">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; searchUser &gt; should fetch user by email" time="0.0008863">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; updateUser &gt; should call API to update user" time="0.0031487">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; updateUser &gt; should call API to update user" time="0.0023446">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; addUser &gt; should call API to add a user" time="0.0052823">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; addUser &gt; should call API to add a user" time="0.0048106">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; deleteUser &gt; should call API to delete a user" time="0.0011978">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; deleteUser &gt; should call API to delete a user" time="0.0012001">
             <system-out>
 User 1 deleted from local map.
 
             </system-out>
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; setPreference &gt; should call API to set a preference" time="0.0012695">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; setPreference &gt; should call API to set a preference" time="0.0013677">
         </testcase>
-        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; setPreference &gt; should update language and call services" time="0.0010761">
+        <testcase classname="src/stores/modules/users/__tests__/user.spec.ts" name="stores/modules/users/user &gt; actions &gt; setPreference &gt; should update language and call services" time="0.0013498">
         </testcase>
     </testsuite>
-    <testsuite name="src/stores/modules/users/models/__tests__/userModel.spec.ts" timestamp="2025-05-07T15:53:29.612Z" hostname="DESKTOP-RDK5HMQ" tests="20" failures="0" errors="0" skipped="0" time="0.0607999">
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; should create an instance with provided data" time="0.0159693">
+    <testsuite name="src/stores/modules/users/models/__tests__/userModel.spec.ts" timestamp="2025-05-07T16:01:00.652Z" hostname="DESKTOP-RDK5HMQ" tests="20" failures="0" errors="0" skipped="0" time="0.0327501">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; should create an instance with provided data" time="0.014154">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; should use default values for missing optional data" time="0.0014804">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; should use default values for missing optional data" time="0.0010801">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; should correctly calculate fullName" time="0.0011205">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; should correctly calculate fullName" time="0.0005228">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; handles date strings in constructor correctly (simulating old test logic)" time="0.0052085">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; Constructor and Basic Properties &gt; handles date strings in constructor correctly (simulating old test logic)" time="0.0018433">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.fromAPI() &gt; should create a UserModel instance from API data" time="0.0026044">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.fromAPI() &gt; should create a UserModel instance from API data" time="0.0012423">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.fromAPI() &gt; should handle missing optional fields in fromAPI" time="0.0016077">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.fromAPI() &gt; should handle missing optional fields in fromAPI" time="0.0007178">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; toAPI() &gt; should return an object suitable for API submission" time="0.004986">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; toAPI() &gt; should return an object suitable for API submission" time="0.0032269">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; toAPI() &gt; should remove id if it is null (though constructor defaults to 0)" time="0.0010139">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; toAPI() &gt; should remove id if it is null (though constructor defaults to 0)" time="0.0004761">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; clone() &gt; should create a deep copy of the user model" time="0.0086315">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; clone() &gt; should create a deep copy of the user model" time="0.0019898">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return true for a valid user" time="0.0013935">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return true for a valid user" time="0.0004802">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for invalid email" time="0.0015482">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for invalid email" time="0.0002307">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for empty name" time="0.0007182">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for empty name" time="0.0001492">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for null name" time="0.00027">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for null name" time="0.0001081">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for invalid level (0 or less)" time="0.0004219">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; isValid() &gt; should return false for invalid level (0 or less)" time="0.0001277">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; reset() &gt; should reset user properties to default values" time="0.0014046">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; reset() &gt; should reset user properties to default values" time="0.000889">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.isEmailInternal() &gt; should return true for internal email domains" time="0.0004034">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.isEmailInternal() &gt; should return true for internal email domains" time="0.0002456">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.isEmailInternal() &gt; should return false for external email domains" time="0.0001994">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; UserModel.isEmailInternal() &gt; should return false for external email domains" time="0.0001389">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; hasExpired() &gt; should return false if permissionsExpireAt is null" time="0.0005544">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; hasExpired() &gt; should return false if permissionsExpireAt is null" time="0.0001746">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; hasExpired() &gt; should return false if permissionsExpireAt is in the future" time="0.0023687">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; hasExpired() &gt; should return false if permissionsExpireAt is in the future" time="0.0006068">
         </testcase>
-        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; hasExpired() &gt; should return true if permissionsExpireAt is in the past" time="0.0010137">
+        <testcase classname="src/stores/modules/users/models/__tests__/userModel.spec.ts" name="UserModel &gt; hasExpired() &gt; should return true if permissionsExpireAt is in the past" time="0.0003322">
         </testcase>
     </testsuite>
 </testsuites>
