@@ -6,7 +6,6 @@
       "matchUpdateTypes": ["patch"],
       "automerge": true,
       "automergeType": "squash",
-      "ignoreTests": true,
       "labels": ["dependencies", "renovate", "automerge"]
     },
     {
@@ -14,7 +13,6 @@
       "matchUpdateTypes": ["minor"],
       "automerge": true,
       "automergeType": "squash",
-      "ignoreTests": true,
       "labels": ["dependencies", "renovate", "automerge"]
     },
     {
