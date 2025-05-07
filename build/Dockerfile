@@ -1,6 +1,6 @@
 # Étape 1: Builder l'application et Storybook
 # Utilisation d'une image Node.js plus récente et sécurisée
-FROM node:22-alpine3 AS builder
+FROM node:22-alpine AS builder
 
 # Arguments de build (seront passés par build.sh)
 ARG BUILD_ENV
@@ -52,7 +52,7 @@ RUN if [ "$BUILD_ENV" != "production" ]; then \
 
 # Étape 2: Servir l'application avec Nginx
 # Utilisation d'une image Nginx plus récente et sécurisée
-FROM nginx:1.29-alpine AS runner
+FROM nginx:1.28-alpine AS runner
 
 # Arguments et variables d'environnement pour Nginx (APP_NAME est passé par build.sh)
 ARG APP_NAME
