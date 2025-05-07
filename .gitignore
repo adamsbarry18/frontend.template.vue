@@ -6,21 +6,49 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env*
 
-node_modules
-dist
-dist-ssr
+# Environment variables
+.env*
 *.local
-# build/
+
+# Dependency directories
+node_modules/
+.npm/
+.yarn/
+
+# Build output
+dist/
+dist-ssr/
+coverage/
+# build/ # Commenté car potentiellement un répertoire source
+
+# Test results
+junit.xml
+
+# Tooling cache files
+.eslintcache
+.stylelintcache
+.prettiercache
+.vite/
+vite-cache/
+
+# OS generated files
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.sw[a-p] # Vim swap files
+*.un~ # Vim backup files
+Session.vim # Vim session file
+*.sublime-workspace
+*.sublime-project
+.atom/

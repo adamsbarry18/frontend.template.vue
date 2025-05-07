@@ -1,10 +1,46 @@
+# Node specific
 node_modules
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+logs/
+
+# Docker files
+Dockerfile
 Dockerfile*
+docker-compose.yml
 docker-compose*
 .dockerignore
+
+# Version control
 .git
 .gitignore
+
+# Build artifacts and cache
+dist/
+dist-ssr/
+coverage/
+.cache/
+.eslintcache
+build/ # Scripts/configs de build locaux, non nécessaires dans l'image
+
+# OS generated files
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+
+# Editor/IDE configuration
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Documentation and license (généralement non requis dans l'image finale)
 README.md
 LICENSE
-.vscode
