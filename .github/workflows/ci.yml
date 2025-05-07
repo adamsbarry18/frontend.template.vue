@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches: # Spécifiez les branches sur lesquelles Renovate peut créer des PRs (souvent main ou dev)
+      - main
+      - dev
   workflow_dispatch: # Pour le déploiement manuel
     inputs:
       environment:

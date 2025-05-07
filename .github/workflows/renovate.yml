@@ -1,0 +1,25 @@
+name: Renovate
+
+on:
+  # Exécuter le workflow selon un planning (par exemple, tous les lundis à 4h du matin)
+  schedule:
+    - cron: '0 4 * * 1'
+  # Permettre l'exécution manuelle du workflow depuis l'interface GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write # Permet à Renovate de créer des branches et de commiter
+  pull-requests: write # Permet à Renovate de créer et gérer les Pull Requests
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Renovate
+        uses: renovatebot/github-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Token par défaut avec les permissions définies ci-dessus
