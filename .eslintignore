@@ -5,6 +5,7 @@ node_modules
 /html
 /coverage
 /.cache
+./html/assets
 
 # Test results
 .nyc_output/

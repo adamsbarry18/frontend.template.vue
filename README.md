@@ -12,27 +12,28 @@ Un template complet pour des applications frontend Vue 3, riche en composants, u
 
 ## ✨ Fonctionnalités Principales
 
-*   **Stack Moderne** : Vue 3, TypeScript, Vite.
-*   **Bibliothèque de Composants UI** : Un ensemble de composants réutilisables et personnalisables, documentés avec Storybook.
-*   **Gestion d'État** : Pinia pour une gestion d'état simple et typée.
-*   **Internationalisation** : Prise en charge de `vue-i18n`.
-*   **Qualité de Code** : ESLint, Prettier, et Husky pour les hooks pre-commit.
-*   **Tests** : Vitest pour les tests unitaires.
-*   **Build & Déploiement** : Scripts pour le build et configuration Docker.
-*   **Intégration Continue** : Workflows GitHub Actions pour CI et Renovate.
+- **Stack Moderne** : Vue 3, TypeScript, Vite.
+- **Bibliothèque de Composants UI** : Un ensemble de composants réutilisables et personnalisables, documentés avec Storybook.
+- **Gestion d'État** : Pinia pour une gestion d'état simple et typée.
+- **Internationalisation** : Prise en charge de `vue-i18n`.
+- **Qualité de Code** : ESLint, Prettier, et Husky pour les hooks pre-commit.
+- **Tests** : Vitest pour les tests unitaires.
+- **Build & Déploiement** : Scripts pour le build et configuration Docker.
+- **Intégration Continue** : Workflows GitHub Actions pour CI et Renovate.
 
 ## 📋 Prérequis
 
 Assurez-vous d'avoir les versions suivantes (ou supérieures) installées :
 
-*   [Node.js](https://nodejs.org/): `^20.0.0`
-*   [npm](https://www.npmjs.com/): `^10.0.0`
+- [Node.js](https://nodejs.org/): `^20.0.0`
+- [npm](https://www.npmjs.com/): `^10.0.0`
 
 Ces versions sont spécifiées dans la section `engines` du fichier [`package.json`](package.json:86).
 
 ## 🚀 Démarrage Rapide
 
 1.  **Cloner le repository (ou utiliser comme template) :**
+
     ```bash
     # Exemple avec git clone
     git clone https://github.com/adamsbarry18/frontend.template.vue.git
@@ -40,12 +41,14 @@ Ces versions sont spécifiées dans la section `engines` du fichier [`package.js
     ```
 
 2.  **Installer les dépendances :**
+
     ```bash
     npm install
     ```
 
 3.  **Lancer le serveur de développement :**
     L'application sera disponible sur `http://localhost:5173` (ou un autre port si celui-ci est occupé).
+
     ```bash
     npm run dev
     ```
@@ -60,19 +63,19 @@ Ces versions sont spécifiées dans la section `engines` du fichier [`package.js
 
 Voici une liste des principaux scripts disponibles dans [`package.json`](package.json:5) :
 
-*   `npm run dev`: Lance le serveur de développement Vite avec HMR.
-*   `npm run prod`: Lance le serveur de développement Vite en mode production.
-*   `npm run build`: Construit l'application pour la production (optimisée et minifiée).
-*   `npm run build:test`: Construit l'application pour un environnement de test.
-*   `npm run build:prod`: Construit l'application pour la production (similaire à `npm run build`).
-*   `npm run preview`: Lance un serveur local pour prévisualiser le build de production.
-*   `npm run test:unit`: Exécute les tests unitaires avec Vitest.
-*   `npm run test:watch`: Exécute les tests unitaires en mode "watch".
-*   `npm run storybook`: Démarre Storybook pour visualiser et développer les composants UI.
-*   `npm run build-storybook`: Construit une version statique de Storybook.
-*   `npm run lint`: Analyse le code avec ESLint pour détecter les erreurs et les problèmes de style.
-*   `npm run format`: Formate automatiquement le code avec Prettier.
-*   `npm run prepare`: Script exécuté par Husky lors de l'installation des dépendances pour configurer les hooks Git.
+- `npm run dev`: Lance le serveur de développement Vite avec HMR.
+- `npm run prod`: Lance le serveur de développement Vite en mode production.
+- `npm run build`: Construit l'application pour la production (optimisée et minifiée).
+- `npm run build:test`: Construit l'application pour un environnement de test.
+- `npm run build:prod`: Construit l'application pour la production (similaire à `npm run build`).
+- `npm run preview`: Lance un serveur local pour prévisualiser le build de production.
+- `npm run test:unit`: Exécute les tests unitaires avec Vitest.
+- `npm run test:watch`: Exécute les tests unitaires en mode "watch".
+- `npm run storybook`: Démarre Storybook pour visualiser et développer les composants UI.
+- `npm run build-storybook`: Construit une version statique de Storybook.
+- `npm run lint`: Analyse le code avec ESLint pour détecter les erreurs et les problèmes de style.
+- `npm run format`: Formate automatiquement le code avec Prettier.
+- `npm run prepare`: Script exécuté par Husky lors de l'installation des dépendances pour configurer les hooks Git.
 
 ## 📁 Structure du Projet
 
@@ -161,14 +164,15 @@ Chaque composant est documenté et testable via Storybook.
 
 ### Exemples de Catégories de Composants :
 
-*   **Basiques** : [`UButton`](src/modules/ui/basic/UButton.vue), [`UMultiActionButton`](src/modules/ui/basic/UMultiActionButton.vue)
-*   **Formulaires** : [`UNumberInput`](src/modules/ui/forms/UNumberInput.vue), [`UPasswordInput`](src/modules/ui/forms/UPasswordInput.vue), [`UDatePicker`](src/modules/ui/forms/UDatePicker.vue), [`USelectGroup`](src/modules/ui/forms/USelectGroup.vue)
-*   **Données** : [`UList`](src/modules/ui/data/UList.vue), [`UBar`](src/modules/ui/data/UBar.vue) (pour graphiques), [`UKpiCard`](src/modules/ui/data/UKpiCard.vue)
-*   **Navigation** : [`UTabs`](src/modules/ui/navigation/UTabs.vue), [`UContextualMenu`](src/modules/ui/navigation/UContextualMenu.vue)
-*   **Notifications** : [`UMessage.ts`](src/modules/ui/notice/UMessage.ts), [`UMessageBox.ts`](src/modules/ui/notice/UMessageBox.ts)
-*   **Layout & Autres** : [`UCard`](src/modules/ui/layout/UCard.vue), [`UDialog`](src/modules/ui/others/UDialog.vue), [`ULoader`](src/modules/ui/others/ULoader.vue)
+- **Basiques** : [`UButton`](src/modules/ui/basic/UButton.vue), [`UMultiActionButton`](src/modules/ui/basic/UMultiActionButton.vue)
+- **Formulaires** : [`UNumberInput`](src/modules/ui/forms/UNumberInput.vue), [`UPasswordInput`](src/modules/ui/forms/UPasswordInput.vue), [`UDatePicker`](src/modules/ui/forms/UDatePicker.vue), [`USelectGroup`](src/modules/ui/forms/USelectGroup.vue)
+- **Données** : [`UList`](src/modules/ui/data/UList.vue), [`UBar`](src/modules/ui/data/UBar.vue) (pour graphiques), [`UKpiCard`](src/modules/ui/data/UKpiCard.vue)
+- **Navigation** : [`UTabs`](src/modules/ui/navigation/UTabs.vue), [`UContextualMenu`](src/modules/ui/navigation/UContextualMenu.vue)
+- **Notifications** : [`UMessage.ts`](src/modules/ui/notice/UMessage.ts), [`UMessageBox.ts`](src/modules/ui/notice/UMessageBox.ts)
+- **Layout & Autres** : [`UCard`](src/modules/ui/layout/UCard.vue), [`UDialog`](src/modules/ui/others/UDialog.vue), [`ULoader`](src/modules/ui/others/ULoader.vue)
 
 Pour une liste exhaustive et des démonstrations interactives :
+
 ```bash
 npm run storybook
 ```
@@ -177,8 +181,8 @@ npm run storybook
 
 Le theming est géré via des variables SCSS. Vous pouvez personnaliser l'apparence en modifiant les fichiers situés dans [`src/assets/style/themes/`](src/assets/style/themes/):
 
-*   [`colors.scss`](src/assets/style/themes/colors.scss): Variables de couleurs primaires, secondaires, de feedback, etc.
-*   [`font.scss`](src/assets/style/themes/font.scss): Variables pour les polices, tailles, graisses.
+- [`colors.scss`](src/assets/style/themes/colors.scss): Variables de couleurs primaires, secondaires, de feedback, etc.
+- [`font.scss`](src/assets/style/themes/font.scss): Variables pour les polices, tailles, graisses.
 
 Ces thèmes sont importés globalement dans [`src/assets/style/main.scss`](src/assets/style/main.scss).
 
@@ -189,17 +193,18 @@ Les fichiers de langue se trouvent dans [`src/locales/`](src/locales/) (ex: [`en
 La configuration est initialisée dans [`src/i18n.ts`](src/i18n.ts).
 
 Langues supportées par défaut :
-*   Anglais (en)
-*   Français (fr)
+
+- Anglais (en)
+- Français (fr)
 
 ## ⚙️ Configuration de l'Environnement
 
 Les variables d'environnement sont gérées via des fichiers `.env` à la racine du projet, en utilisant le [mode de Vite pour les variables d'environnement](https://vitejs.dev/guide/env-and-mode.html).
 
-*   `.env`: Variables par défaut (non versionnées, pour les secrets locaux).
-*   `.env.development`: Variables pour l'environnement de développement.
-*   `.env.production`: Variables pour le build de production.
-*   `.env.test`: Variables pour l'environnement de test.
+- `.env`: Variables par défaut (non versionnées, pour les secrets locaux).
+- `.env.development`: Variables pour l'environnement de développement.
+- `.env.production`: Variables pour le build de production.
+- `.env.test`: Variables pour l'environnement de test.
 
 Un fichier `.env.example` devrait être versionné pour indiquer les variables nécessaires.
 
@@ -209,36 +214,40 @@ Un [`Dockerfile`](build/Dockerfile) est fourni dans le répertoire [`build/`](bu
 Des scripts d'aide (`build.sh`, `start.sh`, `deploy.sh`) sont également présents.
 
 Pour construire l'image Docker (exemple) :
+
 ```bash
 docker build -t nom-de-votre-image . -f build/Dockerfile
 ```
 
 Pour lancer un conteneur (exemple) :
+
 ```bash
 docker run -d -p 8080:80 nom-de-votre-image
 ```
+
 Consultez le [`README.md`](README.md) spécifique au build ou les scripts pour des instructions plus détaillées.
 
 ## 🔧 Qualité du Code & Intégration Continue
 
 ### Linting & Formatting
 
-*   **ESLint** ([`.eslintrc.cjs`](.eslintrc.cjs)): Pour l'analyse statique du code et le respect des conventions.
-*   **Prettier** ([`.prettierrc.cjs`](.prettierrc.cjs)): Pour le formatage automatique du code.
-    ```bash
-    npm run lint
-    npm run format
-    ```
+- **ESLint** ([`.eslintrc.cjs`](.eslintrc.cjs)): Pour l'analyse statique du code et le respect des conventions.
+- **Prettier** ([`.prettierrc.cjs`](.prettierrc.cjs)): Pour le formatage automatique du code.
+  ```bash
+  npm run lint
+  npm run format
+  ```
 
 ### Hooks Git
 
-*   **Husky** ([`.husky/`](.husky/)): Utilisé pour configurer des hooks Git. Par défaut, un hook `pre-commit` est configuré pour exécuter le linting et le formatage avant chaque commit.
+- **Husky** ([`.husky/`](.husky/)): Utilisé pour configurer des hooks Git. Par défaut, un hook `pre-commit` est configuré pour exécuter le linting et le formatage avant chaque commit.
 
 ### Intégration Continue (GitHub Actions)
 
 Le répertoire [`.github/workflows/`](.github/workflows/) contient :
-*   [`ci.yml`](.github/workflows/ci.yml): Workflow pour l'intégration continue (build, tests, linting) à chaque push/pull request.
-*   [`renovate.yml`](.github/workflows/renovate.yml): Configuration pour Renovate Bot pour la mise à jour automatique des dépendances.
+
+- [`ci.yml`](.github/workflows/ci.yml): Workflow pour l'intégration continue (build, tests, linting) à chaque push/pull request.
+- [`renovate.yml`](.github/workflows/renovate.yml): Configuration pour Renovate Bot pour la mise à jour automatique des dépendances.
 
 ## 📄 License
 
@@ -252,6 +261,6 @@ Les contributions sont les bienvenues ! Veuillez suivre ces étapes :
 1.  Fork le repository.
 2.  Créez une nouvelle branche pour votre fonctionnalité (`git checkout -b feature/ma-nouvelle-feature`).
 3.  Commitez vos changements (`git commit -am 'Ajout de ma nouvelle feature'`).
-    *   Assurez-vous que les hooks pre-commit passent (linting, formatting).
+    - Assurez-vous que les hooks pre-commit passent (linting, formatting).
 4.  Poussez vers la branche (`git push origin feature/ma-nouvelle-feature`).
 5.  Ouvrez une Pull Request.

@@ -20,6 +20,7 @@ node_modules/
 dist/
 dist-ssr/
 coverage/
+/html
 # build/ # Commenté car potentiellement un répertoire source
 
 # Test results
