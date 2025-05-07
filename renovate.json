@@ -28,13 +28,7 @@
       "description": "Add dependencies and renovate labels to all other PRs",
       "labels": ["dependencies", "renovate"],
       "matchUpdateTypes": ["major"],
-      "matchPackageNames": [
-        "!vue",
-        "!vue-router",
-        "!pinia",
-        "!vite",
-        "!typescript"
-      ]
+      "matchPackageNames": ["!vue", "!vue-router", "!pinia", "!vite", "!typescript"]
     }
   ],
   "prConcurrentLimit": 10,

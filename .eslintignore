@@ -2,6 +2,9 @@
 
 node_modules
 /dist
+/html
+/coverage
+/.cache
 
 # Test results
 .nyc_output/
