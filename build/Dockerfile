@@ -8,7 +8,7 @@ ARG BUILD_ID
 ARG APP_NAME
 ARG GITHUB_TOKEN
 
-ENV NODE_ENV=${BUILD_ENV}
+# ENV NODE_ENV will be set after npm ci to ensure devDependencies are installed
 ENV GENERATE_SOURCEMAP=false
 # STORYBOOK_BASE_PATH est utilisé par Storybook pour générer les chemins corrects si servi dans un sous-dossier.
 # Nginx servira Storybook depuis /usr/share/nginx/html/storybook, qui correspondra à l'URL /storybook/
@@ -23,15 +23,19 @@ WORKDIR /app
 # pour exclure node_modules, .git, .env, etc. du contexte de build.
 COPY package.json package-lock.json ./
 COPY .npmrc .npmrc
+# Copier le reste des sources de l'application (avant npm install)
+COPY . .
+
 # npm utilisera la variable d'environnement GITHUB_TOKEN si elle est passée comme ARG
 # et que .npmrc contient ${GITHUB_TOKEN}
-RUN npm ci --quiet
+RUN npm install --quiet --ignore-scripts
+# Now set NODE_ENV for the subsequent build steps
+ENV NODE_ENV=${BUILD_ENV}
 
-# Copier le reste des sources de l'application
-COPY . .
 
 # Builder l'application en fonction de BUILD_ENV
 RUN echo "Building application for environment: ${BUILD_ENV}"
+RUN npm --version # DEBUG: Check if npm is accessible before the build script
 RUN if [ "$BUILD_ENV" = "production" ]; then \
     npm run build:prod; \
     elif [ "$BUILD_ENV" = "test" ]; then \
@@ -52,7 +56,7 @@ RUN if [ "$BUILD_ENV" != "production" ]; then \
 
 # Étape 2: Servir l'application avec Nginx
 # Utilisation d'une image Nginx plus récente et sécurisée
-FROM nginx:1.28-alpine AS runner
+FROM nginx:stable-alpine AS runner
 
 # Arguments et variables d'environnement pour Nginx (APP_NAME est passé par build.sh)
 ARG APP_NAME
