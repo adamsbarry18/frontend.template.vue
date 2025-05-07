@@ -46,11 +46,11 @@ describe('UserModel', () => {
       expect(user.createdAt).toBeInstanceOf(Date);
       expect(user.createdAt?.toISOString()).toBe(baseData.createdAt.toISOString());
       expect(user.updatedAt).toBeInstanceOf(Date);
-      expect(user.updatedAt?.toISOString()).toBe(baseData.updatedAt);
+      expect(user.updatedAt?.toISOString()).toBe(baseData.updatedAt.toISOString());
       expect(user.passwordUpdatedAt).toBeInstanceOf(Date);
-      expect(user.passwordUpdatedAt?.toISOString()).toBe(baseData.passwordUpdatedAt);
+      expect(user.passwordUpdatedAt?.toISOString()).toBe(baseData.passwordUpdatedAt.toISOString());
       expect(user.permissionsExpireAt).toBeInstanceOf(Date);
-      expect(user.permissionsExpireAt?.toISOString()).toBe(baseData.permissionsExpireAt);
+      expect(user.permissionsExpireAt?.toISOString()).toBe(baseData.permissionsExpireAt.toISOString());
     });
 
     it('should use default values for missing optional data', () => {

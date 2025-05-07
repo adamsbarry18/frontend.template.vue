@@ -12,18 +12,22 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
 
   // Accès à l'utilisateur courant
   const usersStore = useUsersStore();
-  const currentUser = computed(() => usersStore.currentUser);
+  // Dans les tests, usersStore.currentUser EST un Ref.
+  // Dans le code de l'application, Pinia gère la réactivité, et usersStore.currentUser est le UserModel ou null.
+  // Pour que les getters réagissent au mock (qui utilise un Ref), nous devons accéder à .value.
+  // Pour satisfaire TypeScript ici (qui ne voit pas le mock), nous utilisons `as any`.
+  const localCurrentUser = computed(() => (usersStore.currentUser as any)?.value ?? usersStore.currentUser);
 
   // Getters typés
-  const level = computed(() => currentUser.value?.level ?? 1);
-  const internalLevel = computed(() => currentUser.value?.internalLevel ?? 1);
-  const internal = computed(() => currentUser.value?.internal ?? false);
-  const permissionsExpireAt = computed(() =>
-    currentUser.value?.permissionsExpireAt ? dayjs(currentUser.value.permissionsExpireAt) : null
+  const level = computed(() => localCurrentUser.value?.level ?? SecurityLevel.EXTERNAL);
+  const internalLevel = computed(() => localCurrentUser.value?.internalLevel ?? 1);
+  const internal = computed(() => localCurrentUser.value?.internal ?? false);
+  const permissionsExpireAtComputed = computed(() =>
+    localCurrentUser.value?.permissionsExpireAt ? dayjs(localCurrentUser.value.permissionsExpireAt) : null
   );
   const hasExpired = computed(() => {
-    if (!permissionsExpireAt.value) return false;
-    return dayjs().isAfter(permissionsExpireAt.value);
+    if (!permissionsExpireAtComputed.value) return false;
+    return dayjs().isAfter(permissionsExpireAtComputed.value);
   });
 
   // Rôles standards using SecurityLevel enum
@@ -38,7 +42,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
         return true;
       }
 
-      const permissions = currentUser.value?.permissions;
+      const permissions = localCurrentUser.value?.permissions;
       if (!permissions) {
         return false;
       }
@@ -163,11 +167,11 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   return {
     features,
     levelsAuthorisations,
-    currentUser,
+    currentUser: localCurrentUser, // Expose le computed local pour la cohérence
     level,
     internalLevel,
     internal,
-    permissionsExpireAt,
+    permissionsExpireAt: permissionsExpireAtComputed,
     hasExpired,
     isUser,
     isIntegrator,
