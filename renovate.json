@@ -1,55 +1,43 @@
 {
-    "extends": [
-      "config:base",
-      "schedule:weekly",
-      "group:recommended"
-    ],
-    "packageRules": [
-      {
-        "description": "Automerge patch updates if CI passes",
-        "matchUpdateTypes": ["patch"],
-        "automerge": true,
-        "automergeType": "squash",
-        "requiredStatusChecks": null,
-        "labels": ["dependencies", "renovate", "automerge"]
-      },
-      {
-        "description": "Automerge minor updates if CI passes",
-        "matchUpdateTypes": ["minor"],
-        "automerge": true,
-        "automergeType": "squash",
-        "requiredStatusChecks": null,
-        "labels": ["dependencies", "renovate", "automerge"]
-      },
-       {
-        "description": "Group major updates for core frontend libs",
-        "matchPackageNames": [
-          "vue",
-          "vue-router",
-          "pinia",
-          "vite",
-          "typescript"
-        ],
-        "matchUpdateTypes": ["major"],
-        "groupName": "core-frontend-major",
-        "labels": ["dependencies", "renovate", "major", "core"],
-        "automerge": false,
-        "groupSlug": "core-frontend-major"
-      },
-      {
-         "description": "Add dependencies and renovate labels to all other PRs",
-         "labels": ["dependencies", "renovate"],
-         "matchUpdateTypes": ["major"],
-         "excludePackageNames": [
-            "vue",
-            "vue-router",
-            "pinia",
-            "vite",
-            "typescript"
-         ]
-      }
-    ],
-    "prConcurrentLimit": 10,
-    "branchConcurrentLimit": 0,
-    "prHourlyLimit": 2
-  }
+  "extends": ["config:recommended", "schedule:weekly", "group:recommended"],
+  "packageRules": [
+    {
+      "description": "Automerge patch updates if CI passes",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "squash",
+      "labels": ["dependencies", "renovate", "automerge"]
+    },
+    {
+      "description": "Automerge minor updates if CI passes",
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "automergeType": "squash",
+      "labels": ["dependencies", "renovate", "automerge"]
+    },
+    {
+      "description": "Group major updates for core frontend libs",
+      "matchPackageNames": ["vue", "vue-router", "pinia", "vite", "typescript"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "core-frontend-major",
+      "labels": ["dependencies", "renovate", "major", "core"],
+      "automerge": false,
+      "groupSlug": "core-frontend-major"
+    },
+    {
+      "description": "Add dependencies and renovate labels to all other PRs",
+      "labels": ["dependencies", "renovate"],
+      "matchUpdateTypes": ["major"],
+      "matchPackageNames": [
+        "!vue",
+        "!vue-router",
+        "!pinia",
+        "!vite",
+        "!typescript"
+      ]
+    }
+  ],
+  "prConcurrentLimit": 10,
+  "branchConcurrentLimit": 0,
+  "prHourlyLimit": 2
+}
