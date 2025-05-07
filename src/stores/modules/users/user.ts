@@ -10,15 +10,14 @@ import { storageService } from '@/libs/utils/StorageService';
 import { PendingInterceptor } from '@/libs/interceptors/PendingInterceptor';
 
 export const useUsersStore = defineStore('users', () => {
-  // State
+  // --- State ---
   const currentUser = ref<UserModel | null>(null);
-  const usersMap = ref<Map<number | string, UserModel>>(new Map());
-  const usersFetched = ref(false);
-  const isLoggingOut = ref(false);
-  const authStatusChecked = ref(false);
+  const usersMap = ref<Map<number | string, UserModel>>(new Map()); // Stores fetched users by ID
+  const usersFetched = ref(false); // Flag to indicate if the initial list of users has been fetched
+  const isLoggingOut = ref(false); // Flag to prevent concurrent logout attempts
+  const authStatusChecked = ref(false); // Flag to indicate if initial authentication status has been checked
 
-  // Getters
-
+  // --- Getters ---
   const isAuthenticated = computed(() => !!currentUser.value);
   const currentUserId = computed(() => currentUser.value?.id ?? null);
   const level = computed(() => currentUser.value?.level ?? SecurityLevel.EXTERNAL);
@@ -38,6 +37,11 @@ export const useUsersStore = defineStore('users', () => {
     getAllUsers.value.filter((user) => user.level === SecurityLevel.ADMIN)
   );
 
+  /**
+   * Provides a consistent color for a user based on their ID or stored color.
+   * @param userId The ID of the user.
+   * @returns A hex color string.
+   */
   const userColorFromId = (userId: number): string => {
     const user = getUserById(userId);
     const DEFAULT_COLORS = ['#fc842c', '#b43893', '#c98963', '#4e8cd4', '#18bc91', '#cf454a'];
@@ -48,13 +52,26 @@ export const useUsersStore = defineStore('users', () => {
     return user.color;
   };
 
-  // Actions - Helpers Internes
+  // --- Internal Helper Actions ---
   const apiStore = useApiStore();
 
+  /**
+   * Updates or adds a user to the local usersMap.
+   * @param user The user model to update/add.
+   */
   function _updateUserInMap(user: UserModel): void {
-    usersMap.value.set(user.id, user);
+    if (user && user.id) {
+      // Ensure user and user.id are valid
+      usersMap.value.set(user.id, user);
+    }
   }
 
+  /**
+   * Handles authentication errors from API calls.
+   * @param error The error object from the API call.
+   * @param context A string describing the context of the error (e.g., 'login', 'fetchCurrentUser').
+   * @throws An error message string or a ServerError instance.
+   */
   function _handleAuthenticationError(error: any, context: string): never {
     console.error(`Authentication error in ${context}:`, error);
     const responseData = error.response?.data;
@@ -72,6 +89,11 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Sets the current user and updates their language preference if available.
+   * Also updates the user in the local usersMap.
+   * @param user The user model to set as current, or null to clear.
+   */
   function _setCurrentUser(user: UserModel | null): void {
     currentUser.value = user;
     if (user) {
@@ -83,6 +105,12 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  // --- Public Actions ---
+
+  /**
+   * Initializes authentication status by checking for a stored token
+   * and fetching the current user if a token exists.
+   */
   async function initializeAuth(): Promise<void> {
     if (authStatusChecked.value) return;
 
@@ -110,6 +138,12 @@ export const useUsersStore = defineStore('users', () => {
     authStatusChecked.value = true;
   }
 
+  /**
+   * Logs in a user with email and password.
+   * Stores the auth token and fetches the current user on success.
+   * @param credentials An object containing email and password.
+   * @returns True if login was successful, otherwise throws an error.
+   */
   async function login({ email, password }: { email: string; password: string }): Promise<boolean> {
     if (!email || !password) {
       throw new Error('Email and password are required');
@@ -135,35 +169,50 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Logs out the current user.
+   * Clears the auth token, resets user state, and redirects to the login page.
+   */
   async function logout(): Promise<void> {
-    const apiStore = useApiStore();
+    if (isLoggingOut.value) return;
+
+    isLoggingOut.value = true;
+    console.warn('Logging out user...');
 
     try {
-      if (!isLoggingOut.value) {
-        isLoggingOut.value = true;
-        console.warn('Logging out user...');
-        if (token.value) {
-          await apiStore.api.post('/api/v1/auth/logout', {
-            skipAuthErrorInterceptor: true,
-          });
-        }
+      if (token.value) {
+        // Only call API if a token exists
+        await apiStore.api.post('/api/v1/auth/logout', {
+          skipAuthErrorInterceptor: true, // Allow handling logout errors locally if needed
+        });
       }
     } catch (error) {
-      console.error('logout error', error);
+      console.error('Error during API logout call:', error);
     } finally {
-      isLoggingOut.value = false;
       storageService.removeAuthToken();
-      PendingInterceptor.clearPendingCache();
-      currentUser.value = null;
+      PendingInterceptor.clearPendingCache(); // Clear any pending requests
+      _setCurrentUser(null);
       usersMap.value.clear();
       usersFetched.value = false;
       authStatusChecked.value = false;
+      isLoggingOut.value = false;
       router.push({ name: 'login', replace: true });
     }
   }
 
-  async function changeExpiredPassword({ email, password, newPassword }) {
-    const apiStore = useApiStore();
+  /**
+   * Changes an expired password for a user.
+   * @param payload Object containing email, current password, and new password.
+   */
+  async function changeExpiredPassword({
+    email,
+    password,
+    newPassword,
+  }: {
+    email: string;
+    password: string;
+    newPassword: string;
+  }): Promise<void> {
     try {
       await apiStore.api.post('/api/v1/auth/password/expired', {
         data: {
@@ -178,6 +227,10 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Requests a password reset for the given email.
+   * @param payload Object containing the user's email.
+   */
   async function resetPassword({ email }: { email: string }): Promise<void> {
     try {
       await apiStore.api.post('/api/v1/auth/password/reset', {
@@ -188,6 +241,10 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Confirms a password reset using a code and new password.
+   * @param payload Object containing the new password and reset code.
+   */
   async function confirmResetPassword({ password, code }: { password: string; code: string }): Promise<void> {
     try {
       await apiStore.api.post(`/api/v1/auth/password/reset/${code}/confirm`, {
@@ -198,6 +255,10 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Confirms a user's email/account using a confirmation code (e.g., after registration).
+   * @param payload Object containing the confirmation code.
+   */
   async function passwordConfirm({ code }: { code: string }): Promise<void> {
     try {
       await apiStore.api.post(`/api/v1/auth/password/${code}/confirm`);
@@ -206,7 +267,12 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  // Met à jour le mot de passe et retourne true si c'était celui de l'utilisateur courant.
+  /**
+   * Updates the password for a given user.
+   * @param payload Object containing the user model and the new password.
+   * @returns True if the updated user is the current user, false otherwise.
+   * @throws ServerError if the API call fails.
+   */
   async function updateUserPassword({
     user,
     password,
@@ -214,27 +280,28 @@ export const useUsersStore = defineStore('users', () => {
     user: UserModel;
     password: string;
   }): Promise<boolean> {
-    const apiStore = useApiStore();
+    // apiStore is already defined at the store level
+    if (!user || !user.id) throw new Error('Valid user object with ID must be provided.'); // More specific error
     try {
-      if (!user) throw 'No user provided';
       await apiStore.api.put(`/api/v1/users/${user.id}/password`, {
-        data: {
-          password,
-        },
-        skipAuthErrorInterceptor: true,
+        data: { password },
+        skipAuthErrorInterceptor: true, // Often, password updates have specific error handling
       });
-      // Retourne true si l'ID de l'utilisateur modifié correspond à l'ID de l'utilisateur connecté
+      // Return true if the ID of the modified user matches the ID of the logged-in user
       return user.id === currentUserId.value;
-    } catch (error) {
-      // Propager l'erreur pour la gestion dans le composant
-      throw new ServerError('users', 'updateUserPassword', error, {
-        userId: user.id,
-      });
+    } catch (error: any) {
+      // Propagate the error for component-level handling
+      throw new ServerError('users', 'updateUserPassword', error, { userId: user.id });
     }
   }
 
+  /**
+   * Fetches the currently authenticated user's data from the API.
+   * Updates the local currentUser state.
+   * @returns The UserModel of the current user, or null if fetch fails or no user is authenticated.
+   */
   async function fetchCurrentUser(): Promise<UserModel | null> {
-    console.log('[fetchCurrentUser] Start'); // Log start
+    console.log('[fetchCurrentUser] Start');
     try {
       console.log('[fetchCurrentUser] Calling API /users/me');
       const response = await apiStore.api.get('/api/v1/users/me');
@@ -252,6 +319,12 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Fetches a specific user by their ID.
+   * Updates the user in the local usersMap and potentially the currentUser.
+   * @param userId The ID of the user to fetch.
+   * @returns The UserModel, or null if not found or an error occurs.
+   */
   async function fetchUser(userId: number | string): Promise<UserModel | null> {
     try {
       const response = await apiStore.api.get(`/api/v1/users/${userId}`);
@@ -267,6 +340,10 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Fetches all users from the API.
+   * Populates the usersMap and sets usersFetched to true.
+   */
   async function fetchUsers(): Promise<void> {
     try {
       const response = await apiStore.api.get('/api/v1/users');
@@ -279,12 +356,22 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   const debouncedFetchUsers = debounce(fetchUsers, 300);
+  /**
+   * Ensures that the list of users has been fetched.
+   * Calls `fetchUsers` (debounced) if `usersFetched` is false.
+   */
   async function ensureUsersFetched(): Promise<void> {
     if (!usersFetched.value) {
       await debouncedFetchUsers();
     }
   }
 
+  /**
+   * Searches for a user by ID or other identifier (e.g., email).
+   * Checks local cache (usersMap) first if identifier is numeric.
+   * @param identifier The user ID or other unique identifier.
+   * @returns The UserModel if found, otherwise null.
+   */
   async function searchUser(identifier: string | number): Promise<UserModel | null> {
     try {
       if (typeof identifier === 'number' || !isNaN(Number(identifier))) {
@@ -306,6 +393,11 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Updates a user's data on the server.
+   * @param user The UserModel instance with updated data.
+   * @returns The updated UserModel from the server.
+   */
   async function updateUser(user: UserModel): Promise<UserModel> {
     const dataToSend = user.toAPI ? user.toAPI() : { ...user };
 
@@ -329,7 +421,13 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function addUser(userData: UserModel): Promise<UserModel> {
+  /**
+   * Adds a new user to the system.
+   * @param userData The UserModel instance representing the new user.
+   * @returns The newly created UserModel from the server.
+   */
+  async function addUser(userData: Partial<UserModel>): Promise<UserModel> {
+    // Allow Partial for creation
     const dataToSend: Partial<UserModel> = {
       email: userData.email,
       password: userData.password,
@@ -357,7 +455,7 @@ export const useUsersStore = defineStore('users', () => {
       return newUser;
     } catch (error: any) {
       if (error.response?.data?.message) {
-        throw new Error(`Erreur lors de l'ajout : ${error.response.data.message}`);
+        throw new Error(`Error during user addition: ${error.response.data.message}`);
       }
       throw new ServerError('users', 'addUser', error, {
         email: userData.email,
@@ -365,6 +463,11 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * Deletes a user from the system.
+   * If the deleted user is the current user, also logs out.
+   * @param userId The ID of the user to delete.
+   */
   async function deleteUser(userId: number | string): Promise<void> {
     if (!userId) throw new Error('User ID is required');
     try {
@@ -381,19 +484,39 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function resetPreferences({ user }) {
-    const apiStore = useApiStore();
+  /**
+   * Resets all preferences for a given user to their defaults (by deleting them on the server).
+   * @param payload Object containing the user model.
+   */
+  async function resetPreferences({ user }: { user: UserModel }): Promise<void> {
+    // apiStore is already defined at the store level
+    if (!user || !user.id) throw new Error('Valid user object with ID must be provided.');
     try {
-      if (!user) throw 'No user provided';
       await apiStore.api.delete(`/api/v1/users/${user.id}/preferences`, {
-        data: {},
         skipAuthErrorInterceptor: true,
       });
-    } catch (error) {
-      throw new ServerError('users', 'resetPreferences', error, {});
+      // Optionally, update local user model if preferences are cleared locally too
+      if (currentUser.value && currentUser.value.id === user.id) {
+        const updatedUser = currentUser.value.clone();
+        updatedUser.preferences = null; // Or an empty object, depending on desired state
+        _setCurrentUser(updatedUser);
+      } else {
+        const userInMap = usersMap.value.get(user.id);
+        if (userInMap) {
+          const updatedUserInMap = userInMap.clone();
+          updatedUserInMap.preferences = null;
+          _updateUserInMap(updatedUserInMap);
+        }
+      }
+    } catch (error: any) {
+      throw new ServerError('users', 'resetPreferences', error, { userId: user.id });
     }
   }
 
+  /**
+   * Sets a specific preference for the current user.
+   * @param payload Object containing the preference key and value.
+   */
   async function setPreference({ key, value }: { key: string; value: any }): Promise<void> {
     if (!currentUser.value) {
       console.warn('Cannot set preference: no user logged in.');
@@ -459,7 +582,6 @@ export const useUsersStore = defineStore('users', () => {
     deleteUser,
     resetPreferences,
     setPreference,
-    // Exposed for testing purposes
-    usersMap,
+    usersMap, // Exposed for testing or specific direct access scenarios
   };
 });

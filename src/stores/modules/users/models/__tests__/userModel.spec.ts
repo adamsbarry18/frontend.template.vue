@@ -108,7 +108,7 @@ describe('UserModel', () => {
       expect(user.level).toBe(apiData.level);
       expect(user.createdAt?.toISOString()).toBe(apiData.createdAt.toISOString());
       expect(user.updatedAt?.toISOString()).toBe(apiData.updatedAt.toISOString());
-      expect(user.password).toBeNull(); // fromAPI should set password to null or undefined
+      expect(user.password).toBeNull();
       expect(user.preferences).toEqual(apiData.preferences);
     });
 
@@ -117,7 +117,7 @@ describe('UserModel', () => {
       const user = UserModel.fromAPI(minimalApiData);
       expect(user.name).toBeNull();
       expect(user.preferences).toBeNull();
-      expect(user.createdAt).toBeInstanceOf(Date); // Defaults to new Date()
+      expect(user.createdAt).toBeInstanceOf(Date);
     });
   });
 

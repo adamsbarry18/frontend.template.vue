@@ -28,9 +28,6 @@ vi.mock('@/stores/modules/api', () => ({
   }),
 }));
 
-// Mock pour dayjs si nécessaire pour contrôler le temps, sinon les appels réels sont ok
-// vi.mock('dayjs');
-
 describe('stores/modules/auth/authorisations', () => {
   let authorisationsStore: ReturnType<typeof useAuthorisationsStore>;
   let mockUsersStore: {
@@ -68,19 +65,15 @@ describe('stores/modules/auth/authorisations', () => {
     permissions: {
       featureA: ['read'],
     },
-    permissionsExpireAt: dayjs().subtract(1, 'day').toISOString(), // Expiré
+    permissionsExpireAt: dayjs().subtract(1, 'day').toISOString(),
   };
 
   beforeEach(() => {
     setActivePinia(createPinia());
-
-    // Configurer le mock de useUsersStore pour retourner un currentUser contrôlable
-    // Ce mock sera utilisé par le store d'autorisations
     mockUsersStore = {
-      currentUser: ref(null), // Sera défini dans les tests spécifiques
+      currentUser: ref(null),
       isAuthenticated: computed(() => !!mockUsersStore.currentUser.value),
-      // ... autres propriétés ou méthodes du store utilisateur si nécessaires au store d'autorisation
-    } as any; // Cast to any to simplify mock structure, though specific mock type is better
+    } as any;
     (useUsersStore as unknown as Mock).mockReturnValue(mockUsersStore);
 
     authorisationsStore = useAuthorisationsStore();
@@ -88,7 +81,6 @@ describe('stores/modules/auth/authorisations', () => {
     // Réinitialiser les mocks d'API
     vi.clearAllMocks();
 
-    // Réinitialiser l'état du store d'autorisations
     authorisationsStore.features = null;
     authorisationsStore.levelsAuthorisations = null;
   });
@@ -104,8 +96,8 @@ describe('stores/modules/auth/authorisations', () => {
     describe('user context getters', () => {
       it('should return default values when no user is logged in', () => {
         mockUsersStore.currentUser.value = null;
-        expect(authorisationsStore.level).toBe(SecurityLevel.EXTERNAL); // Ou la valeur par défaut définie
-        expect(authorisationsStore.internalLevel).toBe(1); // Ou la valeur par défaut définie
+        expect(authorisationsStore.level).toBe(SecurityLevel.EXTERNAL);
+        expect(authorisationsStore.internalLevel).toBe(1);
         expect(authorisationsStore.internal).toBe(false);
         expect(authorisationsStore.permissionsExpireAt).toBeNull();
         expect(authorisationsStore.hasExpired).toBe(false);
@@ -122,17 +114,17 @@ describe('stores/modules/auth/authorisations', () => {
 
     describe('hasExpired', () => {
       it('should be false if permissionsExpireAt is null', () => {
-        mockUsersStore.currentUser.value = mockAdminUser as any; // N'expire pas
+        mockUsersStore.currentUser.value = mockAdminUser as any;
         expect(authorisationsStore.hasExpired).toBe(false);
       });
 
       it('should be false if permissionsExpireAt is in the future', () => {
-        mockUsersStore.currentUser.value = mockUser as any; // Non expiré
+        mockUsersStore.currentUser.value = mockUser as any;
         expect(authorisationsStore.hasExpired).toBe(false);
       });
 
       it('should be true if permissionsExpireAt is in the past', () => {
-        mockUsersStore.currentUser.value = mockExpiredUser as any; // Expiré
+        mockUsersStore.currentUser.value = mockExpiredUser as any;
         expect(authorisationsStore.hasExpired).toBe(true);
       });
     });
@@ -200,7 +192,6 @@ describe('stores/modules/auth/authorisations', () => {
       it('should still check permissions even if hasExpired is true (permissions check is independent of expiry for this getter)', () => {
         mockUsersStore.currentUser.value = mockExpiredUser as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureA', 'read')).toBe(true);
-        // Note: The application logic might combine hasExpired with this getter elsewhere.
       });
     });
   });
@@ -228,7 +219,7 @@ describe('stores/modules/auth/authorisations', () => {
         mockApiGet.mockRejectedValueOnce({ response: { status: 403 } });
         const result = await authorisationsStore.fetchAllFeatures();
         expect(result).toBeNull();
-        expect(authorisationsStore.features).toBeNull(); // State should not be updated
+        expect(authorisationsStore.features).toBeNull();
       });
 
       it('should throw ServerError on other errors', async () => {
@@ -293,14 +284,14 @@ describe('stores/modules/auth/authorisations', () => {
       const userId = 123;
       const payload = { level: SecurityLevel.ADMIN, permissions: { featureY: ['all'] } };
       it('should call API to update user authorization', async () => {
-        mockApiPut.mockResolvedValueOnce({ data: {} }); // Successful update
+        mockApiPut.mockResolvedValueOnce({ data: {} });
         await authorisationsStore.updateUserAuthorization(userId, payload);
         expect(mockApiPut).toHaveBeenCalledWith(`/api/v1/authorization/users/${userId}`, { data: payload });
       });
 
       it('should throw error if no userId is provided', async () => {
         await expect(authorisationsStore.updateUserAuthorization(0, payload)).rejects.toThrow(
-          'Aucun userId fourni'
+          'User ID must be provided.'
         );
       });
 
@@ -320,7 +311,9 @@ describe('stores/modules/auth/authorisations', () => {
       });
 
       it('should throw error if no userId is provided', async () => {
-        await expect(authorisationsStore.deleteUserAuthorizations(0)).rejects.toThrow('Aucun userId fourni');
+        await expect(authorisationsStore.deleteUserAuthorizations(0)).rejects.toThrow(
+          'User ID must be provided.'
+        );
       });
 
       it('should return null on 403 error', async () => {

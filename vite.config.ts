@@ -4,7 +4,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 export default defineConfig(({ mode }) => {
-  // Charge les variables d'environnement en fonction du mode
   const env = loadEnv(mode, process.cwd(), '');
 
   return {

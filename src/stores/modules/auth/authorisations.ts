@@ -7,35 +7,35 @@ import { computed, ref } from 'vue';
 import { ServerError } from '@/libs/utils/Errors';
 
 export const useAuthorisationsStore = defineStore('authorisations', () => {
-  const features = ref<Record<string, string[]> | null>(null); // Correction du type ici
+  const features = ref<Record<string, string[]> | null>(null);
   const levelsAuthorisations = ref<Record<string, any> | null>(null);
 
-  // Accès à l'utilisateur courant
+  // Access to the current user from the users store
   const usersStore = useUsersStore();
-  // Dans les tests, usersStore.currentUser EST un Ref.
-  // Dans le code de l'application, Pinia gère la réactivité, et usersStore.currentUser est le UserModel ou null.
-  // Pour que les getters réagissent au mock (qui utilise un Ref), nous devons accéder à .value.
-  // Pour satisfaire TypeScript ici (qui ne voit pas le mock), nous utilisons `as any`.
   const localCurrentUser = computed(() => (usersStore.currentUser as any)?.value ?? usersStore.currentUser);
 
-  // Getters typés
+  // Typed Getters based on the current user
   const level = computed(() => localCurrentUser.value?.level ?? SecurityLevel.EXTERNAL);
-  const internalLevel = computed(() => localCurrentUser.value?.internalLevel ?? 1);
+  const internalLevel = computed(() => localCurrentUser.value?.internalLevel ?? 1); // Default to 1 if no user
   const internal = computed(() => localCurrentUser.value?.internal ?? false);
   const permissionsExpireAtComputed = computed(() =>
     localCurrentUser.value?.permissionsExpireAt ? dayjs(localCurrentUser.value.permissionsExpireAt) : null
   );
+
+  /**
+   * Checks if the current user's permissions have expired.
+   */
   const hasExpired = computed(() => {
     if (!permissionsExpireAtComputed.value) return false;
     return dayjs().isAfter(permissionsExpireAtComputed.value);
   });
 
-  // Rôles standards using SecurityLevel enum
+  // Standard roles using SecurityLevel enum
   const isUser = computed(() => level.value >= SecurityLevel.USER);
   const isIntegrator = computed(() => level.value >= SecurityLevel.INTEGRATOR);
-  const isAdmin = computed(() => level.value >= SecurityLevel.ADMIN);
+  const isAdmin = computed(() => level.value === SecurityLevel.ADMIN);
 
-  // Vérification des autorisations spécifiques
+  // Specific authorisation checks
   const hasCurrentUserAuthorisation = computed(() => {
     return (feature: string, action: string): boolean => {
       if (isAdmin.value) {
@@ -61,9 +61,10 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   const apiStore = useApiStore();
 
   /**
-   * Récupère toutes les features/actions disponibles (admin)
+   * Fetches all available features and their actions (admin only).
+   * @returns A record of features and actions, or null if forbidden.
    */
-  async function fetchAllFeatures() {
+  async function fetchAllFeatures(): Promise<Record<string, string[]> | null> {
     try {
       const response = await apiStore.api.get('/api/v1/authorization/features');
       features.value = response.data.data;
@@ -75,9 +76,10 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   }
 
   /**
-   * Récupère la map des authorisations par niveau (admin)
+   * Fetches the map of authorisations per security level (admin only).
+   * @returns A record of levels and their authorisations, or null if forbidden.
    */
-  async function fetchLevels() {
+  async function fetchLevels(): Promise<Record<string, any> | null> {
     try {
       const response = await apiStore.api.get('/api/v1/authorization/levels');
       levelsAuthorisations.value = response.data.data;
@@ -89,9 +91,11 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   }
 
   /**
-   * Récupère les authorisations pour un niveau donné (admin)
+   * Fetches authorisations for a specific security level (admin only).
+   * @param level The security level number.
+   * @returns The authorisations for the given level, or null if forbidden.
    */
-  async function getLevel(level: number) {
+  async function getLevel(level: number): Promise<any | null> {
     try {
       const response = await apiStore.api.get(`/api/v1/authorization/levels/${level}`);
       return response.data.data;
@@ -102,31 +106,37 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   }
 
   /**
-   * Récupère les authorisations d'un utilisateur (admin)
+   * Fetches authorisations for a specific user (admin only).
+   * @param userId The ID of the user.
+   * @returns The user's authorisations, or null if forbidden or not found.
    */
-  async function getUserAuthorisations(userId: number) {
+  async function getUserAuthorisations(userId: number): Promise<any | null> {
     try {
-      // Ajouter un timestamp pour forcer le non-usage du cache navigateur/serveur
+      // Add a timestamp to bypass browser/server caching if necessary
       const timestamp = Date.now();
       const response = await apiStore.api.get(`/api/v1/authorization/users/${userId}?_t=${timestamp}`);
       return response.data.data;
-    } catch (error) {
+    } catch (error: any) {
       if ([403, 404].includes(error.response?.status)) return null;
-      throw new ServerError('authorisations', 'getUserAuthorisations', error, {
-        userId,
-      });
+      throw new ServerError('authorisations', 'getUserAuthorisations', error, { userId });
     }
   }
 
+  /**
+   * Updates the authorisation for a specific user (admin only).
+   * @param userId The ID of the user.
+   * @param payload The authorisation data to update.
+   * @returns Null if forbidden, otherwise void or throws ServerError.
+   */
   async function updateUserAuthorization(
     userId: number,
     payload: {
       level?: number;
       internal?: boolean;
       permissions?: Record<string, string[]> | null;
-    } // Ajout de internal? ici
-  ) {
-    if (!userId) throw new Error('Aucun userId fourni');
+    }
+  ): Promise<void | null> {
+    if (!userId) throw new Error('User ID must be provided.');
     try {
       await apiStore.api.put(`/api/v1/authorization/users/${userId}`, {
         data: payload,
@@ -138,11 +148,12 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   }
 
   /**
-   * Réinitialise les authorisations spécifiques d'un utilisateur (admin)
-   * @param userId number
+   * Resets (deletes) specific authorisations for a user (admin only).
+   * @param userId The ID of the user.
+   * @returns Null if forbidden, otherwise void or throws ServerError.
    */
-  async function deleteUserAuthorizations(userId: number) {
-    if (!userId) throw new Error('Aucun userId fourni');
+  async function deleteUserAuthorizations(userId: number): Promise<void | null> {
+    if (!userId) throw new Error('User ID must be provided.');
     try {
       await apiStore.api.delete(`/api/v1/authorization/users/${userId}`);
     } catch (error) {
@@ -152,9 +163,11 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   }
 
   /**
-   * Crée une authorisation temporaire pour un utilisateur (admin)
+   * Creates a temporary authorisation for a user (admin only).
+   * @param userId The ID of the user.
+   * @returns The temporary authorisation data, or null if forbidden.
    */
-  async function createTemporaryAuthorisationForUser(userId: number) {
+  async function createTemporaryAuthorisationForUser(userId: number): Promise<any | null> {
     try {
       const response = await apiStore.api.post(`/api/v1/authorization/users/${userId}/temporary`);
       return response.data.data;
@@ -167,7 +180,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   return {
     features,
     levelsAuthorisations,
-    currentUser: localCurrentUser, // Expose le computed local pour la cohérence
+    currentUser: localCurrentUser,
     level,
     internalLevel,
     internal,
@@ -183,8 +196,8 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
     fetchLevels,
     getLevel,
     getUserAuthorisations,
-    createTemporaryAuthorisationForUser,
     updateUserAuthorization,
     deleteUserAuthorizations,
+    createTemporaryAuthorisationForUser,
   };
 });

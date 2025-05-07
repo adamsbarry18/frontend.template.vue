@@ -43,8 +43,6 @@ vi.mock('@/libs/utils/Debounce', () => ({
 
 describe('stores/modules/users/user', () => {
   let usersStore: ReturnType<typeof useUsersStore>;
-  // apiStore will be initialized in beforeEach to ensure mocks are fresh
-  // and tests can configure it as needed.
 
   const rawUser1 = {
     id: 1,
@@ -192,7 +190,6 @@ describe('stores/modules/users/user', () => {
         expect(mockApiPost).toHaveBeenCalledWith('/api/v1/auth/logout', { skipAuthErrorInterceptor: true });
         expect(usersStore.currentUser).toBeNull();
         expect(storageService.removeAuthToken).toHaveBeenCalledTimes(1);
-        // expect(mockApiGet).toHaveBeenCalledWith('/api/v1/users/me'); // Supprimé pour simplifier le test de logout
       });
     });
 
@@ -235,7 +232,7 @@ describe('stores/modules/users/user', () => {
         await usersStore.ensureUsersFetched();
 
         expect(mockApiGet).toHaveBeenCalledWith('/api/v1/users');
-        expect(usersStore.usersFetched).toBe(true); // Verify effect of fetchUsers
+        expect(usersStore.usersFetched).toBe(true);
       });
 
       it('should not call fetchUsers if usersFetched is true', async () => {
