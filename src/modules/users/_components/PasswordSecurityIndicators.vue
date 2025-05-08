@@ -28,7 +28,7 @@
       required: true,
     },
   });
-  function isIndicatorValid(indicator) {
+  function isIndicatorValid(indicator: any): boolean {
     // Vuelidate indicator handling
     if (typeof indicator === 'object') {
       return !indicator.$invalid;

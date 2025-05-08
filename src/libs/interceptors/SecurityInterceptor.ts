@@ -8,12 +8,12 @@ import { useUsersStore } from '@/stores/modules/users/user';
 
 export class SecurityInterceptor extends BaseInterceptor {
   /** Retourne le type de l'intercepteur */
-  getType(): string {
+  override getType(): string {
     return 'SecurityInterceptor';
   }
 
   /** Configure l'intercepteur de requête */
-  requestInterceptor() {
+  override requestInterceptor() {
     return {
       request: (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
         config = this.setRequestHeaders(config);
@@ -28,7 +28,7 @@ export class SecurityInterceptor extends BaseInterceptor {
   }
 
   /** Configure l'intercepteur de réponse */
-  responseInterceptor() {
+  override responseInterceptor() {
     return {
       response: (response: AxiosResponse): AxiosResponse => response,
       error: async (error: AxiosError): Promise<never> => {

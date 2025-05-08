@@ -1,5 +1,6 @@
 <template>
   <svg
+    v-if="props.icon"
     class="icon"
     :width="iconWidth"
     :height="iconHeight"
@@ -56,14 +57,17 @@
     },
   });
 
-  const iconName = computed(() =>
-    props.icon
+  const iconName = computed(() => {
+    if (!props.icon) {
+      return '';
+    }
+    return props.icon
       .split('-')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('')
-  );
+      .join('');
+  });
 
-  const iconComponent = computed(() => icons[iconName.value]);
+  const iconComponent = computed(() => (icons as any)[iconName.value]);
 
   const iconWidth = computed(() => props.width || props.size);
   const iconHeight = computed(() => props.height || props.size);

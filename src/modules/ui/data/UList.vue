@@ -136,7 +136,7 @@
       <el-table
         ref="table"
         :data="displayedData"
-        :default-sort="savedDefaultSort"
+        :default-sort="savedDefaultSort as any"
         :show-header="showTableHeader"
         :row-class-name="rowClassNameWrapper"
         :row-key="isTree || reserveSelection ? rowKey : undefined"
@@ -283,7 +283,7 @@
     listActions: { type: Array, default: () => [] },
     searchFunction: {
       type: Function,
-      default: (row, searchInput = '') => {
+      default: (row: any, searchInput = '') => {
         if (!row.name) return true;
         return row.name?.toLowerCase().includes(searchInput?.toLowerCase());
       },
@@ -349,9 +349,9 @@
   const filterPanelActive = ref(false);
   const rightClickEvent = ref<MouseEvent | null>(null);
   const searchBarInput = ref('');
-  const filterChangeDebouncer = ref(null);
-  const searchChangeDebouncer = ref(null);
-  const onChangeDebouncer = ref(null);
+  const filterChangeDebouncer = ref<(() => void) | null>(null);
+  const searchChangeDebouncer = ref<(() => void) | null>(null);
+  const onChangeDebouncer = ref<(() => void) | null>(null);
   const hoverElementPosition = ref<any>({});
   const currentRowHover = ref<any>(null);
   const oldRowNodeHover = ref<HTMLElement | null>(null);
@@ -492,9 +492,14 @@
       | HTMLDivElement
       | undefined;
     const BOTTOM_OFFSET = 150;
-    const heightTableWrapper = tableWrapperEl.scrollHeight - tableWrapperEl.offsetHeight;
-    if (tableWrapperEl && tableWrapperEl.scrollTop + BOTTOM_OFFSET > heightTableWrapper) {
-      emit('scrolled-to-bottom');
+    if (tableWrapperEl) {
+      const heightTableWrapper = tableWrapperEl.scrollHeight - tableWrapperEl.offsetHeight;
+      if (tableWrapperEl.scrollTop + BOTTOM_OFFSET > heightTableWrapper) {
+        emit('scrolled-to-bottom');
+      }
+    } else {
+      // Handle case where tableWrapperEl is not found, maybe log an error
+      console.error('Table body wrapper not found for scroll check.');
     }
   }
 
@@ -515,25 +520,27 @@
     }
   }
 
-  function rowClassNameWrapper({ row, rowIndex }) {
+  function rowClassNameWrapper({ row, rowIndex }: { row: any; rowIndex: number }) {
     let res = 'u-list-row';
     if (props.rowClassName) res += ` ${props.rowClassName({ row, rowIndex })}`;
     return res;
   }
 
-  function onCellHover(row, column, cell) {
+  function onCellHover(row: any, column: any, cell: HTMLElement) {
     if (oldRowNodeHover.value && cell.parentNode !== oldRowNodeHover.value) {
       oldRowNodeHover.value.classList.remove('color-hover');
       rowButtonsVisible.value = false;
     }
-    if (!isScrolling.value) showRowButtons(row, cell.parentNode);
+    if (!isScrolling.value && cell.parentNode instanceof HTMLElement) {
+      showRowButtons(row, cell.parentNode);
+    }
   }
 
-  function onMouseLeaveList(event) {
-    const relatedTarget = event.relatedTarget;
+  function onMouseLeaveList(event: MouseEvent) {
+    const relatedTarget = event.relatedTarget as Element | null;
     if (
       !relatedTarget?.classList.contains('u-list-row-buttons') &&
-      !['button', 'svg', 'path', 'td'].includes(relatedTarget?.nodeName?.toLowerCase())
+      !['button', 'svg', 'path', 'td'].includes(relatedTarget?.nodeName?.toLowerCase() || '')
     ) {
       rowButtonsVisible.value = false;
       if (oldRowNodeHover.value) {
@@ -542,16 +549,19 @@
     }
   }
 
-  function showRowButtons(row, rowElement) {
+  function showRowButtons(row: any, rowElement: HTMLElement) {
     currentRowHover.value = row;
     oldRowNodeHover.value = rowElement;
-    oldRowNodeHover.value.classList.add('color-hover');
-    const posTab = (table.value?.$refs.bodyWrapper as HTMLDivElement).getBoundingClientRect();
-    hoverElementPosition.value = oldRowNodeHover.value.getBoundingClientRect();
-    const isRowInTable = Math.trunc(hoverElementPosition.value.top) >= Math.trunc(posTab.top);
-    const isRowWithinTable = Math.trunc(hoverElementPosition.value.bottom) <= Math.trunc(posTab.bottom);
-
-    rowButtonsVisible.value = isRowInTable && isRowWithinTable;
+    if (oldRowNodeHover.value) {
+      oldRowNodeHover.value.classList.add('color-hover');
+      const posTab = (table.value?.$refs.bodyWrapper as HTMLDivElement).getBoundingClientRect();
+      hoverElementPosition.value = oldRowNodeHover.value.getBoundingClientRect();
+      const isRowInTable = Math.trunc(hoverElementPosition.value.top) >= Math.trunc(posTab.top);
+      const isRowWithinTable = Math.trunc(hoverElementPosition.value.bottom) <= Math.trunc(posTab.bottom);
+      rowButtonsVisible.value = isRowInTable && isRowWithinTable;
+    } else {
+      rowButtonsVisible.value = false;
+    }
   }
 
   function getScopedContextualMenuItem(item: any) {
@@ -573,9 +583,11 @@
     emit('selection-change', selection.value);
   }
 
-  function onRowClick(row, column, event) {
-    let rowNode = event.target;
-    while (rowNode && !rowNode.classList.contains('u-list-row')) rowNode = rowNode.parentNode;
+  function onRowClick(row: any, column: any, event: MouseEvent) {
+    let rowNode: HTMLElement | null = event.target instanceof HTMLElement ? event.target : null;
+    while (rowNode && !rowNode.classList.contains('u-list-row')) {
+      rowNode = rowNode.parentNode instanceof HTMLElement ? rowNode.parentNode : null;
+    }
     if (rowNode) showRowButtons(row, rowNode);
     if (canToggleRowSelection(row)) toggleRowSelection(row);
     emit('row-click', row);
@@ -636,7 +648,7 @@
     table.value?.sort(prop, order);
   }
 
-  function onSortChange(event) {
+  function onSortChange(event: { prop: string; order: string }) {
     const { prop, order } = event;
     if (props.listKey) setSort({ list: props.listKey, value: { prop, order } });
     currentSort.value = { prop, order };
@@ -647,9 +659,12 @@
   }
 
   // Gestion des changements de visibilité
-  const onColumnVisibilityChange = (column, value) => {
+  const onColumnVisibilityChange = (column: string, value: boolean) => {
     columnVisibility.value[column] = value;
-    setVisibility({ column, value });
+    setVisibility({
+      column,
+      value: value ? LIST_COLUMN_VISIBILITY.VISIBLE : LIST_COLUMN_VISIBILITY.INVISIBLE,
+    });
   };
 
   function clearSelection() {
@@ -705,7 +720,9 @@
         });
       }, timeout);
     }
-    onChangeDebouncer.value();
+    if (onChangeDebouncer.value) {
+      onChangeDebouncer.value();
+    }
   }
 
   function onFilterChange() {
@@ -718,7 +735,9 @@
         isRemoteData.value ? 800 : 250
       );
     }
-    filterChangeDebouncer.value();
+    if (filterChangeDebouncer.value) {
+      filterChangeDebouncer.value();
+    }
   }
 
   function onSearchChange(search: string) {
@@ -728,7 +747,9 @@
         await onFilterOrSearchChange();
       }, 250);
     }
-    searchChangeDebouncer.value();
+    if (searchChangeDebouncer.value) {
+      searchChangeDebouncer.value();
+    }
   }
 
   async function onFilterOrSearchChange() {

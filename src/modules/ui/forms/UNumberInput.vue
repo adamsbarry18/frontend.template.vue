@@ -114,7 +114,7 @@
     (e: 'reset'): void;
   }>();
 
-  const input = ref(props.modelValue);
+  const input = ref<number | null>(props.modelValue);
   const customInputValue = ref<string | number>('');
   const inputFocused = ref(false);
   const inputRef = ref<HTMLInputElement | null>(null);
@@ -163,7 +163,7 @@
       inputFocused.value = true;
       setTimeout(() => {
         inputRef.value?.focus();
-        document.execCommand('selectAll', false, null);
+        document.execCommand('selectAll', false, '');
       }, 50);
     }
   };

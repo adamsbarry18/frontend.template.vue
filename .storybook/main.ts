@@ -16,7 +16,7 @@ export default {
     options: {},
   },
 
-  async viteFinal(config) {
+  async viteFinal(config: any) {
     config.optimizeDeps = {
       ...config.optimizeDeps,
       include: ['@storybook/builder-vite'],

@@ -34,7 +34,7 @@
   const intersectionRatio = reactive<Record<string, number>>({});
   const clickedSection = ref<string | null>(null);
   const scrollHandlerDisabled = ref(false);
-  let scrollDisablerTimeout: NodeJS.Timeout | null = null;
+  const scrollDisablerTimeout = ref<NodeJS.Timeout | null>(null);
 
   // Gestion des slots
   const slots = useSlots();
@@ -92,8 +92,10 @@
       section.$el.scrollIntoView({ behavior: 'smooth' });
       clickedSection.value = getMenuTitle(section);
       scrollHandlerDisabled.value = true;
-      clearTimeout(scrollDisablerTimeout);
-      scrollDisablerTimeout = setTimeout(() => {
+      if (scrollDisablerTimeout.value) {
+        clearTimeout(scrollDisablerTimeout.value);
+      }
+      scrollDisablerTimeout.value = setTimeout(() => {
         scrollHandlerDisabled.value = false;
       }, 1000);
     }
@@ -142,7 +144,9 @@
     eventListeners.forEach(({ section, handler }) => {
       section.$off('intersection-ratio', handler);
     });
-    clearTimeout(scrollDisablerTimeout);
+    if (scrollDisablerTimeout.value) {
+      clearTimeout(scrollDisablerTimeout.value);
+    }
   });
 </script>
 

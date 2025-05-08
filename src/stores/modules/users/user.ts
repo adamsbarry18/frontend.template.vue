@@ -399,15 +399,19 @@ export const useUsersStore = defineStore('users', () => {
    * @returns The updated UserModel from the server.
    */
   async function updateUser(user: UserModel): Promise<UserModel> {
-    const dataToSend = user.toAPI ? user.toAPI() : { ...user };
-
-    delete dataToSend.id;
-    delete dataToSend.createdAt;
-    delete dataToSend.updatedAt;
+    // Select only the fields that should be updatable via this function
+    const dataToSend: Partial<UserModel> = {
+      email: user.email,
+      name: user.name,
+      surname: user.surname,
+      color: user.color,
+      // preferences: user.preferences, // Preferences are updated via setPreference
+      // level, internal, permissions are updated via authorizationStore
+    };
 
     try {
       const response = await apiStore.api.put(`/api/v1/users/${user.id}`, {
-        data: dataToSend,
+        data: dataToSend, // Send only the selected fields
       });
       const updatedUser = UserModel.fromAPI(response.data.data);
       _updateUserInMap(updatedUser);

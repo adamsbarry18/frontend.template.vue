@@ -23,7 +23,7 @@
   const notificationStore = useNotificationStore();
 
   // Référence au composant IconBase pour manipuler le DOM
-  const bell = ref(null);
+  const bell = ref<InstanceType<typeof IconBase> | null>(null);
 
   // Propriété calculée pour les notifications
   const notifications = computed(() => notificationStore.getAll);

@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch } from 'vue';
+  import { ref, computed, watch, PropType } from 'vue';
   import { ElUpload } from 'element-plus';
   import { IconBase } from '@/modules/ui';
   import { formatFileSize } from '@/libs/utils/Number';
@@ -49,7 +49,8 @@
 
   const props = defineProps({
     modelValue: {
-      type: Object,
+      type: Object as PropType<File | null>,
+      default: null,
     },
     accept: {
       type: String,
@@ -61,13 +62,14 @@
     },
   });
 
-  const input = ref(props.modelValue);
+  const input = ref<File | null>(props.modelValue || null);
   const isUploadInProgress = ref(false);
 
   watch(
     () => props.modelValue,
-    (newValue) => {
-      input.value = newValue;
+    (newValue: File | null | undefined) => {
+      // Expliciter le type de newValue
+      input.value = newValue ?? null; // Assigner null si newValue est undefined
     },
     { immediate: true }
   );

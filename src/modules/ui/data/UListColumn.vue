@@ -7,7 +7,7 @@
     :width="width"
     :min-width="minWidth"
     :sort-method="sortMethodFunction"
-    :sort-by="sortByProp"
+    :sort-by="sortByProp || undefined"
     :sort-orders="['ascending', 'descending']"
     :align="align"
     :type="type"
@@ -61,14 +61,14 @@
 
   // Injection de dépendances
   const listKey = inject('listKey', '');
-  const columnVisibility = inject('columnVisibility', {});
+  const columnVisibility = inject('columnVisibility', {} as Record<string, boolean>);
 
   // Variable réactive pour gérer le tri personnalisé
   const hasCustomSort = ref(false);
 
   const isVisible = computed(() => {
     const fullKey = `${listKey}@${props.columnKey}`;
-    if (props.columnKey && columnVisibility.hasOwnProperty(fullKey)) {
+    if (props.columnKey && columnVisibility[fullKey] !== undefined) {
       return columnVisibility[fullKey];
     }
     return true;

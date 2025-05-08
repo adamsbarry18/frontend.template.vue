@@ -1,7 +1,7 @@
 <template>
   <el-date-picker
     ref="datepicker"
-    v-model="input"
+    v-model="vModelCompatibleInput"
     class="u-date-picker"
     :class="datepickerClass"
     :placeholder="placeholder || $t('commons.date-picker.default-placeholder')"
@@ -35,7 +35,7 @@
   }
 
   interface Props {
-    modelValue?: Date | Date[] | null;
+    modelValue?: Date | [Date, Date] | null; // Modifié Date[] en [Date, Date]
     placeholder?: string;
     format?: string;
     type?: 'date' | 'datetime' | 'daterange' | 'datetimerange';
@@ -59,20 +59,30 @@
   });
 
   const emit = defineEmits<{
-    (e: 'update:modelValue', value: Date | Date[] | null): void;
-    (e: 'change', value: Date | Date[] | null): void;
-    (e: 'blur', value: Date | Date[] | null): void;
+    (e: 'update:modelValue', value: Date | [Date, Date] | null): void; // Modifié Date[] en [Date, Date]
+    (e: 'change', value: Date | [Date, Date] | null): void; // Modifié Date[] en [Date, Date]
+    (e: 'blur', value: Date | [Date, Date] | null): void; // Modifié Date[] en [Date, Date]
     (e: 'pick-shortcut', key: string): void;
   }>();
 
-  const input = ref<Date | Date[] | null>(props.modelValue);
+  const input = ref<Date | [Date, Date] | null>(props.modelValue ?? null); // Modifié Date[] en [Date, Date]
+
+  const vModelCompatibleInput = computed({
+    get: () => input.value ?? undefined,
+    set: (value: Date | [Date, Date] | undefined | null) => {
+      // Modifié Date[] en [Date, Date]
+      // ElDatePicker peut émettre null ou undefined
+      input.value = formatInput(value ?? null); // Convertir undefined en null pour formatInput
+    },
+  });
 
   const datepickerClass = computed(() => ({
     '-disabled': props.disabled,
     '-range': ['daterange', 'datetimerange'].includes(props.type!),
   }));
 
-  const getDefaultValue = computed(() => {
+  const getDefaultValue = computed((): Date | [Date, Date] | null => {
+    // Expliciter le type de retour
     const currentDate = dayjs();
 
     if (props.type === 'date' || props.type === 'datetime') {
@@ -80,6 +90,7 @@
     }
 
     if (props.type === 'daterange' || props.type === 'datetimerange') {
+      // Retourner explicitement un tuple [Date, Date]
       return [currentDate.toDate(), currentDate.add(1, 'month').toDate()];
     }
 
@@ -150,14 +161,14 @@
 
   // Raccourcis pour un date-picker simple (type "date" ou "datetime")
   const datePickerShortcuts = computed(() => {
-    const shortcuts = {
-      today: 0,
-      '1-day.single': 3600 * 1000 * 24,
-      '7_last_days.single': 3600 * 1000 * 24 * 7,
-      '30_last_days.single': 3600 * 1000 * 24 * 30,
-      '90_last_days.single': 3600 * 1000 * 24 * 90,
-      '180_last_days.single': 3600 * 1000 * 24 * 180,
-      '365_last_days.single': 3600 * 1000 * 24 * 365,
+    const shortcuts: Record<string, { range: number; modifier?: number }> = {
+      today: { range: 0 },
+      '1-day.single': { range: 3600 * 1000 * 24 },
+      '7_last_days.single': { range: 3600 * 1000 * 24 * 7 },
+      '30_last_days.single': { range: 3600 * 1000 * 24 * 30 },
+      '90_last_days.single': { range: 3600 * 1000 * 24 * 90 },
+      '180_last_days.single': { range: 3600 * 1000 * 24 * 180 },
+      '365_last_days.single': { range: 3600 * 1000 * 24 * 365 },
     };
     const modifier = shortcutModifier.value;
     const shortcutLabel = props.shortcuts;
@@ -165,7 +176,7 @@
     return Object.keys(shortcuts).map((key) => ({
       text: i18n.global.t(`commons.date-picker.shortcut.${shortcutLabel}.${key}`),
       onClick: (picker: any) => {
-        const date = dayjs().add(modifier * shortcuts[key], 'millisecond');
+        const date = dayjs().add(modifier * shortcuts[key].range, 'millisecond');
         picker.emit('pick', date);
         onPickShortcut(key);
       },
@@ -235,24 +246,29 @@
     return [];
   });
 
-  const formatInput = (value: Date | Date[] | null): Date | Date[] | null => {
-    if (!value) {
+  const formatInput = (value: Date | [Date, Date] | null): Date | [Date, Date] | null => {
+    // Modifié Date[] en [Date, Date]
+    if (value === null) {
       return null;
     }
 
-    if (props.type === 'date' || props.type === 'datetime') {
-      return new Date((value as Date).getTime());
+    if (props.type === 'datetimerange' || props.type === 'daterange') {
+      if (Array.isArray(value) && value.length === 2 && value[0] && value[1]) {
+        const date1 = value[0] instanceof Date ? value[0] : new Date(value[0]);
+        const date2 = value[1] instanceof Date ? value[1] : new Date(value[1]);
+        return [date1, date2]; // Retourne un tuple [Date, Date]
+      }
+      return null;
     }
 
-    if (props.type === 'daterange' && Array.isArray(value) && value.length === 2) {
-      return [dayjs(value[0]).startOf('day').toDate(), dayjs(value[1]).endOf('day').toDate()];
+    // Pour 'date' ou 'datetime' (ne devrait pas être un tableau ici)
+    if (Array.isArray(value)) {
+      // Gérer le cas où un tableau est passé pour un type non-range, pourrait être une erreur.
+      // Pour l'instant, on prend le premier élément ou null.
+      const firstVal = value[0];
+      return firstVal ? (firstVal instanceof Date ? firstVal : new Date(firstVal)) : null;
     }
-
-    if (props.type === 'datetimerange' && Array.isArray(value) && value.length === 2) {
-      return [new Date(value[0].getTime()), new Date(value[1].getTime())];
-    }
-
-    return null;
+    return value instanceof Date ? value : new Date(value);
   };
 
   const onChange = () => {

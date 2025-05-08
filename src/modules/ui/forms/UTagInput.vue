@@ -164,16 +164,19 @@
     return props.values.slice(0, props.collapseLimit);
   });
   const invisibleTags = computed(() => {
-    if (props.collapseLimit === 0 || props.values.length < props.collapseLimit) {
+    if (
+      (props.collapseLimit ?? Number.MAX_SAFE_INTEGER) === 0 ||
+      props.values.length < (props.collapseLimit ?? Number.MAX_SAFE_INTEGER)
+    ) {
       return [];
     }
-    return props.values.slice(props.collapseLimit);
+    return props.values.slice(props.collapseLimit ?? Number.MAX_SAFE_INTEGER);
   });
   const filteredEnumOptions = computed(() => {
     return (props.enumOptions || []).filter((o) => !props.values.map((v) => v.value).includes(o.value));
   });
   const isFull = computed(() => {
-    return props.values.length >= props.maxTotalValues;
+    return props.values.length >= (props.maxTotalValues ?? Number.MAX_SAFE_INTEGER);
   });
 
   const getTagLabel = (tag: any) => {
@@ -248,7 +251,7 @@
       emit('add-item', localInputValue);
       const tag: any = { value: localInputValue };
       if (props.type === 'enum') {
-        const option = props.enumOptions.find((o) => o.value === localInputValue);
+        const option = (props.enumOptions ?? []).find((o) => o.value === localInputValue);
         if (option?.icon) {
           tag.icon = option.icon;
         }
@@ -315,24 +318,24 @@
     if (data) {
       const splittedData = data
         .split(/;|\t|\n|(?: \/ )/) // Allow to paste multiple values separated by ";", "\t", "\n" or " / "
-        .map((e) => e.trim())
-        .filter((e) => validateInput(e));
+        .map((e: string) => e.trim())
+        .filter((e: string) => validateInput(e));
 
       if (splittedData.length > 1) {
         event.stopPropagation();
         event.preventDefault();
 
-        if (props.values.length + splittedData.length > props.maxTotalValues) {
-          splittedData.length = props.maxTotalValues - props.values.length;
+        if (props.values.length + splittedData.length > (props.maxTotalValues ?? Number.MAX_SAFE_INTEGER)) {
+          splittedData.length = (props.maxTotalValues ?? Number.MAX_SAFE_INTEGER) - props.values.length;
           console.error(
             i18n.global.t('audience.taginput.too-much-elements.toast', {
               added: splittedData.length,
-              limit: props.maxTotalValues,
+              limit: props.maxTotalValues ?? Number.MAX_SAFE_INTEGER,
             })
           );
         }
 
-        const formattedValues = splittedData.map((value) => {
+        const formattedValues = splittedData.map((value: string) => {
           emit('add-item', value);
           return { value };
         });

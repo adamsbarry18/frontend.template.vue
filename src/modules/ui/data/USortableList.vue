@@ -47,14 +47,18 @@
 
   // Références et état réactif
   const sortableList = ref<HTMLTableElement | null>(null);
-  const input = ref([]);
+  const input = ref<Item[]>([]);
   const sortableInstance = ref<Sortable | null>(null);
 
   // Initialisation et synchronisation avec la prop value
   watch(
     () => props.modelValue,
     (newValue) => {
-      input.value = [...newValue]; // Crée une copie pour éviter les mutations directes
+      if (Array.isArray(newValue)) {
+        input.value = [...(newValue as Item[])]; // Crée une copie pour éviter les mutations directes
+      } else {
+        input.value = []; // Réinitialise si newValue n'est pas un tableau
+      }
     },
     { immediate: true }
   );

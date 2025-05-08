@@ -19,8 +19,8 @@ export const IconCount = () => ({
   `,
   setup() {
     const activeItem = ref('convert');
-    const onChange = (value) => {
-      console.log('Item changed', value);
+    const onChange = (value: number) => {
+      console.log('Value changed:', value);
     };
     return { activeItem, onChange };
   },

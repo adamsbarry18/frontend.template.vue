@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :data-lang="$i18n.locale">
+  <div id="app" :data-lang="$i18n.global.locale.value">
     <div v-if="!authCheckCompleted" class="initial-loading">
       <u-loader center size="50px" />
     </div>
@@ -75,7 +75,7 @@
       if (
         adBlockerDiv.value?.offsetParent === null ||
         adBlockerDiv.value?.offsetHeight === 0 ||
-        getComputedStyle(adBlockerDiv.value).display === 'none'
+        (adBlockerDiv.value && getComputedStyle(adBlockerDiv.value).display === 'none')
       ) {
         console.warn('AdBlocker detected!');
         $message({

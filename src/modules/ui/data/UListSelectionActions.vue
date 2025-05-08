@@ -12,7 +12,7 @@
             action.separator && availableActions[index - 1] && !availableActions[index - 1].separator,
         }"
         placement="top"
-        @click="onActionClick(action, $event)"
+        @click="handleActionClick(action, $event)"
       >
         <div>
           <icon-base :icon="action.icon" :size="28" color="var(--color-neutral-800)" />
@@ -63,25 +63,11 @@
 
   // Props
   const props = defineProps({
-    paginatedData: {
-      type: Array as PropType<any[]>,
-      required: true,
-    },
-    selection: {
-      type: Array as PropType<any[]>,
-    },
-    actions: {
-      type: Array as PropType<any[]>,
-      default: () => [],
-    },
-    data: {
-      type: Array as PropType<any[]>,
-      default: () => [],
-    },
-    selectAllAcrossPages: {
-      type: Boolean,
-      default: false,
-    },
+    selection: { type: Array as PropType<any[]>, default: () => [] },
+    data: { type: Array as PropType<any[]>, default: () => [] },
+    paginatedData: { type: Array as PropType<any[]>, default: () => [] },
+    listActions: { type: Array as PropType<Action[]>, default: () => [] },
+    showSelectAllAcrossPages: { type: Boolean, default: false },
   });
 
   // Événements
@@ -92,24 +78,20 @@
   }>();
 
   // État réactif
-  const displaySelectAllButton = ref(props.selectAllAcrossPages);
+  const displaySelectAllButton = ref(props.showSelectAllAcrossPages);
 
   // Propriétés calculées
   const checkboxState = computed(() => {
-    if (props.selection.length === 0) return '-empty';
-    if (props.selection.length === props.data.length) return '-full';
-    return props.selection.length === props.paginatedData.length ? '-full' : '-partial';
+    if (!props.selection?.length) return '-empty';
+    if (props.selection?.length === props.data?.length) return '-full';
+    return props.selection?.length === props.paginatedData?.length ? '-full' : '-partial';
   });
 
   const availableActions = computed(() => {
-    return props.actions.filter((action) => {
-      if (!action.multiTarget) {
-        if (props.selection.length !== 1) return false;
-        if (action.filterFunc && !action.filterFunc(props.selection[0])) return false;
-      } else if (action.multiTarget && action.filterFunc) {
-        if (!props.selection.every((item) => action.filterFunc!(item))) return false;
-      }
-      return true;
+    return props.listActions.filter((action) => {
+      if (!props.selection?.length) return false;
+      if (action.filterFunc && !action.filterFunc(props.selection[0])) return false;
+      return props.selection?.every((item) => action.filterFunc!(item)) || false;
     });
   });
 
@@ -122,19 +104,16 @@
     }
   }
 
-  function onActionClick(action: Action, event: MouseEvent) {
-    const viewportOffset = (event.target as HTMLElement).getBoundingClientRect();
-    const adjustedEvent = {
-      ...event,
-      clientX: viewportOffset.left + viewportOffset.width / 2,
-      clientY: viewportOffset.top + viewportOffset.height / 2,
-    };
-    if (action.multiTarget) {
-      action.onClick(props.selection, adjustedEvent);
-    } else if (props.selection.length === 1) {
+  const handleActionClick = (action: Action, event: MouseEvent) => {
+    if (!props.selection?.length) return;
+
+    const adjustedEvent = event;
+    if (props.selection.length === 1) {
       action.onClick(props.selection[0], adjustedEvent);
+    } else {
+      action.onClick(props.selection, adjustedEvent);
     }
-  }
+  };
 
   function onSelectAllAcrossPages() {
     displaySelectAllButton.value = false;

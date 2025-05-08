@@ -8,7 +8,7 @@
       </p>
     </div>
     <u-tabs class="color-blocks-wrapper" mode="new" v-model:active-index="activeIndex">
-      <u-tab-pane label="Base colors" index="1" class="blocks-wrapper__categories">
+      <u-tab-pane label="Base colors" :index="1" class="blocks-wrapper__categories">
         <h2>Base colors</h2>
         <div class="blocks-token">
           <div class="token">
@@ -494,7 +494,7 @@
           </div>
         </div>
       </u-tab-pane>
-      <u-tab-pane label="Utilities colors" index="2" class="blocks-wrapper__categories">
+      <u-tab-pane label="Utilities colors" :index="2" class="blocks-wrapper__categories">
         <h2>Utilities colors</h2>
         <div class="blocks-token">
           <div class="token">
@@ -601,7 +601,7 @@
           </div>
         </div>
       </u-tab-pane>
-      <u-tab-pane label="Status colors" index="3" class="blocks-wrapper__categories">
+      <u-tab-pane label="Status colors" :index="3" class="blocks-wrapper__categories">
         <h2>Status colors</h2>
         <div class="blocks-token">
           <div class="token">
@@ -664,7 +664,7 @@
           </div>
         </div>
       </u-tab-pane>
-      <u-tab-pane label="Data visualisation colors" index="4" class="blocks-wrapper__categories">
+      <u-tab-pane label="Data visualisation colors" :index="4" class="blocks-wrapper__categories">
         <h2>Data visualisation colors</h2>
         <div class="blocks-token">
           <div class="token">
@@ -761,8 +761,8 @@
   </div>
 </template>
 <script setup lang="ts">
-  import UTabs from '@/modules/ui/navigation/UTabs.vue';
-  import UTabPane from '@/modules/ui/navigation/UTabPane.vue';
+  import UTabs from '../../src/modules/ui/navigation/UTabs.vue';
+  import UTabPane from '../../src/modules/ui/navigation/UTabPane.vue';
 
   import { ref } from 'vue';
 
@@ -772,7 +772,7 @@
     },
   });
 
-  const activeIndex = ref('1');
+  const activeIndex = ref(1);
 </script>
 
 <style lang="scss">

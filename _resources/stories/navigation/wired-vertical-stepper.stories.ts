@@ -13,14 +13,21 @@ export const WiredVerticalStepper = () => ({
                 :steps="steps"
                 :active-step="activeStep"
                 @step-change="onStepChange"
+                @sub-step-change="onSubStepChange"
             />
         </div>
     `,
   setup() {
     const activeStep = ref(2);
-    const onStepChange = (step) => {
+    const onStepChange = (step: { id: number }) => {
+      console.log('Step changed:', step.id);
       activeStep.value = step.id;
     };
+
+    const onSubStepChange = (step: { id: number }) => {
+      console.log('Sub-step changed:', step.id);
+    };
+
     const steps = [
       {
         id: 1,

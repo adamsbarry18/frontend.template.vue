@@ -83,8 +83,8 @@ export const CascaderMenu = () => ({
     const allowParentSelection = ref(true);
     const expandTrigger = ref('click');
 
-    const handleSelect = (selectedValue) => {
-      console.log('Selected:', selectedValue);
+    const handleSelect = (selectedValue: string[]) => {
+      console.log('Selected value:', selectedValue);
     };
 
     return {

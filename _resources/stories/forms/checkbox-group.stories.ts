@@ -30,8 +30,8 @@ export const DefaultCheckboxGroup = () => ({
   `,
   setup() {
     // Les valeurs sélectionnées sont initialisées en tant que tableaux vides
-    const selectedValues = ref([]);
-    const selectedValuesColumn = ref([]);
+    const selectedValues = ref<string[]>([]);
+    const selectedValuesColumn = ref<string[]>([]);
     // Exemple d'options avec icônes et menu contextuel pour une option
     const options = ref([
       {
@@ -56,13 +56,13 @@ export const DefaultCheckboxGroup = () => ({
       },
     ]);
 
-    function handleChange(val) {
+    function handleChange(val: string[]) {
       selectedValues.value = val;
       console.log('Horizontal Checkbox Group Change:', val);
     }
 
-    function handleChangeColumn(val) {
-      selectedValuesColumn.value = val;
+    function handleChangeColumn(val: any) {
+      console.log('checkbox value is: ' + val);
       console.log('Vertical Checkbox Group Change:', val);
     }
 

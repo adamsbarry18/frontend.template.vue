@@ -42,7 +42,7 @@ export const Button = () => ({
       </div>
     </div>`,
   setup() {
-    const alert = (data) => {
+    const alert = (data: any) => {
       console.log(data);
     };
     return {

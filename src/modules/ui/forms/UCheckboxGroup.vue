@@ -35,12 +35,21 @@
   import type { PropType } from 'vue';
   import { UContextualMenu, IconBase } from '@/modules/ui';
 
-  // Props du composant
-  const props = defineProps({
-    modelValue: { type: Array as PropType<any[]> },
-    options: { type: Array as PropType<any[]>, required: true },
-    direction: { type: String, default: 'row' },
-  });
+interface Option {
+  value: any;
+  label: string;
+  icon?: string;
+  color?: string;
+  contextualMenu?: Array<{ label: string; value: any }>;
+}
+
+// Props du composant
+const props = defineProps({
+  modelValue: { type: Array as PropType<any[]> },
+  options: { type: Array as PropType<Option[]>, required: true },
+  direction: { type: String, default: 'row' },
+  contextualMenu: { type: Object as PropType<Array<{ label: string; value: any }>>, default: () => [] }
+});
 
   // Émission d'événements
   const emit = defineEmits<{
@@ -48,20 +57,18 @@
     (e: 'change', value: any[]): void;
   }>();
 
-  const input = ref([...props.modelValue]);
-  const contextualMenuOption = ref(null);
+  const input = ref<any[]>(props.modelValue ? [...props.modelValue] : []);
+  const contextualMenuOption = ref<Option | null>(null);
 
   watch(
     () => props.modelValue,
     (newVal) => {
-      input.value = [...newVal];
+      input.value = newVal ? [...newVal] : [];
     }
   );
 
   const contextualMenuOptions = computed(() =>
-    contextualMenuOption.value && contextualMenuOption.value.contextualMenu
-      ? contextualMenuOption.value.contextualMenu
-      : []
+    contextualMenuOption.value?.contextualMenu || []
   );
 
   function toggleValue(val: any) {
@@ -78,15 +85,14 @@
     emit('change', [...input.value]);
   }
 
-  const contextualMenu = ref<InstanceType<typeof UContextualMenu>>();
-  function openContextualMenu(option: any) {
+  const contextualMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
+  function openContextualMenu(option: Option) {
     contextualMenuOption.value = option;
     if (contextualMenu.value && typeof contextualMenu.value.showMenu === 'function') {
       contextualMenu.value.showMenu({ x: 100, y: 90 });
     }
   }
 
-  // Ferme le menu contextuel
   function onContextualMenuClosed() {
     contextualMenuOption.value = null;
   }

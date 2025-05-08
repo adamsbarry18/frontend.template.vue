@@ -93,8 +93,8 @@
       },
     },
     activeStepId: {
-      type: [Number, String],
-      default: null,
+      type: [Number, String] as PropType<string | number>,
+      default: undefined,
     },
     activeSubStepId: {
       type: [Number, String],
@@ -108,11 +108,9 @@
   }>();
 
   const activeSubStepComputed = computed(() => {
-    const activeStep = props.steps.find((step) => step.id === props.activeStepId);
-    if (!activeStep || !activeStep.substeps) {
-      return null;
-    }
-    return props.activeSubStepId;
+    if (!props.activeStepId) return undefined;
+    const currentStep = props.steps.find((step) => step.id === props.activeStepId);
+    return currentStep?.substeps?.find((substep) => substep.id === props.activeStepId)?.id || undefined;
   });
 
   const onStepClick = (step: Step) => {

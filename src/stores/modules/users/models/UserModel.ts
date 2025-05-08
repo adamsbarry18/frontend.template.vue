@@ -100,17 +100,35 @@ export default class UserModel {
   /**
    * Prepare object for API (convert dates to ISO string, remove frontend-only fields)
    */
-  toAPI() {
-    const res = { ...this };
-    if (res.id === null) {
-      delete res.id;
+  toAPI(): Partial<UserModel> {
+    const apiData: Partial<UserModel> = {};
+    const clearFields = [
+      'createdAt',
+      'updatedAt',
+      'passwordStatus',
+      'passwordUpdatedAt',
+      'token',
+      'level',
+      'internalLevel',
+      'internal',
+      'color',
+      'permissions',
+      'password',
+    ];
+
+    for (const key in this) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        const typedKey = key as keyof UserModel;
+        if (!clearFields.includes(typedKey)) {
+          (apiData as any)[typedKey] = this[typedKey];
+        }
+      }
     }
-    const clearFields = ['createdAt', 'updatedAt', 'passwordStatus', 'passwordUpdatedAt', 'token', 'level'];
-    for (const field of clearFields) {
-      delete res[field];
+    if (this.id === 0 || this.id === null) {
+      delete apiData.id;
     }
 
-    return res;
+    return apiData;
   }
 
   clone(): UserModel {

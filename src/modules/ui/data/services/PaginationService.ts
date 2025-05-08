@@ -14,30 +14,30 @@ const paginationDefaults: PaginationServiceSettings = {
 };
 
 export default class PaginationService {
-  private _defaultPage: number;
-  private _pageNumber: number;
-  private _itemsTotal: number;
-  private _size: number;
+  private _pageNumber: number = 1;
+  private _pageSize: number = 25;
+  private _totalItems: number = 0;
+  private _totalPages: number = 1;
 
   constructor(settings: PaginationServiceSettings = paginationDefaults) {
     const mSettings = Object.assign({}, paginationDefaults, settings);
 
-    this._defaultPage = mSettings.defaultPage!;
-    this.changePage(mSettings.defaultPage!);
-    this._itemsTotal = 0;
-    this._size = mSettings.size!;
+    this._pageNumber = mSettings.defaultPage || 1;
+    this._pageSize = mSettings.size || 25;
+    this._totalItems = 0;
+    this._totalPages = 1;
   }
 
   get defaultPage(): number {
-    return this._defaultPage;
+    return this._pageNumber;
   }
 
   get itemsTotal(): number {
-    return this._itemsTotal;
+    return this._totalItems;
   }
 
   set itemsTotal(itemsTotal: number) {
-    this._itemsTotal = itemsTotal;
+    this._totalItems = itemsTotal;
   }
 
   get pageNumber(): number {
@@ -49,7 +49,7 @@ export default class PaginationService {
   }
 
   get size(): number {
-    return this._size;
+    return this._pageSize;
   }
 
   get context(): PaginationContext {

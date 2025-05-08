@@ -38,7 +38,7 @@ export default {
   },
 };
 
-export const TagListFilter = (args) => ({
+export const TagListFilter = (args: any) => ({
   components: { UTagListFilter },
   props: Object.keys(args),
   template: `
@@ -101,22 +101,26 @@ export const TagListFilter = (args) => ({
     const listItems = ref(items);
 
     // Example 1: Default (no preselection)
-    const selectedDefault = ref([]);
+    const selectedDefault = ref<string[]>([]);
     const handleChangedDefault = () => console.log('change - Default: ', selectedDefault.value);
-    const handleSelectDefault = (tag) => selectedDefault.value.push(tag);
-    const handleUnselectDefault = (tag) => selectedDefault.value.push(tag);
+    const handleSelectDefault = (tag: { value: any; label?: string }) =>
+      selectedDefault.value.push(tag.value);
+    const handleUnselectDefault = (tag: { value: any; label?: string }) =>
+      console.log('unselect - Default: ', tag);
 
     // Example 2: Preselected (preselect "store")
     const selectedPreselected = ref(['store']);
     const handleChangedPreselected = () => console.log('change - Preselected: ', selectedPreselected.value);
-    const handleSelectPreselected = (tag) => selectedPreselected.value.push(tag);
-    const handleUnselectPreselected = (tag) => console.log('unselect - Preselected: ', tag);
+    const handleSelectPreselected = (tag: { value: any; label?: string }) =>
+      selectedPreselected.value.push(tag.value);
+    const handleUnselectPreselected = (tag: { value: any; label?: string }) =>
+      console.log('unselect - Preselected: ', tag);
 
     // Example 3: Row layout
-    const selectedRow = ref([]);
+    const selectedRow = ref<string[]>([]);
     const handleChangedRow = () => console.log('change - Row: ', selectedRow.value);
-    const handleSelectRow = (tag) => selectedRow.value.push(tag);
-    const handleUnselectRow = (tag) => console.log('unselect - Row: ', tag);
+    const handleSelectRow = (tag: { value: any; label?: string }) => selectedRow.value.push(tag.value);
+    const handleUnselectRow = (tag: { value: any; label?: string }) => console.log('unselect - Row: ', tag);
 
     return {
       listItems,

@@ -1,115 +1,122 @@
 <template>
-  <div class="u-list-wrapper base-list">
-    <base-list-header :list-service="listService" @filter-change="onFilterChange">
-      <template #header>
+  <div
+    v-if="showHeader"
+    class="header-wrapper"
+    :class="{
+      '-filter-active': filterPanelActive,
+      '-show-header-right': showHeaderRight,
+    }"
+  >
+    <div v-if="searchService || showHeaderRight" class="header">
+      <div class="header-left">
         <slot name="header" />
-      </template>
-    </base-list-header>
-
-    <div v-if="loading" class="u-list-container">
-      <slot name="items" :items="items">
-        <div v-for="(item, key) in items" :key="key">
-          <slot name="item" :item="item" />
+        <base-list-search-bar
+          v-if="searchService"
+          :search-service="searchService"
+          @search-change="onFilterChange"
+        />
+      </div>
+      <div v-if="showHeaderRight" class="header-right">
+        <div v-if="entity" class="numbers-size">
+          <icon-base :icon="entity.entityIcon" :size="26" color="white" class="count-icon" />
+          <p>
+            {{
+              $t(entity.entityLabelKey, {
+                count: props.listService?.itemsTotal ?? 0, // Use props.listService and provide default
+              })
+            }}
+          </p>
         </div>
-      </slot>
-      <div v-if="items.length === 0 && !loading" class="empty-state">
-        <img class="empty-image" src="@/assets/images/svg/list_empty.svg" alt="" />
-        <slot name="empty-label">
-          <span>{{ isFiltered ? $t('commons.list.results.empty') : $t('commons.list.empty') }}</span>
-        </slot>
+        <u-select-group
+          v-if="sort"
+          v-model="sort.selectValue"
+          :options="sort.selectOptions"
+          :placeholder="sort.placeholder || undefined"
+          @change="onFilterChange"
+        />
       </div>
     </div>
-
-    <u-list-pagination
-      v-if="pagination"
-      ref="paginationRef"
-      :total="pagination.itemsTotal"
-      :size="pagination.size"
-      :default-page="pagination.defaultPage"
-      @page-change="onPageChange"
-    />
-
-    <slot name="footer" />
+    <transition v-if="searchService && paginationService" name="filter-fade" :duration="350">
+      <u-filter
+        v-show="filterPanelActive"
+        v-model="searchService.filters"
+        :datu-count="paginationService.itemsTotal"
+        v-model:search="searchService.input"
+        :config="searchService.filterConfig"
+        @collapse="searchService.filterPanelActive = false"
+        @change="onFilterChange"
+      />
+    </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue';
-  import { UListPagination, BaseListHeader } from '@/modules/ui';
+  import { computed } from 'vue';
+  import { BaseListSearchBar, UFilter, USelectGroup, IconBase } from '@/modules/ui';
   import ListService from './services/listService';
 
-  const props = defineProps<{
-    listService: ListService | null;
+  const props = withDefaults(
+    defineProps<{
+      listService?: ListService | null;
+    }>(),
+    {
+      listService: null,
+    }
+  );
+
+  const emit = defineEmits<{
+    (e: 'filter-change'): void;
   }>();
 
-  const items = ref<any[]>([]);
-  const loading = ref(true);
-  const paginationRef = ref<InstanceType<typeof UListPagination> | null>(null);
-
-  const pagination = computed(() => {
+  const paginationService = computed(() => {
     return props.listService?.pagination || null;
   });
 
-  const search = computed(() => {
+  const searchService = computed(() => {
     return props.listService?.search || null;
   });
 
-  const isFiltered = computed(() => {
-    return !!search.value?.isFiltered;
+  const showHeader = computed(() => {
+    return (
+      showHeaderRight.value ||
+      (!!searchService.value && !!paginationService.value) ||
+      (!!searchService.value && !paginationService.value)
+    );
   });
 
-  onMounted(async () => {
-    if (items.value.length) {
-      props.listService?.onRetrieveData((data: any[]) => {
-        items.value = data;
-      });
-
-      if (props.listService?.autoload) await retrieveData();
-    }
+  const showHeaderRight = computed(() => {
+    return !!entity.value || !!sort.value;
   });
 
-  async function onPageChange(pageNumber: number) {
-    props.listService?.pagination?.changePage(pageNumber);
-    await retrieveData();
-  }
+  const filterPanelActive = computed(() => {
+    return searchService.value?.filterPanelActive || false;
+  });
 
-  async function onFilterChange() {
-    if (props.listService) {
-      items.value = await props.listService.onFilterChange();
-      if (paginationRef.value) {
-        paginationRef.value.currentPage = props.listService.pagination?.pageNumber || 1;
-      }
-    }
-  }
+  const showCounts = computed(() => {
+    return props.listService?.showCounts || false;
+  });
 
-  async function retrieveData() {
-    loading.value = true;
-    try {
-      await props.listService?.retrieveData();
-    } catch (err) {
-      console.error('retrieveData error', err);
-    } finally {
-      loading.value = false;
-    }
+  const entity = computed(() => {
+    return props.listService?.entity || null;
+  });
+
+  const sort = computed(() => {
+    return props.listService?.sort || null;
+  });
+
+  function onFilterChange() {
+    emit('filter-change');
   }
+  defineExpose({ showCounts });
 </script>
 
 <style lang="scss" scoped>
-  .u-list-wrapper {
-    .u-list-container {
-      overflow-y: auto;
+  .header-right {
+    .el-input__inner {
+      height: 34px;
     }
   }
-  .base-list {
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      & > img {
-        height: 160px;
-        object-fit: contain;
-        margin: 8px;
-      }
-    }
+  .header {
+    padding: 0 0 20px 0 !important;
   }
 </style>

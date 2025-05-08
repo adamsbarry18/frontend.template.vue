@@ -1,4 +1,4 @@
-import Color from '../../common/UiColor.vue';
+import Color from '../../common/Color.vue';
 
 export default {
   title: 'Common/Color',

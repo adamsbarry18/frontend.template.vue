@@ -67,8 +67,8 @@ export const ToggleButton = () => ({
       { id: 1, label: 'Inactif', value: false },
     ]);
 
-    const handleChange = (newValue) => {
-      console.log('Valeur changée :', newValue);
+    const handleChange = (newValue: boolean) => {
+      console.log('Toggle changed:', newValue);
     };
 
     return {

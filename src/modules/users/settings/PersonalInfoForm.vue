@@ -204,9 +204,9 @@
     }
   }
 
-  function updatePreference<K extends keyof UserModel['preferences']>(
-    key: K,
-    value: UserModel['preferences'][K]
+  function updatePreference(
+    key: string, // Use string type directly for the key
+    value: any // Keep 'any' for the value from the event
   ) {
     if (localUser.value) {
       const updatedUser = localUser.value.clone();

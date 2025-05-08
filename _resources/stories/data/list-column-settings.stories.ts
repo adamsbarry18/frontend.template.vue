@@ -24,13 +24,15 @@ export const ListColumnSettings = () => ({
       'testList@col2': true,
       'testList@col3': false,
     });
-    const onColumnVisibilityChange = (columnId, visible) => {
-      columnVisibility.value[columnId] = visible;
-      console.log('Column visibility changed:', columnVisibility.value);
+    const onColumnVisibilityChange = (columnId: string, isVisible: boolean) => {
+      console.log(`Column ${columnId} visibility changed to ${isVisible}`);
     };
-    const settingsRef = ref(null);
+
+    const settingsRef = ref<InstanceType<typeof UListColumnSettings> | null>(null);
     const openSettings = () => {
-      settingsRef.value.showSettings();
+      if (settingsRef.value) {
+        settingsRef.value.showSettings?.();
+      }
     };
     return {
       listKey,

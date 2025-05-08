@@ -105,8 +105,8 @@ export const CodeEditor = () => ({
     const emptyCode = ref('');
 
     // Fonction commune pour les événements de changement
-    const handleChange = (editor, value) => {
-      console.log(`Code modifié dans l'éditeur ${editor}:`, value);
+    const handleChange = (editor: any, value: string) => {
+      console.log('Code changed:', value);
     };
 
     return {

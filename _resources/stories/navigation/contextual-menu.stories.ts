@@ -38,9 +38,9 @@ export const ContextualMenu = () => ({
     </div>
   `,
   setup() {
-    const basicMenu = ref(null);
-    const nestedMenu = ref(null);
-    const shortcutMenu = ref(null);
+    const basicMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
+    const nestedMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
+    const shortcutMenu = ref<InstanceType<typeof UContextualMenu> | null>(null);
     const basicMenuList = ref([
       {
         label: 'Itemaaaaaaaaaaaaaaa 1',

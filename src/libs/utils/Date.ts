@@ -226,7 +226,12 @@ export const initializeDateLocale = (lang: string): void => {
  * @param date Date to validate.
  * @returns True if the date is a valid Date object and not NaN, false otherwise.
  */
-export const isDateValid = (date): boolean => date instanceof Date && !isNaN(date.getTime());
+export const isDateValid = (date: any): boolean => {
+  if (date instanceof Date) {
+    return !isNaN(date.getTime());
+  }
+  return false;
+};
 
 /**
  * Checks if a date is in the future compared to the current time.

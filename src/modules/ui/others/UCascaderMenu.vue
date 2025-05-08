@@ -53,13 +53,13 @@
   const emit = defineEmits(['select']);
 
   // Reactive state
-  const value = ref(null);
-  const lastValue = ref(null);
+  const value = ref<string[]>([]);
+  const lastValue = ref<string[]>([]);
   const hasSelectedItem = ref(false);
 
   // Lifecycle hooks
   onMounted(() => {
-    value.value = null;
+    value.value = []; // Initialiser avec un tableau vide
     lastValue.value = value.value;
   });
 
@@ -74,13 +74,13 @@
     lastValue.value = value.value;
     emit('select', lastValue.value !== null ? [...lastValue.value] : null);
     // Revert value to placeholder
-    value.value = [props.placeholder];
+    value.value = [props.placeholder]; // Assignation correcte d'un tableau de string
   };
 
   const handleVisibleChange = (visibility: boolean) => {
     if (!visibility && hasSelectedItem.value) {
       hasSelectedItem.value = false;
-      lastValue.value = null;
+      lastValue.value = []; // Réinitialiser avec un tableau vide
     }
   };
 </script>

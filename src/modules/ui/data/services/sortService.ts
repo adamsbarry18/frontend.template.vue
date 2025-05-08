@@ -27,9 +27,9 @@ interface SelectOption {
 
 export default class SortService {
   private _choices: SortChoice[];
-  private _prop: string | null;
-  private _order: OrderType | null;
-  private _placeholder: string | null;
+  private _prop: string | null = null;
+  private _order: OrderType | null = 'ascending';
+  private _placeholder: string | null = null;
 
   static ORDER_ASC: OrderType = 'ascending';
   static ORDER_DESC: OrderType = 'descending';
@@ -38,9 +38,9 @@ export default class SortService {
     const mSettings = Object.assign({}, sortDefault, settings);
 
     this._choices = mSettings.choices!;
-    this._prop = mSettings.defaultProp;
-    this._order = mSettings.defaultOrder!;
-    this._placeholder = mSettings.placeholder;
+    this._prop = mSettings.defaultProp || null;
+    this._order = mSettings.defaultOrder || 'ascending';
+    this._placeholder = mSettings.placeholder || null;
   }
 
   get placeholder(): string | null {

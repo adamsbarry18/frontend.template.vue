@@ -52,7 +52,7 @@
     emit('change', internalValue.value);
   };
 
-  const getFormattedValue = (value, config) => {
+  const getFormattedValue = (value: boolean, config: typeof props.config) => {
     return formatBool(value, config);
   };
 

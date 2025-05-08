@@ -70,10 +70,20 @@ export function wait(variable: string, expire?: number): Promise<any> {
 
     const checkVariable = () => {
       try {
-        // eslint-disable-next-line no-eval
-        const value = variable.split('.').reduce((acc, part) => acc?.[part], window);
-        if (typeof value !== 'undefined') {
-          resolve(value);
+        const parts = variable.split('.');
+        let current: any = window;
+        
+        for (const part of parts) {
+          if (current && typeof current === 'object') {
+            current = current[part];
+          } else {
+            current = undefined;
+            break;
+          }
+        }
+
+        if (typeof current !== 'undefined') {
+          resolve(current);
         } else if (expire && Date.now() - startTime > expire) {
           reject(new Error(`Variable "${variable}" non définie après ${expire} ms`));
         } else {

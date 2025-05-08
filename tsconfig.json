@@ -1,26 +1,62 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "incremental": true,
-    "allowJs": true,
-    "noImplicitThis": true,
-    "outDir": "./dist",
-    "baseUrl": "src",
+    // Options de base recommandées pour un projet frontend moderne avec Vite
+    "target": "ESNext", // Cible les fonctionnalités JavaScript les plus récentes compatibles avec les navigateurs modernes et Node >= 20
+    "module": "ESNext", // Utilise le format de module ES Modules, idéal pour les bundlers comme Vite
+    "moduleResolution": "Bundler", // Nouvelle stratégie de résolution de module recommandée pour les bundlers
+    "resolveJsonModule": true, // Permet d'importer directement des fichiers .json
+    "skipLibCheck": true, // Ignore le type-checking des fichiers de déclaration des librairies (accélère la compilation, compromis acceptable)
+    "esModuleInterop": true, // Assure une meilleure compatibilité lors de l'import de modules CommonJS
+    "allowSyntheticDefaultImports": true, // Permet les imports par défaut synthétiques (va souvent avec esModuleInterop)
+    "forceConsistentCasingInFileNames": true, // Assure la cohérence de la casse des noms de fichiers/dossiers, important pour la compatibilité multi-OS
+    "allowJs": true, // Autorise la présence de fichiers JavaScript dans le projet (si nécessaire)
+    "jsx": "preserve", // Nécessaire pour le support du JSX/TSX par Vue
+
+    // Riguer du typage - Fortement recommandé pour un code robuste
+    "strict": true, // Active l'ensemble des options de rigueur par défaut (noImplicitAny, noImplicitThis, noImplicitReturns, etc.)
+    // Vous pouvez ajouter d'autres options strictes ici si vous le souhaitez, par exemple :
+    "noFallthroughCasesInSwitch": true, // Interdit les 'case' manquants dans les switch sans break
+    "noImplicitOverride": true, // Exige le mot clé 'override' pour les méthodes de surcharge
+    "noImplicitReturns": true, // S'assure que toutes les branches d'une fonction qui doit retourner une valeur le font
+    // "noUncheckedIndexedAccess": true, // Option très stricte pour l'accès aux éléments par index (peut générer beaucoup d'erreurs initialement)
+
+    // Configuration des chemins et alias
+    "baseUrl": ".", // La base pour la résolution des chemins non relatifs
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"] // Mappe l'alias '@/' vers le dossier 'src'
     },
+
+    // Types globaux nécessaires pour les différents environnements
+    // Combine les types pour l'application (vite/client), les tests (vitest/globals) et les fichiers Node.js (node)
     "types": ["vite/client", "vitest/globals", "node"],
-    "jsx": "preserve"
+    
+    // Librairies d'APIs globales disponibles
+    // Combine les APIs standard JS (ESNext) et les APIs du navigateur (DOM, DOM.Iterable)
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+
+    // Options spécifiques au processus de compilation/vérification
+    "noEmit": true // Indique à TypeScript de ne pas générer de fichiers JavaScript/CSS. Vite s'en charge pendant la build. TypeScript est utilisé pour le type-checking.
+    // "outDir": "./dist", // Plus pertinent avec noEmit: true
   },
-  "vueCompilerOptions": {
-    "target": 2.7
-  },
-  "include": ["_resources/**/*", ".storybook/**/*", "src/**/*", "tests/**/*"],
+  // Note : La section "vueCompilerOptions" avec target: 2.7 est supprimée.
+  // Les presets @vue/tsconfig gèrent cela correctement pour Vue 3, et même sans extend, vue-tsc
+  // est généralement configuré pour Vue 3 par défaut ou via le plugin Vite.
+
+  // Fichiers à inclure dans le processus de compilation/vérification
+  "include": [
+    "src/**/*.ts", // Tous les fichiers TypeScript dans src
+    "src/**/*.vue", // Tous les fichiers Vue (qui contiennent du TS/JS) dans src
+    "tests/**/*.ts", // Tous les fichiers TypeScript dans tests
+    "tests/**/*.vue", // Tous les fichiers Vue dans tests
+    "vite.config.ts", // Configuration Vite (fichier Node.js/TS)
+    "vitest.config.ts", // Configuration Vitest (fichier Node.js/TS)
+    ".storybook/**/*.ts", // Fichiers TypeScript dans .storybook
+    "_resources/**/*.ts", // Fichiers TypeScript dans _resources
+    // Inclure d'autres fichiers de configuration ou scripts Node.js si nécessaire (ex: si .js en mode ESM/TS)
+     "eslint.config.js", // Si votre configuration ESLint est en JS (format plat)
+     "prettier.config.js" // Si votre configuration Prettier est en JS
+  ],
+
+  // Fichiers ou dossiers à exclure du processus
   "exclude": ["node_modules", "dist"]
 }

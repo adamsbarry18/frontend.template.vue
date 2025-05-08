@@ -49,7 +49,7 @@ export const TimePicker = () => ({
     });
     const disabledValue = ref('10:00');
     const eventValue = ref('14:00');
-    const handleChange = (newValue) => {
+    const handleChange = (newValue: string) => {
       console.log('Valeur changée :', newValue);
     };
 

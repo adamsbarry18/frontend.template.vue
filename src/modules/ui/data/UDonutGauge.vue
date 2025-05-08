@@ -11,7 +11,7 @@
         d="M21 5.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
       />
       <path
-        v-if="percentage > 0 || indeterminate"
+        v-if="(typeof percentage === 'number' && percentage > 0) || indeterminate"
         :stroke-dasharray="dasharray"
         :style="circleStyle"
         class="circle"
@@ -48,7 +48,7 @@
 
   // Propriétés calculées avec la fonction `computed`
   const dasharray = computed(() => {
-    return `${props.indeterminate ? 35 : props.percentage}, 100`;
+    return `${props.indeterminate ? 35 : props.percentage || 0}, 100`;
   });
 
   const circleBgStyle = computed(() => {

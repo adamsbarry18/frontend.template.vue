@@ -2,6 +2,7 @@
   "name": "frontend.template.vue",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "npx vite",
     "prod": "npx vite --mode production",
@@ -58,6 +59,7 @@
     "@storybook/vue3-vite": "^8.5.3",
     "@types/node": "^22.13.1",
     "@types/sortablejs": "^1.15.8",
+    "@types/tinycolor2": "^1.4.6",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-vue": "^5.2.1",

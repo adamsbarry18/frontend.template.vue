@@ -22,7 +22,7 @@
           <p>
             {{
               $t(entity.entityLabelKey, {
-                count: listService.itemsTotal,
+                count: paginationService?.itemsTotal ?? 0,
               })
             }}
           </p>
@@ -31,7 +31,7 @@
           v-if="sort"
           v-model="sort.selectValue"
           :options="sort.selectOptions"
-          :placeholder="sort.placeholder"
+          :placeholder="sort?.placeholder ?? undefined"
           @change="onFilterChange"
         />
       </div>
@@ -40,7 +40,7 @@
       <u-filter
         v-show="filterPanelActive"
         v-model="searchService.filters"
-        :datu-count="paginationService.itemsTotal"
+        :data-count="paginationService.itemsTotal"
         v-model:search="searchService.input"
         :config="searchService.filterConfig"
         @collapse="searchService.filterPanelActive = false"
@@ -108,7 +108,7 @@
     emit('filter-change');
   }
   onMounted(() => {
-    console.log('list service data: ', props.listService.data);
+    console.log('list service data: ', props.listService?.data);
   });
   defineExpose({ showCounts });
 </script>

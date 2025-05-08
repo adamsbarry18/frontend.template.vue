@@ -1,11 +1,14 @@
-import { App } from 'vue';
+import { App, DefineComponent } from 'vue';
 import { ElLoading, ElInfiniteScroll } from 'element-plus';
 import * as icons from '@/modules/ui/icons';
+
+// Define a type for the icons object
+type IconComponents = Record<string, DefineComponent<object, object, any>>;
 
 function registerGlobalComponents(app: App) {
   Object.keys(icons).forEach((key) => {
     const snakeCaseName = key.replace(/\.?([A-Z])/g, (x, y) => `-${y.toLowerCase()}`).replace(/^-/, '');
-    app.component(snakeCaseName, icons[key]);
+    app.component(snakeCaseName, (icons as IconComponents)[key]);
   });
 }
 

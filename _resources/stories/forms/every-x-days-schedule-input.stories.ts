@@ -16,8 +16,8 @@ export const Default = () => ({
     </div>`,
   setup() {
     const value = null;
-    const handleChange = (newValue) => {
-      console.log('New value:', newValue);
+    const handleChange = (newValue: string) => {
+      console.log('Schedule changed:', newValue);
     };
     return { value, handleChange };
   },
@@ -35,8 +35,8 @@ export const WithInitialValue = () => ({
     </div>`,
   setup() {
     const value = '00 00 00 */3 * ?'; // Tous les 3 jours
-    const handleChange = (newValue) => {
-      console.log('New value:', newValue);
+    const handleChange = (newValue: string) => {
+      console.log('Schedule changed:', newValue);
     };
     return { value, handleChange };
   },
@@ -55,8 +55,8 @@ export const WithTimezone = () => ({
     </div>`,
   setup() {
     const value = null;
-    const handleChange = (newValue) => {
-      console.log('New value:', newValue);
+    const handleChange = (newValue: string) => {
+      console.log('Schedule changed:', newValue);
     };
     return { value, handleChange };
   },
@@ -75,8 +75,8 @@ export const Disabled = () => ({
     </div>`,
   setup() {
     const value = '00 00 00 */5 * ?'; // Tous les 5 jours
-    const handleChange = (newValue) => {
-      console.log('New value:', newValue);
+    const handleChange = (newValue: string) => {
+      console.log('Schedule changed:', newValue);
     };
     return { value, handleChange };
   },
@@ -96,8 +96,8 @@ export const WithCustomOptions = () => ({
   setup() {
     const value = null;
     const customOptions = {}; // Ajoutez des options si nécessaire
-    const handleChange = (newValue) => {
-      console.log('New value:', newValue);
+    const handleChange = (newValue: string) => {
+      console.log('Schedule changed:', newValue);
     };
     return { value, customOptions, handleChange };
   },

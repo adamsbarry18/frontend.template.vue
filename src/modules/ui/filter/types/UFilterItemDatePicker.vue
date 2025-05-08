@@ -49,8 +49,6 @@
 
   const emit = defineEmits(['update:value', 'change']);
 
-  const internalValue = ref(props.modelValue);
-
   const defaultStartValue = computed(() => {
     return props.config.hasOwnProperty('defaultStart') ? props.config.defaultStart : null;
   });
@@ -59,13 +57,37 @@
     return props.config.hasOwnProperty('defaultEnd') ? props.config.defaultEnd : null;
   });
 
+  const internalValue = ref<(Date | null)[]>(
+    Array.isArray(props.modelValue) && props.modelValue.length === 2
+      ? props.modelValue
+      : [defaultStartValue.value, defaultEndValue.value]
+  );
+
   watch(
     () => [props.modelValue, internalValue.value],
     ([newModelValue, newInternalValue]) => {
-      if (newModelValue !== newInternalValue) {
-        internalValue.value = newModelValue;
+      // Ensure internalValue always holds an array
+      if (Array.isArray(newModelValue) && newModelValue.length === 2) {
+        if (newModelValue !== newInternalValue) {
+          internalValue.value = newModelValue;
+        }
+      } else if (newModelValue === null && internalValue.value !== null) {
+        // If modelValue becomes null, reset internalValue to default
+        internalValue.value = [defaultStartValue.value, defaultEndValue.value];
       }
-      if (props.modelValue !== internalValue.value) {
+
+      // Emit changes only if internalValue differs from modelValue
+      // This comparison needs to handle null vs array carefully
+      const modelValueIsArray = Array.isArray(props.modelValue);
+      const internalValueIsDefault =
+        internalValue.value[0] === defaultStartValue.value &&
+        internalValue.value[1] === defaultEndValue.value;
+
+      if (modelValueIsArray && props.modelValue !== internalValue.value) {
+        emit('update:value', internalValue.value);
+        emit('change', internalValue.value);
+      } else if (!modelValueIsArray && !internalValueIsDefault) {
+        // If modelValue is null, only emit if internalValue is not the default
         emit('update:value', internalValue.value);
         emit('change', internalValue.value);
       }
@@ -76,11 +98,14 @@
   const handleChange = (index: number = -1) => {
     if (internalValue.value) {
       // Check bounds consistency
-      if (internalValue.value[0] !== null && internalValue.value[1] !== null) {
-        if (index === 0 && internalValue.value[0] > internalValue.value[1]) {
+      const startDate = internalValue.value[0];
+      const endDate = internalValue.value[1];
+
+      if (startDate instanceof Date && endDate instanceof Date) {
+        if (index === 0 && startDate > endDate) {
           internalValue.value[1] = null;
         }
-        if (index === 1 && internalValue.value[1] < internalValue.value[0]) {
+        if (index === 1 && endDate < startDate) {
           internalValue.value[0] = null;
         }
       }
@@ -99,8 +124,11 @@
     handleChange();
   };
 
-  const getFormattedValue = (value) => {
-    return formatDateRange(value);
+  const getFormattedValue = (value: Date[] | null): string => {
+    if (Array.isArray(value) && value.length === 2) {
+      return formatDateRange([value[0], value[1]]);
+    }
+    return ''; // Retourne une chaîne vide si la valeur n'est pas un tuple valide
   };
 
   defineExpose({

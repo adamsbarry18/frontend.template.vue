@@ -70,7 +70,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
       features.value = response.data.data;
       return features.value;
     } catch (error) {
-      if (error.response?.status === 403) return null;
+      if ((error as any).response?.status === 403) return null;
       throw new ServerError('authorisations', 'fetchAllFeatures', error, {});
     }
   }
@@ -85,7 +85,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
       levelsAuthorisations.value = response.data.data;
       return levelsAuthorisations.value;
     } catch (error) {
-      if (error.response?.status === 403) return null;
+      if ((error as any).response?.status === 403) return null;
       throw new ServerError('authorisations', 'fetchLevels', error, {});
     }
   }
@@ -100,7 +100,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
       const response = await apiStore.api.get(`/api/v1/authorization/levels/${level}`);
       return response.data.data;
     } catch (error) {
-      if (error.response?.status === 403) return null;
+      if ((error as any).response?.status === 403) return null;
       throw new ServerError('authorisations', 'getLevel', error, { level });
     }
   }
@@ -142,7 +142,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
         data: payload,
       });
     } catch (error) {
-      if (error.response?.status === 403) return null;
+      if ((error as any).response?.status === 403) return null;
       throw new ServerError('authorisations', 'updateUserAuthorization', error, { userId, payload });
     }
   }
@@ -157,7 +157,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
     try {
       await apiStore.api.delete(`/api/v1/authorization/users/${userId}`);
     } catch (error) {
-      if (error.response?.status === 403) return null;
+      if ((error as any).response?.status === 403) return null;
       throw new ServerError('authorisations', 'deleteUserAuthorizations', error, { userId });
     }
   }
@@ -172,7 +172,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
       const response = await apiStore.api.post(`/api/v1/authorization/users/${userId}/temporary`);
       return response.data.data;
     } catch (error) {
-      if (error.response?.status === 403) return null;
+      if ((error as any).response?.status === 403) return null;
       throw new ServerError('authorisations', 'createTemporaryAuthorisationForUser', error, { userId });
     }
   }

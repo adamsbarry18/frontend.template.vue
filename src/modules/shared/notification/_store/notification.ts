@@ -30,6 +30,11 @@ export const useNotificationStore = defineStore('notification', () => {
     context,
     icon = 'icon-notif-active',
     isError = false,
+  }: {
+    template?: string;
+    context?: any;
+    icon?: string;
+    isError?: boolean;
   }): void {
     const id = uuidv4().substring(0, 8);
     persistentNotifications.value.push({
@@ -37,12 +42,12 @@ export const useNotificationStore = defineStore('notification', () => {
       template,
       context,
       icon,
-      isError,
+      isError: isError, // Assurez-vous que la propriété correspond au paramètre
       created_time: new Date(),
     });
   }
 
-  function removeItem({ id }): void {
+  function removeItem({ id }: { id: string }): void {
     persistentNotifications.value = persistentNotifications.value.filter((item) => item.id !== id);
   }
 

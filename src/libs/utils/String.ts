@@ -80,10 +80,12 @@ export const formatDateRange = (value: [Date | null, Date | null]): string => {
     return '-';
   }
   if (value[1] === null) {
-    return `${i18n.global.t('commons.after')} ${i18n.global.d(new Date(value[0]), 'short')}`;
+    const date = value[0] ? new Date(value[0]) : new Date();
+    return `${i18n.global.t('commons.after')} ${i18n.global.d(date, 'short')}`;
   }
   if (value[0] === null) {
-    return `${i18n.global.t('commons.before')} ${i18n.global.d(new Date(value[1]), 'short')}`;
+    const date = value[1] ? new Date(value[1]) : new Date();
+    return `${i18n.global.t('commons.before')} ${i18n.global.d(date, 'short')}`;
   }
   return `${i18n.global.d(new Date(value[0]), 'short')} - ${i18n.global.d(new Date(value[1]), 'short')}`;
 };
@@ -104,7 +106,7 @@ export const formatEnum = (
 };
 
 // Type formatter object
-const typeFormater = {
+const typeFormater: Record<string, (...args: any[]) => string> = {
   daterange: formatDateRange,
   numberrange: formatNumberRange,
   enum: formatEnum,

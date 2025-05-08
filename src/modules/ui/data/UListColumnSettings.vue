@@ -40,8 +40,14 @@
   import { isColumnVisible, hasSavedVisibility, LIST_COLUMN_VISIBILITY } from '@/libs/utils/List';
   import { inject } from 'vue';
 
+  // Define Column interface locally
+  interface Column {
+    key: string;
+    label: string;
+  }
+
   const props = defineProps({
-    columns: { type: Array as PropType<any[]> },
+    columns: { type: Array as PropType<Column[]> }, // Use Column[] type
     defaults: {
       type: Object as PropType<Record<string, string>>,
     },
@@ -52,9 +58,10 @@
   const emit = defineEmits(['column-visibility-change']);
 
   const show = ref(false);
-  const values = reactive({});
+  const values = reactive<Record<string, boolean>>({}); // Correctly type the reactive object
 
-  function showSettings() {
+  function showSettings(): void {
+    if (!props.columns || !props.defaults) return; // Add guard clause
     for (const column of props.columns) {
       const columnId = getColumnId(column.key);
       if (props.defaults[column.key] === LIST_COLUMN_VISIBILITY.ALWAYS) {
@@ -69,7 +76,8 @@
     show.value = true;
   }
 
-  const hasUnsavedChanges = () => {
+  const hasUnsavedChanges = (): boolean => {
+    if (!props.columns || !props.defaults) return false; // Add guard clause
     for (const column of props.columns) {
       const columnId = getColumnId(column.key);
 
@@ -92,7 +100,8 @@
     show.value = false;
   };
 
-  const reset = () => {
+  const reset = (): void => {
+    if (!props.columns || !props.defaults) return; // Add guard clause
     for (const column of props.columns) {
       if (!isLocked(column.key)) {
         values[column.key] = props.defaults[column.key] !== LIST_COLUMN_VISIBILITY.INVISIBLE;
@@ -106,8 +115,8 @@
     }
   };
 
-  const isLocked = (columnKey: string) => {
-    return props.defaults[columnKey] === LIST_COLUMN_VISIBILITY.ALWAYS;
+  const isLocked = (columnKey: string): boolean => {
+    return props.defaults?.[columnKey] === LIST_COLUMN_VISIBILITY.ALWAYS; // Use optional chaining
   };
 
   defineExpose({ showSettings });

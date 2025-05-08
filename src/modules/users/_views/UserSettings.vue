@@ -69,6 +69,12 @@
   import { deepEqual } from '@/libs/utils/Object';
   import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 
+  // Define BreadcrumbLink locally as import might be problematic or not exported
+  interface BreadcrumbLink {
+    label: string;
+    path: string;
+  }
+
   const props = defineProps({
     mode: {
       type: String,
@@ -369,7 +375,7 @@
   function setBreadcrumb() {
     if (!user.value && props.mode !== 'creation') return;
 
-    let links = [];
+    let links: BreadcrumbLink[] = [];
     const userName = user.value?.fullName || i18n.global.t('breadcrumb.admin.new-user');
 
     if (props.mode === 'admin-edit') {
@@ -504,11 +510,11 @@
     const authorizationChanged =
       props.mode === 'admin-edit' && !deepEqual(userAuthorizations.value, originalAuthorizations.value);
     const passwordChanged = !!password.value;
+    // Create copies and nullify 'preferences' for comparison
     const userCloneForInfoCheck = user.value.clone();
     const originalUserCloneForInfoCheck = originalUser.value.clone();
-
-    delete userCloneForInfoCheck.preferences;
-    delete originalUserCloneForInfoCheck.preferences;
+    userCloneForInfoCheck.preferences = null;
+    originalUserCloneForInfoCheck.preferences = null;
 
     try {
       const infoChanged = !deepEqual(userCloneForInfoCheck, originalUserCloneForInfoCheck);

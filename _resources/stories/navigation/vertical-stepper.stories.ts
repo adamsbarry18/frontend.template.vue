@@ -56,12 +56,16 @@ export const VerticalStepper = () => ({
       { id: 6, label: 'Résumé', status: 'EMPTY' },
     ];
 
-    const onStepChange = (step) => {
+    const onStepChange = (step: { id: number }) => {
       activeStepId.value = step.id;
+      console.log('Step changed:', step.id);
     };
-    const onSubStepChange = (step) => {
+
+    const onSubStepChange = (step: { id: number }) => {
       activeSubStepId.value = step.id;
+      console.log('Sub-step changed:', step.id);
     };
+
     return {
       activeStepId,
       activeSubStepId,

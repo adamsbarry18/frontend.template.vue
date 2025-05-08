@@ -78,9 +78,12 @@
     handleChange();
   }
 
-  function getFormattedValue(value, config) {
-    return formatNumberRange(value, config);
-  }
+  const getFormattedValue = (value: number[] | null, config: typeof props.config): string => {
+    if (Array.isArray(value) && value.length === 2) {
+      return formatNumberRange([value[0], value[1]], config);
+    }
+    return ''; // Retourne une chaîne vide si la valeur n'est pas un tuple valide
+  };
 
   defineExpose({
     getFormattedValue,

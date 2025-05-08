@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, Ref } from 'vue';
   import { ElSlider } from 'element-plus';
 
   const props = defineProps({
@@ -41,14 +41,10 @@
     get() {
       return props.modelValue;
     },
-    set(val) {
-      if (Array.isArray(val)) {
-        emit('update:modelValue', val[0]); // Use the first value if it's an array
-      } else {
-        emit('update:modelValue', val);
-      }
+    set(val: number | number[]) {
+      emit('update:modelValue', Array.isArray(val) ? val[0] : val);
     },
-  });
+  }) as Ref<number | number[]>;
   const formatTooltip = (value: number): string => {
     return `${value}%`;
   };
@@ -56,8 +52,12 @@
     [props.min]: formatTooltip(props.min),
     [props.max]: formatTooltip(props.max),
   }));
-  const onChange = (val: number) => {
-    emit('change', val);
+  const onChange = (val: number | number[]) => {
+    if (Array.isArray(val)) {
+      emit('change', val[0]);
+    } else {
+      emit('change', val);
+    }
   };
 </script>
 

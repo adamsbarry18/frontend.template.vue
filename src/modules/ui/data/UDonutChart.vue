@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onBeforeUnmount } from 'vue';
+  import { ref, computed, onBeforeUnmount, PropType } from 'vue';
   import { debounce } from '@/libs/utils/Debounce';
   import { getCssVariable } from '@/libs/utils/Style';
   import { getGraphColorPalette } from '@/libs/utils/Color';
@@ -55,12 +55,12 @@
       validator: (value: string) => ['auto', 'vertical', 'horizontal'].includes(value),
     },
     valueFormatter: {
-      type: Function,
-      default: (value) => numberFormat(value, { condensed: true }),
+      type: Function as PropType<(value: number) => string>,
+      default: (value: number) => numberFormat(value, { condensed: true }),
     },
     tooltipFormat: {
-      type: [Boolean, String, Function],
-      default: () => (p) =>
+      type: [Boolean, String, Function] as PropType<boolean | string | ((p: any) => string)>,
+      default: () => (p: any) =>
         `${p.seriesName} <br/>${p.name}: ${numberFormat(p.value, { condensed: true })} (${numberFormat(p.percent, { unit: '%' })})`,
     },
     minRadius: {
@@ -95,7 +95,7 @@
   const sum = computed(() => {
     return props.data
       .filter((item: any) => !legendSelected.value || legendSelected.value[item.name])
-      .reduce((acc: any, item: any) => acc + item.value, 0);
+      .reduce((acc: number, item: any) => acc + (item.value as number), 0);
   });
 
   const isLayoutVertical = computed<boolean>(() => {
@@ -199,12 +199,12 @@
   });
 
   // Expose chart update method if needed
-  const chart = ref(null);
-  function updateChart(): void {
+  const chart = ref<any>(null);
+  const updateChart = () => {
     if (chart.value) {
       chart.value.resize();
     }
-  }
+  };
 
   // Expose chart ref and updateChart for parent usage if needed
   defineExpose({ updateChart });

@@ -40,7 +40,8 @@
 
   const props = defineProps({
     modelValue: {
-      type: [String, Number, Date, Array, Boolean],
+      type: [String, Number, Boolean] as PropType<string | number | boolean>,
+      default: undefined,
     },
     disabled: {
       type: Boolean,
@@ -67,17 +68,18 @@
 
   const emit = defineEmits(['update:modelValue', 'change']);
 
-  const input = ref(props.modelValue);
+  const input = ref<string | number | boolean | undefined>(props.modelValue ?? undefined);
 
   watch(
     () => props.modelValue,
-    (val: any) => {
-      input.value = val;
+    (val: string | number | boolean | undefined) => {
+      // Mise à jour du type du paramètre val
+      input.value = val ?? undefined;
     }
   );
 
   onMounted(() => {
-    input.value = props.modelValue || props.modelValue === false ? props.modelValue : null;
+    input.value = props.modelValue ?? undefined;
   });
 
   function handleChange() {

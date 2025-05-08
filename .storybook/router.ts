@@ -17,18 +17,23 @@ const StoryRouter =
       router.replace('/');
     }
 
-    const getLocation = (location) => {
+    const getLocation = (location: RouteLocationRaw) => {
       // The localtion can be a simple string if you are using directly one of the
       // Router methods (https://router.vuejs.org/en/api/router-instance.html#methods)
       // or it can be an object, having the name or the path depending if you
       // are using named routes or not.
       if (typeof location === 'object') {
-        return location.path ? location.path : `name: ${location.name}`;
+        if ('path' in location && location.path) {
+          return location.path;
+        } else if ('name' in location && location.name) {
+          return `name: ${String(location.name)}`; // Ensure name is stringified
+        }
+        return JSON.stringify(location); // Fallback for other object types
       }
       return location;
     };
 
-    let replaced;
+    let replaced: boolean = false;
 
     // We want to log every action performed on the navigation router with the only
     // exception of links replaced with the linkTo callback.
@@ -70,7 +75,7 @@ const StoryRouter =
     router.afterEach((to) => {
       for (const link of Object.keys(links)) {
         if (to.fullPath === link) {
-          links[link](to.fullPath);
+          (links as any)[link](to.fullPath);
           replaced = true;
           return;
         }

@@ -14,6 +14,6 @@ app.use(router);
 app.use(i18n);
 app.use(plugins);
 
-registerInterceptor({ router, i18n });
+registerInterceptor({ router, i18n: i18n as any }); // Use 'as any' to bypass complex type mismatch
 
 app.mount('#app');

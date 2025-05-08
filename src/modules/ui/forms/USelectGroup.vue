@@ -53,7 +53,7 @@
       <el-option-group
         v-for="(group, label) in groupedOptions"
         :key="label"
-        :label="withGroupLabel ? label : null"
+        :label="withGroupLabel ? label : undefined"
       >
         <el-option
           v-for="item in group"
@@ -86,11 +86,18 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, type PropType } from 'vue';
+  import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, PropType } from 'vue';
+  import { ElSelect } from 'element-plus';
+  import { IconBase } from '@/modules/ui';
+
+  type SelectInstance = InstanceType<typeof ElSelect>;
+
+  const selectRef = ref<SelectInstance | null>(null);
+
   import { groupBy as _groupBy } from '@/libs/utils/Array';
   import { isObject } from '@/libs/utils/Object';
-  import { ElSelect, ElOption, ElOptionGroup } from 'element-plus';
-  import { IconBase, UTooltip } from '@/modules/ui';
+  import { ElOption, ElOptionGroup } from 'element-plus';
+  import { UTooltip } from '@/modules/ui';
 
   // Props
   const props = defineProps({
@@ -152,7 +159,7 @@
 
   // Refs
   const localValue = ref(props.modelValue);
-  const selectRef = ref(null);
+  // selectRef est déjà déclaré et typé à la ligne 97
 
   // Computed
   const groupedOptions = computed(() => {
@@ -163,7 +170,8 @@
   });
 
   const selectedOption = computed(() => {
-    return props.options.find((o) => {
+    return props.options.find((o: any) => {
+      // Ajout du type any pour le paramètre o
       if (isObject(localValue.value)) {
         return (o.value as any)?.value === (localValue.value as any)?.value;
       }
@@ -198,7 +206,7 @@
 
   // Lifecycle Hooks
   onMounted(() => {
-    localValue.value = props.modelValue ?? null;
+    localValue.value = props.modelValue ?? undefined;
     if (props.fallbackLabel && !selectedOption.value && localValue.value) {
       localValue.value = props.fallbackLabel;
     }
@@ -209,8 +217,10 @@
       nextTick(() => {
         const select = selectRef.value;
         if (select) {
-          select.inputHovering = true;
-          const selectInputEl = select.$el.querySelector('input');
+          if ('inputHovering' in select) {
+            (select as any).inputHovering = true;
+          }
+          const selectInputEl = select.$el?.querySelector('input');
           if (selectInputEl) {
             selectInputEl.addEventListener('mouseenter', stopEventPropagation, true);
             selectInputEl.addEventListener('mouseleave', stopEventPropagation, true);
@@ -223,7 +233,7 @@
   onBeforeUnmount(() => {
     if (props.clearable) {
       const select = selectRef.value;
-      if (select) {
+      if (select && select.$el) {
         const selectInputEl = select.$el.querySelector('input');
         if (selectInputEl) {
           selectInputEl.removeEventListener('mouseenter', stopEventPropagation, true);
@@ -238,7 +248,10 @@
   };
 
   const focus = () => {
-    selectRef.value?.focus();
+    const select = selectRef.value;
+    if (select && typeof select.focus === 'function') {
+      select.focus();
+    }
   };
 
   const handleChange = (value: any) => {

@@ -32,7 +32,7 @@ export const globalTypes = {
   },
 };
 
-const withI18n = (Story, context) => {
+const withI18n = (Story: any, context: any) => {
   i18n.global.locale = context.globals.locale;
   return Story();
 };

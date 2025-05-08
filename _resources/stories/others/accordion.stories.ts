@@ -79,8 +79,8 @@ export const Accordion = () => ({
     </div>
     `,
   methods: {
-    onChange(value) {
-      console.log('Item changed', value);
+    onChange(value: string | string[]) {
+      console.log('value:', value);
     },
   },
   data() {

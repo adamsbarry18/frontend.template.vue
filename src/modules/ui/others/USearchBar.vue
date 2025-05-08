@@ -117,8 +117,10 @@
     style: undefined,
   }));
 
-  const emitUpdate = debounce((value: string) => {
-    emit('update:modelValue', value);
+  const emitUpdate = debounce((...args: unknown[]) => {
+    if (typeof args[0] === 'string') {
+      emit('update:modelValue', args[0]);
+    }
   }, props.debounceDelay);
 
   const handleInput = (event: Event) => {

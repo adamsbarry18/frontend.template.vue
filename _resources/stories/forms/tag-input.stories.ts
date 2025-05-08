@@ -85,19 +85,19 @@ export const TagInput = () => ({
     const customTooltipTags = ref([{ value: 'Custom Tooltip Tag' }]);
 
     // Gestion des événements
-    const onChangeBasic = (newTags) => {
+    const onChangeBasic = (newTags: any) => {
       basicTags.value = newTags;
     };
 
-    const onChangeCollapsed = (newTags) => {
+    const onChangeCollapsed = (newTags: any) => {
       collapsedTags.value = newTags;
     };
 
-    const onChangeAutocomplete = (newTags) => {
+    const onChangeAutocomplete = (newTags: any) => {
       autocompleteTags.value = newTags;
     };
 
-    const onQuerySearch = ({ queryString, cb }) => {
+    const onQuerySearch = ({ queryString, cb }: { queryString: any; cb: any }) => {
       // Simule une recherche asynchrone dans enumOptions
       const results = enumOptions.value
         .filter((option) => option.label.toLowerCase().includes(queryString.toLowerCase()))
@@ -105,7 +105,7 @@ export const TagInput = () => ({
       cb(results);
     };
 
-    const onTagClick = (tag) => {
+    const onTagClick = (tag: any) => {
       console.log('Tag cliqué :', tag);
     };
 

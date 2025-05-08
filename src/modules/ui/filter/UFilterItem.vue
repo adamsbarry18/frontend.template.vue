@@ -64,7 +64,14 @@
   }
 
   // Map filter types to formatting functions
-  const formatValue = {
+  interface FormatValueMap {
+    bool: (value: any, config: ConfigType) => string;
+    enum: (value: any, config: ConfigType) => string;
+    numberrange: (value: any, config: ConfigType) => string;
+    daterange: (value: any) => string;
+  }
+
+  const formatValue: FormatValueMap = {
     bool: formatBool,
     enum: formatEnum,
     numberrange: formatNumberRange,
@@ -117,7 +124,7 @@
     if (input.value == null) {
       return i18n.global.t('commons.filter-no-value');
     }
-    const formatter = formatValue[props.config.type];
+    const formatter = formatValue[props.config.type as keyof FormatValueMap];
     if (typeof formatter === 'function') {
       return formatter(input.value, props.config);
     } else {
