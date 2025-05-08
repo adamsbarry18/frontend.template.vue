@@ -39,7 +39,7 @@ export const PasswordInput = () => ({
     const numberCheck = (value: string) => (/[0-9]/.test(value) ? 15 : null);
     const uppercaseCheck = (value: string) => (/[A-Z]/.test(value) ? 15 : null);
     const specialCharacterCheck = (value: string) => {
-      const regex = new RegExp('[!@#$%^&*()_+\-=[]{};\':"\\|,.<>/?]+');
+      const regex = new RegExp('[!@#$%^&*()_+-=[]{};\':"\\|,.<>/?]+');
       return regex.test(value) ? 15 : null;
     };
 

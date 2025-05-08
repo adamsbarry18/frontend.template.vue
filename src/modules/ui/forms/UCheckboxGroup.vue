@@ -35,21 +35,20 @@
   import type { PropType } from 'vue';
   import { UContextualMenu, IconBase } from '@/modules/ui';
 
-interface Option {
-  value: any;
-  label: string;
-  icon?: string;
-  color?: string;
-  contextualMenu?: Array<{ label: string; value: any }>;
-}
+  interface Option {
+    value: any;
+    label: string;
+    icon?: string;
+    color?: string;
+    contextualMenu?: Array<{ label: string; value: any }>;
+  }
 
-// Props du composant
-const props = defineProps({
-  modelValue: { type: Array as PropType<any[]> },
-  options: { type: Array as PropType<Option[]>, required: true },
-  direction: { type: String, default: 'row' },
-  contextualMenu: { type: Object as PropType<Array<{ label: string; value: any }>>, default: () => [] }
-});
+  // Props du composant
+  const props = defineProps({
+    modelValue: { type: Array as PropType<any[]> },
+    options: { type: Array as PropType<Option[]>, required: true },
+    direction: { type: String, default: 'row' },
+  });
 
   // Émission d'événements
   const emit = defineEmits<{
@@ -67,9 +66,7 @@ const props = defineProps({
     }
   );
 
-  const contextualMenuOptions = computed(() =>
-    contextualMenuOption.value?.contextualMenu || []
-  );
+  const contextualMenuOptions = computed(() => contextualMenuOption.value?.contextualMenu || []);
 
   function toggleValue(val: any) {
     if (input.value.includes(val)) {

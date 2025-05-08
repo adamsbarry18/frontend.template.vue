@@ -60,6 +60,7 @@ export const WiredVerticalStepper = () => ({
       activeStep,
       steps,
       onStepChange,
+      onSubStepChange,
     };
   },
 });

@@ -72,7 +72,7 @@ export function wait(variable: string, expire?: number): Promise<any> {
       try {
         const parts = variable.split('.');
         let current: any = window;
-        
+
         for (const part of parts) {
           if (current && typeof current === 'object') {
             current = current[part];

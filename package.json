@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx vite",
     "prod": "npx vite --mode production",
-    "build": "npx vue-tsc -b && npx vite build",
+    "build": "npx vue-tsc -b && npm run lint && npx vite build",
     "build:test": "npx vue-tsc -b && npx vite build --mode test",
     "build:prod": "npx vue-tsc -b && npx vite build --mode production",
     "test:unit": "vitest run",
