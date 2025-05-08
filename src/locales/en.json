@@ -332,7 +332,7 @@
   "user.settings.edit-password": "Edit password",
   "user.settings.current-password": "Current password",
   "user.settings.new-password": "New password",
-  "user.settings.updated.success": "Profile updated",
+  "user.settings.updated.success": "Profile user updated",
   "user.settings.updated.error": "Unable to update the profile",
   "user.settings.load.error": "Failed to load user information",
   "user.settings.update.password-error": "Password update failed.",

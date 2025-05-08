@@ -29,7 +29,7 @@
     // Types globaux nécessaires pour les différents environnements
     // Combine les types pour l'application (vite/client), les tests (vitest/globals) et les fichiers Node.js (node)
     "types": ["vite/client", "vitest/globals", "node"],
-    
+
     // Librairies d'APIs globales disponibles
     // Combine les APIs standard JS (ESNext) et les APIs du navigateur (DOM, DOM.Iterable)
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
@@ -53,8 +53,8 @@
     ".storybook/**/*.ts", // Fichiers TypeScript dans .storybook
     "_resources/**/*.ts", // Fichiers TypeScript dans _resources
     // Inclure d'autres fichiers de configuration ou scripts Node.js si nécessaire (ex: si .js en mode ESM/TS)
-     "eslint.config.js", // Si votre configuration ESLint est en JS (format plat)
-     "prettier.config.js" // Si votre configuration Prettier est en JS
+    "eslint.config.js", // Si votre configuration ESLint est en JS (format plat)
+    "prettier.config.js" // Si votre configuration Prettier est en JS
   ],
 
   // Fichiers ou dossiers à exclure du processus

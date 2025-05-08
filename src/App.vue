@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :data-lang="$i18n.global.locale.value">
+  <div id="app" :data-lang="$i18n.locale">
     <div v-if="!authCheckCompleted" class="initial-loading">
       <u-loader center size="50px" />
     </div>

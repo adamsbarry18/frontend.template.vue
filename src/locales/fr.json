@@ -336,7 +336,7 @@
   "user.settings.password-validator.uppercase": "1 lettre majuscule",
   "user.settings.password-validator.number": "1 chiffre",
   "user.settings.password-validator.special": "1 caractère spécial",
-  "user.settings.updated.success": "Profil mis à jour",
+  "user.settings.updated.success": "Profil utilisateur mis à jour",
   "user.settings.updated.error": "Impossible de mettre à jour le profil",
   "user.settings.load.error": "Impossible de charger les informations de l'utilisateur",
   "user.settings.update.password-error": "La mise à jour du mot de passe a échoué.",

@@ -150,7 +150,7 @@ const numberFormatsI18n = {
 const localLanguage =
   typeof window !== 'undefined' && window.localStorage ? window.localStorage.getItem('language') : null;
 
-const i18n = createI18n({
+const i18n: any = createI18n({
   legacy: false,
   locale: localLanguage !== null ? localLanguage.toLowerCase() : 'fr',
   fallbackLocale: localLanguage !== null ? localLanguage.toLowerCase() : 'en',
