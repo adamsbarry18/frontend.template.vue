@@ -17,7 +17,7 @@ docker-compose*
 
 # Version control
 .git
-.gitignore
+# .gitignore
 
 # Build artifacts and cache
 dist/
