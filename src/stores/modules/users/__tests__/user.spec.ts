@@ -62,6 +62,7 @@ describe('stores/modules/users/user', () => {
     updatedAt: new Date().toISOString(),
     passwordUpdatedAt: new Date().toISOString(),
     permissionsExpireAt: new Date(Date.now() + 3600 * 1000).toISOString(),
+    isActive: true,
   };
 
   const rawAdminUser = {
@@ -74,6 +75,7 @@ describe('stores/modules/users/user', () => {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     passwordStatus: PasswordStatus.ACTIVE,
+    isActive: true,
   };
 
   beforeEach(() => {
@@ -215,6 +217,10 @@ describe('stores/modules/users/user', () => {
 
     describe('fetchUsers', () => {
       it('should fetch all users and store them', async () => {
+        // Ensure user is authenticated for fetchUsers to proceed
+        usersStore.currentUser = rawUser1 as any;
+        usersStore.authStatusChecked = true; // Simulate auth has been checked
+
         const usersList = [rawUser1, rawAdminUser];
         mockApiGet.mockResolvedValueOnce({ data: { data: usersList } });
         await usersStore.fetchUsers();
@@ -228,6 +234,10 @@ describe('stores/modules/users/user', () => {
     describe('ensureUsersFetched', () => {
       it('should call fetchUsers if usersFetched is false', async () => {
         usersStore.usersFetched = false;
+        // Ensure user is authenticated for ensureUsersFetched (which calls fetchUsers)
+        usersStore.currentUser = rawUser1 as any;
+        usersStore.authStatusChecked = true;
+
         mockApiGet.mockResolvedValueOnce({ data: { data: [] } });
         await usersStore.ensureUsersFetched();
 

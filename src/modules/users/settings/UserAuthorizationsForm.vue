@@ -44,6 +44,42 @@
           {{ $t('commons.loading') }}
         </div>
       </div>
+
+      <div class="form-section">
+        <h4>{{ $t('user.settings.authorizations.status') }}</h4>
+        <u-radio
+          :model-value="localAuthorizations.isActive"
+          :options="activeOptions"
+          :disabled="!canEdit"
+          @update:model-value="updateAuthorization('isActive', $event)"
+        />
+      </div>
+
+      <div class="form-section">
+        <h4>{{ $t('user.settings.authorizations.define-expiration') }}</h4>
+        <u-switch
+          :model-value="expirationEnabled"
+          :true-label="$t('commons.yes')"
+          :false-label="$t('commons.no')"
+          :disabled="!canEdit"
+          @update:model-value="toggleExpiration"
+        />
+      </div>
+
+      <div v-if="expirationEnabled" class="form-section">
+        <h4>{{ $t('user.settings.authorizations.expiration') }}</h4>
+        <u-date-picker
+          :model-value="localAuthorizations.permissionsExpireAt"
+          type="datetime"
+          :placeholder="$t('user.settings.authorizations.select-expiration')"
+          :disabled="!canEdit || !expirationEnabled"
+          clearable
+          @update:model-value="updateExpireDate"
+        />
+        <small v-if="localAuthorizations.permissionsExpireAt && expirationEnabled" class="help-text">
+          {{ $t('user.settings.authorizations.expiration-info') }}
+        </small>
+      </div>
     </div>
     <div v-else class="loading-placeholder">
       <p>{{ $t('commons.loading') }}</p>
@@ -53,7 +89,7 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import { IconBase, USelectGroup, URadio } from '@/modules/ui';
+  import { IconBase, USelectGroup, URadio, UDatePicker, USwitch } from '@/modules/ui';
   import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
   import { SecurityLevel } from '@/stores/modules/users/models/UserModel';
   import i18n from '@/i18n';
@@ -62,6 +98,8 @@
     level: number;
     internal: boolean;
     permissions: Record<string, string[]> | null;
+    isActive: boolean;
+    permissionsExpireAt: Date | null;
   }
 
   const props = defineProps({
@@ -80,7 +118,26 @@
   const authorisationsStore = useAuthorisationsStore();
 
   const localAuthorizations = ref<UserAuthorizationData | null>(null);
+  const expirationEnabled = ref(false);
+  const hasInitializedExpirationEnabled = ref(false);
+
+  const activeOptions = computed(() => [
+    { value: true, label: i18n.global.t('commons.active') },
+    { value: false, label: i18n.global.t('commons.inactive') },
+  ]);
   const availableFeatures = ref<Record<string, string[]> | null>(null);
+
+  function toggleExpiration(enabled: boolean) {
+    expirationEnabled.value = enabled;
+
+    if (localAuthorizations.value) {
+      const updatedAuths = {
+        ...localAuthorizations.value,
+        permissionsExpireAt: enabled ? localAuthorizations.value.permissionsExpireAt || null : null,
+      };
+      emit('update:authorizations', updatedAuths);
+    }
+  }
 
   const levelOptions = computed(() => [
     {
@@ -134,12 +191,15 @@
     return selected;
   });
 
-  function updateAuthorization<K extends keyof UserAuthorizationData>(
+  function updateAuthorization<K extends keyof Omit<UserAuthorizationData, 'permissions'>>(
     field: K,
     value: UserAuthorizationData[K]
   ) {
     if (localAuthorizations.value && localAuthorizations.value[field] !== value) {
-      const updatedAuths = { ...localAuthorizations.value, [field]: value };
+      const updatedAuths = {
+        ...localAuthorizations.value,
+        [field]: value,
+      };
       localAuthorizations.value = updatedAuths;
       emit('update:authorizations', updatedAuths);
     }
@@ -168,13 +228,54 @@
     }
   }
 
+  function updateExpireDate(value: Date | [Date, Date] | null) {
+    if (localAuthorizations.value && expirationEnabled.value) {
+      let dateToSet: Date | null = null;
+      if (Array.isArray(value)) {
+        dateToSet = value[0] ?? null;
+      } else {
+        dateToSet = value;
+      }
+
+      const updatedAuths = {
+        ...localAuthorizations.value,
+        permissionsExpireAt: dateToSet,
+      };
+      localAuthorizations.value = updatedAuths;
+      emit('update:authorizations', updatedAuths);
+    } else if (localAuthorizations.value && !expirationEnabled.value) {
+      const updatedAuths = {
+        ...localAuthorizations.value,
+        permissionsExpireAt: null,
+      };
+      localAuthorizations.value = updatedAuths;
+      emit('update:authorizations', updatedAuths);
+    }
+  }
+
   watch(
     () => props.authorizations,
     (newAuths) => {
       if (newAuths) {
-        localAuthorizations.value = newAuths;
+        localAuthorizations.value = { ...newAuths };
+
+        if (!hasInitializedExpirationEnabled.value) {
+          expirationEnabled.value = newAuths.permissionsExpireAt !== null;
+          hasInitializedExpirationEnabled.value = true;
+        } else {
+          const propsDateExists = newAuths.permissionsExpireAt !== null;
+          if (propsDateExists !== (localAuthorizations.value?.permissionsExpireAt !== null)) {
+            if (propsDateExists && !expirationEnabled.value) {
+              expirationEnabled.value = true;
+            } else if (!propsDateExists && expirationEnabled.value) {
+              expirationEnabled.value = false;
+            }
+          }
+        }
       } else {
         localAuthorizations.value = null;
+        expirationEnabled.value = false;
+        hasInitializedExpirationEnabled.value = false;
       }
     },
     { immediate: true, deep: true }
@@ -195,6 +296,30 @@
 
 <style lang="scss" scoped>
   .user-authorizations-form {
+    .form-section {
+      h4 {
+        margin-bottom: 10px;
+        color: var(--color-text-secondary);
+      }
+      .u-select-group,
+      .u-radio,
+      .u-date-picker,
+      .u-switch {
+        width: 100%;
+        max-width: 400px;
+      }
+      .u-radio,
+      .u-switch {
+        margin-top: 5px;
+      }
+      .u-date-picker {
+        margin-top: 10px;
+      }
+      small {
+        margin-left: 5px;
+      }
+    }
+
     .global-card-title {
       display: flex;
       align-items: center;

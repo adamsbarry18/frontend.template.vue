@@ -52,7 +52,7 @@ export const useUsersStore = defineStore('users', () => {
     return user.color;
   };
 
-  // --- Internal Helper Actions ---
+  // --- Actions ---
   const apiStore = useApiStore();
 
   /**
@@ -61,8 +61,9 @@ export const useUsersStore = defineStore('users', () => {
    */
   function _updateUserInMap(user: UserModel): void {
     if (user && user.id) {
-      // Ensure user and user.id are valid
-      usersMap.value.set(user.id, user);
+      const newMap = new Map(usersMap.value);
+      newMap.set(user.id, user);
+      usersMap.value = newMap;
     }
   }
 
@@ -105,8 +106,6 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  // --- Public Actions ---
-
   /**
    * Initializes authentication status by checking for a stored token
    * and fetching the current user if a token exists.
@@ -117,22 +116,16 @@ export const useUsersStore = defineStore('users', () => {
     const storedToken = storageService.getAuthToken();
     if (storedToken) {
       try {
-        console.log('Initializing auth: Found token, fetching current user...');
         const response = await apiStore.api.get('/api/v1/users/me');
         const user = UserModel.fromAPI(response.data.data);
         _setCurrentUser(user);
-        console.log('Initializing auth: User fetched successfully.');
       } catch (error: any) {
-        console.error('Initializing auth: Failed to fetch user with stored token.', error);
         if (error.response?.status === 401 || error.message === 'BAD_CREDENTIALS') {
           storageService.removeAuthToken();
           _setCurrentUser(null);
-        } else {
-          console.error('Initialization failed due to non-auth error:', error);
         }
       }
     } else {
-      console.log('Initializing auth: No token found.');
       _setCurrentUser(null);
     }
     authStatusChecked.value = true;
@@ -162,6 +155,7 @@ export const useUsersStore = defineStore('users', () => {
       }
 
       await fetchCurrentUser();
+      authStatusChecked.value = true;
       return true;
     } catch (error) {
       console.error('[store login catch] Error during login process:', error);
@@ -181,16 +175,15 @@ export const useUsersStore = defineStore('users', () => {
 
     try {
       if (token.value) {
-        // Only call API if a token exists
         await apiStore.api.post('/api/v1/auth/logout', {
-          skipAuthErrorInterceptor: true, // Allow handling logout errors locally if needed
+          skipAuthErrorInterceptor: true,
         });
       }
     } catch (error) {
       console.error('Error during API logout call:', error);
     } finally {
       storageService.removeAuthToken();
-      PendingInterceptor.clearPendingCache(); // Clear any pending requests
+      PendingInterceptor.clearPendingCache();
       _setCurrentUser(null);
       usersMap.value.clear();
       usersFetched.value = false;
@@ -280,17 +273,15 @@ export const useUsersStore = defineStore('users', () => {
     user: UserModel;
     password: string;
   }): Promise<boolean> {
-    // apiStore is already defined at the store level
-    if (!user || !user.id) throw new Error('Valid user object with ID must be provided.'); // More specific error
+    if (!user || !user.id) throw new Error('Valid user object with ID must be provided.');
     try {
       await apiStore.api.put(`/api/v1/users/${user.id}/password`, {
         data: { password },
-        skipAuthErrorInterceptor: true, // Often, password updates have specific error handling
+        skipAuthErrorInterceptor: true,
       });
-      // Return true if the ID of the modified user matches the ID of the logged-in user
+
       return user.id === currentUserId.value;
     } catch (error: any) {
-      // Propagate the error for component-level handling
       throw new ServerError('users', 'updateUserPassword', error, { userId: user.id });
     }
   }
@@ -301,20 +292,14 @@ export const useUsersStore = defineStore('users', () => {
    * @returns The UserModel of the current user, or null if fetch fails or no user is authenticated.
    */
   async function fetchCurrentUser(): Promise<UserModel | null> {
-    console.log('[fetchCurrentUser] Start');
     try {
-      console.log('[fetchCurrentUser] Calling API /users/me');
       const response = await apiStore.api.get('/api/v1/users/me');
-      console.log('[fetchCurrentUser] API call successful');
       const user = UserModel.fromAPI(response.data.data);
       _setCurrentUser(user);
-      console.log('[fetchCurrentUser] User set, returning user.');
       return user;
     } catch (error) {
-      console.error('[fetchCurrentUser catch] Failed to fetch current user:', error);
       storageService.removeAuthToken();
       _setCurrentUser(null);
-      console.log('[fetchCurrentUser catch] Throwing ServerError');
       throw new ServerError('users', 'fetchCurrentUser', error);
     }
   }
@@ -345,6 +330,9 @@ export const useUsersStore = defineStore('users', () => {
    * Populates the usersMap and sets usersFetched to true.
    */
   async function fetchUsers(): Promise<void> {
+    if (!isAuthenticated.value) {
+      return;
+    }
     try {
       const response = await apiStore.api.get('/api/v1/users');
       const fetchedUsers = response.data.data.map((u: any) => UserModel.fromAPI(u));
@@ -399,19 +387,16 @@ export const useUsersStore = defineStore('users', () => {
    * @returns The updated UserModel from the server.
    */
   async function updateUser(user: UserModel): Promise<UserModel> {
-    // Select only the fields that should be updatable via this function
     const dataToSend: Partial<UserModel> = {
       email: user.email,
       name: user.name,
       surname: user.surname,
       color: user.color,
-      // preferences: user.preferences, // Preferences are updated via setPreference
-      // level, internal, permissions are updated via authorizationStore
     };
 
     try {
       const response = await apiStore.api.put(`/api/v1/users/${user.id}`, {
-        data: dataToSend, // Send only the selected fields
+        data: dataToSend,
       });
       const updatedUser = UserModel.fromAPI(response.data.data);
       _updateUserInMap(updatedUser);
@@ -476,9 +461,10 @@ export const useUsersStore = defineStore('users', () => {
     if (!userId) throw new Error('User ID is required');
     try {
       await apiStore.api.delete(`/api/v1/users/${userId}`);
-      const deleted = usersMap.value.delete(userId);
+      const newMap = new Map(usersMap.value);
+      const deleted = newMap.delete(userId);
       if (deleted) {
-        console.log(`User ${userId} deleted from local map.`);
+        usersMap.value = newMap;
       }
       if (currentUser.value && currentUser.value.id === userId) {
         await logout();
@@ -493,16 +479,14 @@ export const useUsersStore = defineStore('users', () => {
    * @param payload Object containing the user model.
    */
   async function resetPreferences({ user }: { user: UserModel }): Promise<void> {
-    // apiStore is already defined at the store level
     if (!user || !user.id) throw new Error('Valid user object with ID must be provided.');
     try {
       await apiStore.api.delete(`/api/v1/users/${user.id}/preferences`, {
         skipAuthErrorInterceptor: true,
       });
-      // Optionally, update local user model if preferences are cleared locally too
       if (currentUser.value && currentUser.value.id === user.id) {
         const updatedUser = currentUser.value.clone();
-        updatedUser.preferences = null; // Or an empty object, depending on desired state
+        updatedUser.preferences = null;
         _setCurrentUser(updatedUser);
       } else {
         const userInMap = usersMap.value.get(user.id);

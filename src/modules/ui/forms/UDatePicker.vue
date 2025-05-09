@@ -1,7 +1,8 @@
 <template>
   <el-date-picker
     ref="datepicker"
-    v-model="vModelCompatibleInput"
+    :model-value="input ?? undefined"
+    :default-value="defaultValueForPicker"
     class="u-date-picker"
     :class="datepickerClass"
     :placeholder="placeholder || $t('commons.date-picker.default-placeholder')"
@@ -16,13 +17,13 @@
     :disabled-date="disabledDate"
     :first-day-of-week="firstDayOfWeek"
     :popper-class="popperClass"
-    @change="onChange"
+    @update:model-value="handleElDatePickerUpdate"
     @blur="onBlur"
   />
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { ElDatePicker } from 'element-plus';
   import dayjs from 'dayjs';
   import i18n from '@/i18n';
@@ -35,7 +36,7 @@
   }
 
   interface Props {
-    modelValue?: Date | [Date, Date] | null; // Modifié Date[] en [Date, Date]
+    modelValue?: Date | [Date, Date] | null;
     placeholder?: string;
     format?: string;
     type?: 'date' | 'datetime' | 'daterange' | 'datetimerange';
@@ -45,7 +46,6 @@
     shortcuts?: '' | 'future' | 'past' | 'around';
     customShortcuts?: DatePickerShortcut[];
     disabled?: boolean;
-    // Replace the generic Function type with an explicit signature.
     disabledDate?: () => void;
     clearable?: boolean;
   }
@@ -59,46 +59,28 @@
   });
 
   const emit = defineEmits<{
-    (e: 'update:modelValue', value: Date | [Date, Date] | null): void; // Modifié Date[] en [Date, Date]
-    (e: 'change', value: Date | [Date, Date] | null): void; // Modifié Date[] en [Date, Date]
-    (e: 'blur', value: Date | [Date, Date] | null): void; // Modifié Date[] en [Date, Date]
+    (e: 'update:modelValue', value: Date | [Date, Date] | null): void;
+    (e: 'change', value: Date | [Date, Date] | null): void;
+    (e: 'blur', value: Date | [Date, Date] | null): void;
     (e: 'pick-shortcut', key: string): void;
   }>();
 
-  const input = ref<Date | [Date, Date] | null>(props.modelValue ?? null); // Modifié Date[] en [Date, Date]
-
-  const vModelCompatibleInput = computed({
-    get: () => input.value ?? undefined,
-    set: (value: Date | [Date, Date] | undefined | null) => {
-      // Modifié Date[] en [Date, Date]
-      // ElDatePicker peut émettre null ou undefined
-      input.value = formatInput(value ?? null); // Convertir undefined en null pour formatInput
-    },
-  });
+  const input = ref<Date | [Date, Date] | null>(null);
 
   const datepickerClass = computed(() => ({
     '-disabled': props.disabled,
     '-range': ['daterange', 'datetimerange'].includes(props.type!),
   }));
 
-  const getDefaultValue = computed((): Date | [Date, Date] | null => {
-    // Expliciter le type de retour
-    const currentDate = dayjs();
-
+  // Default value for the picker calendar view when modelValue is initially null
+  const defaultValueForPicker = computed(() => {
     if (props.type === 'date' || props.type === 'datetime') {
-      return currentDate.toDate();
+      return new Date();
     }
-
     if (props.type === 'daterange' || props.type === 'datetimerange') {
-      // Retourner explicitement un tuple [Date, Date]
-      return [currentDate.toDate(), currentDate.add(1, 'month').toDate()];
+      return new Date();
     }
-
-    return null;
-  });
-
-  onMounted(() => {
-    input.value = getDefaultValue.value;
+    return undefined;
   });
 
   const defaultFormat = computed(() =>
@@ -115,12 +97,10 @@
     return classes.join(' ');
   });
 
-  // Méthode appelée lors du clic sur un raccourci
   const onPickShortcut = (key: string) => {
     emit('pick-shortcut', key);
   };
 
-  // Génère les raccourcis pour les plages de dates (daterange ou datetimerange)
   const generateRangeShortcuts = (shortcuts: Record<string, { range: number; modifier?: number }>) => {
     return Object.keys(shortcuts).map((key) => {
       const { range, modifier } = shortcuts[key];
@@ -143,12 +123,10 @@
     });
   };
 
-  // Retourne le modificateur utilisé pour calculer la date en fonction du sens des raccourcis
   const shortcutModifier = computed(() => {
     return props.shortcuts === 'past' ? -1 : 1;
   });
 
-  // Choisit le groupe de raccourcis à utiliser en fonction du type et de la valeur du prop shortcuts
   const selectedShortcuts = computed(() => {
     if (props.type === 'daterange' || props.type === 'datetimerange') {
       if (props.shortcuts === 'around') {
@@ -159,7 +137,6 @@
     return datePickerShortcuts.value;
   });
 
-  // Raccourcis pour un date-picker simple (type "date" ou "datetime")
   const datePickerShortcuts = computed(() => {
     const shortcuts: Record<string, { range: number; modifier?: number }> = {
       today: { range: 0 },
@@ -183,7 +160,6 @@
     }));
   });
 
-  // Raccourcis pour une plage de dates (date range)
   const dateRangeShortcuts = computed(() => {
     const shortcuts = {
       '1-day.range': {
@@ -214,7 +190,6 @@
     return generateRangeShortcuts(shortcuts);
   });
 
-  // Raccourcis pour une plage "autour" de la date courante
   const dateRangeAroundShortcuts = computed(() => {
     const shortcuts = {
       '6_last_months.range': {
@@ -246,8 +221,8 @@
     return [];
   });
 
+  // Ensures the input value is always a Date object, a [Date, Date] tuple, or null
   const formatInput = (value: Date | [Date, Date] | null): Date | [Date, Date] | null => {
-    // Modifié Date[] en [Date, Date]
     if (value === null) {
       return null;
     }
@@ -256,26 +231,31 @@
       if (Array.isArray(value) && value.length === 2 && value[0] && value[1]) {
         const date1 = value[0] instanceof Date ? value[0] : new Date(value[0]);
         const date2 = value[1] instanceof Date ? value[1] : new Date(value[1]);
-        return [date1, date2]; // Retourne un tuple [Date, Date]
+        return [date1, date2];
       }
       return null;
     }
 
-    // Pour 'date' ou 'datetime' (ne devrait pas être un tableau ici)
     if (Array.isArray(value)) {
-      // Gérer le cas où un tableau est passé pour un type non-range, pourrait être une erreur.
-      // Pour l'instant, on prend le premier élément ou null.
+      console.warn('UDatePicker received an array for a non-range type. Using the first element.');
       const firstVal = value[0];
       return firstVal ? (firstVal instanceof Date ? firstVal : new Date(firstVal)) : null;
     }
     return value instanceof Date ? value : new Date(value);
   };
 
-  const onChange = () => {
-    const formattedInput = formatInput(input.value);
-    input.value = formattedInput;
-    emit('update:modelValue', formattedInput);
-    emit('change', formattedInput);
+  // Handles the @update:model-value event from el-date-picker
+  const handleElDatePickerUpdate = (value: Date | [Date, Date] | null) => {
+    const formattedValue = formatInput(value);
+    if (formattedValue !== input.value) {
+      input.value = formattedValue;
+      emit('update:modelValue', formattedValue);
+      emit('change', formattedValue);
+    } else if (value === null && input.value !== null) {
+      input.value = null;
+      emit('update:modelValue', null);
+      emit('change', null);
+    }
   };
 
   const onBlur = () => {

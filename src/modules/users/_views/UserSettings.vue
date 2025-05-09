@@ -48,6 +48,17 @@
         :label="$t('commons.form.save')"
         @click="save"
       />
+      <u-button
+        collapsable
+        type="tertiary"
+        icon="icon-arrow-back"
+        :icon-size="24"
+        round
+        class="button"
+        :title="$t('commons.form.back')"
+        :label="$t('commons.form.back')"
+        @click="goBack"
+      />
     </u-action-button-bar>
   </div>
 </template>
@@ -69,7 +80,23 @@
   import { deepEqual } from '@/libs/utils/Object';
   import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 
-  // Define BreadcrumbLink locally as import might be problematic or not exported
+  // --- Types for User Authorizations ---
+  interface UserAuthorizationsData {
+    level: SecurityLevel;
+    internal: boolean;
+    permissions: Record<string, string[]> | null;
+    isActive: boolean;
+    permissionsExpireAt: Date | null;
+  }
+
+  // Type for the data structure returned by authorizationStore.getUserAuthorisations
+  interface ApiUserAuthDataFromStore {
+    authorisation: Record<string, string[]> | null;
+    expire: string | null;
+    level: SecurityLevel;
+    isActive: boolean;
+  }
+
   interface BreadcrumbLink {
     label: string;
     path: string;
@@ -85,11 +112,12 @@
 
   const route = useRoute();
   const router = useRouter();
+
   const { $successMsg, $errorMsg, $confirm } = useNotification();
+
   const usersStore = useUsersStore();
   const authorizationStore = useAuthorisationsStore();
   const breadcrumbStore = useBreadcrumbStore();
-  const currentUser = computed(() => usersStore.currentUser);
 
   const user = ref<UserModel | null>(null);
   const originalUser = ref<UserModel | null>(null);
@@ -98,16 +126,10 @@
   const isPasswordFormValid = ref(true);
   const foundUserInCreation = ref<UserModel | null>(null);
   const isSaving = ref(false);
-  const userAuthorizations = ref<{
-    level: number;
-    internal: boolean;
-    permissions: Record<string, string[]> | null;
-  } | null>(null);
-  const originalAuthorizations = ref<{
-    level: number;
-    internal: boolean;
-    permissions: Record<string, string[]> | null;
-  } | null>(null);
+  const userAuthorizations = ref<UserAuthorizationsData | null>(null);
+  const originalAuthorizations = ref<UserAuthorizationsData | null>(null);
+
+  const currentUser = computed(() => usersStore.currentUser);
 
   const userIdFromRouteOrCurrent = computed(() => {
     if (props.mode === 'creation') return null;
@@ -150,22 +172,11 @@
       }
     }
 
-    // Comparaison des autorisations (level, internal, permissions)
     if (props.mode === 'admin-edit' && !deepEqual(userAuthorizations.value, originalAuthorizations.value)) {
       return true;
     }
 
-    const originalPrefs = originalUser.value.preferences ?? {};
-    const currentPrefs = user.value.preferences ?? {};
-    const originalLang = originalPrefs.language ?? null;
-    const currentLang = currentPrefs.language ?? null;
-    if (originalLang !== currentLang) {
-      return true;
-    }
-
-    const originalTheme = originalPrefs.theme ?? null;
-    const currentTheme = currentPrefs.theme ?? null;
-    if (originalTheme !== currentTheme) {
+    if (!deepEqual(user.value.preferences, originalUser.value.preferences)) {
       return true;
     }
 
@@ -193,6 +204,43 @@
     return false;
   });
 
+  // --- Helper Functions for User Authorizations ---
+  function mapAuthDataToUserAuthorizations(
+    userModel: UserModel,
+    authDataFromStore?: ApiUserAuthDataFromStore | null
+  ): UserAuthorizationsData {
+    if (authDataFromStore) {
+      return {
+        level: authDataFromStore.level,
+        internal: userModel.internal,
+        permissions: authDataFromStore.authorisation ?? null,
+        isActive: authDataFromStore.isActive,
+        permissionsExpireAt: authDataFromStore.expire ? new Date(authDataFromStore.expire) : null,
+      };
+    }
+    // Fallback to UserModel data if no specific authDataFromStore
+    return {
+      level: userModel.level,
+      internal: userModel.internal,
+      permissions: userModel.permissions ?? null,
+      isActive: userModel.isActive,
+      permissionsExpireAt: userModel.permissionsExpireAt,
+    };
+  }
+
+  function getInitialUserAuthorizations(email?: string | null): UserAuthorizationsData {
+    const initialLevel = SecurityLevel.USER;
+    const initialInternal = email ? UserModel.isEmailInternal(email) : false;
+    const initialPermissions = null;
+    return {
+      level: initialLevel,
+      internal: initialInternal,
+      permissions: initialPermissions,
+      isActive: true,
+      permissionsExpireAt: null,
+    };
+  }
+
   function onUserUpdate(updatedUser: UserModel) {
     user.value = updatedUser;
     isPersonalInfoValid.value = checkPersonalInfoValidity(user.value);
@@ -214,64 +262,32 @@
         isPersonalInfoValid.value = true;
         isPasswordFormValid.value = true;
         try {
-          const authData = await authorizationStore.getUserAuthorisations(foundUser.id);
-          if (authData) {
-            userAuthorizations.value = {
-              level: authData.level ?? foundUser.level,
-              internal: authData.internal ?? foundUser.internal,
-              permissions: authData.permissions ?? null,
-            };
-          } else {
-            userAuthorizations.value = {
-              level: foundUser.level,
-              internal: foundUser.internal,
-              permissions: foundUser.permissions ?? null,
-            };
-          }
-          originalAuthorizations.value = userAuthorizations.value;
+          const authDataFromApi = await authorizationStore.getUserAuthorisations(foundUser.id);
+          userAuthorizations.value = mapAuthDataToUserAuthorizations(foundUser, authDataFromApi);
         } catch (authError) {
           console.error(`Failed to fetch authorizations for found user ${foundUser.id}:`, authError);
-          userAuthorizations.value = {
-            level: foundUser.level,
-            internal: foundUser.internal,
-            permissions: foundUser.permissions ?? null,
-          };
-          originalAuthorizations.value = userAuthorizations.value;
+          userAuthorizations.value = mapAuthDataToUserAuthorizations(foundUser); // Fallback to user model data
         }
+        originalAuthorizations.value = userAuthorizations.value ? { ...userAuthorizations.value } : null;
       } else {
         const currentEmail = user.value?.email;
-        const initialLevel = SecurityLevel.USER;
-        const initialInternal = UserModel.isEmailInternal(currentEmail || '');
-        const initialPermissions = null;
+        userAuthorizations.value = getInitialUserAuthorizations(currentEmail);
+        originalAuthorizations.value = userAuthorizations.value ? { ...userAuthorizations.value } : null;
 
         user.value = new UserModel({
           email: currentEmail,
-          level: initialLevel,
-          internal: initialInternal,
-          permissions: initialPermissions,
+          level: userAuthorizations.value.level,
+          internal: userAuthorizations.value.internal,
+          permissions: userAuthorizations.value.permissions,
+          preferences: { language: 'fr' },
         });
         isPersonalInfoValid.value = checkPersonalInfoValidity(user.value);
-
-        userAuthorizations.value = {
-          level: initialLevel,
-          internal: initialInternal,
-          permissions: initialPermissions,
-        };
-        originalAuthorizations.value = userAuthorizations.value;
       }
     }
   }
 
-  function onAuthorizationsUpdate(updatedAuths: {
-    level: number;
-    internal: boolean;
-    permissions: Record<string, string[]> | null;
-  }) {
+  function onAuthorizationsUpdate(updatedAuths: UserAuthorizationsData) {
     userAuthorizations.value = updatedAuths;
-    if (user.value && props.mode === 'admin-edit') {
-      user.value.level = updatedAuths.level;
-      user.value.internal = updatedAuths.internal;
-    }
   }
 
   async function loadUser() {
@@ -293,12 +309,8 @@
       isPasswordFormValid.value = false;
       foundUserInCreation.value = null;
 
-      userAuthorizations.value = {
-        level: initialLevel,
-        internal: initialInternal,
-        permissions: initialPermissions,
-      };
-      originalAuthorizations.value = userAuthorizations.value;
+      userAuthorizations.value = getInitialUserAuthorizations();
+      originalAuthorizations.value = userAuthorizations.value ? { ...userAuthorizations.value } : null;
     } else if (targetUserId) {
       let userFromStore = usersStore.getUserById(targetUserId);
       if (!userFromStore) {
@@ -331,32 +343,23 @@
 
         if (props.mode === 'admin-edit') {
           try {
-            const authData = await authorizationStore.getUserAuthorisations(targetUserId);
-            if (authData) {
-              userAuthorizations.value = {
-                level: authData.level ?? user.value.level,
-                internal: user.value.internal,
-                permissions: authData.authorisation ?? null,
-              };
-              originalAuthorizations.value = userAuthorizations.value;
+            const authDataFromApi = await authorizationStore.getUserAuthorisations(targetUserId);
+            if (user.value) {
+              userAuthorizations.value = mapAuthDataToUserAuthorizations(user.value, authDataFromApi);
             } else {
-              userAuthorizations.value = {
-                level: user.value.level,
-                internal: user.value.internal,
-                permissions: user.value.permissions ?? null,
-              };
-              originalAuthorizations.value = userAuthorizations.value;
+              console.error('User model is null when trying to load admin-edit authorizations');
+              userAuthorizations.value = null;
             }
           } catch (authError) {
             console.error(`Failed to fetch authorizations for user ${targetUserId}:`, authError);
             $errorMsg(i18n.global.t('user.settings.load.auth-error'));
-            userAuthorizations.value = {
-              level: user.value.level,
-              internal: user.value.internal,
-              permissions: user.value.permissions ?? null,
-            };
-            originalAuthorizations.value = userAuthorizations.value;
+            if (user.value) {
+              userAuthorizations.value = mapAuthDataToUserAuthorizations(user.value); // Fallback
+            } else {
+              userAuthorizations.value = null;
+            }
           }
+          originalAuthorizations.value = userAuthorizations.value ? { ...userAuthorizations.value } : null;
         }
       } else {
         console.error(`User with ID ${targetUserId} not found.`);
@@ -370,6 +373,10 @@
       }
     }
     setBreadcrumb();
+  }
+
+  function goBack() {
+    router.back();
   }
 
   function setBreadcrumb() {
@@ -421,28 +428,37 @@
           originalUser.value = updatedUserFromStore.clone();
           user.value = updatedUserFromStore.clone();
           if (userAuthorizations.value) {
-            originalAuthorizations.value = userAuthorizations.value;
+            originalAuthorizations.value = { ...userAuthorizations.value };
           }
-          if (props.mode === 'admin-edit') {
+
+          if (props.mode === 'admin-edit' && user.value && newUserId) {
             try {
               const freshAuthData = await authorizationStore.getUserAuthorisations(newUserId);
-              if (freshAuthData) {
-                userAuthorizations.value = {
-                  level: freshAuthData.level ?? user.value.level,
-                  internal: user.value.internal,
-                  permissions: freshAuthData.authorisation ?? null,
-                };
-                originalAuthorizations.value = userAuthorizations.value;
-              }
+              userAuthorizations.value = mapAuthDataToUserAuthorizations(user.value, freshAuthData);
+              originalAuthorizations.value = userAuthorizations.value
+                ? {
+                    ...userAuthorizations.value,
+                  }
+                : null;
             } catch (refreshError) {
               console.error('Failed to refresh authorizations after save:', refreshError);
+              if (user.value) {
+                userAuthorizations.value = mapAuthDataToUserAuthorizations(user.value);
+                originalAuthorizations.value = userAuthorizations.value
+                  ? {
+                      ...userAuthorizations.value,
+                    }
+                  : null;
+              }
             }
           }
         }
         password.value = '';
         isPasswordFormValid.value = true;
 
-        if (props.mode === 'creation' || props.mode === 'admin-edit') {
+        if (props.mode === 'creation') {
+          router.push({ name: 'users' });
+        } else if (props.mode === 'admin-edit') {
           router.push({ name: 'users' });
         } else if (props.mode === 'user-edit') {
           await loadUser();
@@ -457,13 +473,18 @@
 
   async function addExistingUser(): Promise<boolean> {
     if (!user.value?.id || !userAuthorizations.value) return false;
-
     try {
-      await authorizationStore.updateUserAuthorization(user.value.id, {
+      await authorizationStore.updateUserStatus(user.value.id, {
+        isActive: userAuthorizations.value.isActive,
+        expire: userAuthorizations.value.permissionsExpireAt?.toISOString() ?? null, // Convert Date to ISO string or null
         level: userAuthorizations.value.level,
-        internal: userAuthorizations.value.internal,
-        permissions: userAuthorizations.value.permissions,
       });
+
+      if (!deepEqual(userAuthorizations.value.permissions, originalAuthorizations.value?.permissions)) {
+        await authorizationStore.updateUserAuthorization(user.value.id, {
+          permissions: userAuthorizations.value.permissions,
+        });
+      }
 
       $successMsg(i18n.global.t('users.add-existing.success'));
       await usersStore.fetchUser(user.value.id);
@@ -481,10 +502,25 @@
     user.value.level = userAuthorizations.value.level;
     user.value.internal = userAuthorizations.value.internal;
     user.value.permissions = userAuthorizations.value.permissions;
+    user.value.isActive = userAuthorizations.value.isActive;
+    user.value.permissionsExpireAt = userAuthorizations.value.permissionsExpireAt;
 
     try {
-      const userDataToSend = { ...user.value, password: password.value };
-      const newUser = await usersStore.addUser(userDataToSend as UserModel);
+      const userDataToSend: Partial<UserModel> = {
+        email: user.value.email,
+        password: password.value,
+        name: user.value.name,
+        surname: user.value.surname,
+        level: user.value.level,
+        internal: user.value.internal,
+        color: user.value.color,
+        preferences: user.value.preferences,
+        permissions: user.value.permissions,
+        permissionsExpireAt: user.value.permissionsExpireAt,
+        isActive: user.value.isActive,
+      };
+
+      const newUser = await usersStore.addUser(userDataToSend);
       $successMsg(i18n.global.t('users.created.success'));
       return newUser.id;
     } catch (err: any) {
@@ -510,14 +546,11 @@
     const authorizationChanged =
       props.mode === 'admin-edit' && !deepEqual(userAuthorizations.value, originalAuthorizations.value);
     const passwordChanged = !!password.value;
-    // Create copies and nullify 'preferences' for comparison
-    const userCloneForInfoCheck = user.value.clone();
-    const originalUserCloneForInfoCheck = originalUser.value.clone();
-    userCloneForInfoCheck.preferences = null;
-    originalUserCloneForInfoCheck.preferences = null;
+
+    const infoFieldsToCheck: (keyof UserModel)[] = ['email', 'name', 'surname', 'color'];
+    const infoChanged = infoFieldsToCheck.some((field) => user.value![field] !== originalUser.value![field]);
 
     try {
-      const infoChanged = !deepEqual(userCloneForInfoCheck, originalUserCloneForInfoCheck);
       if (infoChanged) {
         await usersStore.updateUser(user.value);
       }
@@ -549,17 +582,19 @@
 
       if (authorizationChanged && userAuthorizations.value) {
         try {
-          await authorizationStore.updateUserAuthorization(user.value.id, {
+          await authorizationStore.updateUserStatus(user.value.id, {
+            isActive: userAuthorizations.value.isActive,
+            expire: userAuthorizations.value.permissionsExpireAt?.toISOString() ?? null,
             level: userAuthorizations.value.level,
-            internal: userAuthorizations.value.internal,
-            permissions: userAuthorizations.value.permissions,
           });
-          originalAuthorizations.value = { ...userAuthorizations.value };
-          if (user.value) {
-            user.value.level = userAuthorizations.value.level;
-            user.value.internal = userAuthorizations.value.internal;
-            user.value.permissions = userAuthorizations.value.permissions;
+
+          if (!deepEqual(userAuthorizations.value.permissions, originalAuthorizations.value?.permissions)) {
+            await authorizationStore.updateUserAuthorization(user.value.id, {
+              permissions: userAuthorizations.value.permissions,
+            });
           }
+
+          originalAuthorizations.value = { ...userAuthorizations.value };
           authorizationUpdateSuccess = true;
         } catch (authError) {
           console.error('Authorization update failed:', authError);

@@ -22,7 +22,7 @@ const loginRoutes: RouteRecordRaw[] = [
   {
     path: '/reset-password',
     name: 'password.reset',
-    props: false, // On lira le code depuis route.query
+    props: false,
     component: () => import('@/modules/login/_views/PasswordReset.vue'),
     meta: { guest: true },
   },

@@ -32,7 +32,7 @@ export default class UserModel {
   name: string | null;
   surname: string | null;
   password: string | null;
-  level: number;
+  level: SecurityLevel;
   internalLevel: number;
   internal: boolean;
   color: string | null;
@@ -44,6 +44,7 @@ export default class UserModel {
   permissionsExpireAt: Date | null;
   permissions: Record<string, any> | null;
   authorisationOverrides: string | null;
+  isActive: boolean;
   token?: string;
 
   constructor(data?: Partial<UserModel>) {
@@ -52,7 +53,7 @@ export default class UserModel {
     this.email = data?.email ?? '';
     this.name = data?.name ?? null;
     this.surname = data?.surname ?? null;
-    this.level = data?.level ?? 0;
+    this.level = data?.level ?? SecurityLevel.EXTERNAL;
     this.internalLevel = data?.internalLevel ?? 0;
     this.internal = data?.internal ?? false;
     this.password = data?.password ?? null;
@@ -63,8 +64,9 @@ export default class UserModel {
     this.passwordUpdatedAt = data?.passwordUpdatedAt ? dayjs(data.passwordUpdatedAt).toDate() : null;
     this.preferences = data?.preferences ?? null;
     this.permissionsExpireAt = data?.permissionsExpireAt ? dayjs(data.permissionsExpireAt).toDate() : null;
-    this.permissions = data?.permissions ?? null;
+    this.permissions = data?.permissions ?? null; // Kept for potential direct use, though often derived
     this.authorisationOverrides = data?.authorisationOverrides ?? null;
+    this.isActive = data?.isActive ?? true; // Default to true if not provided
     this.token = data?.token;
   }
 
@@ -87,6 +89,8 @@ export default class UserModel {
       preferences: user.preferences ?? null,
     };
     delete modelData.password;
+    // Ensure isActive is handled if present in API response
+    modelData.isActive = user.isActive === undefined ? true : user.isActive;
     return new UserModel(modelData);
   }
 
@@ -173,7 +177,7 @@ export default class UserModel {
   reset(): void {
     this.name = null;
     this.surname = null;
-    this.level = 0;
+    this.level = SecurityLevel.EXTERNAL;
     this.internalLevel = 0;
     this.internal = false;
     this.color = null;
@@ -184,6 +188,7 @@ export default class UserModel {
     this.preferences = null;
     this.permissionsExpireAt = null;
     this.authorisationOverrides = null;
+    this.isActive = true;
   }
 
   static isEmailInternal(email: string) {

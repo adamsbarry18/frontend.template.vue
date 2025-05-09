@@ -21,6 +21,7 @@ describe('UserModel', () => {
     authorisationOverrides: 'override_string',
     color: '#123456',
     internalLevel: 2,
+    isActive: true,
   };
 
   describe('Constructor and Basic Properties', () => {
@@ -41,6 +42,7 @@ describe('UserModel', () => {
       expect(user.internalLevel).toBe(baseData.internalLevel);
       expect(user.permissions).toEqual(baseData.permissions);
       expect(user.authorisationOverrides).toBe(baseData.authorisationOverrides);
+      expect(user.isActive).toBe(baseData.isActive); // Check isActive
 
       // Dates are converted to Date objects
       expect(user.createdAt).toBeInstanceOf(Date);
@@ -60,10 +62,11 @@ describe('UserModel', () => {
       expect(user.email).toBe('minimal@example.com');
       expect(user.name).toBeNull();
       expect(user.surname).toBeNull();
-      expect(user.level).toBe(0);
+      expect(user.level).toBe(SecurityLevel.EXTERNAL);
       expect(user.internal).toBe(false);
       expect(user.passwordStatus).toBe(PasswordStatus.ACTIVE);
       expect(user.preferences).toBeNull();
+      expect(user.isActive).toBe(true); // Check default isActive
       expect(user.createdAt).toBeInstanceOf(Date);
       expect(user.updatedAt).toBeInstanceOf(Date);
     });
@@ -99,6 +102,7 @@ describe('UserModel', () => {
         updatedAt: new Date('2024-03-13T13:00:00Z'),
         password: 'shouldberemoved',
         preferences: { theme: 'light' },
+        isActive: false, // Test with isActive from API
       };
       const user = UserModel.fromAPI(apiData as any);
       expect(user).toBeInstanceOf(UserModel);
@@ -110,6 +114,7 @@ describe('UserModel', () => {
       expect(user.updatedAt?.toISOString()).toBe(apiData.updatedAt.toISOString());
       expect(user.password).toBeNull();
       expect(user.preferences).toEqual(apiData.preferences);
+      expect(user.isActive).toBe(false); // Check isActive from API
     });
 
     it('should handle missing optional fields in fromAPI', () => {
@@ -195,9 +200,9 @@ describe('UserModel', () => {
     });
 
     it('should return false for invalid level (0 or less)', () => {
-      const user = new UserModel({ email: 'test@example.com', name: 'Test', level: 0 });
+      const user = new UserModel({ email: 'test@example.com', name: 'Test', level: 0 as any });
       expect(user.isValid()).toBe(false);
-      user.level = -1;
+      user.level = -1 as any;
       expect(user.isValid()).toBe(false);
     });
   });
@@ -214,7 +219,7 @@ describe('UserModel', () => {
       expect(user.email).toBe(originalEmail);
       expect(user.name).toBeNull();
       expect(user.surname).toBeNull();
-      expect(user.level).toBe(0);
+      expect(user.level).toBe(SecurityLevel.EXTERNAL);
       expect(user.internalLevel).toBe(0);
       expect(user.internal).toBe(false);
       expect(user.color).toBeNull();

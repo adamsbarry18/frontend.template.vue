@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { ref, computed } from 'vue';
+import { ref, type Ref } from 'vue';
 import { ServerError } from '@/libs/utils/Errors';
 import { setActivePinia, createPinia } from 'pinia';
 import { useUsersStore } from '@/stores/modules/users/user';
@@ -7,7 +7,6 @@ import { SecurityLevel } from '@/stores/modules/users/models/UserModel';
 import dayjs from 'dayjs';
 import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
 
-// Mock des dépendances externes
 vi.mock('@/stores/modules/users/user', () => ({
   useUsersStore: vi.fn(),
 }));
@@ -30,10 +29,7 @@ vi.mock('@/stores/modules/api', () => ({
 
 describe('stores/modules/auth/authorisations', () => {
   let authorisationsStore: ReturnType<typeof useAuthorisationsStore>;
-  let mockUsersStore: {
-    currentUser: import('vue').Ref<any>;
-    isAuthenticated: import('vue').ComputedRef<boolean>;
-  };
+  let testSharedCurrentUser: Ref<any>;
 
   // Données utilisateur simulées pour les tests des getters
   const mockUser = {
@@ -45,7 +41,8 @@ describe('stores/modules/auth/authorisations', () => {
       featureA: ['read', 'write'],
       featureB: ['read'],
     },
-    permissionsExpireAt: dayjs().add(1, 'day').toISOString(), // Non expiré
+    permissionsExpireAt: dayjs().add(1, 'day').toISOString(),
+    isActive: true,
   };
 
   const mockAdminUser = {
@@ -53,8 +50,9 @@ describe('stores/modules/auth/authorisations', () => {
     level: SecurityLevel.ADMIN,
     internalLevel: 5,
     internal: true,
-    permissions: {}, // L'admin a toutes les permissions implicitement
-    permissionsExpireAt: null, // N'expire jamais
+    permissions: {},
+    permissionsExpireAt: null,
+    isActive: true,
   };
 
   const mockExpiredUser = {
@@ -66,20 +64,31 @@ describe('stores/modules/auth/authorisations', () => {
       featureA: ['read'],
     },
     permissionsExpireAt: dayjs().subtract(1, 'day').toISOString(),
+    isActive: true,
   };
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    mockUsersStore = {
-      currentUser: ref(null),
-      isAuthenticated: computed(() => !!mockUsersStore.currentUser.value),
-    } as any;
-    (useUsersStore as unknown as Mock).mockReturnValue(mockUsersStore);
+    testSharedCurrentUser = ref(null);
+
+    (useUsersStore as unknown as Mock).mockImplementation(() => {
+      return {
+        get currentUser() {
+          return testSharedCurrentUser.value;
+        },
+        get isAuthenticated() {
+          return !!testSharedCurrentUser.value;
+        },
+        fetchUser: vi.fn(),
+      };
+    });
 
     authorisationsStore = useAuthorisationsStore();
 
-    // Réinitialiser les mocks d'API
-    vi.clearAllMocks();
+    mockApiGet.mockClear();
+    mockApiPost.mockClear();
+    mockApiPut.mockClear();
+    mockApiDelete.mockClear();
 
     authorisationsStore.features = null;
     authorisationsStore.levelsAuthorisations = null;
@@ -95,16 +104,16 @@ describe('stores/modules/auth/authorisations', () => {
   describe('getters', () => {
     describe('user context getters', () => {
       it('should return default values when no user is logged in', () => {
-        mockUsersStore.currentUser.value = null;
+        testSharedCurrentUser.value = null;
         expect(authorisationsStore.level).toBe(SecurityLevel.EXTERNAL);
-        expect(authorisationsStore.internalLevel).toBe(1);
+        expect(authorisationsStore.internalLevel).toBe(0);
         expect(authorisationsStore.internal).toBe(false);
         expect(authorisationsStore.permissionsExpireAt).toBeNull();
         expect(authorisationsStore.hasExpired).toBe(false);
       });
 
       it('should reflect currentUser properties', () => {
-        mockUsersStore.currentUser.value = mockUser as any;
+        testSharedCurrentUser.value = mockUser as any;
         expect(authorisationsStore.level).toBe(mockUser.level);
         expect(authorisationsStore.internalLevel).toBe(mockUser.internalLevel);
         expect(authorisationsStore.internal).toBe(mockUser.internal);
@@ -114,83 +123,83 @@ describe('stores/modules/auth/authorisations', () => {
 
     describe('hasExpired', () => {
       it('should be false if permissionsExpireAt is null', () => {
-        mockUsersStore.currentUser.value = mockAdminUser as any;
+        testSharedCurrentUser.value = mockAdminUser as any;
         expect(authorisationsStore.hasExpired).toBe(false);
       });
 
       it('should be false if permissionsExpireAt is in the future', () => {
-        mockUsersStore.currentUser.value = mockUser as any;
+        testSharedCurrentUser.value = mockUser as any;
         expect(authorisationsStore.hasExpired).toBe(false);
       });
 
       it('should be true if permissionsExpireAt is in the past', () => {
-        mockUsersStore.currentUser.value = mockExpiredUser as any;
+        testSharedCurrentUser.value = mockExpiredUser as any;
         expect(authorisationsStore.hasExpired).toBe(true);
       });
     });
 
     describe('role getters', () => {
       it('isUser should be true for USER level and above', () => {
-        mockUsersStore.currentUser.value = { level: SecurityLevel.USER } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.USER } as any;
         expect(authorisationsStore.isUser).toBe(true);
-        mockUsersStore.currentUser.value = { level: SecurityLevel.ADMIN } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.ADMIN } as any;
         expect(authorisationsStore.isUser).toBe(true);
-        mockUsersStore.currentUser.value = { level: SecurityLevel.EXTERNAL } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.EXTERNAL } as any;
         expect(authorisationsStore.isUser).toBe(false);
       });
 
       it('isIntegrator should be true for INTEGRATOR level and above', () => {
-        mockUsersStore.currentUser.value = { level: SecurityLevel.INTEGRATOR } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.INTEGRATOR } as any;
         expect(authorisationsStore.isIntegrator).toBe(true);
-        mockUsersStore.currentUser.value = { level: SecurityLevel.ADMIN } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.ADMIN } as any;
         expect(authorisationsStore.isIntegrator).toBe(true);
-        mockUsersStore.currentUser.value = { level: SecurityLevel.USER } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.USER } as any;
         expect(authorisationsStore.isIntegrator).toBe(false);
       });
 
       it('isAdmin should be true for ADMIN level', () => {
-        mockUsersStore.currentUser.value = { level: SecurityLevel.ADMIN } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.ADMIN } as any;
         expect(authorisationsStore.isAdmin).toBe(true);
-        mockUsersStore.currentUser.value = { level: SecurityLevel.INTEGRATOR } as any;
+        testSharedCurrentUser.value = { level: SecurityLevel.INTEGRATOR } as any;
         expect(authorisationsStore.isAdmin).toBe(false);
       });
     });
 
     describe('hasCurrentUserAuthorisation (and isUserAllowed)', () => {
       it('should return true for admin for any feature/action', () => {
-        mockUsersStore.currentUser.value = mockAdminUser as any;
+        testSharedCurrentUser.value = mockAdminUser as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('anyFeature', 'anyAction')).toBe(true);
         expect(authorisationsStore.isUserAllowed('anyFeature', 'anyAction')).toBe(true);
       });
 
       it('should return false if no user is logged in', () => {
-        mockUsersStore.currentUser.value = null;
+        testSharedCurrentUser.value = null;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureA', 'read')).toBe(false);
       });
 
       it('should return false if user has no permissions object', () => {
-        mockUsersStore.currentUser.value = { ...mockUser, permissions: null } as any;
+        testSharedCurrentUser.value = { ...mockUser, permissions: null } as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureA', 'read')).toBe(false);
       });
 
       it('should return false if user does not have the feature permission', () => {
-        mockUsersStore.currentUser.value = mockUser as any;
+        testSharedCurrentUser.value = mockUser as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureC', 'read')).toBe(false);
       });
 
       it('should return false if user has the feature but not the action', () => {
-        mockUsersStore.currentUser.value = mockUser as any;
+        testSharedCurrentUser.value = mockUser as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureB', 'write')).toBe(false);
       });
 
       it('should return true if user has the feature and action', () => {
-        mockUsersStore.currentUser.value = mockUser as any;
+        testSharedCurrentUser.value = mockUser as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureA', 'read')).toBe(true);
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureA', 'write')).toBe(true);
       });
 
       it('should still check permissions even if hasExpired is true (permissions check is independent of expiry for this getter)', () => {
-        mockUsersStore.currentUser.value = mockExpiredUser as any;
+        testSharedCurrentUser.value = mockExpiredUser as any;
         expect(authorisationsStore.hasCurrentUserAuthorisation('featureA', 'read')).toBe(true);
       });
     });
@@ -323,19 +332,32 @@ describe('stores/modules/auth/authorisations', () => {
       });
     });
 
-    describe('createTemporaryAuthorisationForUser', () => {
+    describe('updateUserStatus', () => {
       const userId = 123;
-      const tempAuthData = { token: 'temp-token', expiresAt: '2025-12-31T23:59:59Z' };
-      it('should call API to create temporary authorisation', async () => {
-        mockApiPost.mockResolvedValueOnce({ data: { data: tempAuthData } });
-        const result = await authorisationsStore.createTemporaryAuthorisationForUser(userId);
-        expect(mockApiPost).toHaveBeenCalledWith(`/api/v1/authorization/users/${userId}/temporary`);
-        expect(result).toEqual(tempAuthData);
+      const payload = { isActive: false, expire: null, level: SecurityLevel.READER };
+      it('should call API to update user status', async () => {
+        mockApiPost.mockResolvedValueOnce({ data: { success: true } });
+        await authorisationsStore.updateUserStatus(userId, payload);
+        expect(mockApiPost).toHaveBeenCalledWith(`/api/v1/authorization/users/${userId}/status`, {
+          data: payload,
+        });
       });
+
+      it('should throw error if no userId is provided', async () => {
+        await expect(authorisationsStore.updateUserStatus(0, payload)).rejects.toThrow(
+          'User ID must be provided.'
+        );
+      });
+
       it('should return null on 403 error', async () => {
         mockApiPost.mockRejectedValueOnce({ response: { status: 403 } });
-        const result = await authorisationsStore.createTemporaryAuthorisationForUser(userId);
+        const result = await authorisationsStore.updateUserStatus(userId, payload);
         expect(result).toBeNull();
+      });
+
+      it('should throw ServerError on other errors', async () => {
+        mockApiPost.mockRejectedValueOnce({ response: { status: 500 }, message: 'Server Error' });
+        await expect(authorisationsStore.updateUserStatus(userId, payload)).rejects.toThrow(ServerError);
       });
     });
   });

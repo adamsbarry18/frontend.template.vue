@@ -7,9 +7,6 @@ const administrationRoutes: RouteRecordRaw[] = [
     name: 'user-settings-edit',
     component: () => import('@/modules/users/_views/UserSettings.vue'),
     props: { mode: 'user-edit' },
-    meta: {
-      // Breadcrumb géré dynamiquement dans le composant
-    },
   },
   {
     path: '/users',
@@ -28,7 +25,6 @@ const administrationRoutes: RouteRecordRaw[] = [
     component: () => import('@/modules/users/_views/UserSettings.vue'),
     props: (route) => ({ mode: 'admin-edit', id: Number(route.params.id) }),
     meta: {
-      // Breadcrumb géré dynamiquement dans le composant
       authorisation: {
         level: SecurityLevel.ADMIN,
       },
@@ -40,7 +36,6 @@ const administrationRoutes: RouteRecordRaw[] = [
     component: () => import('@/modules/users/_views/UserSettings.vue'),
     props: { mode: 'creation' },
     meta: {
-      // Breadcrumb géré dynamiquement dans le composant
       authorisation: {
         level: SecurityLevel.ADMIN,
       },

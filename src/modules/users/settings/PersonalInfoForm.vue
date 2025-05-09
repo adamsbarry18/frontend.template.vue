@@ -56,15 +56,6 @@
             </transition>
           </template>
           <u-form-input
-            :model-value="localUser?.name"
-            :error="nameValidationError"
-            :disabled="isFieldDisabled"
-            :label="$t('commons.form.first-name')"
-            placeholder="John"
-            @update:model-value="updateField('name', $event)"
-            @blur="touchField('name')"
-          />
-          <u-form-input
             :model-value="localUser?.surname"
             :error="surnameValidationError"
             :disabled="isFieldDisabled"
@@ -72,6 +63,15 @@
             placeholder="Doe"
             @update:model-value="updateField('surname', $event)"
             @blur="touchField('surname')"
+          />
+          <u-form-input
+            :model-value="localUser?.name"
+            :error="nameValidationError"
+            :disabled="isFieldDisabled"
+            :label="$t('commons.form.first-name')"
+            placeholder="John"
+            @update:model-value="updateField('name', $event)"
+            @blur="touchField('name')"
           />
         </div>
       </div>

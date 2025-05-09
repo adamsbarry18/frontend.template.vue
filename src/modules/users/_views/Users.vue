@@ -121,6 +121,56 @@
         </template>
       </u-list-column>
 
+      <u-list-column
+        column-key="users.list.header.status"
+        column-default-visibility="visible"
+        :label="$t('users.list.header.status')"
+        sortable
+        sort-prop="isActive"
+        filterable
+        filter-type="bool"
+        filter-property="isActive"
+        :filter-config="{
+          default: true,
+          prompt: $t('users.list.header.status'),
+          trueLabel: $t('commons.active'),
+          falseLabel: $t('commons.inactive'),
+        }"
+        width="120px"
+        align="center"
+      >
+        <template #default="{ row }">
+          <u-tag
+            :icon="row.isActive ? 'icon-active' : 'icon-paused'"
+            :background-color="row.isActive ? 'var(--color-green-100)' : 'var(--color-neutral-100)'"
+            :color="row.isActive ? 'var(--color-green-700)' : 'var(--color-neutral-700)'"
+            class="-list-tag"
+          >
+            {{ row.isActive ? $t('commons.active') : $t('commons.inactive') }}
+          </u-tag>
+        </template>
+      </u-list-column>
+
+      <u-list-column
+        column-key="users.list.header.expiration"
+        column-default-visibility="visible"
+        :label="$t('users.list.header.expiration')"
+        sortable
+        sort-prop="permissionsExpireAt"
+        min-width="150px"
+        filterable
+        filter-type="daterange"
+        filter-property="permissionsExpireAt"
+        :filter-config="{ shortcuts: 'around', defaultEnd: null }"
+      >
+        <template #default="{ row }">
+          <span v-if="row.permissionsExpireAt">
+            {{ $d(new Date(row.permissionsExpireAt), 'middle') }}
+          </span>
+          <span v-else>{{ $t('users.list.header.permanent') }}</span>
+        </template>
+      </u-list-column>
+
       <template #action="{ row }">
         <u-button
           type="tertiary"
@@ -146,7 +196,7 @@
 <script setup lang="ts">
   import { ref, computed, h, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import { UContentWrapper, UButton, UListColumn, UList } from '@/modules/ui';
+  import { UContentWrapper, UButton, UListColumn, UList, UTag } from '@/modules/ui';
   import { useNotification } from '@/composables/notfication';
   import { useUsersStore } from '@/stores/modules/users/user';
   import UserModel from '@/stores/modules/users/models/UserModel';
@@ -192,7 +242,7 @@
 
   function editUser(user: UserModel) {
     router.push({
-      name: 'admin-user-settings-edit', // Correction du nom de la route
+      name: 'admin-user-settings-edit',
       params: { id: user.id.toString() },
     });
   }

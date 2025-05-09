@@ -12,14 +12,12 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
 
   // Access to the current user from the users store
   const usersStore = useUsersStore();
-  const localCurrentUser = computed(() => (usersStore.currentUser as any)?.value ?? usersStore.currentUser);
-
-  // Typed Getters based on the current user
-  const level = computed(() => localCurrentUser.value?.level ?? SecurityLevel.EXTERNAL);
-  const internalLevel = computed(() => localCurrentUser.value?.internalLevel ?? 1); // Default to 1 if no user
-  const internal = computed(() => localCurrentUser.value?.internal ?? false);
+  // Typed Getters based on the current user from usersStore
+  const level = computed(() => usersStore.currentUser?.level ?? SecurityLevel.EXTERNAL);
+  const internalLevel = computed(() => usersStore.currentUser?.internalLevel ?? 0);
+  const internal = computed(() => usersStore.currentUser?.internal ?? false);
   const permissionsExpireAtComputed = computed(() =>
-    localCurrentUser.value?.permissionsExpireAt ? dayjs(localCurrentUser.value.permissionsExpireAt) : null
+    usersStore.currentUser?.permissionsExpireAt ? dayjs(usersStore.currentUser.permissionsExpireAt) : null
   );
 
   /**
@@ -42,7 +40,7 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
         return true;
       }
 
-      const permissions = localCurrentUser.value?.permissions;
+      const permissions = usersStore.currentUser?.permissions;
       if (!permissions) {
         return false;
       }
@@ -108,11 +106,15 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   /**
    * Fetches authorisations for a specific user (admin only).
    * @param userId The ID of the user.
-   * @returns The user's authorisations, or null if forbidden or not found.
+   * @returns The user's authorisations, level, expiration, and active status, or null if forbidden or not found.
    */
-  async function getUserAuthorisations(userId: number): Promise<any | null> {
+  async function getUserAuthorisations(userId: number): Promise<{
+    authorisation: Record<string, string[]>;
+    expire: string | null;
+    level: number;
+    isActive: boolean;
+  } | null> {
     try {
-      // Add a timestamp to bypass browser/server caching if necessary
       const timestamp = Date.now();
       const response = await apiStore.api.get(`/api/v1/authorization/users/${userId}?_t=${timestamp}`);
       return response.data.data;
@@ -163,24 +165,32 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
   }
 
   /**
-   * Creates a temporary authorisation for a user (admin only).
+   * Updates a user's status (active, expiration, level) (admin only).
+   * Replaces the old createTemporaryAuthorisationForUser.
    * @param userId The ID of the user.
-   * @returns The temporary authorisation data, or null if forbidden.
+   * @param payload Object containing optional isActive, expire (ISO string or null), and level.
+   * @returns Null if forbidden, otherwise void or throws ServerError.
    */
-  async function createTemporaryAuthorisationForUser(userId: number): Promise<any | null> {
+  async function updateUserStatus(
+    userId: number,
+    payload: { isActive?: boolean; expire?: string | null; level?: number }
+  ): Promise<void | null> {
+    if (!userId) throw new Error('User ID must be provided.');
     try {
-      const response = await apiStore.api.post(`/api/v1/authorization/users/${userId}/temporary`);
-      return response.data.data;
+      await apiStore.api.post(`/api/v1/authorization/users/${userId}/status`, {
+        data: payload,
+      });
+      await usersStore.fetchUser(userId);
     } catch (error) {
       if ((error as any).response?.status === 403) return null;
-      throw new ServerError('authorisations', 'createTemporaryAuthorisationForUser', error, { userId });
+      throw new ServerError('authorisations', 'updateUserStatus', error, { userId, payload });
     }
   }
 
   return {
     features,
     levelsAuthorisations,
-    currentUser: localCurrentUser,
+    currentUser: computed(() => usersStore.currentUser), // Expose as a computed ref to the user from usersStore
     level,
     internalLevel,
     internal,
@@ -191,13 +201,12 @@ export const useAuthorisationsStore = defineStore('authorisations', () => {
     isAdmin,
     hasCurrentUserAuthorisation,
     isUserAllowed,
-    // Actions
     fetchAllFeatures,
     fetchLevels,
     getLevel,
     getUserAuthorisations,
     updateUserAuthorization,
     deleteUserAuthorizations,
-    createTemporaryAuthorisationForUser,
+    updateUserStatus,
   };
 });
