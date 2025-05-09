@@ -34,7 +34,7 @@
   const notificationStore = useNotificationStore();
   const usersStore = useUsersStore();
   const userName = computed(() => {
-    return usersStore.currentUser?.surname ?? usersStore.currentUser?.name;
+    return usersStore.currentUser?.lastName ?? usersStore.currentUser?.firstName;
   });
 
   const errorNotifications = computed(() => notificationStore.getAllErrorNotifications);

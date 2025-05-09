@@ -56,22 +56,22 @@
             </transition>
           </template>
           <u-form-input
-            :model-value="localUser?.surname"
-            :error="surnameValidationError"
+            :model-value="localUser?.lastName"
+            :error="lastNameValidationError"
             :disabled="isFieldDisabled"
-            :label="$t('commons.form.name')"
+            :label="$t('commons.form.last-name')"
             placeholder="Doe"
-            @update:model-value="updateField('surname', $event)"
-            @blur="touchField('surname')"
+            @update:model-value="updateField('lastName', $event)"
+            @blur="touchField('lastName')"
           />
           <u-form-input
-            :model-value="localUser?.name"
-            :error="nameValidationError"
+            :model-value="localUser?.firstName"
+            :error="firstNameValidationError"
             :disabled="isFieldDisabled"
             :label="$t('commons.form.first-name')"
             placeholder="John"
-            @update:model-value="updateField('name', $event)"
-            @blur="touchField('name')"
+            @update:model-value="updateField('firstName', $event)"
+            @blur="touchField('firstName')"
           />
         </div>
       </div>
@@ -132,14 +132,14 @@
 
   const fieldsTouched = reactive({
     email: false,
-    name: false,
-    surname: false,
+    firstName: false,
+    lastName: false,
   });
 
   // --- Computed Properties ---
 
   const userInitial = computed(() => {
-    return localUser.value?.name ? localUser.value.name.substring(0, 1).toUpperCase() : '-';
+    return localUser.value?.firstName ? localUser.value.firstName.substring(0, 1).toUpperCase() : '-';
   });
 
   const languageOptions = computed(() => [
@@ -177,15 +177,15 @@
     return false;
   });
 
-  const nameValidationError = computed(() => {
-    if (!fieldsTouched.name) return false;
-    if (!localUser.value?.name?.trim()) return i18n.global.t('error.required-field');
+  const firstNameValidationError = computed(() => {
+    if (!fieldsTouched.firstName) return false;
+    if (!localUser.value?.firstName?.trim()) return i18n.global.t('error.required-field');
     return false;
   });
 
-  const surnameValidationError = computed(() => {
-    if (!fieldsTouched.surname) return false;
-    if (!localUser.value?.surname?.trim()) return i18n.global.t('error.required-field');
+  const lastNameValidationError = computed(() => {
+    if (!fieldsTouched.lastName) return false;
+    if (!localUser.value?.lastName?.trim()) return i18n.global.t('error.required-field');
     return false;
   });
 

@@ -310,6 +310,8 @@
   "user.creation.personal-information": "New user information",
   "user.creation.password": "Password definition",
   "user.settings.delete-account": "Delete account",
+  "user.form.first-name": "First name",
+  "user.form.last-name": "Last name",
   "user.settings.first-name": "First name",
   "user.settings.last-name": "Last name",
   "user.settings.language": "Language",

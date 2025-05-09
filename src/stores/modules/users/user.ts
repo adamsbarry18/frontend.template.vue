@@ -26,7 +26,7 @@ export const useUsersStore = defineStore('users', () => {
   const internal = computed(() => currentUser.value?.internal ?? false);
   const language = computed(() => currentUser.value?.preferences?.language?.toLowerCase?.() ?? 'en');
   const getInitial = computed(() =>
-    currentUser.value?.name ? currentUser.value.name.substring(0, 1).toUpperCase() : '-'
+    currentUser.value?.firstName ? currentUser.value.firstName.substring(0, 1).toUpperCase() : '-'
   );
 
   const getAllUsers = computed(() => Array.from(usersMap.value.values()));
@@ -389,8 +389,8 @@ export const useUsersStore = defineStore('users', () => {
   async function updateUser(user: UserModel): Promise<UserModel> {
     const dataToSend: Partial<UserModel> = {
       email: user.email,
-      name: user.name,
-      surname: user.surname,
+      firstName: user.firstName,
+      lastName: user.lastName,
       color: user.color,
     };
 
@@ -420,8 +420,8 @@ export const useUsersStore = defineStore('users', () => {
     const dataToSend: Partial<UserModel> = {
       email: userData.email,
       password: userData.password,
-      name: userData.name,
-      surname: userData.surname,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
       level: userData.level,
       internalLevel: userData.internalLevel,
       internal: userData.internal,

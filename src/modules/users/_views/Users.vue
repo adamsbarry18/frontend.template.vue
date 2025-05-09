@@ -4,7 +4,7 @@
       list-key="users"
       :loading="loading"
       :data="usersToDisplay"
-      :default-sort="{ prop: 'name', order: 'ascending' }"
+      :default-sort="{ prop: 'firstName', order: 'ascending' }"
       :selectable="canWriteUser"
       :list-actions="listActions"
       :search-function="searchUser"
@@ -68,10 +68,10 @@
         column-default-visibility="visible"
         :label="$t('commons.form.first-name')"
         sortable
-        sort-prop="name"
+        sort-prop="firstName"
       >
         <template #default="{ row }">
-          <span>{{ row.name }}</span>
+          <span>{{ row.firstName }}</span>
         </template>
       </u-list-column>
 
@@ -80,10 +80,10 @@
         column-default-visibility="visible"
         :label="$t('commons.form.last-name')"
         sortable
-        sort-prop="surname"
+        sort-prop="lastName"
       >
         <template #default="{ row }">
-          <span>{{ row.surname }}</span>
+          <span>{{ row.lastName }}</span>
         </template>
       </u-list-column>
 
@@ -234,8 +234,8 @@
   function searchUser(user: UserModel, searchInput: string): boolean {
     const lower = searchInput.toLowerCase();
     return (
-      user.name?.toLowerCase().includes(lower) ||
-      user.surname?.toLowerCase().includes(lower) ||
+      user.firstName?.toLowerCase().includes(lower) ||
+      user.lastName?.toLowerCase().includes(lower) ||
       user.email?.toLowerCase().includes(lower)
     );
   }

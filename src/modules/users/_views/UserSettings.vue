@@ -146,8 +146,8 @@
     if (!userToCheck) return false;
     return (
       !!userToCheck.email?.trim() &&
-      !!userToCheck.name?.trim() &&
-      !!userToCheck.surname?.trim() &&
+      !!userToCheck.firstName?.trim() &&
+      !!userToCheck.lastName?.trim() &&
       UserModel.prototype.isValid.call(userToCheck)
     );
   };
@@ -161,11 +161,11 @@
   const isDirty = computed(() => {
     if (!user.value || !originalUser.value) {
       const dirtyInCreation =
-        !!user.value?.email || !!user.value?.name || !!user.value?.surname || !!password.value;
+        !!user.value?.email || !!user.value?.firstName || !!user.value?.lastName || !!password.value;
       return dirtyInCreation;
     }
 
-    const fieldsToCompare: (keyof UserModel)[] = ['email', 'name', 'surname', 'color'];
+    const fieldsToCompare: (keyof UserModel)[] = ['email', 'firstName', 'lastName', 'color'];
     for (const field of fieldsToCompare) {
       if (user.value[field] !== originalUser.value[field]) {
         return true;
@@ -509,8 +509,8 @@
       const userDataToSend: Partial<UserModel> = {
         email: user.value.email,
         password: password.value,
-        name: user.value.name,
-        surname: user.value.surname,
+        firstName: user.value.firstName,
+        lastName: user.value.lastName,
         level: user.value.level,
         internal: user.value.internal,
         color: user.value.color,
@@ -547,7 +547,7 @@
       props.mode === 'admin-edit' && !deepEqual(userAuthorizations.value, originalAuthorizations.value);
     const passwordChanged = !!password.value;
 
-    const infoFieldsToCheck: (keyof UserModel)[] = ['email', 'name', 'surname', 'color'];
+    const infoFieldsToCheck: (keyof UserModel)[] = ['email', 'firstName', 'lastName', 'color'];
     const infoChanged = infoFieldsToCheck.some((field) => user.value![field] !== originalUser.value![field]);
 
     try {

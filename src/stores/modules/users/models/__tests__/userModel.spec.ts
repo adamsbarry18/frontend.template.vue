@@ -6,8 +6,8 @@ describe('UserModel', () => {
     id: 1,
     uid: 'test-uid-123',
     email: 'name@example.com',
-    name: 'TestName',
-    surname: 'TestSurname',
+    firstName: 'TestName',
+    lastName: 'TestSurname',
     level: SecurityLevel.USER,
     internal: false,
     passwordStatus: PasswordStatus.ACTIVE,
@@ -31,8 +31,8 @@ describe('UserModel', () => {
       expect(user.id).toBe(baseData.id);
       expect(user.uid).toBe(baseData.uid);
       expect(user.email).toBe(baseData.email);
-      expect(user.name).toBe(baseData.name);
-      expect(user.surname).toBe(baseData.surname);
+      expect(user.firstName).toBe(baseData.firstName);
+      expect(user.lastName).toBe(baseData.lastName);
       expect(user.level).toBe(baseData.level);
       expect(user.internal).toBe(baseData.internal);
       expect(user.passwordStatus).toBe(baseData.passwordStatus);
@@ -60,8 +60,8 @@ describe('UserModel', () => {
       const user = new UserModel(minimalData);
       expect(user.id).toBe(2);
       expect(user.email).toBe('minimal@example.com');
-      expect(user.name).toBeNull();
-      expect(user.surname).toBeNull();
+      expect(user.firstName).toBeNull();
+      expect(user.lastName).toBeNull();
       expect(user.level).toBe(SecurityLevel.EXTERNAL);
       expect(user.internal).toBe(false);
       expect(user.passwordStatus).toBe(PasswordStatus.ACTIVE);
@@ -72,11 +72,11 @@ describe('UserModel', () => {
     });
 
     it('should correctly calculate fullName', () => {
-      const user = new UserModel({ name: 'John', surname: 'Doe' });
+      const user = new UserModel({ firstName: 'John', lastName: 'Doe' });
       expect(user.fullName).toBe('John Doe');
-      const userNoSurname = new UserModel({ name: 'Cher' });
+      const userNoSurname = new UserModel({ firstName: 'Cher' });
       expect(userNoSurname.fullName).toBe('Cher');
-      const userNoName = new UserModel({ surname: 'Madonna' });
+      const userNoName = new UserModel({ lastName: 'Madonna' });
       expect(userNoName.fullName).toBe('Madonna');
       const userNoNameOrSurname = new UserModel({});
       expect(userNoNameOrSurname.fullName).toBe('');
@@ -96,7 +96,7 @@ describe('UserModel', () => {
       const apiData = {
         id: 3,
         email: 'api@example.com',
-        name: 'ApiUser',
+        firstName: 'ApiUser',
         level: SecurityLevel.ADMIN,
         createdAt: new Date('2024-03-13T12:00:00Z'),
         updatedAt: new Date('2024-03-13T13:00:00Z'),
@@ -108,7 +108,7 @@ describe('UserModel', () => {
       expect(user).toBeInstanceOf(UserModel);
       expect(user.id).toBe(apiData.id);
       expect(user.email).toBe(apiData.email);
-      expect(user.name).toBe(apiData.name);
+      expect(user.firstName).toBe(apiData.firstName);
       expect(user.level).toBe(apiData.level);
       expect(user.createdAt?.toISOString()).toBe(apiData.createdAt.toISOString());
       expect(user.updatedAt?.toISOString()).toBe(apiData.updatedAt.toISOString());
@@ -120,7 +120,7 @@ describe('UserModel', () => {
     it('should handle missing optional fields in fromAPI', () => {
       const minimalApiData = { id: 4, email: 'minimalapi@example.com' };
       const user = UserModel.fromAPI(minimalApiData);
-      expect(user.name).toBeNull();
+      expect(user.firstName).toBeNull();
       expect(user.preferences).toBeNull();
       expect(user.createdAt).toBeInstanceOf(Date);
     });
@@ -143,7 +143,7 @@ describe('UserModel', () => {
       expect(apiObject).not.toHaveProperty('level');
 
       // Check other properties are present
-      expect(apiObject.name).toBe(baseData.name);
+      expect(apiObject.firstName).toBe(baseData.firstName);
       expect(apiObject.preferences).toEqual(baseData.preferences);
     });
 
@@ -179,28 +179,28 @@ describe('UserModel', () => {
     it('should return true for a valid user', () => {
       const user = new UserModel({
         email: 'valid@example.com',
-        name: 'Valid Name',
+        firstName: 'Valid Name',
         level: SecurityLevel.USER,
       });
       expect(user.isValid()).toBe(true);
     });
 
     it('should return false for invalid email', () => {
-      const user = new UserModel({ email: 'invalid-email', name: 'Test', level: 1 });
+      const user = new UserModel({ email: 'invalid-email', firstName: 'Test', level: 1 });
       expect(user.isValid()).toBe(false);
     });
 
     it('should return false for empty name', () => {
-      const user = new UserModel({ email: 'test@example.com', name: '  ', level: 1 });
+      const user = new UserModel({ email: 'test@example.com', firstName: '  ', level: 1 });
       expect(user.isValid()).toBe(false);
     });
     it('should return false for null name', () => {
-      const user = new UserModel({ email: 'test@example.com', name: null, level: 1 });
+      const user = new UserModel({ email: 'test@example.com', firstName: null, level: 1 });
       expect(user.isValid()).toBe(false);
     });
 
     it('should return false for invalid level (0 or less)', () => {
-      const user = new UserModel({ email: 'test@example.com', name: 'Test', level: 0 as any });
+      const user = new UserModel({ email: 'test@example.com', firstName: 'Test', level: 0 as any });
       expect(user.isValid()).toBe(false);
       user.level = -1 as any;
       expect(user.isValid()).toBe(false);
@@ -217,8 +217,8 @@ describe('UserModel', () => {
 
       expect(user.id).toBe(originalId);
       expect(user.email).toBe(originalEmail);
-      expect(user.name).toBeNull();
-      expect(user.surname).toBeNull();
+      expect(user.firstName).toBeNull();
+      expect(user.lastName).toBeNull();
       expect(user.level).toBe(SecurityLevel.EXTERNAL);
       expect(user.internalLevel).toBe(0);
       expect(user.internal).toBe(false);

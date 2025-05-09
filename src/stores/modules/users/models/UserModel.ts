@@ -29,8 +29,8 @@ export default class UserModel {
   id: number;
   uid: string | null;
   email: string;
-  name: string | null;
-  surname: string | null;
+  firstName: string | null;
+  lastName: string | null;
   password: string | null;
   level: SecurityLevel;
   internalLevel: number;
@@ -51,8 +51,8 @@ export default class UserModel {
     this.id = data?.id ?? 0;
     this.uid = data?.uid ?? null;
     this.email = data?.email ?? '';
-    this.name = data?.name ?? null;
-    this.surname = data?.surname ?? null;
+    this.firstName = data?.firstName ?? null;
+    this.lastName = data?.lastName ?? null;
     this.level = data?.level ?? SecurityLevel.EXTERNAL;
     this.internalLevel = data?.internalLevel ?? 0;
     this.internal = data?.internal ?? false;
@@ -80,7 +80,7 @@ export default class UserModel {
   static fromAPI(user: Partial<UserModel>): UserModel {
     const modelData = {
       ...user,
-      name: user.name ?? null,
+      firstName: user.firstName ?? null,
       createdAt: user.createdAt ? dayjs(user.createdAt).toDate() : new Date(),
       updatedAt: user.updatedAt ? dayjs(user.updatedAt).toDate() : new Date(),
       passwordUpdatedAt: user.passwordUpdatedAt ? dayjs(user.passwordUpdatedAt).toDate() : null,
@@ -98,7 +98,7 @@ export default class UserModel {
    * Returns the full name (handles null/undefined)
    */
   get fullName(): string {
-    return [this.name, this.surname].filter(Boolean).join(' ').trim();
+    return [this.firstName, this.lastName].filter(Boolean).join(' ').trim();
   }
 
   /**
@@ -157,7 +157,7 @@ export default class UserModel {
     if (!isValidEmail(this.email)) {
       return false;
     }
-    const stringFields: (keyof this)[] = ['email', 'name'];
+    const stringFields: (keyof this)[] = ['email', 'firstName'];
     for (const field of stringFields) {
       const value = this[field];
       if (typeof value !== 'string' || !value.trim()) {
@@ -175,8 +175,8 @@ export default class UserModel {
    * Reset user to default values (except id)
    */
   reset(): void {
-    this.name = null;
-    this.surname = null;
+    this.firstName = null;
+    this.lastName = null;
     this.level = SecurityLevel.EXTERNAL;
     this.internalLevel = 0;
     this.internal = false;

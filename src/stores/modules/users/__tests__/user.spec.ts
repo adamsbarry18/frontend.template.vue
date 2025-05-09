@@ -48,8 +48,8 @@ describe('stores/modules/users/user', () => {
     id: 1,
     uid: 'user-uid-1',
     email: 'test@example.com',
-    name: 'Test',
-    surname: 'User',
+    firstName: 'Test',
+    lastName: 'User',
     level: SecurityLevel.USER,
     internalLevel: 1,
     internal: false,
@@ -68,8 +68,8 @@ describe('stores/modules/users/user', () => {
   const rawAdminUser = {
     id: 2,
     email: 'admin@example.com',
-    name: 'Admin',
-    surname: 'UserAdmin',
+    firstName: 'Admin',
+    lastName: 'UserAdmin',
     level: SecurityLevel.ADMIN,
     preferences: { language: 'fr', theme: 'dark' },
     createdAt: new Date().toISOString(),
@@ -273,25 +273,29 @@ describe('stores/modules/users/user', () => {
     describe('updateUser', () => {
       it('should call API to update user', async () => {
         usersStore.currentUser = { ...rawUser1, id: 1 } as any;
-        const updatedName = 'Updated Name From Test';
-        const apiResponseData = { ...rawUser1, name: updatedName, updatedAt: new Date().toISOString() };
+        const updatedFirstName = 'Updated Name From Test';
+        const apiResponseData = {
+          ...rawUser1,
+          firstName: updatedFirstName,
+          updatedAt: new Date().toISOString(),
+        };
 
         mockApiPut.mockResolvedValueOnce({ data: { data: apiResponseData } });
 
         // Object passed to the action
         const userUpdatePayload = {
           id: rawUser1.id,
-          name: updatedName,
+          firstName: updatedFirstName,
           email: rawUser1.email,
           // Include any other fields the action might need directly
         };
         const expectedApiData = {
           email: rawUser1.email,
-          name: updatedName,
+          firstName: updatedFirstName,
         };
         const result = await usersStore.updateUser(userUpdatePayload as any); // Cast as any if needed
         expect(mockApiPut).toHaveBeenCalledWith(`/api/v1/users/${rawUser1.id}`, { data: expectedApiData });
-        expect(result.name).toBe(updatedName);
+        expect(result.firstName).toBe(updatedFirstName);
       });
     });
 
@@ -299,9 +303,9 @@ describe('stores/modules/users/user', () => {
       it('should call API to add a user', async () => {
         const newUserPayload = {
           email: 'new@dev.com',
-          name: 'Newby',
+          firstName: 'Newby',
           password: 'secure',
-          surname: 'Test',
+          lastName: 'Test',
           level: SecurityLevel.USER,
           internalLevel: 0,
           internal: false,
@@ -326,7 +330,7 @@ describe('stores/modules/users/user', () => {
         const result = await usersStore.addUser(newUserPayload as any);
 
         expect(mockApiPost).toHaveBeenCalledWith('/api/v1/users', {
-          data: expect.objectContaining({ email: 'new@dev.com', name: 'Newby' }),
+          data: expect.objectContaining({ email: 'new@dev.com', firstName: 'Newby' }),
         });
         expect(result.id).toBe(100);
       });
