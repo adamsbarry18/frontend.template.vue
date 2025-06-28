@@ -128,8 +128,14 @@ LICENSE
 .eslintrc*
 .prettierrc*
 .stylelintrc*
+
+# ========================================
+# CONFIG FILES (keep essential configs)
+# ========================================
 tsconfig.json
 tsconfig.*.json
+vite.config.ts
+vite.config.js
 
 # ========================================
 # TEMPORARY FILES
