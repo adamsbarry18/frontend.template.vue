@@ -2,47 +2,30 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, dev]
+    branches: ['main', 'dev']
   pull_request:
-    branches: [main, dev]
+    branches: ['main', 'dev']
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - staging
-          - production
-
-# Permissions nécessaires pour le GitHub Container Registry
-permissions:
-  contents: read
-  packages: write
-
-env:
-  NODE_VERSION: '22'
-  DOCKER_IMAGE: frontend-template
-  DOCKER_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
 jobs:
-  # ========================================
-  # QUALITY ASSURANCE & TESTING
-  # ========================================
+  # ==========================================
+  # Job: Test
+  # ==========================================
   test:
-    name: Quality Assurance & Testing
+    name: Run Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version: [22.x]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -50,12 +33,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run ESLint
+      # Linting/Formatting
+      - name: Lint code
         run: npm run lint
-
-      - name: Run Prettier check
+      - name: Check formatting
         run: npm run format:check
-
       - name: Type check
         run: npm run type-check
 
@@ -73,14 +55,20 @@ jobs:
           path: coverage/
           retention-days: 30
 
-  # ========================================
-  # BUILD & DOCKER
-  # ========================================
-  build:
-    name: Build & Docker
-    needs: test
+  # ==========================================
+  # Job: Build and Push Docker Image
+  # ==========================================
+  build-and-push-docker:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Ne s'exécute que sur push vers 'main' ou 'dev' et après succès du job 'test'
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push'
+    needs: test
+
+    # Accorde les permissions nécessaires pour lire le contenu et écrire des packages (images Docker)
+    permissions:
+      contents: read # Nécessaire pour actions/checkout
+      packages: write # Nécessaire pour pusher vers GHCR
 
     steps:
       - name: Checkout repository
@@ -89,7 +77,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -99,6 +87,9 @@ jobs:
 
       - name: Build application and Storybook
         run: npm run build:full
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -110,21 +101,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # Construit le nom de l'image pour GHCR: ghcr.io/owner/repo
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,prefix=,suffix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ github.ref_name }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ${{ env.DOCKER_REGISTRY }}:latest
-            ${{ env.DOCKER_REGISTRY }}:${{ github.sha }}
-            ${{ env.DOCKER_REGISTRY }}:${{ github.ref_name }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
             BUILD_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
             BUILD_ID=${{ github.sha }}
-            NODE_VERSION=${{ env.NODE_VERSION }}
+            NODE_VERSION=22
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -133,14 +133,15 @@ jobs:
           path: dist/
           retention-days: 7
 
-  # ========================================
-  # DEPLOYMENT - PRODUCTION
-  # ========================================
+  # ==========================================
+  # Job: Deploy to Production
+  # ==========================================
   deploy-production:
     name: Deploy to Production
-    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # Ne s'exécute que sur push vers 'main' et après succès du job 'build-and-push-docker'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-and-push-docker
     environment: production
 
     steps:
