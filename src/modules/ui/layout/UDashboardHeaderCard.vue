@@ -14,7 +14,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '../icons/IconBase.vue';
 
   defineProps({
     title: {

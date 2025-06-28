@@ -33,7 +33,8 @@
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
   import type { PropType } from 'vue';
-  import { UContextualMenu, IconBase } from '@/modules/ui';
+  import { UContextualMenu } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   interface Option {
     value: any;

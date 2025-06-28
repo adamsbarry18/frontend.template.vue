@@ -11,7 +11,7 @@
       <div element-loading-spinner="el-icon-loading" />
       <span v-if="label" class="simple-label">{{ label }}</span>
       <slot name="label" />
-      <IconBase
+      <icon-base
         v-if="closable"
         icon="icon-cross"
         class="close-button -button-like"
@@ -105,8 +105,8 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import { IconBase, UDatePicker, USelectGroup, URadio, UNumberInput, UPasswordInput } from '@/modules/ui';
-
+  import { UDatePicker, USelectGroup, URadio, UNumberInput, UPasswordInput } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   const props = defineProps({
     modelValue: {
       type: [String, Number, Date, Array, Boolean] as PropType<any>,
@@ -142,7 +142,7 @@
       type: String,
       default: 'string',
       validator: (v: string) =>
-        ['string', 'textarea', 'number', 'date', 'enum', 'radio', 'password'].includes(v),
+        ['string', 'textarea', 'number', 'date', 'enum', 'radio', 'password', 'email'].includes(v),
     },
     radioOptions: { type: Array as PropType<any[]>, default: () => [] },
     enumOptions: { type: Array as PropType<any[]>, default: () => [] },

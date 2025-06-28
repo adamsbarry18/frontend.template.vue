@@ -1,18 +1,90 @@
+# ========================================
+# ESLINT IGNORE - Vue.js Frontend Template
+# ========================================
+
+# ========================================
+# DEPENDENCIES
+# ========================================
+node_modules/
+node_modules/**
+
+# ========================================
+# BUILD OUTPUTS
+# ========================================
+dist/
+dist/**
+dist-ssr/
+build/
+coverage/
+/html
+
+# ========================================
+# STORYBOOK
+# ========================================
+storybook-static/
+storybook-static/**
+dist/storybook/
+dist/storybook/**
 !.storybook
 
-node_modules
-/dist
-/html
-/coverage
-/.cache
-./html/assets
+# ========================================
+# CACHE FILES
+# ========================================
+.cache/
+.cache/**
+.eslintcache
+.stylelintcache
+.prettiercache
+.vite/
+vite-cache/
+.parcel-cache/
 
-# Test results
+# ========================================
+# TEST RESULTS
+# ========================================
 .nyc_output/
-coverage
+coverage/
 junit.xml
+test-results/
+playwright-report/
 
+# ========================================
+# GENERATED FILES
+# ========================================
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
 
-# Storybook
-.cache
-storybook-static
+# ========================================
+# CONFIG FILES
+# ========================================
+vite.config.ts
+vite.config.js
+rollup.config.js
+webpack.config.js
+postcss.config.js
+tailwind.config.js
+
+# ========================================
+# DOCUMENTATION
+# ========================================
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+
+# ========================================
+# DOCKER
+# ========================================
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# ========================================
+# TEMPORARY FILES
+# ========================================
+*.tmp
+*.temp
+*.bak
+*.backup

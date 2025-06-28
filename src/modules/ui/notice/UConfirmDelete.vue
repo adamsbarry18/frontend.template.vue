@@ -37,7 +37,8 @@
 <script setup lang="ts">
   import i18n from '@/i18n';
   import { computed, PropType } from 'vue';
-  import { UInfo, UHelpButton, IconBase } from '@/modules/ui';
+  import { UInfo, UHelpButton } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   const props = defineProps({
     list: {

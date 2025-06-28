@@ -5,54 +5,58 @@
       <h3>{{ $t('user.settings.authorizations.title') }}</h3>
     </div>
     <div v-if="localAuthorizations" class="form-layout">
-      <div class="form-section">
-        <h4>{{ $t('user.settings.authorizations.level') }}</h4>
-        <u-select-group
-          :model-value="localAuthorizations.level"
-          :options="levelOptions"
-          :disabled="!canEdit"
-          @update:model-value="updateAuthorization('level', $event)"
-        />
-      </div>
+      <div class="level-internal-group">
+        <div class="form-section">
+          <h4>{{ $t('user.settings.authorizations.level') }}</h4>
+          <u-select-group
+            :model-value="localAuthorizations.level"
+            :options="levelOptions"
+            :disabled="!canEdit"
+            @update:model-value="updateAuthorization('level', $event)"
+          />
+        </div>
 
-      <div class="form-section">
-        <h4>{{ $t('user.settings.authorizations.internal') }}</h4>
-        <u-radio
-          :model-value="localAuthorizations.internal"
-          :options="internalOptions"
-          :disabled="!canEdit"
-          @update:model-value="updateAuthorization('internal', $event)"
-        />
-      </div>
-
-      <div class="form-section">
-        <h4>{{ $t('user.settings.authorizations.permissions') }}</h4>
-        <u-select-group
-          v-if="availableFeatures"
-          :model-value="selectedPermissions"
-          :options="permissionOptions"
-          :placeholder="$t('user.settings.authorizations.select-permissions')"
-          :disabled="!canEdit"
-          multiple
-          filterable
-          group-by="feature"
-          with-group-label
-          clearable
-          @update:model-value="updatePermissions"
-        />
-        <div v-else>
-          {{ $t('commons.loading') }}
+        <div class="form-section">
+          <h4>{{ $t('user.settings.authorizations.internal') }}</h4>
+          <u-radio
+            :model-value="localAuthorizations.internal"
+            :options="internalOptions"
+            :disabled="!canEdit"
+            @update:model-value="updateAuthorization('internal', $event)"
+          />
         </div>
       </div>
 
-      <div class="form-section">
-        <h4>{{ $t('user.settings.authorizations.status') }}</h4>
-        <u-radio
-          :model-value="localAuthorizations.isActive"
-          :options="activeOptions"
-          :disabled="!canEdit"
-          @update:model-value="updateAuthorization('isActive', $event)"
-        />
+      <div class="permissions-status-group">
+        <div class="form-section">
+          <h4>{{ $t('user.settings.authorizations.permissions') }}</h4>
+          <u-select-group
+            v-if="availableFeatures"
+            :model-value="selectedPermissions"
+            :options="permissionOptions"
+            :placeholder="$t('user.settings.authorizations.select-permissions')"
+            :disabled="!canEdit"
+            multiple
+            filterable
+            group-by="feature"
+            with-group-label
+            clearable
+            @update:model-value="updatePermissions"
+          />
+          <div v-else>
+            {{ $t('commons.loading') }}
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>{{ $t('user.settings.authorizations.status') }}</h4>
+          <u-radio
+            :model-value="localAuthorizations.isActive"
+            :options="activeOptions"
+            :disabled="!canEdit"
+            @update:model-value="updateAuthorization('isActive', $event)"
+          />
+        </div>
       </div>
 
       <div class="form-section">
@@ -89,7 +93,8 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, PropType } from 'vue';
-  import { IconBase, USelectGroup, URadio, UDatePicker, USwitch } from '@/modules/ui';
+  import { USelectGroup, URadio, UDatePicker, USwitch } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { useAuthorisationsStore } from '@/stores/modules/auth/authorisations';
   import { SecurityLevel } from '@/stores/modules/users/models/UserModel';
   import i18n from '@/i18n';
@@ -296,6 +301,22 @@
 
 <style lang="scss" scoped>
   .user-authorizations-form {
+    .form-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .level-internal-group,
+    .permissions-status-group {
+      display: flex;
+      gap: 20px;
+
+      .form-section {
+        flex: 1;
+      }
+    }
+
     .form-section {
       h4 {
         margin-bottom: 10px;
@@ -306,7 +327,6 @@
       .u-date-picker,
       .u-switch {
         width: 100%;
-        max-width: 400px;
       }
       .u-radio,
       .u-switch {
@@ -332,22 +352,6 @@
       }
     }
 
-    .form-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-
-    .form-section {
-      h4 {
-        margin-bottom: 10px;
-        color: var(--color-text-secondary);
-      }
-      .u-select-group,
-      .u-radio {
-        width: 100%;
-      }
-    }
     .loading-placeholder {
       padding: 20px;
       text-align: center;

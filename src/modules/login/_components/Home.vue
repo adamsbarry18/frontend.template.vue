@@ -1,27 +1,27 @@
 <template>
   <div class="unconnected-home">
     <transition name="slide-fade">
-      <el-card v-if="show" class="box-card">
-        <template v-slot:header>
-          <div class="header">
+      <u-card v-if="show" class="box-card login-home-card">
+        <template #title>
+          <div class="header-ucard-slot">
             <div class="logo-wrapper">
-              <img class="header-logo" src="@/assets/images/logo_mabarry_title.jpg" />
+              <img class="header-logo" src="@/assets/images/logo_stock_app.png" />
             </div>
           </div>
         </template>
-        <div>
+        <div class="content-slot-wrapper">
           <slot />
         </div>
-      </el-card>
+      </u-card>
     </transition>
     <div class="home-logo">
-      <img src="@/assets/images/logo_mabarry.jpg" />
+      <img src="@/assets/images/stock_app_hero.jpg" alt="E-commerce" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ElCard } from 'element-plus';
+  import { UCard } from '@/modules/ui';
   import { onMounted, ref } from 'vue';
 
   const show = ref(false);
@@ -53,47 +53,45 @@
     width: 100%;
     height: 100%;
 
-    .box-card {
+    .login-home-card {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
       align-items: center;
       border: none;
       box-shadow: none;
+      background-color: transparent;
 
-      .el-card__header {
-        .header {
+      :deep(.card-title-wrapper) {
+        background-color: transparent;
+        border-bottom: none;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .header-ucard-slot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding-top: 20px;
+        .logo-wrapper {
           display: flex;
           flex-direction: column;
-          align-items: center;
           gap: 20px;
-          .logo-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-          }
-
           .header-logo {
             max-width: 300px;
           }
         }
       }
 
-      .el-card__body {
+      :deep(.card-content) {
         padding: 2rem 3rem;
         width: 550px;
-
-        .el-form-item__label {
-          width: 50%;
-        }
-      }
-    }
-
-    .header {
-      justify-content: center;
-
-      .title {
-        padding-left: 0;
+        display: flex;
+        justify-content: center;
       }
     }
 

@@ -1,4 +1,3 @@
-import Dashboard from '@/modules/dashboard/_views/Dashboard.vue';
 import MyHome from '@/views/MyHome.vue';
 import { RouteRecordRaw } from 'vue-router';
 
@@ -6,7 +5,7 @@ const testRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'dashboard',
-    component: Dashboard,
+    component: () => import('@/modules/dashboard/_views/Dashboard.vue'),
   },
   {
     path: '/my-account',

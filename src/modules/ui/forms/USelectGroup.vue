@@ -88,7 +88,7 @@
 <script setup lang="ts">
   import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, PropType } from 'vue';
   import { ElSelect } from 'element-plus';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   type SelectInstance = InstanceType<typeof ElSelect>;
 

@@ -236,10 +236,10 @@
     UListPagination,
     USelectGroup,
     UInfo,
-    IconBase,
     UListRowButtons,
     UListSelectionActions,
   } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   import {
     setSort,
@@ -1003,6 +1003,12 @@
           display: flex;
           align-items: center;
           gap: 12px;
+          .numbers-size {
+            margin: 0;
+            p {
+              margin: 0;
+            }
+          }
         }
         .header-left {
           display: flex;
@@ -1046,10 +1052,10 @@
               z-index: 2;
               border-radius: 0 3px 3px 0;
               background: var(--color-neutral-600);
-              padding: 0 10px;
               height: 100%;
               p {
-                margin: 1px 0 0 6px;
+                margin: 0;
+                padding: 4px;
                 color: var(--color-white);
                 font-weight: 500;
               }

@@ -1,157 +1,222 @@
-name: CI Frontend Template Vue
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: [main, dev]
   pull_request:
-    branches: # Spécifiez les branches sur lesquelles Renovate peut créer des PRs (souvent main ou dev)
-      - main
-      - dev
-  workflow_dispatch: # Pour le déploiement manuel
+    branches: [main, dev]
+  workflow_dispatch:
     inputs:
       environment:
-        description: 'Environnement de déploiement (ex: staging, production)'
+        description: 'Environment to deploy'
         required: true
         default: 'staging'
         type: choice
         options:
           - staging
           - production
-          - test
-      image_tag:
-        description: "Tag de l'image Docker à déployer (ex: latest, dev-xxxxxxx, ou un SHA)"
-        required: true
 
 env:
+  NODE_VERSION: '22'
   REGISTRY: ghcr.io
-  # L'image sera nommée ghcr.io/VOTRE_USER_OU_ORG/NOM_DU_REPO
-  # github.repository est au format 'owner/repository-name'
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  lint_and_test:
-    name: Lint and Unit Test
+  # ========================================
+  # QUALITY ASSURANCE
+  # ========================================
+  quality:
+    name: Quality Assurance
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
-        # Le GITHUB_TOKEN ici est celui fourni par Actions, il a des permissions limitées.
-        # Si votre .npmrc a besoin d'un token avec des droits spécifiques pour lire des paquets
-        # (par exemple, d'un autre repo privé ou d'une autre organisation),
-        # vous devriez utiliser un secret personnalisé (ex: secrets.GH_PACKAGES_READ_TOKEN)
-        # et l'assigner à la variable d'environnement que votre .npmrc attend (ex: GITHUB_TOKEN).
         run: npm ci
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_READ_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run linters
-        # Remplacez 'npm run lint' par votre commande de lint réelle si différente
+      - name: Run ESLint
         run: npm run lint
 
-      - name: Run unit tests
-        # Remplacez 'npm run test:unit' par votre commande de test unitaire réelle si différente
-        # Si vous n'avez pas de tests unitaires, vous pouvez supprimer cette étape ou la marquer comme 'continue-on-error: true'
-        run: npm run test:unit
+      - name: Run Prettier check
+        run: npm run format:check || echo "Prettier check failed - run 'npm run format' to fix"
 
-  build_and_push_image:
-    name: Build and Push Docker Image
+      - name: Type check
+        run: npm run type-check || npx vue-tsc --noEmit
+
+  # ========================================
+  # TESTING
+  # ========================================
+  test:
+    name: Testing
     runs-on: ubuntu-latest
-    needs: lint_and_test # Ce job ne démarre que si lint_and_test réussit
-    permissions:
-      contents: read # Nécessaire pour checkout
-      packages: write # Nécessaire pour pousser des images vers ghcr.io
+    timeout-minutes: 15
+    needs: quality
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+  # ========================================
+  # BUILD
+  # ========================================
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [quality, test]
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+
+  # ========================================
+  # DOCKER BUILD & PUSH
+  # ========================================
+  docker:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }} # Le GITHUB_TOKEN fourni par Actions a la permission packages:write ici
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: | # Génère plusieurs tags utiles
-            type=ref,event=branch # Tag avec le nom de la branche (ex: main, dev)
-            type=sha,prefix=,suffix=,event=push # Tag avec le SHA court du commit (ex: 1234567)
-            # Si vous utilisez des tags Git sémantiques (v1.0.0), vous pouvez ajouter:
-            # type=semver,pattern={{version}}
-            # type=semver,pattern={{major}}.{{minor}}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=,suffix=,event=push
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: . # Le contexte de build est la racine du projet
-          file: ./build/Dockerfile # Chemin vers votre Dockerfile
-          push: ${{ github.event_name != 'pull_request' }} # Ne pousse pas sur les PRs, seulement sur merge/push direct sur les branches
+          context: .
+          file: ./build/Dockerfile
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: | # Passer les arguments de build au Dockerfile
-            BUILD_ENV=${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'development') }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_ENV=${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
             BUILD_ID=${{ github.sha }}
-            APP_NAME=${{ fromJSON(steps.meta.outputs.json).image.name }} # Utilise le nom d'image de metadata
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} # Pour .npmrc pendant le build Docker (si .npmrc utilise ${GITHUB_TOKEN})
+            NODE_VERSION=${{ env.NODE_VERSION }}
 
-  deploy:
-    name: Deploy Application
+  # ========================================
+  # DEPLOYMENT
+  # ========================================
+  deploy-staging:
+    name: Deploy to Staging
     runs-on: ubuntu-latest
-    needs: build_and_push_image # Dépend du build et push de l'image
-    if: github.event_name == 'workflow_dispatch' # Ne s'exécute que sur déclenchement manuel
-
-    # Configure l'environnement GitHub pour le déploiement (optionnel mais bonne pratique)
-    environment:
-      name: ${{ github.event.inputs.environment }}
-      # url: https://your-app-url.com # Si vous avez une URL pour l'environnement déployé
+    needs: [build, docker]
+    if: github.ref == 'refs/heads/dev'
+    environment: staging
 
     steps:
-      - name: Display deployment information
-        run: |
-          echo "Déploiement manuel déclenché par : ${{ github.actor }}"
-          echo "Branche/Commit de référence pour l'image : ${{ github.ref_name }} / ${{ github.sha }}"
-          echo "Environnement cible : ${{ github.event.inputs.environment }}"
-          echo "Tag de l'image à déployer : ${{ github.event.inputs.image_tag }}"
-          echo "Image Docker complète : ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Optionnel: Login à ghcr.io si votre script de déploiement a besoin de pull l'image
-      - name: Log in to GitHub Container Registry (si nécessaire pour le script de déploiement)
-        uses: docker/login-action@v3
+      - name: Deploy to Vercel (Staging)
+        uses: amondnet/vercel-action@v25
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .
+          vercel-args: '--target=preview'
 
-      - name: Placeholder - Execute deployment script
-        run: |
-          echo "Exécution du script de déploiement pour l'environnement: ${{ github.event.inputs.environment }}"
-          echo "Image à déployer: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}"
-          #
-          # REMPLACEZ CECI PAR VOS COMMANDES DE DÉPLOIEMENT RÉELLES
-          # Exemple:
-          # ssh -o StrictHostKeyChecking=no user@${{ secrets.DEPLOY_SERVER_IP }} << EOF
-          #   docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}
-          #   docker stop ${{ env.APP_NAME_ON_SERVER }} || true
-          #   docker rm ${{ env.APP_NAME_ON_SERVER }} || true
-          #   docker run -d --name ${{ env.APP_NAME_ON_SERVER }} -p 80:80 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}
-          # EOF
-          echo "Déploiement (simulation) terminé."
-        env:
-          # Vous devrez configurer des secrets dans GitHub pour les variables ci-dessous si vous les utilisez
-          # DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_STAGING_IP }} # ou secrets.DEPLOY_SERVER_PRODUCTION_IP
-          # APP_NAME_ON_SERVER: "my-frontend-app" # Nom du conteneur sur le serveur
-          IMAGE_TO_DEPLOY: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, docker]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: .
+          vercel-args: '--prod'

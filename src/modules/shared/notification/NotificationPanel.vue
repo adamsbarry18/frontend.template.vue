@@ -50,7 +50,8 @@
   import { reactBus, STATE } from '@/plugins/reactBus';
   import { compile } from 'vue/dist/vue.esm-bundler.js';
   import dayjs from 'dayjs';
-  import { IconBase, UDismissable, UShortcutSubscriber } from '@/modules/ui';
+  import { UDismissable, UShortcutSubscriber } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import i18n from '@/i18n';
   import NotificationConnection from '@/modules/users/_components/NotificationConnection.vue';
   import { useNotification } from '@/composables/notfication';

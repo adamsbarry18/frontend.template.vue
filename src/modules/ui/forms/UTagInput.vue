@@ -123,7 +123,8 @@
 <script lang="ts" setup>
   import { ref, computed, onMounted, onBeforeUnmount, nextTick, getCurrentInstance } from 'vue';
   import { ellipsis } from '@/libs/utils/String';
-  import { UTooltip, USelectGroup, IconBase } from '@/modules/ui';
+  import { UTooltip, USelectGroup } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { ElTag, ElAutocomplete, ElInput } from 'element-plus';
   import i18n from '@/i18n';
 

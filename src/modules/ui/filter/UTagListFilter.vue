@@ -28,7 +28,8 @@
 </template>
 <script setup lang="ts">
   import { ref, watch, onMounted } from 'vue';
-  import { IconBase, UTag } from '@/modules/ui';
+  import { UTag } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   const props = defineProps({
     options: {

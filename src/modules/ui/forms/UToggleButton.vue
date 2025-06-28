@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
   import { PropType, onMounted } from 'vue';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   interface ToggleButtonOption {
     value: string | number;

@@ -37,8 +37,6 @@
       </div>
     </template>
   </u-tooltip>
-  <!-- Optionnel: Afficher quelque chose si pas d'utilisateur (ex: bouton login) -->
-  <!-- <div v-else>...</div> -->
 </template>
 
 <script setup lang="ts">
@@ -46,54 +44,42 @@
   import { useRouter } from 'vue-router';
   import { storeToRefs } from 'pinia';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { UTooltip, UColorInitials, IconBase } from '@/modules/ui';
+  import { UTooltip, UColorInitials } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
-  // Accès au store et au router
   const usersStore = useUsersStore();
   const router = useRouter();
 
-  // Obtenir des références réactives depuis le store users
   const { currentUser, getInitial: userInitial, email: userEmail } = storeToRefs(usersStore);
 
-  // Propriétés calculées basées sur currentUser du store
-  const userName = computed(() => currentUser.value?.fullName ?? ''); // Utiliser fullName pour nom complet
-  const userColor = computed(() => usersStore.userColorFromId(currentUser.value?.id ?? 0)); // Obtenir la couleur
+  const userName = computed(() => currentUser.value?.fullName ?? '');
+  const userColor = computed(() => usersStore.userColorFromId(currentUser.value?.id ?? 0));
 
-  // Méthodes de navigation
   const goToLogout = async () => {
     await usersStore.logout();
     router.push({ name: 'login' });
   };
 
   const goToMyAccountScreen = () => {
-    // Assurez-vous que la route 'user-settings-edit' existe et prend l'ID en paramètre
-    // Ou utilisez une route dédiée comme 'my-account' si elle existe.
     if (currentUser.value?.id) {
-      // Redirige vers la page d'édition de l'utilisateur courant
-      // Note: 'user-settings-edit' est utilisé dans nav.ts pour 'account'
       router.push({
-        name: 'user-settings-edit', // Utiliser le nom de route cohérent
-        // Ne pas passer de paramètre 'id', car la route /account/settings n'en a pas.
-        // Le composant UserSettings récupère l'ID du currentUser depuis le store en mode 'user-edit'.
+        name: 'user-settings-edit',
       });
     } else {
       console.error('Cannot navigate to account screen: current user ID is missing.');
-      // Optionnel: rediriger vers login si l'ID manque pour une raison quelconque
-      // goToLogout();
     }
   };
 </script>
 
 <style scoped lang="scss">
-  // Styles pour user-info et user-info-tooltip (à adapter/créer si nécessaire)
   .user-info {
-    margin-left: 15px; // Espacement par rapport à l'élément précédent
+    margin-left: 15px;
     cursor: pointer;
   }
 
   .user-tooltip-content {
     padding: 10px;
-    min-width: 200px; // Donner une largeur minimale au tooltip
+    min-width: 200px;
 
     .user-profile-wrapper {
       display: flex;
@@ -109,11 +95,11 @@
       .user-informations {
         display: flex;
         flex-direction: column;
-        overflow: hidden; // Empêcher le texte de déborder
+        overflow: hidden;
 
         h3 {
           margin: 0;
-          font-size: var(--paragraph-01); // Ajuster la taille
+          font-size: var(--paragraph-01);
           font-weight: 500;
           white-space: nowrap;
           overflow: hidden;
@@ -121,7 +107,7 @@
         }
 
         .user-email {
-          font-size: var(--paragraph-03); // Ajuster la taille
+          font-size: var(--paragraph-03);
           color: var(--color-neutral-600);
           white-space: nowrap;
           overflow: hidden;
@@ -133,7 +119,7 @@
     .user-action {
       display: flex;
       flex-direction: column;
-      gap: 8px; // Espace entre les actions
+      gap: 8px;
 
       div.-button-like {
         display: flex;
@@ -152,14 +138,13 @@
         }
 
         span {
-          font-size: var(--paragraph-02); // Ajuster la taille
+          font-size: var(--paragraph-02);
           color: var(--color-neutral-800);
         }
       }
     }
   }
 
-  // Styles pour .main-header__notifications (semble hors contexte ici, peut-être à déplacer)
   .main-header__notifications {
     display: flex;
     position: relative;

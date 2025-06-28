@@ -1,4 +1,4 @@
-import { UDataKpiCard } from '@/modules/ui';
+import UDataKpiCard from '@/modules/ui/data/UDataKpiCard.vue';
 
 export default {
   title: 'data/DataKpiCard',

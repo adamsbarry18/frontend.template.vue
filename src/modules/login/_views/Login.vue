@@ -34,6 +34,24 @@
             {{ $t('login.password.lost') }}
           </router-link>
         </div>
+        <div class="signup-prompt">
+          <span>{{ $t('login.no-account-prompt') }}</span>
+          <router-link :to="{ name: 'signup' }" data-cy="signup-link" class="signup-action-link">
+            {{ $t('login.create-account') }}
+          </router-link>
+        </div>
+        <div class="or-divider">
+          <span>{{ $t('login.or') }}</span>
+        </div>
+        <u-button
+          class="google-login-button"
+          type="secondary"
+          data-cy="google-login-button"
+          @click="handleGoogleLogin"
+        >
+          <img src="@/assets/images/svg/google-color-icon.svg" alt="Google logo" class="google-logo" />
+          {{ $t('login.google-signin') }}
+        </u-button>
       </div>
     </form>
   </home>
@@ -118,6 +136,10 @@
     }
   }
 
+  function handleGoogleLogin() {
+    usersStore.initiateGoogleLogin();
+  }
+
   async function getRedirect() {
     const redirectQuery = route.query?.redirect;
     let targetPath: string | null = null;
@@ -128,9 +150,7 @@
       if (potentialPath) {
         try {
           const decodedPath = decodeURIComponent(potentialPath);
-
           const resolvedRoute = router.resolve(decodedPath);
-
           if (resolvedRoute.matched.length > 0 && resolvedRoute.name !== '404') {
             targetPath = resolvedRoute.fullPath;
           }
@@ -141,7 +161,7 @@
     }
 
     if (targetPath) {
-      await router.push(targetPath);
+      await router.replace(targetPath);
     } else {
       await redirectToDashboard();
     }
@@ -151,20 +171,115 @@
     await router.replace({ name: 'dashboard' });
   }
 
-  onMounted(() => {
-    if (route.query.passwordUpdated === 'true') {
-      $notification.notify({
-        title: i18n.global.t('notification.success-title'),
-        message: i18n.global.t('login.notification.password-updated'),
-        type: 'success',
-      });
-      router.replace({ query: { ...route.query, passwordUpdated: undefined } });
+  onMounted(async () => {
+    fullscreenLoading.value = true;
+    try {
+      const mainUrlParams = new URLSearchParams(window.location.search);
+      const googleAuthTokenFromMainUrl = mainUrlParams.get('google_auth_token');
+      const googleAuthSuccessFromMainUrl = mainUrlParams.get('google_auth_success');
+
+      const { error: oauthErrorQuery, passwordUpdated } = route.query;
+
+      if (googleAuthTokenFromMainUrl && googleAuthSuccessFromMainUrl === 'true') {
+        const token = googleAuthTokenFromMainUrl;
+
+        if (token) {
+          const loginSuccess = await usersStore.loginWithToken(token);
+          if (loginSuccess) {
+            $notification.notify({
+              title: i18n.global.t('notification.success-title'),
+              message: i18n.global.t('login.google-signin-success'),
+              type: 'success',
+            });
+
+            const url = new URL(window.location.href);
+            const paramsToRemoveFromMainUrl = [
+              'google_auth_token',
+              'google_auth_success',
+              'code',
+              'scope',
+              'authuser',
+              'prompt',
+              'hd',
+              'error',
+            ];
+            paramsToRemoveFromMainUrl.forEach((param) => url.searchParams.delete(param));
+
+            const newCleanedMainUrl = url.pathname + url.search;
+            window.history.replaceState({}, '', newCleanedMainUrl + (window.location.hash || '#/'));
+
+            await router.replace({ name: 'dashboard' });
+            return;
+          } else {
+            console.warn('Login.vue: usersStore.loginWithToken returned false.');
+            $errorMsg(i18n.global.t('login.error.google-oauth-generic'));
+          }
+        } else {
+          console.warn('Login.vue: Google auth token was present in URL but evaluated as empty/null.');
+          $errorMsg(i18n.global.t('login.error.google-oauth-generic'));
+        }
+        const url = new URL(window.location.href);
+        const paramsToRemoveFromMainUrl = [
+          'google_auth_token',
+          'google_auth_success',
+          'code',
+          'scope',
+          'authuser',
+          'prompt',
+          'hd',
+          'error',
+        ];
+        paramsToRemoveFromMainUrl.forEach((param) => url.searchParams.delete(param));
+        window.history.replaceState({}, '', url.pathname + url.search + (window.location.hash || '#/'));
+      }
+
+      if (oauthErrorQuery) {
+        $errorMsg(i18n.global.t('login.error.google-oauth-failed', { error: oauthErrorQuery as string }));
+        const url = new URL(window.location.href);
+        const paramsToRemoveOnError = ['error', 'code', 'scope', 'authuser', 'prompt', 'hd'];
+        paramsToRemoveOnError.forEach((param) => url.searchParams.delete(param));
+        window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+      }
+
+      if (passwordUpdated === 'true') {
+        $notification.notify({
+          title: i18n.global.t('notification.success-title'),
+          message: i18n.global.t('login.notification.password-updated'),
+          type: 'success',
+        });
+        const currentHashQuery = { ...route.query };
+        delete currentHashQuery.passwordUpdated;
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete('passwordUpdated');
+        const hashPath = route.hash.split('?')[0];
+        window.history.replaceState({}, '', url.pathname + url.search + hashPath);
+        await router.replace({ query: currentHashQuery, hash: hashPath });
+      }
+    } catch (error: any) {
+      console.error('Error during onMounted in Login.vue:', error.message);
+      const url = new URL(window.location.href);
+      const paramsToRemoveOnCatch = [
+        'google_auth_token',
+        'google_auth_success',
+        'code',
+        'scope',
+        'authuser',
+        'prompt',
+        'hd',
+        'error',
+      ];
+      paramsToRemoveOnCatch.forEach((param) => url.searchParams.delete(param));
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    } finally {
+      fullscreenLoading.value = false;
     }
   });
 </script>
 
 <style lang="scss" scoped>
   .login {
+    width: auto;
     :deep(.rebranding-text) {
       display: flex;
       align-items: center;
@@ -188,13 +303,69 @@
 
       .form-actions {
         text-align: center;
+        margin-top: 20px;
 
-        .forgot-password a {
-          text-decoration: underline;
-        }
         .login-button {
-          margin-bottom: 8px;
+          margin-bottom: 20px;
           width: 100%;
+        }
+
+        .forgot-password {
+          margin-bottom: 15px;
+          a {
+            font-size: var(--paragraph-02);
+            text-decoration: underline;
+            &:hover {
+              color: var(--color-primary-500);
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .signup-prompt {
+          font-size: var(--paragraph-02);
+          color: var(--color-text-secondary);
+          span {
+            margin-right: 5px;
+          }
+          .signup-action-link {
+            color: var(--color-primary-500);
+            font-weight: 500;
+            text-decoration: none;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .or-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--color-text-secondary);
+        font-size: var(--paragraph-02);
+        margin: 20px 0;
+        span {
+          padding: 0 10px;
+        }
+        &::before,
+        &::after {
+          content: '';
+          flex: 1;
+          border-bottom: 1px solid var(--color-border-neutral);
+        }
+      }
+
+      .google-login-button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        .google-logo {
+          height: 20px;
+          width: auto;
         }
       }
     }

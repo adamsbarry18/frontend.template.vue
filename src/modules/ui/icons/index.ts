@@ -1,4 +1,3 @@
-import IconBase from '@/modules/ui/icons/IconBase.vue';
 import IconAccount from '@/modules/ui/icons/IconAccount.vue';
 import IconAcquire from '@/modules/ui/icons/IconAcquire.vue';
 import IconAction from '@/modules/ui/icons/IconAction.vue';
@@ -222,7 +221,6 @@ export {
   IconNotifActive,
   IconColorTheme,
   IconInfo,
-  IconBase,
   IconDynamicList,
   IconVisit,
   IconDidWhat,

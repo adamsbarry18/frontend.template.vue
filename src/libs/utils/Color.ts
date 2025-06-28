@@ -55,23 +55,3 @@ export function getGraphColorPalette(): string[] {
     getCssVariable('--color-dataviz-6'),
   ];
 }
-
-/**
- * Récupère la palette de couleurs héritée à utiliser dans les graphiques ECharts.
- * @returns Un tableau de chaînes de couleurs.
- */
-export function getGraphColorLegacyPalette(): string[] {
-  return [
-    getCssVariable('--color-legacy-dataviz-1'),
-    getCssVariable('--color-legacy-dataviz-2'),
-    getCssVariable('--color-legacy-dataviz-3'),
-    getCssVariable('--color-legacy-dataviz-4'),
-    getCssVariable('--color-legacy-dataviz-5'),
-    getCssVariable('--color-legacy-dataviz-6'),
-    getCssVariable('--color-legacy-dataviz-7'),
-    getCssVariable('--color-legacy-dataviz-8'),
-    getCssVariable('--color-legacy-dataviz-9'),
-    getCssVariable('--color-legacy-dataviz-10'),
-    getCssVariable('--color-legacy-dataviz-11'),
-  ];
-}

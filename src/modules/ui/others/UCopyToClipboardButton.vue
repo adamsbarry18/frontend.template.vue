@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { waitForMilliseconds } from '@/libs/utils/Time';
 
   const props = defineProps<{

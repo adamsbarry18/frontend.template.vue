@@ -1,20 +1,20 @@
-import { UIconCount } from '@/modules/ui';
+import { UBadge } from '@/modules/ui';
 import { ref } from 'vue';
 
 export default {
   title: 'others/IconCount',
-  component: UIconCount,
+  component: UBadge,
 };
 
 export const IconCount = () => ({
-  components: { UIconCount },
+  components: { UBadge },
   template: `
     <div style="background-color: white; width: 232px; height: 450px">
-      <u-icon-count icon="icon-product" :count="3" :size="24" style="margin: 12px" />
-      <u-icon-count icon="icon-audience" color="red" :count="2" :size="24" style="margin: 12px">
+      <u-badge icon="icon-product" :count="3" :size="24" style="margin: 12px" />
+      <u-badge icon="icon-audience" color="red" :count="2" :size="24" style="margin: 12px">
        <p>2 users!</p>
-      </u-icon-count>
-      <u-icon-count icon="icon-store" color="var(--color-primary-500)" :count="2" :size="32" style="margin: 12px" />
+      </u-badge>
+      <u-badge icon="icon-store" color="var(--color-primary-500)" :count="2" :size="32" style="margin: 12px" />
     </div>
   `,
   setup() {

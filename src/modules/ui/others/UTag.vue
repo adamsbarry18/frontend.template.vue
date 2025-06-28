@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   interface Props {
     icon?: string | null;

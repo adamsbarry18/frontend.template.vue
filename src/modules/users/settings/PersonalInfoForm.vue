@@ -1,6 +1,6 @@
 <template>
   <div class="personal-info-form">
-    <div class="global-card-title">
+    <div v-if="mode !== 'signup'" class="global-card-title">
       <icon-base class="icon" icon="icon-users" :color="'var(--color-neutral-800)'" size="24" />
       <h3>
         {{ mode === 'creation' ? $t('breadcrumb.admin.new-user') : $t('globals.account.title') }}
@@ -35,7 +35,7 @@
             :model-value="localUser?.email"
             :loading="isSearchingUser"
             :error="emailValidationError"
-            :disabled="mode !== 'creation'"
+            :disabled="!(mode === 'creation' || mode === 'signup')"
             :label="$t('commons.form.email')"
             placeholder="example@domain"
             @update:model-value="handleEmailInput"
@@ -55,24 +55,26 @@
               </u-alert-card>
             </transition>
           </template>
-          <u-form-input
-            :model-value="localUser?.lastName"
-            :error="lastNameValidationError"
-            :disabled="isFieldDisabled"
-            :label="$t('commons.form.last-name')"
-            placeholder="Doe"
-            @update:model-value="updateField('lastName', $event)"
-            @blur="touchField('lastName')"
-          />
-          <u-form-input
-            :model-value="localUser?.firstName"
-            :error="firstNameValidationError"
-            :disabled="isFieldDisabled"
-            :label="$t('commons.form.first-name')"
-            placeholder="John"
-            @update:model-value="updateField('firstName', $event)"
-            @blur="touchField('firstName')"
-          />
+          <div class="name-fields">
+            <u-form-input
+              :model-value="localUser?.lastName"
+              :error="lastNameValidationError"
+              :disabled="isFieldDisabled"
+              :label="$t('commons.form.last-name')"
+              placeholder="Doe"
+              @update:model-value="updateField('lastName', $event)"
+              @blur="touchField('lastName')"
+            />
+            <u-form-input
+              :model-value="localUser?.firstName"
+              :error="firstNameValidationError"
+              :disabled="isFieldDisabled"
+              :label="$t('commons.form.first-name')"
+              placeholder="John"
+              @update:model-value="updateField('firstName', $event)"
+              @blur="touchField('firstName')"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -80,20 +82,22 @@
       <h4>{{ $t('user.settings.preferences.title') }}</h4>
       <div class="preferences-layout">
         <div class="form">
-          <div class="preference-item">
-            <label class="el-form-item__label">{{ $t('user.settings.preferences.language') }}</label>
-            <u-radio
-              :model-value="localUser?.preferences?.language"
-              :options="languageOptions"
+          <div class="preference-fields">
+            <div class="preference-item">
+              <label class="el-form-item__label">{{ $t('user.settings.preferences.language') }}</label>
+              <u-radio
+                :model-value="localUser?.preferences?.language"
+                :options="languageOptions"
+                :disabled="isFieldDisabled"
+                @update:model-value="updatePreference('language', $event)"
+              />
+            </div>
+            <theme-selector
+              :model-value="localUser?.preferences?.theme"
               :disabled="isFieldDisabled"
-              @update:model-value="updatePreference('language', $event)"
+              @update:model-value="updatePreference('theme', $event)"
             />
           </div>
-          <theme-selector
-            :model-value="localUser?.preferences?.theme"
-            :disabled="isFieldDisabled"
-            @update:model-value="updatePreference('theme', $event)"
-          />
         </div>
       </div>
     </div>
@@ -102,7 +106,8 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, reactive } from 'vue';
-  import { IconBase, UColorInitials, UFormInput, UColorPicker, URadio, UAlertCard } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
+  import { UColorInitials, UFormInput, UColorPicker, URadio, UAlertCard } from '@/modules/ui';
   import ThemeSelector from './ThemeSelector.vue';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { debounce } from '@/libs/utils/Debounce';
@@ -118,7 +123,7 @@
     mode: {
       type: String,
       required: true,
-      validator: (value: string) => ['creation', 'admin-edit', 'user-edit'].includes(value),
+      validator: (value: string) => ['creation', 'admin-edit', 'user-edit', 'signup'].includes(value),
     },
   });
 
@@ -362,6 +367,15 @@
         .form {
           flex-grow: 1;
 
+          .name-fields {
+            display: flex;
+            gap: 20px;
+            .u-form-input {
+              flex: 1;
+              margin-bottom: 15px;
+            }
+          }
+
           .u-radio {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -394,18 +408,27 @@
         .form {
           flex-grow: 1;
 
-          .preference-item {
-            margin-bottom: 15px;
+          .preference-fields {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            .preference-item {
+              flex: 1;
+              margin-bottom: 15px;
 
-            .el-form-item__label {
-              color: var(--color-text-secondary);
-              font-size: var(--paragraph-02);
-              line-height: 20px;
-              margin-bottom: 4px;
-              display: block;
+              .el-form-item__label {
+                color: var(--color-text-secondary);
+                font-size: var(--paragraph-02);
+                line-height: 20px;
+                margin-bottom: 4px;
+                display: block;
+              }
+              .u-radio {
+                margin-top: 0;
+              }
             }
-            .u-radio {
-              margin-top: 0;
+            .theme-selector {
+              flex: 1;
             }
           }
         }
@@ -420,6 +443,42 @@
     .fade-enter-from,
     .fade-leave-to {
       opacity: 0;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .personal-info-form {
+      .user-infos {
+        .user-infos-layout {
+          flex-direction: column;
+          gap: 20px;
+        }
+        .form {
+          .name-fields {
+            flex-direction: column;
+            gap: 0;
+            .u-form-input {
+              margin-bottom: 15px;
+            }
+          }
+        }
+      }
+      .preferences-section {
+        .preferences-layout {
+          .form {
+            .preference-fields {
+              flex-direction: column;
+              gap: 15px;
+              align-items: stretch;
+              .preference-item,
+              .theme-selector {
+                flex: none;
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
     }
   }
 </style>

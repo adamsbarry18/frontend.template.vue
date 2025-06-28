@@ -1,4 +1,5 @@
-import { UButton, UCard, IconBase } from '@/modules/ui';
+import { UButton, UCard } from '@/modules/ui';
+import IconBase from '@/modules/ui/icons/IconBase.vue';
 import { ref } from 'vue';
 
 export default {

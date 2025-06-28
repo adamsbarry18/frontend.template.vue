@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { ElInput } from 'element-plus';
   import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 

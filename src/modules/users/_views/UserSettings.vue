@@ -27,7 +27,7 @@
         />
       </u-indexed-section>
       <template v-slot:menu-illustration>
-        <img class="picture" src="@/assets/images/svg/user-settings.svg" alt="user-settings" />
+        <img class="picture" src="@/assets/images/svg/user-settings-icon.svg" alt="user-settings" />
       </template>
     </u-sections-with-menu>
     <u-action-button-bar v-else class="loading-placeholder">
@@ -520,11 +520,12 @@
         isActive: user.value.isActive,
       };
 
-      const newUser = await usersStore.addUser(userDataToSend);
+      // Utilise addUserByAdmin pour le mode création (qui est toujours un admin)
+      const newUser = await usersStore.addUserByAdmin(userDataToSend);
       $successMsg(i18n.global.t('users.created.success'));
       return newUser.id;
     } catch (err: any) {
-      console.error('Error creating new user:', err);
+      console.error('Error creating new user by admin:', err);
       const apiErrorMessage = err.message || i18n.global.t('users.created.error');
       $errorMsg(apiErrorMessage);
       return null;

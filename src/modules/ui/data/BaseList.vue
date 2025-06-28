@@ -52,7 +52,8 @@
 
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { BaseListSearchBar, UFilter, USelectGroup, IconBase } from '@/modules/ui';
+  import { BaseListSearchBar, UFilter, USelectGroup } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import ListService from './services/listService';
 
   const props = withDefaults(
