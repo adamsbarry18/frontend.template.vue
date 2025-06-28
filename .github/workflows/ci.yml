@@ -51,10 +51,10 @@ jobs:
         run: npm run lint
 
       - name: Run Prettier check
-        run: npm run format:check || echo "Prettier check failed - run 'npm run format' to fix"
+        run: npm run format:check
 
       - name: Type check
-        run: npm run type-check || npx vue-tsc --noEmit
+        run: npm run type-check
 
   # ========================================
   # TESTING
@@ -86,13 +86,21 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports-${{ github.sha }}
+          path: coverage/
+          retention-days: 30
+
   # ========================================
   # BUILD
   # ========================================
   build:
     name: Build Application
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     needs: [quality, test]
     if: github.event_name != 'pull_request'
 
@@ -111,8 +119,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build application
-        run: npm run build
+      - name: Build application and Storybook
+        run: npm run build:full
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -167,7 +175,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./build/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
