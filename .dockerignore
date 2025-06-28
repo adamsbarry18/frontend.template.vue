@@ -69,7 +69,6 @@ playwright/.cache/
 # ========================================
 # DOCKER FILES
 # ========================================
-Dockerfile*
 docker-compose*.yml
 .dockerignore
 

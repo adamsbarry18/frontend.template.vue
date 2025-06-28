@@ -128,28 +128,6 @@ jobs:
           path: dist/
           retention-days: 7
 
-  # ========================================
-  # DEPLOYMENT - STAGING
-  # ========================================
-  deploy-staging:
-    name: Deploy to Staging
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev'
-    environment: staging
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel (Staging)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: .
-          vercel-args: '--target=preview'
 
   # ========================================
   # DEPLOYMENT - PRODUCTION
