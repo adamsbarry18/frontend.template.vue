@@ -21,7 +21,8 @@
 </template>
 
 <script setup lang="ts">
-  import { UPopper, IconBase } from '@/modules/ui';
+  import UPopper from './UPopper.vue';
+  import IconBase from '../icons/IconBase.vue';
   import { Placement, TooltipTriggerType } from 'element-plus';
 
   defineProps({

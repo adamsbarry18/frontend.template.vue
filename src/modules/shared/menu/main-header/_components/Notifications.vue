@@ -16,19 +16,15 @@
 
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
 
-  // Accès au store Pinia
   const notificationStore = useNotificationStore();
 
-  // Référence au composant IconBase pour manipuler le DOM
   const bell = ref<InstanceType<typeof IconBase> | null>(null);
 
-  // Propriété calculée pour les notifications
   const notifications = computed(() => notificationStore.getAll);
 
-  // Surveillance des notifications pour animer la cloche
   watch(
     notifications,
     (newVal) => {
@@ -43,7 +39,6 @@
     { immediate: true }
   );
 
-  // Gestion du clic
   const handleClick = (event: Event) => {
     notificationStore.togglePersistentNotificationsVisible();
     event.stopPropagation();

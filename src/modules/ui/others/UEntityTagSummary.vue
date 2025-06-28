@@ -37,7 +37,8 @@
 
 <script setup lang="ts">
   import { computed, type PropType } from 'vue';
-  import { IconBase, UTooltip } from '@/modules/ui';
+  import { UTooltip } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   interface Tag {
     id?: string | number;

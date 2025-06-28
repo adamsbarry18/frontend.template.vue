@@ -1,7 +1,7 @@
 <template>
   <div class="main-header">
     <router-link class="logo-app -button-like" :to="dashboardRedirection">
-      <img src="@/assets/images/logo_mabarry.jpg" alt="app logo" />
+      <img src="@/assets/images/logo_stock_app.png" alt="app logo" />
     </router-link>
     <breadcrumb
       class="header-breadcrumb"
@@ -24,10 +24,8 @@
   import i18n from '@/i18n';
   import { useBreadcrumbStore } from '@/stores/modules/breadcrumb';
 
-  // Initialiser le store
   const breadcrumbStore = useBreadcrumbStore();
 
-  // Obtenir des références réactives aux états du store
   const { breadcrumbLinks, breadcrumbValue } = storeToRefs(breadcrumbStore);
 
   const dashboardRedirection = computed(() => ({
@@ -35,7 +33,6 @@
   }));
 
   onMounted(() => {
-    // Mettre à jour le titre initialement et surveiller les changements
     watch(breadcrumbLinks, setDocumentTitle, { immediate: true });
   });
 
@@ -45,9 +42,6 @@
       document.title = [...values, i18n.global.t('application.name')].join(' - ');
     }
   }
-
-  // La fonction onInputChange n'est plus nécessaire ici,
-  // la modification de la valeur se ferait via une action du store si besoin.
 </script>
 
 <style scoped lang="scss">

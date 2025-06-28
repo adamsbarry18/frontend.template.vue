@@ -28,12 +28,20 @@
 
 <script setup lang="ts">
   import { useSlots } from 'vue';
-  import { UHelpButton } from '@/modules/ui';
+  import UHelpButton from '../others/UHelpButton.vue';
 
   defineProps({
     title: {
       type: String,
       default: '',
+    },
+    titleBackgroundColor: {
+      type: String,
+      default: 'var(--color-neutral-800)',
+    },
+    titleColor: {
+      type: String,
+      default: 'var(--color-white)',
     },
   });
 
@@ -56,13 +64,13 @@
       align-items: center;
       justify-content: space-between;
       border-radius: 4px 4px 0 0;
-      background-color: var(--color-neutral-800);
+      background-color: v-bind('titleBackgroundColor');
       padding: 8px 12px;
 
       .card-title {
         display: flex;
         align-items: center;
-        color: var(--color-white);
+        color: v-bind('titleColor');
 
         svg {
           flex-shrink: 0;

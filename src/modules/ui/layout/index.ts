@@ -7,6 +7,7 @@ import UPrinterLayout from '@/modules/ui/layout/UPrinterLayout.vue';
 import USectionsWithMenu from '@/modules/ui/layout/USectionsWithMenu.vue';
 import UPill from './UPill.vue';
 import UIndexedSection from './UIndexedSection.vue';
+import UNavBar from './UNavBar.vue';
 
 export {
   UCard,
@@ -18,4 +19,5 @@ export {
   USectionsWithMenu,
   UPill,
   UIndexedSection,
+  UNavBar,
 };

@@ -3,36 +3,111 @@
   "extends": ["config:recommended", "schedule:weekly", "group:recommended"],
   "packageRules": [
     {
-      "description": "Automerge patch updates if CI passes",
-      "matchUpdateTypes": ["patch"],
-      "automerge": true,
-      "automergeType": "squash",
-      "labels": ["dependencies", "renovate", "automerge"]
-    },
-    {
-      "description": "Automerge minor updates if CI passes",
-      "matchUpdateTypes": ["minor"],
-      "automerge": true,
-      "automergeType": "squash",
-      "labels": ["dependencies", "renovate", "automerge"]
-    },
-    {
-      "description": "Group major updates for core frontend libs",
-      "matchPackageNames": ["vue", "vue-router", "pinia", "vite", "typescript"],
-      "matchUpdateTypes": ["major"],
-      "groupName": "core-frontend-major",
-      "labels": ["dependencies", "renovate", "major", "core"],
+      "description": "Group core frontend dependencies (Vue ecosystem)",
+      "matchPackageNames": ["vue", "vue-router", "pinia", "vite", "typescript", "vue-tsc"],
+      "groupName": "core-frontend-dependencies",
+      "labels": ["dependencies", "renovate", "core", "frontend"],
       "automerge": false,
-      "groupSlug": "core-frontend-major"
+      "groupSlug": "core-frontend"
     },
     {
-      "description": "Add dependencies and renovate labels to all other PRs",
-      "labels": ["dependencies", "renovate"],
-      "matchUpdateTypes": ["major"],
-      "matchPackageNames": ["!vue", "!vue-router", "!pinia", "!vite", "!typescript"]
+      "description": "Group build and development tools",
+      "matchPackageNames": [
+        "@vitejs/plugin-vue",
+        "vite",
+        "vitest",
+        "vue-tsc",
+        "eslint",
+        "prettier",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser"
+      ],
+      "groupName": "build-tools",
+      "labels": ["dependencies", "renovate", "build", "dev"],
+      "automerge": false,
+      "groupSlug": "build-tools"
+    },
+    {
+      "description": "Group testing dependencies",
+      "matchPackageNames": ["vitest", "@vitest/ui", "happy-dom", "vue-test-utils"],
+      "groupName": "testing-dependencies",
+      "labels": ["dependencies", "renovate", "testing"],
+      "automerge": false,
+      "groupSlug": "testing"
+    },
+    {
+      "description": "Group Storybook dependencies",
+      "matchPackageNames": ["storybook", "@storybook/*"],
+      "groupName": "storybook-dependencies",
+      "labels": ["dependencies", "renovate", "storybook", "documentation"],
+      "automerge": false,
+      "groupSlug": "storybook"
+    },
+    {
+      "description": "Group UI and chart libraries",
+      "matchPackageNames": ["echarts", "vue-echarts", "element-plus", "tinycolor2"],
+      "groupName": "ui-chart-libraries",
+      "labels": ["dependencies", "renovate", "ui", "charts"],
+      "automerge": false,
+      "groupSlug": "ui-charts"
+    },
+    {
+      "description": "Group utility libraries",
+      "matchPackageNames": [
+        "axios",
+        "dayjs",
+        "uuid",
+        "sortablejs",
+        "i18n-iso-countries",
+        "@cospired/i18n-iso-languages"
+      ],
+      "groupName": "utility-libraries",
+      "labels": ["dependencies", "renovate", "utilities"],
+      "automerge": false,
+      "groupSlug": "utilities"
+    },
+    {
+      "description": "Group type definitions",
+      "matchPackageNames": ["@types/*"],
+      "groupName": "type-definitions",
+      "labels": ["dependencies", "renovate", "types", "dev"],
+      "automerge": false,
+      "groupSlug": "types"
+    },
+    {
+      "description": "Group development dependencies",
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "dev-dependencies",
+      "labels": ["dependencies", "renovate", "dev"],
+      "automerge": false,
+      "groupSlug": "dev-deps"
+    },
+    {
+      "description": "Group production dependencies",
+      "matchDepTypes": ["dependencies"],
+      "groupName": "production-dependencies",
+      "labels": ["dependencies", "renovate", "prod"],
+      "automerge": false,
+      "groupSlug": "prod-deps"
     }
   ],
-  "prConcurrentLimit": 10,
+  "schedule": ["before 6am on monday"],
+  "timezone": "Europe/Paris",
+  "prConcurrentLimit": 5,
   "branchConcurrentLimit": 0,
-  "prHourlyLimit": 2
+  "prHourlyLimit": 2,
+  "commitMessagePrefix": "chore(deps):",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "repositories": ["local"],
+  "onboarding": true,
+  "requireConfig": true,
+  "platformAutomerge": false,
+  "automerge": false,
+  "rangeStrategy": "bump",
+  "bumpVersion": null,
+  "semanticCommits": "enabled",
+  "semanticCommitScope": "deps",
+  "semanticCommitType": "chore"
 }

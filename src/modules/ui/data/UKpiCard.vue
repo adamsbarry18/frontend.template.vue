@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { computed, useSlots } from 'vue';
-  import { UFigure, UInfo, UTooltip, IconBase } from '@/modules/ui';
+  import { UFigure, UInfo, UTooltip } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   // Interface pour typer les props
   interface Props {

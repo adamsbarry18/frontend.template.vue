@@ -76,10 +76,10 @@
 
 <script setup lang="ts">
   import { ref, PropType } from 'vue';
-  import { UButton, IconBase } from '@/modules/ui';
+  import { UButton } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import i18n from '@/i18n';
 
-  // Définition de l'interface pour les éléments de l'explorateur
   interface ExplorerItem {
     id: string | number;
     label: string;

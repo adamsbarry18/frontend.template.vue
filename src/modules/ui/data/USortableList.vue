@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
   import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import Sortable from 'sortablejs';
 
   // Types

@@ -1,46 +1,151 @@
-# Node specific
-node_modules
+# ========================================
+# DOCKER IGNORE - Vue.js Frontend Template
+# ========================================
+
+# ========================================
+# DEPENDENCIES
+# ========================================
+node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+
+# ========================================
+# BUILD OUTPUTS
+# ========================================
+dist/
+dist-ssr/
+build/
+coverage/
+/html
+
+# ========================================
+# STORYBOOK
+# ========================================
+storybook-static/
+storybook-static/**
+dist/storybook/
+dist/storybook/**
+
+# ========================================
+# LOGS
+# ========================================
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-*.log
-logs/
 
-# Docker files
-Dockerfile
-Dockerfile*
-docker-compose.yml
-docker-compose*
-.dockerignore
-
-# Version control
-.git
-# .gitignore
-
-# Build artifacts and cache
-dist/
-dist-ssr/
-coverage/
+# ========================================
+# CACHE FILES
+# ========================================
 .cache/
 .eslintcache
-build/ # Scripts/configs de build locaux, non nécessaires dans l'image
+.stylelintcache
+.prettiercache
+.vite/
+vite-cache/
+.parcel-cache/
 
-# OS generated files
+# ========================================
+# TEST RESULTS
+# ========================================
+.nyc_output/
+coverage/
+junit.xml
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ========================================
+# VERSION CONTROL
+# ========================================
+.git/
+.gitignore
+.gitattributes
+
+# ========================================
+# DOCKER FILES
+# ========================================
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# ========================================
+# ENVIRONMENT VARIABLES
+# ========================================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env*.local
+
+# ========================================
+# OS GENERATED FILES
+# ========================================
 .DS_Store
+.DS_Store?
 ._*
-Thumbs.db
+.Spotlight-V100
+.Trashes
 ehthumbs.db
+Thumbs.db
+desktop.ini
 
-# Editor/IDE configuration
+# ========================================
+# EDITOR/IDE FILES
+# ========================================
 .vscode/
 .idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+*.sw[a-p]
+*.un~
+Session.vim
+*.sublime-workspace
+*.sublime-project
+.atom/
 
-# Documentation and license (généralement non requis dans l'image finale)
+# ========================================
+# DOCUMENTATION
+# ========================================
 README.md
+CHANGELOG.md
 LICENSE
+*.md
+
+# ========================================
+# DEVELOPMENT TOOLS
+# ========================================
+.husky/
+.lintstagedrc*
+.editorconfig
+.eslintrc*
+.prettierrc*
+.stylelintrc*
+tsconfig.json
+tsconfig.*.json
+
+# ========================================
+# TEMPORARY FILES
+# ========================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+
+# ========================================
+# SECURITY
+# ========================================
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx

@@ -30,7 +30,8 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { debounce } from '@/libs/utils/Debounce.js';
-  import { USearchBar, UFilterResume, IconBase } from '@/modules/ui';
+  import { USearchBar, UFilterResume } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import SearchService from './services/searchService';
 
   const props = defineProps<{

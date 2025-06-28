@@ -13,13 +13,14 @@ import UShortcutSubscriber from '@/modules/ui/others/UShortcutSubscriber.vue';
 import UPulser from '@/modules/ui/others/UPulser.vue';
 import UActionButtonBar from '@/modules/ui/others/UActionButtonBar.vue';
 import UPopper from './UPopper.vue';
-import UIconCount from './UIconCount.vue';
+import UBadge from './UBadge.vue';
 import UCopyToClipboardButton from './UCopyToClipboardButton.vue';
 import UEntityTagSummary from './UEntityTagSummary.vue';
 import UCascaderMenu from './UCascaderMenu.vue';
 import UCodeEditor from './UCodeEditor.vue';
 import UColorInitials from './UColorInitials.vue';
 import UDialog from './UDialog.vue';
+import URate from './URate.vue';
 
 export {
   UHelpButton,
@@ -37,11 +38,12 @@ export {
   UPulser,
   UActionButtonBar,
   UPopper,
-  UIconCount,
+  UBadge,
   UCopyToClipboardButton,
   UEntityTagSummary,
   UCascaderMenu,
   UCodeEditor,
   UColorInitials,
   UDialog,
+  URate,
 };

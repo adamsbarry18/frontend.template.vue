@@ -32,6 +32,12 @@ const loginRoutes: RouteRecordRaw[] = [
     component: () => import('@/modules/login/_views/SendEmail.vue'),
     meta: { guest: true },
   },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => import('@/modules/users/_views/UserSignup.vue'),
+    meta: { guest: true },
+  },
 ];
 
 export default loginRoutes;

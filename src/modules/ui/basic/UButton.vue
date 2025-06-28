@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { waitForMilliseconds } from '@/libs/utils/Time';
 
   const props = defineProps({
@@ -175,6 +175,13 @@
       min-width: 65px;
       max-height: 30px;
       font-size: var(--caption);
+    }
+
+    &.-large {
+      padding: 0px 30px;
+      min-width: 100px;
+      min-height: 45px;
+      font-size: var(--paragraph-01);
     }
 
     &.-full {

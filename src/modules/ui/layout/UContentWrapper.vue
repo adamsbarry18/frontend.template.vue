@@ -20,7 +20,8 @@
 </template>
 
 <script setup lang="ts">
-  import { ULoader, UActionButtonBar } from '@/modules/ui';
+  import ULoader from '../others/ULoader.vue';
+  import UActionButtonBar from '../others/UActionButtonBar.vue';
   import { onMounted, ref, watch } from 'vue';
 
   const props = defineProps({

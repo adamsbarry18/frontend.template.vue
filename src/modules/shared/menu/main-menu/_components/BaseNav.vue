@@ -85,7 +85,7 @@
   import { ref, computed, watch, onMounted, PropType, watchEffect } from 'vue';
   import NavSection from './NavSection.vue';
   import { NavItem } from '@/stores/modules/menu/nav';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   interface Config {
     univers?: any[];
@@ -237,16 +237,12 @@
       cursor: pointer;
 
       &.-extended {
-        // Cette classe est toujours liée à isNavExtended (survol ou épinglé)
         right: calc((var(--extended-nav-width) - var(--base-nav-width) + var(--extend-arrow-width)) * -1);
       }
 
       .arrow-icon {
         margin-left: 2px;
         transition: transform 0.2s ease-in-out;
-        // La classe -extended sur le parent .extend-arrow (pilotée par isNavExtended) gère la rotation
-        // Si on voulait une indication visuelle spécifique pour l'état épinglé sur l'icône elle-même :
-        // &.pinned-state-icon { transform: rotate(0deg) !important; } // par exemple
       }
     }
 

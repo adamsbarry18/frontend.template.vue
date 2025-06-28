@@ -1,4 +1,5 @@
-import { UListColumnSettings, UButton, IconBase } from '@/modules/ui';
+import { UListColumnSettings, UButton } from '@/modules/ui';
+import IconBase from '@/modules/ui/icons/IconBase.vue';
 import { ref } from 'vue';
 export default {
   title: 'Data/ListColumnSettings',

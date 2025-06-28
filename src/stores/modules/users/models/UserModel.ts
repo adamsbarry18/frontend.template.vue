@@ -46,6 +46,7 @@ export default class UserModel {
   authorisationOverrides: string | null;
   isActive: boolean;
   token?: string;
+  googleId?: string | null; // Ajout de googleId
 
   constructor(data?: Partial<UserModel>) {
     this.id = data?.id ?? 0;
@@ -68,6 +69,7 @@ export default class UserModel {
     this.authorisationOverrides = data?.authorisationOverrides ?? null;
     this.isActive = data?.isActive ?? true; // Default to true if not provided
     this.token = data?.token;
+    this.googleId = data?.googleId ?? null; // Initialisation de googleId
   }
 
   static sort(a: UserModel, b: UserModel): number {
@@ -87,6 +89,7 @@ export default class UserModel {
       permissionsExpireAt: user.permissionsExpireAt ? dayjs(user.permissionsExpireAt).toDate() : null,
       permissions: user.permissions ?? null,
       preferences: user.preferences ?? null,
+      googleId: user.googleId ?? null, // Prise en compte de googleId depuis l'API
     };
     delete modelData.password;
     // Ensure isActive is handled if present in API response

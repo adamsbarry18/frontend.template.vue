@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
   import { PropType } from 'vue';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { Step } from './step-interfaces';
 
   const props = defineProps({

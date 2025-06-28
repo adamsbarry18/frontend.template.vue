@@ -66,7 +66,7 @@
 <script setup lang="ts">
   import { ref, computed, PropType } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import type { NavItem } from '@/stores/modules/menu/nav';
 
   const props = defineProps({

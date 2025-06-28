@@ -19,7 +19,7 @@
 <script setup lang="ts">
   import type { PropType } from 'vue';
   import { ElTabPane } from 'element-plus';
-  import { IconBase } from '@/modules/ui'; // Import IconBase
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   // Types
   type TabIndex = string | number;

@@ -30,11 +30,11 @@
   import { computed } from 'vue';
   import { useNotificationStore } from '@/modules/shared/notification/_store/notification';
   import { useUsersStore } from '@/stores/modules/users/user';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   const notificationStore = useNotificationStore();
   const usersStore = useUsersStore();
   const userName = computed(() => {
-    return usersStore.currentUser?.lastName ?? usersStore.currentUser?.firstName;
+    return usersStore.currentUser?.firstName;
   });
 
   const errorNotifications = computed(() => notificationStore.getAllErrorNotifications);

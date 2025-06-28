@@ -2,7 +2,7 @@
   <div class="password-form">
     <div class="header">
       <h4>{{ $t('user.settings.password') }}</h4>
-      <span v-if="mode !== 'creation'" class="edit-btn" @click="toggleInputDisplay">
+      <span v-if="mode !== 'creation' && mode !== 'signup'" class="edit-btn" @click="toggleInputDisplay">
         <p v-if="!showInputs">{{ $t('user.settings.edit-password') }}</p>
         <icon-base
           v-else-if="showInputs && !localOldPassword && !localNewPassword"
@@ -14,14 +14,16 @@
       </span>
     </div>
     <transition name="slide">
-      <div v-if="mode === 'creation' || showInputs">
-        <span v-if="mode === 'creation' && !user?.id" class="info">
+      <div v-if="mode === 'creation' || mode === 'signup' || showInputs">
+        <span v-if="(mode === 'creation' || mode === 'signup') && !user?.id" class="info">
           {{ $t('user.settings.create-info') }}
         </span>
         <span v-else-if="mode === 'creation' && user?.id" class="info">
           {{ $t('user.settings.password-no-action') }}
         </span>
-        <span v-else-if="mode !== 'creation'" class="info">{{ $t('user.settings.update-info') }}</span>
+        <span v-else-if="mode !== 'creation' && mode !== 'signup'" class="info">{{
+          $t('user.settings.update-info')
+        }}</span>
 
         <u-password-input
           v-if="mode === 'user-edit'"
@@ -34,17 +36,32 @@
           @update:model-value="handlePasswordChange"
         />
 
-        <u-password-input
-          v-if="!(mode === 'creation' && user?.id)"
-          v-model="localNewPassword"
-          :error="newPasswordValidationError"
-          :label="mode === 'creation' ? $t('user.settings.password') : $t('user.settings.new-password')"
-          :rules="passwordRules"
-          autocomplete="new-password"
-          progress
-          @blur="touchField('newPassword')"
-          @update:model-value="handlePasswordChange"
-        />
+        <div class="password-fields">
+          <u-password-input
+            v-if="!(mode === 'creation' && user?.id)"
+            v-model="localNewPassword"
+            :error="newPasswordValidationError"
+            :label="
+              mode === 'creation' || mode === 'signup'
+                ? $t('user.settings.password')
+                : $t('user.settings.new-password')
+            "
+            :rules="passwordRules"
+            autocomplete="new-password"
+            progress
+            @blur="touchField('newPassword')"
+            @update:model-value="handlePasswordChange"
+          />
+          <u-password-input
+            v-if="(mode === 'creation' || mode === 'signup') && !(mode === 'creation' && user?.id)"
+            v-model="localConfirmPassword"
+            :error="confirmPasswordValidationError"
+            :label="$t('login.confirm.new.password')"
+            autocomplete="new-password"
+            @blur="touchField('confirmPassword')"
+            @update:model-value="handlePasswordChange"
+          />
+        </div>
         <password-security-indicators
           v-if="!(mode === 'creation' && user?.id)"
           :indicators="passwordIndicators"
@@ -56,7 +73,8 @@
 
 <script setup lang="ts">
   import { ref, computed, watch, reactive } from 'vue';
-  import { UPasswordInput, IconBase } from '@/modules/ui';
+  import { UPasswordInput } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import PasswordSecurityIndicators from '../_components/PasswordSecurityIndicators.vue';
   import { passwordRules, getPasswordIndicators, isPasswordSecure } from '@/libs/utils/Security';
   import i18n from '@/i18n';
@@ -70,7 +88,7 @@
     mode: {
       type: String,
       required: true,
-      validator: (value: string) => ['creation', 'admin-edit', 'user-edit'].includes(value),
+      validator: (value: string) => ['creation', 'admin-edit', 'user-edit', 'signup'].includes(value),
     },
   });
 
@@ -79,11 +97,13 @@
   // --- State ---
   const localOldPassword = ref('');
   const localNewPassword = ref('');
-  const showInputs = ref(props.mode === 'creation');
+  const localConfirmPassword = ref('');
+  const showInputs = ref(props.mode === 'creation' || props.mode === 'signup');
 
   const fieldsTouched = reactive({
     oldPassword: false,
     newPassword: false,
+    confirmPassword: false,
   });
 
   // --- Computed Properties ---
@@ -116,6 +136,7 @@
     if (['admin-edit', 'user-edit'].includes(props.mode) && showInputs.value && localNewPassword.value)
       return true;
     if (props.mode === 'user-edit' && showInputs.value && localOldPassword.value) return true;
+    if (props.mode === 'signup') return true; // Le nouveau mot de passe est toujours requis pour le signup
 
     return false;
   });
@@ -138,8 +159,22 @@
     return false;
   });
 
+  const confirmPasswordValidationError = computed(() => {
+    if (!fieldsTouched.confirmPassword) return false;
+    if (
+      (props.mode === 'creation' || props.mode === 'signup') &&
+      !(props.mode === 'creation' && props.user?.id)
+    ) {
+      if (!localConfirmPassword.value.trim()) return i18n.global.t('error.required-field');
+      if (localNewPassword.value !== localConfirmPassword.value) {
+        return i18n.global.t('login.error.password-mismatch');
+      }
+    }
+    return false;
+  });
+
   const isFormSectionValid = computed(() => {
-    if (props.mode !== 'creation' && !showInputs.value) {
+    if (props.mode !== 'creation' && props.mode !== 'signup' && !showInputs.value) {
       return true;
     }
 
@@ -149,8 +184,27 @@
 
     const hasOldPasswordError = isOldPasswordRequired.value && !!oldPasswordValidationError.value;
     const hasNewPasswordError = isNewPasswordRequired.value && !!newPasswordValidationError.value;
+    let hasConfirmPasswordError = false;
+    const isSignupOrNewCreation = props.mode === 'signup' || (props.mode === 'creation' && !props.user?.id);
 
-    return !hasOldPasswordError && !hasNewPasswordError;
+    if (isSignupOrNewCreation) {
+      if (!localNewPassword.value.trim() || !isPasswordSecure(localNewPassword.value)) {
+        return false;
+      }
+      if (!localConfirmPassword.value.trim()) {
+        hasConfirmPasswordError = true;
+      } else if (localNewPassword.value !== localConfirmPassword.value) {
+        hasConfirmPasswordError = true;
+      }
+    } else if (fieldsTouched.confirmPassword) {
+      hasConfirmPasswordError = !!confirmPasswordValidationError.value;
+    }
+
+    return !hasOldPasswordError && !hasNewPasswordError && !hasConfirmPasswordError;
+  });
+
+  watch(isFormSectionValid, (value) => {
+    emit('validity-change', value);
   });
 
   // --- Methods ---
@@ -160,8 +214,10 @@
     if (!showInputs.value) {
       localOldPassword.value = '';
       localNewPassword.value = '';
+      localConfirmPassword.value = '';
       fieldsTouched.oldPassword = false;
       fieldsTouched.newPassword = false;
+      fieldsTouched.confirmPassword = false;
       emit('update:password', '');
     }
     emit('validity-change', isFormSectionValid.value);
@@ -170,10 +226,14 @@
   function handlePasswordChange() {
     if (isFormSectionValid.value && localNewPassword.value) {
       emit('update:password', localNewPassword.value);
-    } else if (!localNewPassword.value && !localOldPassword.value && props.mode !== 'creation') {
+    } else if (
+      !localNewPassword.value &&
+      !localOldPassword.value &&
+      props.mode !== 'creation' &&
+      props.mode !== 'signup'
+    ) {
       emit('update:password', '');
     }
-    emit('validity-change', isFormSectionValid.value);
   }
 
   // --- Watchers ---
@@ -181,11 +241,13 @@
   watch(
     () => props.mode,
     (newMode) => {
-      showInputs.value = newMode === 'creation' && !props.user?.id;
+      showInputs.value = (newMode === 'creation' && !props.user?.id) || newMode === 'signup';
       localOldPassword.value = '';
       localNewPassword.value = '';
+      localConfirmPassword.value = '';
       fieldsTouched.oldPassword = false;
       fieldsTouched.newPassword = false;
+      fieldsTouched.confirmPassword = false;
       emit('update:password', '');
       emit('validity-change', isFormSectionValid.value);
     }
@@ -198,15 +260,15 @@
         showInputs.value = !newId;
         if (!oldId && newId) {
           localNewPassword.value = '';
+          localConfirmPassword.value = '';
           fieldsTouched.newPassword = false;
+          fieldsTouched.confirmPassword = false;
           emit('update:password', '');
           emit('validity-change', isFormSectionValid.value);
         }
       }
     }
   );
-
-  emit('validity-change', isFormSectionValid.value);
 </script>
 
 <style lang="scss">
@@ -241,11 +303,28 @@
     .old-pwd {
       margin-bottom: 20px;
     }
-    .u-password-input {
-      margin-bottom: 5px;
+    .password-fields {
+      display: flex;
+      gap: 20px;
+      .u-password-input {
+        flex: 1;
+        margin-bottom: 5px;
+      }
     }
     .password-security-indicators {
       margin-bottom: 15px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .password-form {
+      .password-fields {
+        flex-direction: column;
+        gap: 0;
+        .u-password-input {
+          margin-bottom: 15px;
+        }
+      }
     }
   }
 

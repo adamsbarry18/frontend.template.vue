@@ -48,7 +48,8 @@
 
 <script setup lang="ts">
   import { ref, computed, PropType } from 'vue';
-  import { UTooltip, IconBase } from '@/modules/ui';
+  import { UTooltip } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   // Types
   interface Action {

@@ -48,7 +48,8 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted, onBeforeUnmount, PropType } from 'vue';
-  import { UPulser, IconBase } from '@/modules/ui';
+  import { UPulser } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
 
   interface MenuItem {
     label: string;

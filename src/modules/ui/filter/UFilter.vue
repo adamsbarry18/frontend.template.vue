@@ -62,7 +62,8 @@
 
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue';
-  import { USearchBar, UButton, UFilterItem, IconBase, UPopper } from '@/modules/ui';
+  import { USearchBar, UButton, UFilterItem, UPopper } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   const props = defineProps({
     modelValue: {
       type: Object,

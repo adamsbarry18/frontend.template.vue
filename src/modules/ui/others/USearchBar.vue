@@ -1,5 +1,5 @@
 <template>
-  <div class="u-search-bar">
+  <div :class="['u-search-bar', { '-overflow-side-show': overflowSideShow }]">
     <icon-base
       v-if="iconPosition === 'left'"
       icon="icon-search"
@@ -7,7 +7,7 @@
       :class="{ '-focused': isFocused }"
       :color="iconColor"
       size="32"
-      @click="handleSearch"
+      @click="focusInput"
     />
 
     <slot name="prefix" />
@@ -55,7 +55,7 @@
       :class="{ '-focused': isFocused }"
       :color="iconColor"
       size="32"
-      @click="handleSearch"
+      @click="focusInput"
     />
   </div>
 </template>
@@ -94,6 +94,11 @@
     debounceDelay: {
       type: Number,
       default: 250,
+    },
+    overflowSideShow: {
+      // Added new prop
+      type: Boolean,
+      default: false,
     },
   });
 
@@ -148,9 +153,13 @@
     emit('blur');
   };
 
+  const focusInput = () => {
+    inputElement.value?.focus();
+  };
+
   // Focus externe
   defineExpose({
-    focus: () => inputElement.value?.focus(),
+    focus: focusInput,
   });
 </script>
 
@@ -224,6 +233,45 @@
       }
     }
   }
+  .u-search-bar.-overflow-side-show {
+    width: 40px;
+    overflow: hidden;
+    transition: width var(--transition-duration) ease-in-out;
+
+    .icon {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    .main-input {
+      padding: var(--input-padding);
+      opacity: 0;
+      width: 0;
+      transition:
+        opacity var(--transition-duration) ease-in-out,
+        width var(--transition-duration) ease-in-out;
+    }
+
+    &:focus-within {
+      width: 200px;
+
+      .main-input {
+        opacity: 1;
+        width: auto;
+        flex-grow: 1;
+      }
+
+      .icon.left {
+        margin-left: 8px;
+      }
+    }
+
+    .icon.left {
+      margin-left: 0;
+    }
+  }
+
   .u-search-bar.-blue {
     margin: 0 auto 15px auto;
     border: none;

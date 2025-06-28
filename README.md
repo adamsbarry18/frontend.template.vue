@@ -1,7 +1,9 @@
-# frontend.template.vue
+# Vue.js Frontend Template
 
-Un template complet pour des applications frontend Vue 3, riche en composants, utilitaires et bonnes pratiques. Ce projet est conçu pour démarrer rapidement le développement d'interfaces utilisateur modernes et robustes.
+A modern, modular, and scalable **Vite + Vue.js 3** frontend template for quickly initializing web applications with robust architecture and built-in best practices.
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-~5.5.0-blue)
 ![Vite](https://img.shields.io/badge/Vite-^6.1.0-purple)
@@ -10,257 +12,617 @@ Un template complet pour des applications frontend Vue 3, riche en composants, u
 ![ESLint](https://img.shields.io/badge/ESLint-^8.57.1-4B32C3)
 ![Prettier](https://img.shields.io/badge/Prettier-^3.5.0-F7B93E)
 
-## ✨ Fonctionnalités Principales
+---
 
-- **Stack Moderne** : Vue 3, TypeScript, Vite.
-- **Bibliothèque de Composants UI** : Un ensemble de composants réutilisables et personnalisables, documentés avec Storybook.
-- **Gestion d'État** : Pinia pour une gestion d'état simple et typée.
-- **Internationalisation** : Prise en charge de `vue-i18n`.
-- **Qualité de Code** : ESLint, Prettier, et Husky pour les hooks pre-commit.
-- **Tests** : Vitest pour les tests unitaires.
-- **Build & Déploiement** : Scripts pour le build et configuration Docker.
-- **Intégration Continue** : Workflows GitHub Actions pour CI et Renovate.
+## 🚀 Introduction
 
-## 📋 Prérequis
+### What is this template?
 
-Assurez-vous d'avoir les versions suivantes (ou supérieures) installées :
+This **Vite + Vue.js 3** frontend template is designed to **accelerate development** of your web applications by providing a **modular and scalable architecture** ready to use with:
 
-- [Node.js](https://nodejs.org/): `^20.0.0`
-- [npm](https://www.npmjs.com/): `^10.0.0`
+- ✅ **Modern Stack** : Vite + Vue.js 3 + TypeScript
+- ✅ **Complete Authentication** : JWT + OAuth providers (Google)
+- ✅ **Modular Architecture** : Feature-based module organization
+- ✅ **Rich UI Component Library** : 100+ reusable components with Storybook
+- ✅ **State Management** : Pinia with modular stores
+- ✅ **Internationalization** : Multi-language support (EN/FR)
+- ✅ **Type Safety** : Full TypeScript integration
+- ✅ **Modern Build System** : Vite for fast development and HMR
+- ✅ **Testing Suite** : Vitest for unit testing
+- ✅ **Code Quality** : ESLint + Prettier + Husky
+- ✅ **Component Documentation** : Storybook integration
 
-Ces versions sont spécifiées dans la section `engines` du fichier [`package.json`](package.json:86).
+### Why use this template?
 
-## 🚀 Démarrage Rapide
+- **Save time** : Ready architecture, no need to configure everything
+- **Best practices** : Structured and maintainable code
+- **Scalable** : Easy to add new modules and features
+- **Production-ready** : Tests, CI/CD, Docker, monitoring
+- **Documented** : Commented code and complete documentation
+- **Rich UI** : Comprehensive component library with 100+ components
+- **Modern Development** : Fast HMR with Vite, Vue 3 Composition API
 
-1.  **Cloner le repository (ou utiliser comme template) :**
+---
 
-    ```bash
-    # Exemple avec git clone
-    git clone https://github.com/adamsbarry18/frontend.template.vue.git
-    cd nom-du-projet
-    ```
+## 🏗️ Architecture
 
-2.  **Installer les dépendances :**
-
-    ```bash
-    npm install
-    ```
-
-3.  **Lancer le serveur de développement :**
-    L'application sera disponible sur `http://localhost:5173` (ou un autre port si celui-ci est occupé).
-
-    ```bash
-    npm run dev
-    ```
-
-4.  **Explorer les composants avec Storybook :**
-    Storybook démarrera sur `http://localhost:6006`.
-    ```bash
-    npm run storybook
-    ```
-
-## 🛠️ Scripts Disponibles
-
-Voici une liste des principaux scripts disponibles dans [`package.json`](package.json:5) :
-
-- `npm run dev`: Lance le serveur de développement Vite avec HMR.
-- `npm run prod`: Lance le serveur de développement Vite en mode production.
-- `npm run build`: Construit l'application pour la production (optimisée et minifiée).
-- `npm run build:test`: Construit l'application pour un environnement de test.
-- `npm run build:prod`: Construit l'application pour la production (similaire à `npm run build`).
-- `npm run preview`: Lance un serveur local pour prévisualiser le build de production.
-- `npm run test:unit`: Exécute les tests unitaires avec Vitest.
-- `npm run test:watch`: Exécute les tests unitaires en mode "watch".
-- `npm run storybook`: Démarre Storybook pour visualiser et développer les composants UI.
-- `npm run build-storybook`: Construit une version statique de Storybook.
-- `npm run lint`: Analyse le code avec ESLint pour détecter les erreurs et les problèmes de style.
-- `npm run format`: Formate automatiquement le code avec Prettier.
-- `npm run prepare`: Script exécuté par Husky lors de l'installation des dépendances pour configurer les hooks Git.
-
-## 📁 Structure du Projet
-
-Le projet est organisé comme suit (structure principale) :
+### Modular Structure
 
 ```
-📦frontend.template.vue
- ┣ 📂.github/            # Workflows GitHub Actions (CI, Renovate)
- ┃ ┗ ...
- ┣ 📂.husky/             # Hooks Git configurés avec Husky
- ┃ ┗ ...
- ┣ 📂.storybook/         # Configuration de Storybook
- ┃ ┗ ...
- ┣ 📂build/              # Scripts et Dockerfile pour le build et déploiement
- ┃ ┗ ...
- ┣ 📂public/             # Fichiers statiques servis directement
- ┃ ┗ ...
- ┣ 📂src/                # Code source de l'application
- ┃ ┣ 📂assets/           # Images, polices, styles globaux (...)
- ┃ ┣ 📂composables/      # Fonctions réutilisables Vue Composables (...)
- ┃ ┣ 📂libs/             # Utilitaires et bibliothèques spécifiques (...)
- ┃ ┣ 📂locales/          # Fichiers de traduction (i18n) (...)
- ┃ ┣ 📂modules/          # Modules fonctionnels de l'application
- ┃ ┃ ┣ 📂app/            # Configuration globale de l'application, composants partagés
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ 📂auth/           # Authentification, tests d'autorisation
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ 📂dashboard/      # Module du tableau de bord
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ 📂login/          # Module de connexion
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ 📂not-found/      # Page 404
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ 📂shared/         # Composants et logique partagés (menu, notifications)
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ 📂ui/             # Bibliothèque de composants UI de base (UButton, UInput, etc.)
- ┃ ┃ ┃ ┣ 📂basic/
- ┃ ┃ ┃ ┣ 📂data/
- ┃ ┃ ┃ ┣ 📂filter/
- ┃ ┃ ┃ ┣ 📂forms/
- ┃ ┃ ┃ ┣ 📂icons/
- ┃ ┃ ┃ ┣ 📂layout/
- ┃ ┃ ┃ ┣ 📂navigation/
- ┃ ┃ ┃ ┣ 📂notice/
- ┃ ┃ ┃ ┣ 📂others/
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┗ 📂users/          # Module de gestion des utilisateurs
- ┃ ┃ ┃ ┣ 📂_components/  # Composants spécifiques au module users
- ┃ ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┣ ┣ 📂_views/       # Vues spécifiques au module users (ex: Users.vue, UserSettings.vue)
- ┃ ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┃ ┣ 📂settings/     # Composants pour les paramètres utilisateur
- ┃ ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┃ ┗ ...
- ┃ ┃ ┗ ...
- ┃ ┣ 📂plugins/          # Plugins Vue (ex: i18n, axios) (...)
- ┃ ┣ 📂router/           # Configuration du routing avec Vue Router (...)
- ┃ ┣ 📂stores/           # Modules Pinia pour la gestion d'état (...)
- ┃ ┣ 📂types/            # Définitions de types TypeScript (...)
- ┃ ┣ 📜App.vue           # Composant racine de l'application
- ┃ ┣ 📜main.ts           # Point d'entrée principal de l'application
- ┃ ┗ 📜vite-env.d.ts     # Définitions de types pour Vite
- ┣ 📂_resources/         # Ressources pour Storybook (non incluses dans le build final)
- ┃ ┗ ...
- ┣ 📜.dockerignore
- ┣ 📜.editorconfig
- ┣ 📜.env.example        # Exemple de variables d'environnement
- ┣ 📜.eslintignore
- ┣ 📜.eslintrc.cjs
- ┣ 📜.gitignore
- ┣ 📜.npmrc
- ┣ 📜.prettierignore
- ┣ 📜.prettierrc.cjs
- ┣ 📜index.html
- ┣ 📜package.json
- ┣ 📜README.md           # Ce fichier
- ┣ 📜renovate.json
- ┣ 📜tsconfig.json
- ┗ 📜vite.config.ts
+src/
+├── assets/                 # Static assets (images, fonts, styles)
+├── composables/           # Vue 3 composables (reusable logic)
+├── libs/                  # Utility libraries and services
+├── locales/               # i18n translation files
+├── modules/               # Feature modules (auth, users, dashboard, etc.)
+│   ├── app/              # Global app configuration
+│   ├── auth/             # Authentication module
+│   ├── dashboard/        # Dashboard module
+│   ├── login/            # Login module
+│   ├── not-found/        # 404 page
+│   ├── shared/           # Shared components (menu, notifications)
+│   ├── ui/               # UI component library
+│   │   ├── basic/        # Basic components (Button, Input, etc.)
+│   │   ├── data/         # Data display components (List, Charts, etc.)
+│   │   ├── filter/       # Filter components
+│   │   ├── forms/        # Form components
+│   │   ├── icons/        # Icon components
+│   │   ├── layout/       # Layout components
+│   │   ├── navigation/   # Navigation components
+│   │   ├── notice/       # Notification components
+│   │   └── others/       # Miscellaneous components
+│   └── users/            # User management module
+├── plugins/               # Vue plugins
+├── router/                # Vue Router configuration
+├── stores/                # Pinia stores
+├── types/                 # TypeScript type definitions
+├── views/                 # Global views
+├── App.vue               # Root component
+├── main.ts               # Application entry point
+└── i18n.ts               # Internationalization setup
 ```
 
-## 📚 Bibliothèque de Composants (Storybook)
+### Architecture Principles
 
-Ce template inclut une riche bibliothèque de composants UI prêts à l'emploi, situés principalement dans [`src/modules/ui/`](src/modules/ui/).
-Chaque composant est documenté et testable via Storybook.
+- **Feature-Based Modules** : Clear separation of business logic
+- **Component-Driven Development** : Reusable UI components
+- **Type Safety** : Full TypeScript integration
+- **State Management** : Centralized state with Pinia
+- **Internationalization** : Multi-language support
+- **Testing** : Unit and integration tests
 
-### Exemples de Catégories de Composants :
+---
 
-- **Basiques** : [`UButton`](src/modules/ui/basic/UButton.vue), [`UMultiActionButton`](src/modules/ui/basic/UMultiActionButton.vue)
-- **Formulaires** : [`UNumberInput`](src/modules/ui/forms/UNumberInput.vue), [`UPasswordInput`](src/modules/ui/forms/UPasswordInput.vue), [`UDatePicker`](src/modules/ui/forms/UDatePicker.vue), [`USelectGroup`](src/modules/ui/forms/USelectGroup.vue)
-- **Données** : [`UList`](src/modules/ui/data/UList.vue), [`UBar`](src/modules/ui/data/UBar.vue) (pour graphiques), [`UKpiCard`](src/modules/ui/data/UKpiCard.vue)
-- **Navigation** : [`UTabs`](src/modules/ui/navigation/UTabs.vue), [`UContextualMenu`](src/modules/ui/navigation/UContextualMenu.vue)
-- **Notifications** : [`UMessage.ts`](src/modules/ui/notice/UMessage.ts), [`UMessageBox.ts`](src/modules/ui/notice/UMessageBox.ts)
-- **Layout & Autres** : [`UCard`](src/modules/ui/layout/UCard.vue), [`UDialog`](src/modules/ui/others/UDialog.vue), [`ULoader`](src/modules/ui/others/ULoader.vue)
+## 🛠️ Features
 
-Pour une liste exhaustive et des démonstrations interactives :
+### 🔐 Authentication & Authorization
+
+- **JWT Authentication** : Secure token-based authentication
+- **OAuth 2.0 Providers** : Integrated Google OAuth
+- **Role Management** : Flexible permission system
+- **Route Guards** : Protected routes with authorization
+- **Session Management** : Automatic token refresh
+
+### 🎨 Rich UI Component Library
+
+- **100+ Components** : Comprehensive component library
+- **Storybook Integration** : Interactive component documentation
+- **Responsive Design** : Mobile-first approach
+- **Theme System** : Customizable theming with SCSS
+- **Accessibility** : WCAG compliant components
+
+### 📊 Data Management
+
+- **Pinia Stores** : Modular state management
+- **API Integration** : Axios with interceptors
+- **Data Visualization** : Charts and KPI components
+- **List Management** : Advanced list components with filtering
+- **Form Handling** : Comprehensive form components
+
+### 🌍 Internationalization
+
+- **Multi-language Support** : EN/FR with vue-i18n
+- **Dynamic Language Switching** : Runtime language changes
+- **Date/Number Formatting** : Locale-aware formatting
+- **RTL Support** : Ready for right-to-left languages
+
+### 🧪 Testing & Quality
+
+- **Unit Tests** : Vitest for component testing
+- **Component Testing** : Vue Test Utils integration
+- **CI/CD** : Automated GitHub Actions pipeline
+- **Linting & Formatting** : ESLint + Prettier
+- **Git Hooks** : Husky for pre-commit checks
+
+### 📚 Documentation
+
+- **Storybook** : Interactive component documentation
+- **JSDoc Comments** : Comprehensive code documentation
+- **TypeScript Types** : Full type definitions
+- **README Guides** : Complete setup and usage documentation
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 ```bash
-npm run storybook
+node >= 20.0.0
+npm >= 10.0.0
 ```
 
-## 🎨 Theming
+### Installation
 
-Le theming est géré via des variables SCSS. Vous pouvez personnaliser l'apparence en modifiant les fichiers situés dans [`src/assets/style/themes/`](src/assets/style/themes/):
+1. **Clone the template**
 
-- [`colors.scss`](src/assets/style/themes/colors.scss): Variables de couleurs primaires, secondaires, de feedback, etc.
-- [`font.scss`](src/assets/style/themes/font.scss): Variables pour les polices, tailles, graisses.
+   ```bash
+   git clone https://github.com/adamsbarry18/frontend.template.vue.git my-vue-project
+   cd my-vue-project
+   ```
 
-Ces thèmes sont importés globalement dans [`src/assets/style/main.scss`](src/assets/style/main.scss).
+2. **Install dependencies**
 
-## 🌐 Internationalisation (i18n)
+   ```bash
+   npm install
+   ```
 
-Le projet utilise `vue-i18n` pour la gestion des traductions.
-Les fichiers de langue se trouvent dans [`src/locales/`](src/locales/) (ex: [`en.json`](src/locales/en.json), [`fr.json`](src/locales/fr.json)).
-La configuration est initialisée dans [`src/i18n.ts`](src/i18n.ts).
+3. **Start development server**
 
-Langues supportées par défaut :
+   ```bash
+   npm run dev
+   ```
 
-- Anglais (en)
-- Français (fr)
+4. **Access the application**
 
-## ⚙️ Configuration de l'Environnement
+   ```bash
+   http://localhost:8080
+   ```
 
-Les variables d'environnement sont gérées via des fichiers `.env` à la racine du projet, en utilisant le [mode de Vite pour les variables d'environnement](https://vitejs.dev/guide/env-and-mode.html).
+5. **Explore components with Storybook**
+   ```bash
+   npm run storybook
+   ```
+   ```
+   http://localhost:6006
+   ```
 
-- `.env`: Variables par défaut (non versionnées, pour les secrets locaux).
-- `.env.development`: Variables pour l'environnement de développement.
-- `.env.production`: Variables pour le build de production.
-- `.env.test`: Variables pour l'environnement de test.
-
-Un fichier `.env.example` devrait être versionné pour indiquer les variables nécessaires.
-
-## 🐳 Build & Déploiement (Docker)
-
-Un [`Dockerfile`](build/Dockerfile) est fourni dans le répertoire [`build/`](build/) pour faciliter la conteneurisation de l'application.
-Des scripts d'aide (`build.sh`, `start.sh`, `deploy.sh`) sont également présents.
-
-Pour construire l'image Docker (exemple) :
+### Testing
 
 ```bash
-docker build -t nom-de-votre-image . -f build/Dockerfile
+# Run unit tests
+npm run test:unit
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
 ```
 
-Pour lancer un conteneur (exemple) :
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable                | Description            | Required | Default                 |
+| ----------------------- | ---------------------- | -------- | ----------------------- |
+| `VITE_API_BASE_URL`     | API base URL           | ❌       | `http://localhost:8000` |
+| `VITE_APP_TITLE`        | Application title      | ❌       | `Vue.js App`            |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID | ❌       | -                       |
+
+See `.env.example` for all available options.
+
+### Adding a new module
+
+1. **Create module structure**
+
+   ```bash
+   mkdir -p src/modules/my-module/{_components,_views,__tests__}
+   ```
+
+2. **Create module components**
+
+   ```vue
+   <!-- src/modules/my-module/_components/MyComponent.vue -->
+   <template>
+     <div class="my-component">
+       <h1>{{ $t('my-module.title') }}</h1>
+     </div>
+   </template>
+
+   <script setup lang="ts">
+     // Component logic here
+   </script>
+   ```
+
+3. **Add module routes**
+
+   ```typescript
+   // src/router/my-module.routes.ts
+   import { RouteRecordRaw } from 'vue-router';
+
+   const routes: RouteRecordRaw[] = [
+     {
+       path: '/my-module',
+       name: 'my-module',
+       component: () => import('@/modules/my-module/_views/MyModule.vue'),
+       meta: {
+         authenticated: true,
+         breadcrumb: [{ label: 'my-module' }],
+       },
+     },
+   ];
+
+   export default routes;
+   ```
+
+4. **Register module**
+   ```typescript
+   // src/modules/my-module/index.ts
+   export * from './_components/MyComponent.vue';
+   export * from './_views/MyModule.vue';
+   ```
+
+---
+
+## 🎨 UI Component Library
+
+### Component Categories
+
+#### Basic Components
+
+- **UButton** : Primary, secondary, tertiary buttons with icons
+- **UMultiActionButton** : Button with multiple actions
+- **USplitButton** : Button with dropdown actions
+- **ULottiePlayer** : Lottie animation player
+
+#### Form Components
+
+- **UFormInput** : Text input with validation
+- **UDatePicker** : Date selection component
+- **USelectGroup** : Dropdown selection
+- **UCheckboxGroup** : Checkbox group
+- **URadio** : Radio button group
+- **USwitch** : Toggle switch
+- **USlider** : Range slider
+- **UColorPicker** : Color selection
+- **UTagInput** : Tag input with autocomplete
+- **UUploader** : File upload component
+
+#### Data Components
+
+- **UList** : Advanced list with sorting, filtering, pagination
+- **UKpiCard** : Key Performance Indicator cards
+- **UBar** : Bar chart component
+- **UDonutChart** : Donut chart component
+- **UFunnel** : Funnel chart component
+- **UFigure** : Data figure display
+- **UDateDisplay** : Date formatting component
+
+#### Navigation Components
+
+- **UTabs** : Tab navigation
+- **UContextualMenu** : Context menu
+- **UVerticalStepper** : Step-by-step navigation
+- **UExplorer** : File/folder explorer
+- **UWizardNav** : Wizard navigation
+
+#### Layout Components
+
+- **UCard** : Content card container
+- **UGrid** : CSS Grid layout
+- **UNavBar** : Navigation bar
+- **UContentWrapper** : Page content wrapper
+- **USectionsWithMenu** : Layout with sidebar menu
+
+#### Notice Components
+
+- **UMessage** : Toast notifications
+- **UMessageBox** : Modal message boxes
+- **UConfirm** : Confirmation dialogs
+- **UConfirmDelete** : Delete confirmation
+
+#### Other Components
+
+- **UDialog** : Modal dialog
+- **ULoader** : Loading spinner
+- **UTooltip** : Tooltip component
+- **UBadge** : Status badges
+- **UTag** : Tag component
+- **UProgressBar** : Progress indicator
+- **USearchBar** : Search input
+- **UCodeEditor** : Code editor with syntax highlighting
+
+### Using Components
+
+```vue
+<template>
+  <u-card>
+    <u-button type="primary" @click="handleClick">
+      {{ $t('common.save') }}
+    </u-button>
+
+    <u-list :data="items" :loading="loading" entity-label-key="items.list.header">
+      <u-list-column column-key="name" :label="$t('items.name')" sortable sort-prop="name" />
+    </u-list>
+  </u-card>
+</template>
+
+<script setup lang="ts">
+  import { UCard, UButton, UList, UListColumn } from '@/modules/ui';
+</script>
+```
+
+---
+
+## 🐳 Docker
+
+### Quick Start with Docker
+
+The easiest way to test the application is using Docker. The project includes a multi-stage Dockerfile that builds the application for production.
+
+#### Prerequisites
 
 ```bash
-docker run -d -p 8080:80 nom-de-votre-image
+docker >= 20.0.0
 ```
 
-Consultez le [`README.md`](README.md) spécifique au build ou les scripts pour des instructions plus détaillées.
+#### Build and Run
 
-## 🔧 Qualité du Code & Intégration Continue
+1. **Build the Docker image**
 
-### Linting & Formatting
+   ```bash
+   # Build for development
+   docker build -t vue-frontend-template .
 
-- **ESLint** ([`.eslintrc.cjs`](.eslintrc.cjs)): Pour l'analyse statique du code et le respect des conventions.
-- **Prettier** ([`.prettierrc.cjs`](.prettierrc.cjs)): Pour le formatage automatique du code.
-  ```bash
-  npm run lint
-  npm run format
-  ```
+   # Build for production
+   docker build --build-arg BUILD_ENV=production -t vue-frontend-template:prod .
+   ```
 
-### Hooks Git
+2. **Run the container**
 
-- **Husky** ([`.husky/`](.husky/)): Utilisé pour configurer des hooks Git. Par défaut, un hook `pre-commit` est configuré pour exécuter le linting et le formatage avant chaque commit.
+   ```bash
+   # Run development version
+   docker run -p 8080:80 --name vue-app vue-frontend-template
 
-### Intégration Continue (GitHub Actions)
+   # Run production version
+   docker run -p 8080:80 --name vue-app-prod vue-frontend-template:prod
+   ```
 
-Le répertoire [`.github/workflows/`](.github/workflows/) contient :
+3. **Access the application**
 
-- [`ci.yml`](.github/workflows/ci.yml): Workflow pour l'intégration continue (build, tests, linting) à chaque push/pull request.
-- [`renovate.yml`](.github/workflows/renovate.yml): Configuration pour Renovate Bot pour la mise à jour automatique des dépendances.
+   ```
+   Application: http://localhost:8080
+   Storybook:   http://localhost:8080/storybook
+   ```
 
-## 📄 License
+4. **For Storybook (separate process)**
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` (s'il existe) ou ajouter une section de licence si nécessaire.
-(Actuellement, le `README.md` original mentionne "MIT License" mais aucun fichier `LICENSE` n'est listé dans l'arborescence fournie. Il est recommandé d'en ajouter un si c'est le cas.)
+   ```bash
+   # Install dependencies locally
+   npm install
+
+   # Start Storybook
+   npm run storybook
+   ```
+
+   ```
+   Storybook: http://localhost:6006
+   ```
+
+### Docker Build Arguments
+
+The Dockerfile accepts several build arguments:
+
+| Argument       | Description                                       | Default                 | Example      |
+| -------------- | ------------------------------------------------- | ----------------------- | ------------ |
+| `BUILD_ENV`    | Build environment (development, production, test) | `development`           | `production` |
+| `BUILD_ID`     | Build identifier (usually Git SHA)                | `local`                 | `abc1234`    |
+| `APP_NAME`     | Application name                                  | `vue-frontend-template` | `my-app`     |
+| `GITHUB_TOKEN` | GitHub token for private packages                 | -                       | `ghp_xxx`    |
+
+### Docker Features
+
+- **Multi-stage build** : Optimized image size
+- **Nginx server** : Production-ready web server
+- **Environment-specific builds** : Different builds for dev/prod
+- **Security optimized** : Alpine Linux base image
+- **Caching optimized** : Layer caching for faster builds
+
+### Development with Docker
+
+For development with hot-reload:
+
+```bash
+# Build development image
+docker build --target builder -t vue-frontend-template:dev .
+
+# Run with volume mount for hot-reload
+docker run -p 8080:80 -v $(pwd)/src:/app/src vue-frontend-template:dev
+```
+
+### Production Deployment
+
+For production deployment:
+
+```bash
+# Build production image
+docker build --build-arg BUILD_ENV=production \
+             --build-arg BUILD_ID=$(git rev-parse HEAD) \
+             --build-arg APP_NAME=my-vue-app \
+             -t my-vue-app:latest .
+
+# Run production container
+docker run -p 80:80 --name my-vue-app my-vue-app:latest
+```
+
+### Docker Commands Reference
+
+```bash
+# Build images
+docker build -t vue-app .                                    # Development
+docker build --build-arg BUILD_ENV=production -t vue-app .  # Production
+
+# Run containers
+docker run -p 8080:80 vue-app                               # Run in foreground
+docker run -it -p 8080:80 vue-app                           # Run interactively
+docker run -d -p 8080:80 vue-app                            # Run in background
+
+# Manage containers
+docker ps                                                   # List running containers
+docker logs vue-app                                         # View logs
+docker stop vue-app                                         # Stop container
+docker rm vue-app                                           # Remove container
+
+# Clean up
+docker system prune -a                                      # Remove unused images
+docker volume prune                                         # Remove unused volumes
+```
+
+---
+
+## 🐳 Deployment
+
+### Docker
+
+```bash
+# Build image
+docker build -t my-vue-app .
+
+# Run with environment variables
+docker run --rm --env-file .env -p 8080:80 my-vue-app
+```
+
+### Production Build
+
+```bash
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+---
+
+## 🧪 Testing
+
+### Test Structure
+
+```
+src/modules/
+├── auth/
+│   └── __tests__/
+│       └── authorization.spec.ts
+└── users/
+    └── __tests__/
+        └── user.spec.ts
+```
+
+### Run Tests
+
+```bash
+# Unit tests
+npm run test:unit
+
+# Tests in watch mode
+npm run test:watch
+
+# Tests with coverage
+npm run test:coverage
+```
+
+---
+
+## 🔐 Security
+
+- **JWT Authentication** : Secure token-based auth
+- **OAuth 2.0** : Google integration
+- **Route Guards** : Protected routes
+- **Input Validation** : Form validation
+- **XSS Protection** : Content Security Policy
+- **CSRF Protection** : Cross-Site Request Forgery protection
+
+---
+
+## 🌍 Internationalization
+
+- **Multi-language Support** : EN/FR with vue-i18n
+- **Dynamic Language Switching** : Runtime changes
+- **Date/Number Formatting** : Locale-aware
+- **RTL Support** : Right-to-left languages
+- **Translation Management** : Organized translation files
+
+---
+
+## 📚 API Integration
+
+### RESTful API Endpoints
+
+#### Authentication
+
+- `POST /api/v1/auth/login` - JWT login
+- `POST /api/v1/auth/logout` - Logout
+- `GET /api/v1/auth/google` - Google OAuth
+
+#### Users
+
+- `GET /api/v1/users` - List users
+- `POST /api/v1/users` - Create user
+- `GET /api/v1/users/:id` - Get user details
+- `PUT /api/v1/users/:id` - Update user
+- `DELETE /api/v1/users/:id` - Delete user
+
+### API Configuration
+
+```typescript
+// src/stores/modules/api.ts
+import { useApiStore } from '@/stores/modules/api';
+
+const apiStore = useApiStore();
+
+// Configure base URL
+apiStore.setBaseURL(import.meta.env.VITE_API_BASE_URL);
+
+// Add request/response interceptors
+apiStore.addRequestInterceptor(/* your interceptor */);
+apiStore.addResponseInterceptor(/* your interceptor */);
+```
+
+---
 
 ## 🤝 Contributing
 
-Les contributions sont les bienvenues ! Veuillez suivre ces étapes :
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-1.  Fork le repository.
-2.  Créez une nouvelle branche pour votre fonctionnalité (`git checkout -b feature/ma-nouvelle-feature`).
-3.  Commitez vos changements (`git commit -am 'Ajout de ma nouvelle feature'`).
-    - Assurez-vous que les hooks pre-commit passent (linting, formatting).
-4.  Poussez vers la branche (`git push origin feature/ma-nouvelle-feature`).
-5.  Ouvrez une Pull Request.
+### Development Guidelines
+
+- Follow Vue.js 3 Composition API best practices
+- Use TypeScript for type safety
+- Write unit tests for components
+- Follow ESLint and Prettier rules
+- Update Storybook documentation for new components
+- Add JSDoc comments for functions and components
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
+
+## 🆘 Support
+
+- **Issues** : [GitHub Issues](https://github.com/adamsbarry18/frontend.template.vue/issues)
+- **Documentation** : [Storybook](http://localhost:6006) (when running locally)
+
+---
+
+**⭐ Don't forget to star if this template helped you!**

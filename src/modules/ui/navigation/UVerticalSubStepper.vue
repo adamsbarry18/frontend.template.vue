@@ -45,7 +45,8 @@
 
 <script setup lang="ts">
   import { PropType } from 'vue';
-  import { UTooltip, IconBase } from '@/modules/ui';
+  import { UTooltip } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import areSubstepsValid from './validateSubsteps';
   import { Substep } from './step-interfaces';
 

@@ -48,7 +48,10 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import { UButton, UPopper, UTooltip, IconBase } from '@/modules/ui';
+  import UButton from './UButton.vue';
+  import UPopper from '../others/UPopper.vue';
+  import UTooltip from '../others/UTooltip.vue';
+  import IconBase from '../icons/IconBase.vue';
 
   interface IMultiActionItem {
     label: string;

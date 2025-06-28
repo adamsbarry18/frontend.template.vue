@@ -43,7 +43,7 @@
 <script lang="ts" setup>
   import { ref, computed, watch, PropType } from 'vue';
   import { ElUpload } from 'element-plus';
-  import { IconBase } from '@/modules/ui';
+  import IconBase from '@/modules/ui/icons/IconBase.vue';
   import { formatFileSize } from '@/libs/utils/Number';
   import i18n from '@/i18n';
 

@@ -1,4 +1,4 @@
-import { URatioKpiCard } from '@/modules/ui';
+import URatioKpiCard from '@/modules/ui/data/URatioKpiCard.vue';
 
 export default {
   title: 'data/RatioKpiCard',
