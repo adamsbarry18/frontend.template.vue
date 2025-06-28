@@ -120,5 +120,4 @@ Session.vim
 # DOCKER
 # ========================================
 .dockerignore
-Dockerfile*
 docker-compose*.yml
