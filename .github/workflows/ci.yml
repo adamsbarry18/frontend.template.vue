@@ -102,7 +102,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: [quality, test]
-    if: github.event_name != 'pull_request'
 
     steps:
       - name: Checkout code
@@ -136,7 +135,6 @@ jobs:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name != 'pull_request'
     permissions:
       contents: read
       packages: write
@@ -187,7 +185,7 @@ jobs:
             NODE_VERSION=${{ env.NODE_VERSION }}
 
   # ========================================
-  # DEPLOYMENT
+  # DEPLOYMENT - STAGING
   # ========================================
   deploy-staging:
     name: Deploy to Staging
@@ -209,6 +207,9 @@ jobs:
           working-directory: .
           vercel-args: '--target=preview'
 
+  # ========================================
+  # DEPLOYMENT - PRODUCTION
+  # ========================================
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
