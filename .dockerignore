@@ -15,9 +15,10 @@ node_modules/
 # ========================================
 dist/
 dist-ssr/
-build/
 coverage/
 /html
+
+
 
 # ========================================
 # STORYBOOK
