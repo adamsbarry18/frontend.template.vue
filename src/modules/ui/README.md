@@ -5,12 +5,14 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
 ## 🎨 Component Categories
 
 ### Basic Components
+
 - **UButton** - Primary, secondary, tertiary buttons with icons and states
 - **UMultiActionButton** - Button with multiple action options
 - **USplitButton** - Button with dropdown actions
 - **ULottiePlayer** - Lottie animation player
 
 ### Form Components
+
 - **UFormInput** - Universal form input with validation
 - **UDatePicker** - Date selection component
 - **USelectGroup** - Dropdown selection with grouping
@@ -23,6 +25,7 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
 - **UUploader** - File upload component
 
 ### Data Components
+
 - **UList** - Advanced list with sorting, filtering, pagination
 - **UKpiCard** - Key Performance Indicator cards
 - **UBar** - Bar chart component
@@ -32,6 +35,7 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
 - **UDateDisplay** - Date formatting component
 
 ### Navigation Components
+
 - **UTabs** - Tab navigation
 - **UContextualMenu** - Context menu
 - **UVerticalStepper** - Step-by-step navigation
@@ -39,6 +43,7 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
 - **UWizardNav** - Wizard navigation
 
 ### Layout Components
+
 - **UCard** - Content card container
 - **UGrid** - CSS Grid layout
 - **UNavBar** - Navigation bar
@@ -46,6 +51,7 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
 - **USectionsWithMenu** - Layout with sidebar menu
 
 ### Notice Components
+
 - **UMessage** - Toast notifications
 - **UMessageBox** - Modal message boxes
 - **UConfirm** - Confirmation dialogs
@@ -65,7 +71,7 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
       :validator="validateName"
       type="string"
     />
-    
+
     <u-form-input
       v-model="user.email"
       label="Email"
@@ -73,27 +79,25 @@ A comprehensive Vue.js 3 design system built on **Element Plus** with **SCSS** s
       type="email"
       :error="emailError"
     />
-    
-    <u-button type="primary" @click="saveUser">
-      Save User
-    </u-button>
+
+    <u-button type="primary" @click="saveUser"> Save User </u-button>
   </u-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { UCard, UFormInput, UButton } from '@/modules/ui';
+  import { ref } from 'vue';
+  import { UCard, UFormInput, UButton } from '@/modules/ui';
 
-const user = ref({ name: '', email: '' });
-const emailError = ref('');
+  const user = ref({ name: '', email: '' });
+  const emailError = ref('');
 
-const validateName = (value: string) => {
-  return value.length < 2 ? 'Name must be at least 2 characters' : null;
-};
+  const validateName = (value: string) => {
+    return value.length < 2 ? 'Name must be at least 2 characters' : null;
+  };
 
-const saveUser = () => {
-  // Save logic here
-};
+  const saveUser = () => {
+    // Save logic here
+  };
 </script>
 ```
 
@@ -108,25 +112,11 @@ const saveUser = () => {
     :filter-config="filterConfig"
     @filter-change="onFilterChange"
   >
-    <u-list-column
-      column-key="name"
-      :label="$t('users.name')"
-      sortable
-      sort-prop="name"
-    />
-    
-    <u-list-column
-      column-key="email"
-      :label="$t('users.email')"
-      sortable
-      sort-prop="email"
-    />
-    
-    <u-list-column
-      column-key="status"
-      :label="$t('users.status')"
-      width="120"
-    >
+    <u-list-column column-key="name" :label="$t('users.name')" sortable sort-prop="name" />
+
+    <u-list-column column-key="email" :label="$t('users.email')" sortable sort-prop="email" />
+
+    <u-list-column column-key="status" :label="$t('users.status')" width="120">
       <template #default="{ row }">
         <u-badge :type="row.status === 'active' ? 'success' : 'warning'">
           {{ row.status }}
@@ -137,20 +127,20 @@ const saveUser = () => {
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { UList, UListColumn, UBadge } from '@/modules/ui';
+  import { ref } from 'vue';
+  import { UList, UListColumn, UBadge } from '@/modules/ui';
 
-const users = ref([]);
-const loading = ref(false);
+  const users = ref([]);
+  const loading = ref(false);
 
-const filterConfig = {
-  name: { type: 'string', label: 'Name' },
-  status: { type: 'enum', options: ['active', 'inactive'] }
-};
+  const filterConfig = {
+    name: { type: 'string', label: 'Name' },
+    status: { type: 'enum', options: ['active', 'inactive'] },
+  };
 
-const onFilterChange = (filters) => {
-  // Apply filters logic
-};
+  const onFilterChange = (filters) => {
+    // Apply filters logic
+  };
 </script>
 ```
 
@@ -167,7 +157,7 @@ const onFilterChange = (filters) => {
         trend="+12%"
         trend-positive
       />
-      
+
       <u-kpi-card
         :value="activeUsers"
         :label="$t('dashboard.active-users')"
@@ -176,52 +166,44 @@ const onFilterChange = (filters) => {
         trend-positive
       />
     </div>
-    
+
     <div class="chart-row">
       <u-card>
-        <u-bar
-          :data="userGrowthData"
-          :options="chartOptions"
-          title="User Growth"
-        />
+        <u-bar :data="userGrowthData" :options="chartOptions" title="User Growth" />
       </u-card>
-      
+
       <u-card>
-        <u-donut-chart
-          :data="userStatusData"
-          :options="donutOptions"
-          title="User Status Distribution"
-        />
+        <u-donut-chart :data="userStatusData" :options="donutOptions" title="User Status Distribution" />
       </u-card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { UKpiCard, UCard, UBar, UDonutChart } from '@/modules/ui';
+  import { ref } from 'vue';
+  import { UKpiCard, UCard, UBar, UDonutChart } from '@/modules/ui';
 
-const totalUsers = ref(1250);
-const activeUsers = ref(890);
+  const totalUsers = ref(1250);
+  const activeUsers = ref(890);
 
-const userGrowthData = ref([
-  { month: 'Jan', users: 100 },
-  { month: 'Feb', users: 150 },
-  { month: 'Mar', users: 200 }
-]);
+  const userGrowthData = ref([
+    { month: 'Jan', users: 100 },
+    { month: 'Feb', users: 150 },
+    { month: 'Mar', users: 200 },
+  ]);
 
-const userStatusData = ref([
-  { label: 'Active', value: 70, color: '#4CAF50' },
-  { label: 'Inactive', value: 30, color: '#FF9800' }
-]);
+  const userStatusData = ref([
+    { label: 'Active', value: 70, color: '#4CAF50' },
+    { label: 'Inactive', value: 30, color: '#FF9800' },
+  ]);
 
-const chartOptions = {
-  // Chart configuration
-};
+  const chartOptions = {
+    // Chart configuration
+  };
 
-const donutOptions = {
-  // Donut chart configuration
-};
+  const donutOptions = {
+    // Donut chart configuration
+  };
 </script>
 ```
 
@@ -271,4 +253,4 @@ For detailed component documentation and examples, run Storybook:
 npm run storybook
 ```
 
-Visit `http://localhost:6006` to explore all components interactively. 
+Visit `http://localhost:6006` to explore all components interactively.
