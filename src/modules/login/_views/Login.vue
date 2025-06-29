@@ -1,4 +1,26 @@
 <template>
+  <div class="info-test-app">
+    <u-alert-card type="info">
+      <template #title><h3>How to test the application</h3></template>
+      <ul>
+        <li>
+          You can create an account using the <strong>"Create Account"</strong>
+          button or with your Google account by clicking
+          <strong>"Sign in with Google"</strong>.
+        </li>
+        <li>
+          In both cases, your account will have the <strong>user</strong>
+          role. For example, in an e-commerce app, this allows users to register and access the application.
+        </li>
+        <li>
+          <strong>To test the application as an admin</strong>, use the following credentials:<br />
+          <strong>Email:</strong> admin@gmail.com<br />
+          <strong>Password:</strong> Password1!<br />
+          As an admin, you can create other users with specific roles and permissions.
+        </li>
+      </ul>
+    </u-alert-card>
+  </div>
   <home v-loading.fullscreen.lock="fullscreenLoading" class="login">
     <form class="form" data-cy="login-form" @submit.prevent="onSubmit">
       <u-form-input
@@ -62,7 +84,7 @@
   import { useRouter, useRoute } from 'vue-router';
   import { useUsersStore } from '@/stores/modules/users/user';
   import { useNotification } from '@/composables/notfication';
-  import { UFormInput, UButton } from '@/modules/ui';
+  import { UFormInput, UButton, UAlertCard } from '@/modules/ui';
   import Home from '../_components/Home.vue';
   import { isValidEmail } from '@/libs/utils/String';
   import i18n from '@/i18n';
@@ -278,6 +300,13 @@
 </script>
 
 <style lang="scss" scoped>
+  .info-test-app {
+    margin: 20px;
+    border-radius: 8px;
+    strong {
+      font-size: 13px;
+    }
+  }
   .login {
     width: auto;
     :deep(.rebranding-text) {
