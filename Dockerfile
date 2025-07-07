@@ -1,5 +1,5 @@
 # Étape 1: Builder l'application et Storybook
-FROM node:22-alpine AS builder
+FROM node:22.17.0-alpine AS builder
 
 # Arguments de build
 ARG BUILD_ENV=development
