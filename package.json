@@ -29,20 +29,20 @@
     "postinstall": "husky || true"
   },
   "dependencies": {
-    "axios": "^1.8.3",
+    "axios": "^1.11.0",
     "dayjs": "^1.11.13",
     "echarts": "^5.6.0",
-    "element-plus": "^2.9.4",
+    "element-plus": "^2.10.4",
     "i18n-iso-countries": "^7.14.0",
-    "pinia": "^3.0.1",
-    "pinia-plugin-persistedstate": "^4.2.0",
+    "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.4.1",
     "sortablejs": "^1.15.6",
     "tinycolor2": "^1.6.0",
     "uuid": "^11.1.0",
-    "vue": "^3.5.13",
+    "vue": "^3.5.18",
     "vue-echarts": "^7.0.3",
     "vue-i18n": "^11.1.1",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
